@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "267180459782",
+    "firebase_url": "https://wiktor-navigator.firebaseio.com",
+    "project_id": "wiktor-navigator",
+    "storage_bucket": "wiktor-navigator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267180459782:android:d18e77a22a5c46e8",
+        "android_client_info": {
+          "package_name": "pl.org.seva.navigator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267180459782-r2seb3fmbm26lqfav0hbndfdtf1sjh6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.org.seva.navigator",
+            "certificate_hash": "4605ED1189B6D0893C99E841FE5C8867EF3B4A50"
+          }
+        },
+        {
+          "client_id": "267180459782-548rckf296jcchkp8id9on17v57trcrf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd5onB-lqXRmgyDyIqKXW4YQopoQjvzBQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267180459782-548rckf296jcchkp8id9on17v57trcrf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
