@@ -1,6 +1,5 @@
 package pl.org.seva.navigator.model;
 
-
 import android.support.annotation.NonNull;
 
 public class Contact implements Comparable<Contact> {

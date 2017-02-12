@@ -5,7 +5,7 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -17,10 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
 
-public class ContactsActivity extends AppCompatActivity {
+public class ContactsActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
@@ -30,19 +32,34 @@ public class ContactsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
+
         Toolbar toolbar = binding.toolbar.toolbar;
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = binding.toolbar.fab;
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        binding.toolbar.fab
+            .setOnClickListener(view -> Snackbar.make(
+                    view,
+                    "Replace with your own action",
+                    Snackbar.LENGTH_LONG)
+            .setAction("Action", null).show());
 
         DrawerLayout drawer = binding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        binding.navView.setNavigationItemSelectedListener(this);
+
+        if (NavigatorApplication.isLoggedIn) {
+            alreadyLoggedIn();
+        }
+    }
+
+    private void alreadyLoggedIn() {
         if (isLocationPermissionEnabled()) {
             initContactsView();
         }
@@ -55,7 +72,7 @@ public class ContactsActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED;
+            PackageManager.PERMISSION_GRANTED;
     }
 
     private void initContactsView() {
@@ -71,7 +88,10 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         if (requestCode != PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID) {
             return;
         }
@@ -88,11 +108,6 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = binding.drawerLayout;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -106,7 +121,7 @@ public class ContactsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.contacts_menu, menu);
         return true;
     }
 
@@ -123,5 +138,35 @@ public class ContactsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        }
+        else if (id == R.id.nav_gallery) {
+
+        }
+        else if (id == R.id.nav_slideshow) {
+
+        }
+        else if (id == R.id.nav_manage) {
+
+        }
+        else if (id == R.id.nav_share) {
+
+        }
+        else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
