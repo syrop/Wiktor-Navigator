@@ -6,7 +6,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="pl.org.seva.navigator.activity.ContactsActivity">
+        tools:context="pl.org.seva.navigator.activity.NavigationActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -23,8 +23,8 @@
         </android.support.design.widget.AppBarLayout>
 
         <include
-            android:id="@+id/content_main"
-            layout="@layout/content_main"
+            android:id="@+id/content_navigation"
+            layout="@layout/content_navigation"
             />
 
         <android.support.design.widget.FloatingActionButton

@@ -15,4 +15,8 @@
     <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
 
+    <string name="contacts_please_log_in">Please log in.</string>
+
+    <string name="drawer_login">Login</string>
+
 </resources>

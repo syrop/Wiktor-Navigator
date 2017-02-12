@@ -26,7 +26,7 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState, persistentState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
 
-        int mapContainerId = binding.toolbar.contentMain.mapContainer.getId();
+        int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag("map");

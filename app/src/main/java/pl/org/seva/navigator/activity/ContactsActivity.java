@@ -1,6 +1,7 @@
 package pl.org.seva.navigator.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,9 +14,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
@@ -27,11 +31,14 @@ public class ContactsActivity extends AppCompatActivity
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
     private ActivityContactsBinding binding;
+    private RecyclerView contactsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
+        TextView pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
+        contactsRecyclerView = binding.toolbar.contentContacts.recyclerView;
 
         Toolbar toolbar = binding.toolbar.toolbar;
         setSupportActionBar(toolbar);
@@ -55,7 +62,13 @@ public class ContactsActivity extends AppCompatActivity
         binding.navView.setNavigationItemSelectedListener(this);
 
         if (NavigatorApplication.isLoggedIn) {
+            pleaseLogIn.setVisibility(View.GONE);
+            contactsRecyclerView.setVisibility(View.VISIBLE);
             alreadyLoggedIn();
+        }
+        else {
+            pleaseLogIn.setVisibility(View.VISIBLE);
+            contactsRecyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -101,7 +114,7 @@ public class ContactsActivity extends AppCompatActivity
         }
         else {
             Snackbar.make(
-                    binding.recyclerView,
+                    binding.toolbar.contentContacts.recyclerView,
                     "Camera permission request was denied.",
                     Snackbar.LENGTH_SHORT).show();
         }
@@ -146,8 +159,8 @@ public class ContactsActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.login) {
+            startActivity(new Intent(this, GoogleSignInActivity.class));
         }
         else if (id == R.id.nav_gallery) {
 
