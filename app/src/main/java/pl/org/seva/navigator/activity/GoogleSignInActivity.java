@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -38,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
 
@@ -55,9 +55,8 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     private GoogleApiClient googleApiClient;
     ActivityGoogleSignInBinding binding;
 
-    private TextView statusTextView;
-    private TextView detailTextView;
     private ProgressDialog progressDialog;
+    private boolean performedAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +64,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_google_sign_in);
 
-        statusTextView = binding.status;
-        detailTextView = binding.detail;
-
         binding.signInButton.setOnClickListener(this);
-        binding.signOutButton.setOnClickListener(this);
-        binding.disconnectButton.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -88,12 +82,33 @@ public class GoogleSignInActivity extends AppCompatActivity implements
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                userLoggedIn(user);
             }
             else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
+                userLoggedOut();
             }
-            updateUI(user);
         };
+    }
+
+    private void userLoggedIn(FirebaseUser user) {
+        NavigatorApplication.isLoggedIn = true;
+        NavigatorApplication.displayName = user.getDisplayName();
+        NavigatorApplication.email = user.getEmail();
+        NavigatorApplication.uid = user.getUid();
+        if (performedAction) {
+            finish();
+        }
+    }
+
+    private void userLoggedOut() {
+        NavigatorApplication.isLoggedIn = true;
+        NavigatorApplication.displayName = null;
+        NavigatorApplication.email = null;
+        NavigatorApplication.uid = null;
+        if (performedAction) {
+            finish();
+        }
     }
 
     @Override
@@ -111,10 +126,74 @@ public class GoogleSignInActivity extends AppCompatActivity implements
         }
     }
 
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(signInIntent, SIGN_IN_REQUEST_ID);
+    }
+
+    private void signOut() {
+        finishWhenStateChanges();
+        // Firebase sign out
+        firebaseAuth.signOut();
+
+        // Google sign out
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> userLoggedOut());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == SIGN_IN_REQUEST_ID) {
+            finishWhenStateChanges();
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
+            }
+            else {
+                userLoggedOut();
+            }
+        }
+    }
+
+    private void finishWhenStateChanges() {
+        performedAction = true;
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        showProgressDialog();
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(
+                        this,
+                        task -> {
+                    Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                    hideProgressDialog();
+
+                    // If sign in fails, display a message to the user. If sign in succeeds
+                    // the auth state listener will be notified and logic to handle the
+                    // signed in user can be handled in the listener.
+                    if (!task.isSuccessful()) {
+                        signInFailed(task.getException());
+                    }
+                });
+    }
+
+    private void signInFailed(Exception ex) {
+        Log.w(TAG, "signInWithCredential", ex);
+        Toast.makeText(GoogleSignInActivity.this, R.string.authentication_failed, Toast.LENGTH_SHORT)
+                .show();
+    }
+
     public void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(getString(R.string.loading));
+            progressDialog.setMessage(getString(R.string.log_in_loading));
             progressDialog.setIndeterminate(true);
         }
 
@@ -128,87 +207,6 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == SIGN_IN_REQUEST_ID) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            }
-            else {
-                // Google Sign In failed, update UI appropriately
-                updateUI(null);
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        showProgressDialog();
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "signInWithCredential", task.getException());
-                        Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    hideProgressDialog();
-                });
-    }
-
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(signInIntent, SIGN_IN_REQUEST_ID);
-    }
-
-    private void signOut() {
-        // Firebase sign out
-        firebaseAuth.signOut();
-
-        // Google sign out
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
-                status -> updateUI(null));
-    }
-
-    private void revokeAccess() {
-        // Firebase sign out
-        firebaseAuth.signOut();
-
-        // Google revoke access
-        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(
-                status -> updateUI(null));
-    }
-
-    private void updateUI(FirebaseUser user) {
-        hideProgressDialog();
-        if (user != null) {
-            statusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            detailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            binding.signInButton.setVisibility(View.GONE);
-            binding.signOutAndDisconnect.setVisibility(View.VISIBLE);
-        }
-        else {
-            statusTextView.setText(R.string.signed_out);
-            detailTextView.setText(null);
-
-            binding.signOutButton.setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
-        }
-    }
-
-    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
@@ -216,15 +214,9 @@ public class GoogleSignInActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.sign_in_button) {
-            signIn();
+        if (v != binding.signInButton) {
+            return;
         }
-        else if (i == R.id.sign_out_button) {
-            signOut();
-        }
-        else if (i == R.id.disconnect_button) {
-            revokeAccess();
-        }
+        signIn();
     }
 }

@@ -16,6 +16,8 @@ import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
 @SuppressWarnings("MissingPermission")
 public class NavigationActivity extends AppCompatActivity {
 
+    private static final String MAP_FRAGMENT_TAG = "map";
+
     private MapFragment mapFragment;
     private GoogleMap map;
 
@@ -29,10 +31,10 @@ public class NavigationActivity extends AppCompatActivity {
         int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
 
         FragmentManager fm = getFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentByTag("map");
+        mapFragment = (MapFragment) fm.findFragmentByTag(MAP_FRAGMENT_TAG);
         if (mapFragment == null) {
             mapFragment = new MapFragment();
-            fm.beginTransaction().add(mapContainerId, mapFragment, "map").commit();
+            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit();
         }
 
         mapFragment.getMapAsync(googleMap -> {

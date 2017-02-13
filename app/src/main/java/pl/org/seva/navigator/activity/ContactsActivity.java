@@ -37,7 +37,6 @@ public class ContactsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
-        TextView pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
         contactsRecyclerView = binding.toolbar.contentContacts.recyclerView;
 
         Toolbar toolbar = binding.toolbar.toolbar;
@@ -60,7 +59,13 @@ public class ContactsActivity extends AppCompatActivity
         toggle.syncState();
 
         binding.navView.setNavigationItemSelectedListener(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        clearSelection();
+        TextView pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
         if (NavigatorApplication.isLoggedIn) {
             pleaseLogIn.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.VISIBLE);
@@ -69,6 +74,13 @@ public class ContactsActivity extends AppCompatActivity
         else {
             pleaseLogIn.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    private void clearSelection() {
+        Menu menu = binding.navView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setChecked(false);
         }
     }
 
