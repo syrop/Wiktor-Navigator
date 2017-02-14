@@ -45,6 +45,10 @@ public class GoogleSignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
+    public static final String ACTION = "action";
+    public static final String LOGIN = "login";
+    public static final String LOGOUT = "logout";
+
     private static final String TAG = GoogleSignInActivity.class.getSimpleName();
 
     private static final int SIGN_IN_REQUEST_ID = 9001;
@@ -61,10 +65,6 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_google_sign_in);
-
-        binding.signInButton.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -89,6 +89,29 @@ public class GoogleSignInActivity extends AppCompatActivity implements
                 userLoggedOut();
             }
         };
+
+        if (getIntent().getStringExtra(ACTION).equals(LOGOUT)) {
+            logout();
+            finish();
+            return;
+        }
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_google_sign_in);
+        binding.signInButton.setOnClickListener(this);
+    }
+
+    private void login() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(signInIntent, SIGN_IN_REQUEST_ID);
+    }
+
+    private void logout() {
+        finishWhenStateChanges();
+        // Firebase sign out
+        firebaseAuth.signOut();
+
+        // Google sign out
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> userLoggedOut());
     }
 
     private void userLoggedIn(FirebaseUser user) {
@@ -124,20 +147,6 @@ public class GoogleSignInActivity extends AppCompatActivity implements
         if (authStateListener != null) {
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
-    }
-
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(signInIntent, SIGN_IN_REQUEST_ID);
-    }
-
-    private void signOut() {
-        finishWhenStateChanges();
-        // Firebase sign out
-        firebaseAuth.signOut();
-
-        // Google sign out
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> userLoggedOut());
     }
 
     @Override
@@ -217,6 +226,6 @@ public class GoogleSignInActivity extends AppCompatActivity implements
         if (v != binding.signInButton) {
             return;
         }
-        signIn();
+        login();
     }
 }

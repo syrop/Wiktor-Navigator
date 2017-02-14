@@ -32,6 +32,7 @@ public class ContactsActivity extends AppCompatActivity
 
     private ActivityContactsBinding binding;
     private RecyclerView contactsRecyclerView;
+    private boolean permissionAlreadyRequested;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,8 @@ public class ContactsActivity extends AppCompatActivity
                     view,
                     "Replace with your own action",
                     Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show());
+            .setAction("Action", null)
+            .show());
 
         DrawerLayout drawer = binding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,7 +66,7 @@ public class ContactsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        clearSelection();
+        clearDrawerSelection();
         TextView pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
         if (NavigatorApplication.isLoggedIn) {
             pleaseLogIn.setVisibility(View.GONE);
@@ -77,7 +79,7 @@ public class ContactsActivity extends AppCompatActivity
         }
     }
 
-    private void clearSelection() {
+    private void clearDrawerSelection() {
         Menu menu = binding.navView.getMenu();
         for (int i = 0; i < menu.size(); i++) {
             menu.getItem(i).setChecked(false);
@@ -88,7 +90,7 @@ public class ContactsActivity extends AppCompatActivity
         if (isLocationPermissionEnabled()) {
             initContactsView();
         }
-        else {
+        else if (!permissionAlreadyRequested) {
             requestLocationPermission();
         }
     }
@@ -105,6 +107,7 @@ public class ContactsActivity extends AppCompatActivity
     }
 
     private void requestLocationPermission() {
+        permissionAlreadyRequested = true;
         final String permissions[] = { Manifest.permission.ACCESS_FINE_LOCATION, };
         ActivityCompat.requestPermissions(
                 this,
@@ -122,14 +125,24 @@ public class ContactsActivity extends AppCompatActivity
         }
 
         if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            initContactsView();
+            permissionGranted();
         }
         else {
-            Snackbar.make(
-                    binding.toolbar.contentContacts.recyclerView,
-                    "Camera permission request was denied.",
-                    Snackbar.LENGTH_SHORT).show();
+            permissionDenied();
         }
+    }
+
+    private void permissionGranted() {
+        initContactsView();
+    }
+
+    private void permissionDenied() {
+        Snackbar.make(
+                binding.toolbar.contentContacts.recyclerView,
+                R.string.permission_request_denied,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.permission_retry, view -> requestLocationPermission())
+                .show();
     }
 
     @Override
@@ -146,7 +159,7 @@ public class ContactsActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.contacts_menu, menu);
+        getMenuInflater().inflate(R.menu.contacts_overflow_menu, menu);
         return true;
     }
 
@@ -172,10 +185,12 @@ public class ContactsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.login) {
-            startActivity(new Intent(this, GoogleSignInActivity.class));
+            startActivity(new Intent(this, GoogleSignInActivity.class)
+                    .putExtra(GoogleSignInActivity.ACTION, GoogleSignInActivity.LOGIN));
         }
-        else if (id == R.id.nav_gallery) {
-
+        else if (id == R.id.logout) {
+            startActivity(new Intent(this, GoogleSignInActivity.class)
+                    .putExtra(GoogleSignInActivity.ACTION, GoogleSignInActivity.LOGOUT));
         }
         else if (id == R.id.nav_slideshow) {
 
