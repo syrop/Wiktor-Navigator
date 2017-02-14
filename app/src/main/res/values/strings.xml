@@ -9,7 +9,8 @@
     <string name="permission_retry">Retry</string>
 
     <string name="log_in_loading">Loading…</string>
-    <string name="please_log_in">Please log in</string>
+    <string name="please_log_in">Please log in.</string>
+    <string name="not_logged_in">(Not logged in.)</string>
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
     <string name="label_google_sign_in">Firebase + Google Sign In</string>

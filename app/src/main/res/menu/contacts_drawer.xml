@@ -3,11 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/login"
+            android:id="@+id/drawer_login"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/drawer_login" />
         <item
-            android:id="@+id/logout"
+            android:id="@+id/drawer_logout"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/drawer_logout" />
         <item

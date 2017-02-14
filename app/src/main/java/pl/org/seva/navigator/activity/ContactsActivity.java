@@ -59,7 +59,6 @@ public class ContactsActivity extends AppCompatActivity
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         binding.navView.setNavigationItemSelectedListener(this);
     }
 
@@ -68,14 +67,26 @@ public class ContactsActivity extends AppCompatActivity
         super.onResume();
         clearDrawerSelection();
         TextView pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
+        View header = binding.navView.getHeaderView(0);
+        TextView name = ((TextView) header.findViewById(R.id.name));
+        TextView email = ((TextView) header.findViewById(R.id.email));
+
         if (NavigatorApplication.isLoggedIn) {
             pleaseLogIn.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.VISIBLE);
+            binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(false);
+            binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(true);
+            name.setText(NavigatorApplication.displayName);
+            email.setText(NavigatorApplication.email);
             alreadyLoggedIn();
         }
         else {
             pleaseLogIn.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.GONE);
+            binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(true);
+            binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(false);
+            name.setText(R.string.app_name);
+            email.setText(R.string.not_logged_in);
         }
     }
 
@@ -184,11 +195,11 @@ public class ContactsActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.login) {
+        if (id == R.id.drawer_login) {
             startActivity(new Intent(this, GoogleSignInActivity.class)
                     .putExtra(GoogleSignInActivity.ACTION, GoogleSignInActivity.LOGIN));
         }
-        else if (id == R.id.logout) {
+        else if (id == R.id.drawer_logout) {
             startActivity(new Intent(this, GoogleSignInActivity.class)
                     .putExtra(GoogleSignInActivity.ACTION, GoogleSignInActivity.LOGOUT));
         }

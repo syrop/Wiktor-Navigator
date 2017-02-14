@@ -109,26 +109,19 @@ public class GoogleSignInActivity extends AppCompatActivity implements
         finishWhenStateChanges();
         // Firebase sign out
         firebaseAuth.signOut();
-
-        // Google sign out
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(status -> userLoggedOut());
+        NavigatorApplication.setCurrentFirebaseUser(null);
+        finish();
     }
 
     private void userLoggedIn(FirebaseUser user) {
-        NavigatorApplication.isLoggedIn = true;
-        NavigatorApplication.displayName = user.getDisplayName();
-        NavigatorApplication.email = user.getEmail();
-        NavigatorApplication.uid = user.getUid();
+        NavigatorApplication.setCurrentFirebaseUser(user);
         if (performedAction) {
             finish();
         }
     }
 
     private void userLoggedOut() {
-        NavigatorApplication.isLoggedIn = true;
-        NavigatorApplication.displayName = null;
-        NavigatorApplication.email = null;
-        NavigatorApplication.uid = null;
+        NavigatorApplication.setCurrentFirebaseUser(null);
         if (performedAction) {
             finish();
         }
