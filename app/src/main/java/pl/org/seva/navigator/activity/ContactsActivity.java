@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,9 +22,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import pl.org.seva.navigator.NavigatorApplication;
+import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
+import pl.org.seva.navigator.view.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -114,7 +116,10 @@ public class ContactsActivity extends AppCompatActivity
     }
 
     private void initContactsView() {
-
+        contactsRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
+        contactsRecyclerView.setLayoutManager(lm);
+        contactsRecyclerView.setAdapter(new ContactAdapter());
     }
 
     private void requestLocationPermission() {

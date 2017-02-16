@@ -4,10 +4,27 @@ import android.support.annotation.NonNull;
 
 public class Contact implements Comparable<Contact> {
 
-    private String email;
+    public String email;
+    public String displayName;
+    private String uid;
+
+    public Contact setName(String name) {
+        this.displayName = name;
+        return this;
+    }
+
+    public Contact setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Contact setUid(String uid) {
+        this.uid = uid;
+        return this;
+    }
 
     @Override
     public int compareTo(@NonNull Contact o) {
-        return email.compareTo(o.email);
+        return displayName.compareTo(o.displayName);
     }
 }

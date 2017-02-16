@@ -1,4 +1,4 @@
-package pl.org.seva.navigator;
+package pl.org.seva.navigator.application;
 
 import android.app.Application;
 
