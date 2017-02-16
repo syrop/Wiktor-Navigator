@@ -5,6 +5,9 @@ import android.app.Application;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import pl.org.seva.navigator.manager.ActivityRecognitionManager;
+import pl.org.seva.navigator.manager.GpsManager;
+
 public class NavigatorApplication extends Application {
 
     public static boolean isLoggedIn;
@@ -16,6 +19,8 @@ public class NavigatorApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setCurrentFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
+        ActivityRecognitionManager.getInstance().init(this);
+        GpsManager.getInstance().init(this);
     }
 
     public static void setCurrentFirebaseUser(FirebaseUser user) {

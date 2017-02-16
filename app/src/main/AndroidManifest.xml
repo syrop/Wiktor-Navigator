@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="pl.org.seva.navigator">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:name=".application.NavigatorApplication"
@@ -36,6 +37,8 @@
         <activity
             android:name=".activity.SearchActivity"
             android:label="@string/search_activity_label" />
+
+        <service android:name=".service.ActivityRecognitionIntentService" />
 
     </application>
 
