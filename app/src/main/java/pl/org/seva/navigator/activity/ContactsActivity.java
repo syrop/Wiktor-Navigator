@@ -68,12 +68,13 @@ public class ContactsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         clearDrawerSelection();
-        TextView pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
+        View pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
         View header = binding.navView.getHeaderView(0);
         TextView name = ((TextView) header.findViewById(R.id.name));
         TextView email = ((TextView) header.findViewById(R.id.email));
 
         if (NavigatorApplication.isLoggedIn) {
+            binding.toolbar.fab.setVisibility(View.VISIBLE);
             pleaseLogIn.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.VISIBLE);
             binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(false);
@@ -85,10 +86,12 @@ public class ContactsActivity extends AppCompatActivity
         else {
             pleaseLogIn.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.GONE);
+            binding.toolbar.fab.setVisibility(View.GONE);
             binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(true);
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(false);
             name.setText(R.string.app_name);
             email.setText(R.string.not_logged_in);
+            login();
         }
     }
 
@@ -194,6 +197,16 @@ public class ContactsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void login() {
+        startActivity(new Intent(this, LoginActivity.class)
+                .putExtra(LoginActivity.ACTION, LoginActivity.LOGIN));
+    }
+
+    private void logout() {
+        startActivity(new Intent(this, LoginActivity.class)
+                .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -201,12 +214,10 @@ public class ContactsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.drawer_login) {
-            startActivity(new Intent(this, GoogleSignInActivity.class)
-                    .putExtra(GoogleSignInActivity.ACTION, GoogleSignInActivity.LOGIN));
+            login();
         }
         else if (id == R.id.drawer_logout) {
-            startActivity(new Intent(this, GoogleSignInActivity.class)
-                    .putExtra(GoogleSignInActivity.ACTION, GoogleSignInActivity.LOGOUT));
+            logout();
         }
         else if (id == R.id.nav_slideshow) {
 

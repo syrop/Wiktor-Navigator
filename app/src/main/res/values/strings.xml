@@ -13,7 +13,7 @@
     <string name="not_logged_in">(Not logged in.)</string>
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
-    <string name="label_google_sign_in">Firebase + Google Sign In</string>
+    <string name="label_google_sign_in">Google Sign In</string>
     <string name="authentication_failed">Authentication failed.</string>
 
     <string name="contacts_please_log_in">Please log in.</string>

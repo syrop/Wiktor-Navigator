@@ -41,7 +41,7 @@ import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
 
-public class GoogleSignInActivity extends AppCompatActivity implements
+public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -49,7 +49,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     public static final String LOGIN = "login";
     public static final String LOGOUT = "logout";
 
-    private static final String TAG = GoogleSignInActivity.class.getSimpleName();
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int SIGN_IN_REQUEST_ID = 9001;
 
@@ -143,6 +143,12 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        finish();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -188,7 +194,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
 
     private void signInFailed(Exception ex) {
         Log.w(TAG, "signInWithCredential", ex);
-        Toast.makeText(GoogleSignInActivity.this, R.string.authentication_failed, Toast.LENGTH_SHORT)
+        Toast.makeText(LoginActivity.this, R.string.authentication_failed, Toast.LENGTH_SHORT)
                 .show();
     }
 

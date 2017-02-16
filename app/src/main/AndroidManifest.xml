@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".activity.GoogleSignInActivity"
+            android:name=".activity.LoginActivity"
             android:label="@string/label_google_sign_in" />
 
     </application>
