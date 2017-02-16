@@ -45,20 +45,15 @@ public class ContactsActivity extends AppCompatActivity
         Toolbar toolbar = binding.toolbar.toolbar;
         setSupportActionBar(toolbar);
         binding.toolbar.fab
-            .setOnClickListener(view -> Snackbar.make(
-                    view,
-                    "Replace with your own action",
-                    Snackbar.LENGTH_LONG)
-            .setAction("Action", null)
-            .show());
+            .setOnClickListener(view -> startActivity(new Intent(this, SearchActivity.class)));
 
         DrawerLayout drawer = binding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
                 drawer,
                 toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+                R.string.drawer_accessibility_open,
+                R.string.drawer_accessibility_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         binding.navView.setNavigationItemSelectedListener(this);
@@ -90,7 +85,7 @@ public class ContactsActivity extends AppCompatActivity
             binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(true);
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(false);
             name.setText(R.string.app_name);
-            email.setText(R.string.not_logged_in);
+            email.setText(R.string.drawer_header_not_logged_in);
             login();
         }
     }

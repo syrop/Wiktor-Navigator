@@ -194,14 +194,14 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void signInFailed(Exception ex) {
         Log.w(TAG, "signInWithCredential", ex);
-        Toast.makeText(LoginActivity.this, R.string.authentication_failed, Toast.LENGTH_SHORT)
+        Toast.makeText(LoginActivity.this, R.string.login_authentication_failed, Toast.LENGTH_SHORT)
                 .show();
     }
 
     public void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(getString(R.string.log_in_loading));
+            progressDialog.setMessage(getString(R.string.login_loading));
             progressDialog.setIndeterminate(true);
         }
 
