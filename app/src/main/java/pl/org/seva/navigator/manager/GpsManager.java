@@ -90,7 +90,7 @@ public class GpsManager implements
         }
     }
 
-    public Observable<LatLng> locationChangedListener() {
+    public Observable<LatLng> locationListener() {
         return locationChangedSubject.asObservable();
     }
 

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
+import pl.org.seva.navigator.manager.GpsManager;
 import pl.org.seva.navigator.view.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity
@@ -98,15 +99,15 @@ public class ContactsActivity extends AppCompatActivity
     }
 
     private void alreadyLoggedIn() {
-        if (isLocationPermissionEnabled()) {
-            initContactsView();
+        if (isLocationPermissionGranted()) {
+            locationPermissionGranted();
         }
         else if (!permissionAlreadyRequested) {
             requestLocationPermission();
         }
     }
 
-    private boolean isLocationPermissionEnabled() {
+    private boolean isLocationPermissionGranted() {
         return ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -139,14 +140,15 @@ public class ContactsActivity extends AppCompatActivity
         }
 
         if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            permissionGranted();
+            locationPermissionGranted();
         }
         else {
             permissionDenied();
         }
     }
 
-    private void permissionGranted() {
+    private void locationPermissionGranted() {
+        GpsManager.getInstance().connectGoogleApiClient();
         initContactsView();
     }
 
