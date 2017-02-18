@@ -88,10 +88,6 @@ public class GpsManager implements
                     .addApi(LocationServices.API)
                     .build();
         }
-        ActivityRecognitionManager.getInstance().stationaryListener().subscribe(
-                stationary -> pauseUpdates());
-        ActivityRecognitionManager.getInstance().movingListener().subscribe(
-                stationary -> resumeUpdates());
     }
 
     public Observable<LatLng> locationChangedListener() {
@@ -160,6 +156,11 @@ public class GpsManager implements
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE);
 
+        ActivityRecognitionManager.getInstance().stationaryListener().subscribe(
+                stationary -> pauseUpdates());
+        ActivityRecognitionManager.getInstance().movingListener().subscribe(
+                stationary -> resumeUpdates());
+
         requestLocationUpdates();
     }
 
@@ -169,7 +170,7 @@ public class GpsManager implements
     }
 
     private void pauseUpdates() {
-        if (paused || googleApiClient == null) {
+        if (paused) {
             return;
         }
         Log.d(TAG, "Pause updates.");

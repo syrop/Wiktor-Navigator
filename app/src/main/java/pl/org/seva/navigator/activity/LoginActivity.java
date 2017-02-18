@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -40,10 +41,12 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
+import pl.org.seva.navigator.manager.DatabaseManager;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        GoogleApiClient.ConnectionCallbacks {
 
     public static final String ACTION = "action";
     public static final String LOGIN = "login";
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private ProgressDialog progressDialog;
     private boolean performedAction;
+    private boolean logoutWhenReady;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addConnectionCallbacks(this)
                 .build();
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -107,14 +112,17 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void logout() {
         finishWhenStateChanges();
+        logoutWhenReady = true;
         // Firebase sign out
         firebaseAuth.signOut();
         NavigatorApplication.setCurrentFirebaseUser(null);
+        googleApiClient.connect();
         finish();
     }
 
     private void userLoggedIn(FirebaseUser user) {
         NavigatorApplication.setCurrentFirebaseUser(user);
+        DatabaseManager.getInstance().login(user);
         if (performedAction) {
             finish();
         }
@@ -226,5 +234,17 @@ public class LoginActivity extends AppCompatActivity implements
             return;
         }
         login();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (logoutWhenReady) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //
     }
 }
