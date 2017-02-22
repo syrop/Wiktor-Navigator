@@ -42,7 +42,7 @@ public class GpsManager implements
     private static final String TAG = GpsManager.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 100.0;  // [m]
-    private static final long UPDATE_FREQUENCY = 1000;  // [ms]
+    private static final long UPDATE_FREQUENCY = 30000;  // [ms]
 
     private static GpsManager instance;
 
