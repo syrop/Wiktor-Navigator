@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion 25
