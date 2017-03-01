@@ -42,7 +42,7 @@ public class NavigatorApplication extends Application {
         GpsManager.getInstance().locationListener()
                 .filter(latLng -> isLoggedIn)
                 .subscribe(
-                latLng -> DatabaseManager.getInstance().location(email, latLng)
+                latLng -> DatabaseManager.getInstance().onLocationReceived(email, latLng)
         );
     }
 

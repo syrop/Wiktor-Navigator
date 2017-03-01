@@ -23,12 +23,16 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.manager.DatabaseManager;
 
 public class SearchActivity extends AppCompatActivity {
+
+    private String TAG = SearchActivity.class.getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -73,6 +77,10 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void search(String query) {
-
+        DatabaseManager
+                .getInstance()
+                .doesEmailExist(query)
+                .subscribe(aBoolean -> Log.d(TAG, "User " + query +
+                        (aBoolean ? " exists." : " does not exist.")));
     }
 }

@@ -21,8 +21,13 @@ import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class DatabaseManager {
 
@@ -74,9 +79,50 @@ public class DatabaseManager {
         userReference.child(DISPLAY_NAME).setValue(to64(user.getDisplayName()));
     }
 
-    public void location(String email, LatLng latLng) {
+    private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
+        PublishSubject<DataSnapshot> result = PublishSubject.create();
+        reference.addListenerForSingleValueEvent(new ValueEventListener(result));
+
+        return result.take(1);
+    }
+
+    public Observable<DataSnapshot> readData(DatabaseReference reference) {
+        PublishSubject<DataSnapshot> result = PublishSubject.create();
+        reference.addListenerForSingleValueEvent(new ValueEventListener(result));
+
+        return result.asObservable();
+    }
+
+    private Observable<Boolean> doesExist(DatabaseReference reference) {
+        return readDataOnce(reference).map(DataSnapshot::exists);
+    }
+
+    public Observable<Boolean> doesEmailExist(String email) {
+        return doesExist(database.getReference(USER + "/" + to64(email)));
+    }
+
+    public void onLocationReceived(String email, LatLng latLng) {
         String email64 = to64(email);
         DatabaseReference ref = database.getReference(USER).child(email64);
         ref.child(LAT_LNG).setValue(latLng2String(latLng));
+    }
+
+    private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
+
+        private PublishSubject<DataSnapshot> subject;
+
+        private ValueEventListener(PublishSubject<DataSnapshot> subject) {
+            this.subject = subject;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            subject.onNext(dataSnapshot);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            subject.onError(new Exception(databaseError.getMessage()));
+        }
     }
 }
