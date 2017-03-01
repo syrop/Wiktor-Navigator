@@ -1,24 +1,26 @@
 <resources>
     <string name="app_name">Wiktor Navigator</string>
 
+    <!-- Contacts activity -->
     <string name="overflow_menu_settings">Settings</string>
-
     <string name="permission_request_denied">Location permission request was denied.</string>
     <string name="permission_retry">Retry</string>
-
-    <string name="login_activity_label">Google Sign In</string>
-    <string name="login_authentication_failed">Authentication failed.</string>
-    <string name="login_loading">Loading…</string>
-    <string name="login_please_log_in">Please log in.</string>
-
-    <string name="contacts_please_log_in">Please log in.</string>
-
     <string name="drawer_accessibility_open">Open navigation drawer</string>
     <string name="drawer_accessibility_close">Close navigation drawer</string>
     <string name="drawer_header_not_logged_in">(Not logged in.)</string>
     <string name="drawer_login">Login</string>
     <string name="drawer_logout">Logout</string>
 
+    <!-- Login activity. -->
+    <string name="login_activity_label">Google Sign In</string>
+    <string name="login_authentication_failed">Authentication failed.</string>
+    <string name="login_loading">Loading…</string>
+    <string name="login_please_log_in">Please log in.</string>
+    <string name="contacts_please_log_in">Please log in.</string>
+
+    <!-- Search activity. -->
     <string name="search_activity_label">Add a new user</string>
+    <string name="search_activity_hint">Search by e-mails</string>
+    <string name="search">Search</string>
 
 </resources>
