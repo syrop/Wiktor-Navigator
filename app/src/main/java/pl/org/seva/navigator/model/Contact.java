@@ -46,4 +46,14 @@ public class Contact implements Comparable<Contact> {
     public int compareTo(@NonNull Contact o) {
         return displayName.compareTo(o.displayName);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return !(obj == null || !(obj instanceof Contact)) && email.equals(((Contact) obj).email);
+    }
+
+    @Override
+    public int hashCode() {
+        return email.hashCode();
+    }
 }

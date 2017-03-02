@@ -51,6 +51,10 @@ public class ContactManager {
                 .setName(NavigatorApplication.displayName);
     }
 
+    public boolean contains(Contact contact) {
+        return getMe().equals(contact) || contacts.contains(contact);
+    }
+
     public void add(Contact contact) {
         contacts.add(contact);
         Collections.sort(contacts);
@@ -61,7 +65,7 @@ public class ContactManager {
     }
 
     public Contact get(int position) {
-        return position == 0 ? getMe() : contacts.get(position + 1);
+        return position == 0 ? getMe() : contacts.get(position - 1);
     }
 
     public int size() {

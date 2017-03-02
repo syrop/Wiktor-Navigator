@@ -26,5 +26,7 @@
     <string name="search_activity_hint">Search by e-mail</string>
     <string name="search_search">Search</string>
     <string name="search_no_user_found">No user is found.</string>
+    <string name="search_dialog_title">Adding a user</string>
+    <string name="search_dialog_question">Do you want to add user %s?</string>
 
 </resources>

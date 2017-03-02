@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import android.view.View;
 
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
+import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.manager.DatabaseManager;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.view.ContactAdapter;
@@ -105,6 +107,24 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void onContactClick(Contact contact) {
+        ContactManager cm = ContactManager.getInstance();
+        if (cm.contains(contact)) {
+            finish();
+            return;
+        }
+        new AlertDialog
+                .Builder(this)
+                .setCancelable(true)
+                .setTitle(R.string.search_dialog_title)
+                .setMessage(getString(R.string.search_dialog_question).replace("%s", contact.getName()))
+                .setPositiveButton(android.R.string.yes, ((dialog, which) -> addContactAndFinish(contact)))
+                .setNegativeButton(android.R.string.no, ((dialog, which) -> finish()))
+                .create()
+                .show();
+    }
 
+    private void addContactAndFinish(Contact contact) {
+        ContactManager.getInstance().add(contact);
+        finish();
     }
 }
