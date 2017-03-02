@@ -17,6 +17,7 @@
 
 package pl.org.seva.navigator.activity;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -41,6 +42,8 @@ import pl.org.seva.navigator.view.SingleContactAdapter;
 public class SearchActivity extends AppCompatActivity {
 
     private ActivitySearchBinding binding;
+
+    private ProgressDialog progress;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +84,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void search(String query) {
+        progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
         DatabaseManager
                 .getInstance()
                 .readContactForEmail(query)
@@ -88,6 +92,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void onContactReceived(Contact contact) {
+        progress.cancel();
         if (contact == null) {
             binding.notFound.setVisibility(View.VISIBLE);
             return;
