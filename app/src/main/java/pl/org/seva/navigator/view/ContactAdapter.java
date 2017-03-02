@@ -17,6 +17,7 @@
 
 package pl.org.seva.navigator.view;
 
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,21 +25,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.databinding.ContactBinding;
 import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.model.Contact;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final TextView email;
-
-        private ViewHolder(View v) {
-            super(v);
-            name = (TextView) v.findViewById(R.id.name);
-            email = (TextView) v.findViewById(R.id.email);
-        }
-    }
+    private final PublishSubject<Contact> clickSubject = PublishSubject.create();
 
     Contact getContact(int position) {
         return ContactManager.getInstance().get(position);
@@ -46,8 +41,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @Override
     public ContactAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.contact, parent, false));
+        ContactBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()),
+                R.layout.contact,
+                parent,
+                false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -55,10 +54,33 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         Contact contact = getContact(position);
         holder.name.setText(contact.getName());
         holder.email.setText(contact.getEmail());
+        holder.view.setOnClickListener(v -> onItemClick(position));
+    }
+
+    private void onItemClick(int position) {
+        clickSubject.onNext(getContact(position));
+    }
+
+    public Observable<Contact> clickListener() {
+        return clickSubject.asObservable();
     }
 
     @Override
     public int getItemCount() {
         return ContactManager.getInstance().size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView name;
+        private final TextView email;
+        private final View view;
+
+
+        private ViewHolder(ContactBinding binding) {
+            super(binding.getRoot());
+            name = binding.name;
+            email = binding.email;
+            view = binding.cardView;
+        }
     }
 }

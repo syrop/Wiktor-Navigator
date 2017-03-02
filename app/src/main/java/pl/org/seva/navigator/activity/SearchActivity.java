@@ -33,6 +33,7 @@ import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.manager.DatabaseManager;
 import pl.org.seva.navigator.model.Contact;
+import pl.org.seva.navigator.view.ContactAdapter;
 import pl.org.seva.navigator.view.SingleContactAdapter;
 
 public class SearchActivity extends AppCompatActivity {
@@ -81,15 +82,15 @@ public class SearchActivity extends AppCompatActivity {
         DatabaseManager
                 .getInstance()
                 .readContactForEmail(query)
-                .subscribe(this::onSnapshotReceived);
+                .subscribe(this::onContactReceived);
     }
 
-    private void onSnapshotReceived(Contact contact) {
+    private void onContactReceived(Contact contact) {
         if (contact == null) {
-            binding.nothing.setVisibility(View.VISIBLE);
+            binding.notFound.setVisibility(View.VISIBLE);
             return;
         }
-        binding.nothing.setVisibility(View.GONE);
+        binding.notFound.setVisibility(View.GONE);
         initRecyclerView(contact);
     }
 
@@ -98,6 +99,12 @@ public class SearchActivity extends AppCompatActivity {
         rv.setHasFixedSize(true);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
         rv.setLayoutManager(lm);
-        rv.setAdapter(new SingleContactAdapter(contact));
+        ContactAdapter adapter = new SingleContactAdapter(contact);
+        rv.setAdapter(adapter);
+        adapter.clickListener().subscribe(this::onContactClick);
+    }
+
+    private void onContactClick(Contact contact) {
+
     }
 }
