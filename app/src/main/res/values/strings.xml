@@ -11,6 +11,9 @@
     <string name="drawer_login">Login</string>
     <string name="drawer_logout">Logout</string>
 
+    <!-- Navigation activity. -->
+    <string name="navigation_activity_label">Navigation</string>
+
     <!-- Login activity. -->
     <string name="login_activity_label">Google Sign In</string>
     <string name="login_authentication_failed">Authentication failed.</string>
@@ -20,7 +23,8 @@
 
     <!-- Search activity. -->
     <string name="search_activity_label">Add a new user</string>
-    <string name="search_activity_hint">Search by e-mails</string>
-    <string name="search">Search</string>
+    <string name="search_activity_hint">Search by e-mail</string>
+    <string name="search_search">Search</string>
+    <string name="search_no_user_found">No user is found.</string>
 
 </resources>

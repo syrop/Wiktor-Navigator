@@ -26,18 +26,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import pl.org.seva.navigator.model.Contact;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class DatabaseManager {
 
     private static final String USER = "user";
-    private static final String UID = "uid";
     private static final String DISPLAY_NAME = "display_name";
     private static final String LAT_LNG = "lat_lng";
 
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
+    }
+
+    private static String from64(String str) {
+        return new String(Base64.decode(str.getBytes(), Base64.NO_WRAP));
     }
 
     public static String latLng2String(LatLng latLng) {
@@ -53,7 +57,7 @@ public class DatabaseManager {
 
     private static DatabaseManager instance;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     public static DatabaseManager getInstance() {
         if (instance == null) {
@@ -75,8 +79,7 @@ public class DatabaseManager {
         DatabaseReference userReference = database.getReference(USER);
         userReference.setValue(email64);
         userReference = userReference.child(email64);
-        userReference.child(UID).setValue(user.getUid());
-        userReference.child(DISPLAY_NAME).setValue(to64(user.getDisplayName()));
+        userReference.child(DISPLAY_NAME).setValue(user.getDisplayName());
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
@@ -86,19 +89,28 @@ public class DatabaseManager {
         return result.take(1);
     }
 
-    public Observable<DataSnapshot> readData(DatabaseReference reference) {
-        PublishSubject<DataSnapshot> result = PublishSubject.create();
-        reference.addListenerForSingleValueEvent(new ValueEventListener(result));
-
-        return result.asObservable();
+    private Observable<DataSnapshot> readDataForEmail(String email) {
+        return readDataOnce(emailToReference(email));
     }
 
-    private Observable<Boolean> doesExist(DatabaseReference reference) {
-        return readDataOnce(reference).map(DataSnapshot::exists);
+    public Observable<Contact> readContactForEmail(String email) {
+        return readDataForEmail(email)
+                .map(DatabaseManager::snapshot2Contact);
     }
 
-    public Observable<Boolean> doesEmailExist(String email) {
-        return doesExist(database.getReference(USER + "/" + to64(email)));
+    private static Contact snapshot2Contact(DataSnapshot snapshot) {
+        if (!snapshot.exists()) {
+            return null;
+        }
+        Contact result = new Contact();
+        result.setEmail(from64(snapshot.getKey()));
+        result.setName((String) snapshot.child(DISPLAY_NAME).getValue());
+
+        return result;
+    }
+
+    private DatabaseReference emailToReference(String email) {
+        return database.getReference(USER + "/" + to64(email));
     }
 
     public void onLocationReceived(String email, LatLng latLng) {
@@ -109,7 +121,7 @@ public class DatabaseManager {
 
     private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
 
-        private PublishSubject<DataSnapshot> subject;
+        private final PublishSubject<DataSnapshot> subject;
 
         private ValueEventListener(PublishSubject<DataSnapshot> subject) {
             this.subject = subject;

@@ -19,24 +19,31 @@ package pl.org.seva.navigator.activity;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.manager.DatabaseManager;
+import pl.org.seva.navigator.model.Contact;
+import pl.org.seva.navigator.view.SingleContactAdapter;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private String TAG = SearchActivity.class.getSimpleName();
+    private ActivitySearchBinding binding;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
 
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -52,12 +59,6 @@ public class SearchActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             search(query);
         }
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -79,8 +80,24 @@ public class SearchActivity extends AppCompatActivity {
     private void search(String query) {
         DatabaseManager
                 .getInstance()
-                .doesEmailExist(query)
-                .subscribe(aBoolean -> Log.d(TAG, "User " + query +
-                        (aBoolean ? " exists." : " does not exist.")));
+                .readContactForEmail(query)
+                .subscribe(this::onSnapshotReceived);
+    }
+
+    private void onSnapshotReceived(Contact contact) {
+        if (contact == null) {
+            binding.nothing.setVisibility(View.VISIBLE);
+            return;
+        }
+        binding.nothing.setVisibility(View.GONE);
+        initRecyclerView(contact);
+    }
+
+    private void initRecyclerView(Contact contact) {
+        RecyclerView rv = binding.recyclerView;
+        rv.setHasFixedSize(true);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
+        rv.setLayoutManager(lm);
+        rv.setAdapter(new SingleContactAdapter(contact));
     }
 }

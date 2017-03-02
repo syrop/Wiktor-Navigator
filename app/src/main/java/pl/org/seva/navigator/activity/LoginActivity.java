@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener authStateListener;
 
     private GoogleApiClient googleApiClient;
-    ActivityGoogleSignInBinding binding;
+    private ActivityGoogleSignInBinding binding;
 
     private ProgressDialog progressDialog;
     private boolean performedAction;
@@ -207,7 +207,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .show();
     }
 
-    public void showProgressDialog() {
+    private void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getString(R.string.login_loading));
@@ -217,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements
         progressDialog.show();
     }
 
-    public void hideProgressDialog() {
+    private void hideProgressDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }

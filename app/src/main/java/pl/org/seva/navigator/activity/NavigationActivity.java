@@ -38,7 +38,7 @@ public class NavigationActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private GoogleMap map;
 
-    ActivityNavigationBinding binding;
+    private ActivityNavigationBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {

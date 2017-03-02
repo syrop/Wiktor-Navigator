@@ -28,7 +28,7 @@ public class ContactManager {
 
     private static ContactManager instance;
 
-    private List<Contact> contacts;
+    private final List<Contact> contacts;
 
     public static ContactManager getInstance() {
         if (instance == null) {
@@ -48,8 +48,7 @@ public class ContactManager {
     private Contact getMe() {
         return new Contact()
                 .setEmail(NavigatorApplication.email)
-                .setName(NavigatorApplication.displayName)
-                .setUid(NavigatorApplication.uid);
+                .setName(NavigatorApplication.displayName);
     }
 
     public void add(Contact contact) {

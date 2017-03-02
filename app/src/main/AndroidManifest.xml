@@ -35,6 +35,10 @@
             android:label="@string/login_activity_label" />
 
         <activity
+            android:name=".activity.NavigationActivity"
+            android:label="@string/navigation_activity_label" />
+
+        <activity
             android:name=".activity.SearchActivity"
             android:label="@string/search_activity_label"
             android:launchMode="singleTop" >

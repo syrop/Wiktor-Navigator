@@ -21,13 +21,16 @@ import android.support.annotation.NonNull;
 
 public class Contact implements Comparable<Contact> {
 
-    public String email;
-    public String displayName;
-    private String uid;
+    private String email;
+    private String displayName;
 
     public Contact setName(String name) {
         this.displayName = name;
         return this;
+    }
+
+    public String getName() {
+        return displayName;
     }
 
     public Contact setEmail(String email) {
@@ -35,9 +38,8 @@ public class Contact implements Comparable<Contact> {
         return this;
     }
 
-    public Contact setUid(String uid) {
-        this.uid = uid;
-        return this;
+    public String getEmail() {
+        return email;
     }
 
     @Override

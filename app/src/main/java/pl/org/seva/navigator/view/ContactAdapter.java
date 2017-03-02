@@ -29,18 +29,19 @@ import pl.org.seva.navigator.model.Contact;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        private TextView name;
-        private TextView email;
+        private final TextView name;
+        private final TextView email;
+
         private ViewHolder(View v) {
             super(v);
             name = (TextView) v.findViewById(R.id.name);
             email = (TextView) v.findViewById(R.id.email);
         }
+    }
+
+    Contact getContact(int position) {
+        return ContactManager.getInstance().get(position);
     }
 
     @Override
@@ -49,12 +50,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 .inflate(R.layout.contact, parent, false));
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Contact contact = ContactManager.getInstance().get(position);
-        holder.name.setText(contact.displayName);
-        holder.email.setText(contact.email);
+        Contact contact = getContact(position);
+        holder.name.setText(contact.getName());
+        holder.email.setText(contact.getEmail());
     }
 
     @Override
