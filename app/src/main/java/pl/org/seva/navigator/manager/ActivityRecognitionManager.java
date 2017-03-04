@@ -30,9 +30,9 @@ import com.google.android.gms.location.ActivityRecognition;
 
 import java.lang.ref.WeakReference;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.service.ActivityRecognitionIntentService;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
@@ -40,8 +40,8 @@ public class ActivityRecognitionManager implements
 
     private static final long ACTIVITY_RECOGNITION_INTERVAL = 1000;  // [ms]
 
-    private static final PublishSubject<Void> stationarySubject = PublishSubject.create();
-    private static final PublishSubject<Void> movingSubject = PublishSubject.create();
+    private static final PublishSubject<Object> stationarySubject = PublishSubject.create();
+    private static final PublishSubject<Object> movingSubject = PublishSubject.create();
 
     private boolean initialized;
     private GoogleApiClient googleApiClient;
@@ -105,19 +105,19 @@ public class ActivityRecognitionManager implements
 
     }
 
-    Observable<Void> stationaryListener() {
-        return stationarySubject.asObservable();
+    Observable<Object> stationaryListener() {
+        return stationarySubject.hide();
     }
 
-    Observable<Void> movingListener() {
-        return movingSubject.asObservable();
+    Observable<Object> movingListener() {
+        return movingSubject.hide();
     }
 
     public void onDeviceStationary() {
-        stationarySubject.onNext(null);
+        stationarySubject.onNext(0);
     }
 
     public void onDeviceMoving() {
-        movingSubject.onNext(null);
+        movingSubject.onNext(0);
     }
 }

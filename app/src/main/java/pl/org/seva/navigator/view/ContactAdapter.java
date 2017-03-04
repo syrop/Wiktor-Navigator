@@ -24,12 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ContactBinding;
 import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.model.Contact;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
@@ -62,7 +62,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     public Observable<Contact> clickListener() {
-        return clickSubject.asObservable();
+        return clickSubject.hide();
     }
 
     @Override

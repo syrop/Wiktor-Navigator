@@ -30,8 +30,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-import rx.Observable;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 @SuppressWarnings("MissingPermission")
 public class GpsManager implements
@@ -91,7 +91,7 @@ public class GpsManager implements
     }
 
     public Observable<LatLng> locationListener() {
-        return locationChangedSubject.asObservable();
+        return locationChangedSubject.hide();
     }
 
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {
@@ -156,10 +156,8 @@ public class GpsManager implements
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE);
 
-        ActivityRecognitionManager.getInstance().stationaryListener().subscribe(
-                stationary -> pauseUpdates());
-        ActivityRecognitionManager.getInstance().movingListener().subscribe(
-                stationary -> resumeUpdates());
+        ActivityRecognitionManager.getInstance().stationaryListener().subscribe(stationary -> pauseUpdates());
+        ActivityRecognitionManager.getInstance().movingListener().subscribe(stationary -> resumeUpdates());
 
         requestLocationUpdates();
     }

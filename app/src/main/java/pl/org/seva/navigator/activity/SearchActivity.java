@@ -100,6 +100,7 @@ public class SearchActivity extends AppCompatActivity {
             return;
         }
         binding.notFoundLabel.setVisibility(View.GONE);
+        binding.contacts.setVisibility(View.VISIBLE);
         initRecyclerView(contact);
     }
 

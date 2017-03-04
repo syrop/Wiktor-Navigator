@@ -26,9 +26,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.model.Contact;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 
 public class DatabaseManager {
 
