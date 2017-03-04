@@ -40,9 +40,6 @@ public class DatabaseManager {
     private static final String FRIENDSHIP_REQUESTS = "friendship_requests";
     private static final String ACCEPTED_FRIENDSHIPS = "accepted_friendships";
 
-    private final ReplaySubject<Contact> friendshipRequestedSubject;
-    private final ReplaySubject<Contact> friendshipAcceptedSubject;
-
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
     }
@@ -78,8 +75,6 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
-        friendshipRequestedSubject = ReplaySubject.create();
-        friendshipAcceptedSubject = ReplaySubject.create();
     }
 
     public void login(FirebaseUser user) {
@@ -140,11 +135,19 @@ public class DatabaseManager {
     }
 
     public Observable<Contact> friendshipRequestedListener() {
-        return friendshipRequestedSubject.hide();
+        DatabaseReference reference = currentUserReference().child(FRIENDSHIP_REQUESTS);
+        return readDataOnce(reference)
+                .concatMapIterable(DataSnapshot::getChildren)
+                .concatWith(childListener(reference))
+                .map(DatabaseManager::snapshot2Contact);
     }
 
     public Observable<Contact> friendshipAcceptedListener() {
-        return friendshipAcceptedSubject.hide();
+        DatabaseReference reference = currentUserReference().child(ACCEPTED_FRIENDSHIPS);
+        return readDataOnce(reference)
+                .concatMapIterable(DataSnapshot::getChildren)
+                .concatWith(childListener(reference))
+                .map(DatabaseManager::snapshot2Contact);
     }
 
     public void requestFriendship(Contact contact) {
