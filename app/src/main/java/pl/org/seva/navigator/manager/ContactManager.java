@@ -55,7 +55,15 @@ public class ContactManager {
         return getMe().equals(contact) || contacts.contains(contact);
     }
 
-    public void add(Contact contact) {
+    public void onFriendshipAccepted(Contact contact) {
+        add(contact);
+    }
+
+    public void acceptFriendship(Contact contact) {
+        add(contact);
+    }
+
+    private void add(Contact contact) {
         contacts.add(contact);
         Collections.sort(contacts);
     }

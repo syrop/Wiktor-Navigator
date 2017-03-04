@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
+import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.manager.DatabaseManager;
 import pl.org.seva.navigator.manager.GpsManager;
 
@@ -43,6 +44,10 @@ public class NavigatorApplication extends Application {
                 .subscribe(
                 latLng -> DatabaseManager.getInstance().onLocationReceived(email, latLng)
         );
+        DatabaseManager
+                .getInstance()
+                .friendshipAcceptedListener()
+                .subscribe(contact -> ContactManager.getInstance().onFriendshipAccepted(contact));
     }
 
     public static void setCurrentFirebaseUser(FirebaseUser user) {

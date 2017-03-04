@@ -36,6 +36,8 @@ public class DatabaseManager {
     private static final String DISPLAY_NAME = "display_name";
     private static final String LAT_LNG = "lat_lng";
 
+    private PublishSubject<Contact> friendshipAcceptedSubject;
+
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
     }
@@ -71,6 +73,7 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
+        friendshipAcceptedSubject = PublishSubject.create();
     }
 
     public void login(FirebaseUser user) {
@@ -116,6 +119,14 @@ public class DatabaseManager {
         String email64 = to64(email);
         DatabaseReference ref = database.getReference(USER).child(email64);
         ref.child(LAT_LNG).setValue(latLng2String(latLng));
+    }
+
+    public Observable<Contact> friendshipAcceptedListener() {
+        return friendshipAcceptedSubject.hide();
+    }
+
+    public void requestFriendship(Contact contact) {
+
     }
 
     private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {

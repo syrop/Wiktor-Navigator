@@ -125,14 +125,14 @@ public class SearchActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .setTitle(R.string.search_dialog_title)
                 .setMessage(getString(R.string.search_dialog_question).replace("%s", contact.getName()))
-                .setPositiveButton(android.R.string.yes, ((dialog, which) -> addContactAndFinish(contact)))
+                .setPositiveButton(android.R.string.yes, ((dialog, which) -> contactApprovedAndFinish(contact)))
                 .setNegativeButton(android.R.string.no, ((dialog, which) -> finish()))
                 .create()
                 .show();
     }
 
-    private void addContactAndFinish(Contact contact) {
-        ContactManager.getInstance().add(contact);
+    private void contactApprovedAndFinish(Contact contact) {
+        DatabaseManager.getInstance().requestFriendship(contact);
         finish();
     }
 }
