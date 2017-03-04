@@ -69,5 +69,4 @@ public class NavigationActivity extends AppCompatActivity {
         }
         super.onSaveInstanceState(outState);
     }
-
 }

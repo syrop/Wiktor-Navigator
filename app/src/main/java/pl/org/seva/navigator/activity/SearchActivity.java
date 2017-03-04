@@ -77,6 +77,8 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_search) {
+            binding.notFoundLabel.setVisibility(View.GONE);
+            binding.contacts.setVisibility(View.GONE);
             onSearchRequested();
             return true;
         }
@@ -94,15 +96,15 @@ public class SearchActivity extends AppCompatActivity {
     private void onContactReceived(Contact contact) {
         progress.cancel();
         if (contact == null) {
-            binding.notFound.setVisibility(View.VISIBLE);
+            binding.notFoundLabel.setVisibility(View.VISIBLE);
             return;
         }
-        binding.notFound.setVisibility(View.GONE);
+        binding.notFoundLabel.setVisibility(View.GONE);
         initRecyclerView(contact);
     }
 
     private void initRecyclerView(Contact contact) {
-        RecyclerView rv = binding.recyclerView;
+        RecyclerView rv = binding.contacts;
         rv.setHasFixedSize(true);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
         rv.setLayoutManager(lm);

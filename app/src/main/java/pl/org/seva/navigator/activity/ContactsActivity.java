@@ -58,7 +58,7 @@ public class ContactsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
-        contactsRecyclerView = binding.toolbar.contentContacts.recyclerView;
+        contactsRecyclerView = binding.toolbar.contentContacts.contacts;
 
         Toolbar toolbar = binding.toolbar.toolbar;
         setSupportActionBar(toolbar);
@@ -171,7 +171,7 @@ public class ContactsActivity extends AppCompatActivity
 
     private void permissionDenied() {
         Snackbar.make(
-                binding.toolbar.contentContacts.recyclerView,
+                binding.toolbar.contentContacts.contacts,
                 R.string.permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.permission_retry, view -> requestLocationPermission())

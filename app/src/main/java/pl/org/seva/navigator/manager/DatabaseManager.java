@@ -71,7 +71,6 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
-        //
     }
 
     public void login(FirebaseUser user) {
