@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
         DatabaseManager
                 .getInstance()
-                .readContactForEmail(query)
+                .readContactOnceForEmail(query)
                 .subscribe(this::onContactReceived);
     }
 

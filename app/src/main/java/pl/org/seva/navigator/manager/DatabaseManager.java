@@ -27,16 +27,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.ReplaySubject;
+import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.model.Contact;
 
 public class DatabaseManager {
 
-    private static final String USER = "user";
+    private static final String USER_ROOT = "user";
+
     private static final String DISPLAY_NAME = "display_name";
     private static final String LAT_LNG = "lat_lng";
+    private static final String FRIENDSHIP_REQUESTS = "friendship_requests";
+    private static final String ACCEPTED_FRIENDSHIPS = "accepted_friendships";
 
-    private PublishSubject<Contact> friendshipAcceptedSubject;
+    private final ReplaySubject<Contact> friendshipRequestedSubject;
+    private final ReplaySubject<Contact> friendshipAcceptedSubject;
 
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
@@ -73,31 +78,40 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
-        friendshipAcceptedSubject = PublishSubject.create();
+        friendshipRequestedSubject = ReplaySubject.create();
+        friendshipAcceptedSubject = ReplaySubject.create();
     }
 
     public void login(FirebaseUser user) {
         String email64 = to64(user.getEmail());
-        DatabaseReference userReference = database.getReference(USER);
+        DatabaseReference userReference = database.getReference(USER_ROOT);
         userReference.setValue(email64);
         userReference = userReference.child(email64);
         userReference.child(DISPLAY_NAME).setValue(user.getDisplayName());
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
-        PublishSubject<DataSnapshot> result = PublishSubject.create();
+        ReplaySubject<DataSnapshot> result = ReplaySubject.create();
         reference.addListenerForSingleValueEvent(new ValueEventListener(result));
 
         return result.take(1);
     }
 
-    private Observable<DataSnapshot> readDataForEmail(String email) {
-        return readDataOnce(emailToReference(email));
+    public Observable<Contact> readContactOnceForEmail(String email) {
+        return readDataOnce(emailReference(email))
+                .map(DatabaseManager::snapshot2Contact);
     }
 
-    public Observable<Contact> readContactForEmail(String email) {
-        return readDataForEmail(email)
-                .map(DatabaseManager::snapshot2Contact);
+    private Observable<DataSnapshot> valueListener(DatabaseReference reference) {
+        ReplaySubject<DataSnapshot> result = ReplaySubject.create();
+        reference.addValueEventListener(new ValueEventListener(result));
+        return result.hide();
+    }
+
+    private Observable<DataSnapshot> childListener(DatabaseReference reference) {
+        ReplaySubject<DataSnapshot> result = ReplaySubject.create();
+        reference.addChildEventListener(new ChildEventListener(result));
+        return result.hide();
     }
 
     private static Contact snapshot2Contact(DataSnapshot snapshot) {
@@ -111,14 +125,22 @@ public class DatabaseManager {
         return result;
     }
 
-    private DatabaseReference emailToReference(String email) {
-        return database.getReference(USER + "/" + to64(email));
+    private DatabaseReference currentUserReference() {
+        return emailReference(NavigatorApplication.email);
+    }
+
+    private DatabaseReference emailReference(String email) {
+        return database.getReference(USER_ROOT + "/" + to64(email));
     }
 
     public void onLocationReceived(String email, LatLng latLng) {
         String email64 = to64(email);
-        DatabaseReference ref = database.getReference(USER).child(email64);
+        DatabaseReference ref = database.getReference(USER_ROOT).child(email64);
         ref.child(LAT_LNG).setValue(latLng2String(latLng));
+    }
+
+    public Observable<Contact> friendshipRequestedListener() {
+        return friendshipRequestedSubject.hide();
     }
 
     public Observable<Contact> friendshipAcceptedListener() {
@@ -131,15 +153,46 @@ public class DatabaseManager {
 
     private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
 
-        private final PublishSubject<DataSnapshot> subject;
+        private final ReplaySubject<DataSnapshot> subject;
 
-        private ValueEventListener(PublishSubject<DataSnapshot> subject) {
+        private ValueEventListener(ReplaySubject<DataSnapshot> subject) {
             this.subject = subject;
         }
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             subject.onNext(dataSnapshot);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            subject.onError(new Exception(databaseError.getMessage()));
+        }
+    }
+
+    private static class ChildEventListener implements com.google.firebase.database.ChildEventListener {
+
+        private final ReplaySubject<DataSnapshot> subject;
+
+        private ChildEventListener(ReplaySubject<DataSnapshot> subject) {
+            this.subject = subject;
+        }
+
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            subject.onNext(dataSnapshot);
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
         }
 
         @Override
