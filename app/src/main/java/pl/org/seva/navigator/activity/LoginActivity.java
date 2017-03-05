@@ -122,8 +122,8 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void onUserLoggedIn(FirebaseUser user) {
-        NavigatorApplication.login(user);
         DatabaseManager.getInstance().login(user);
+        NavigatorApplication.login(user);
         if (performedAction) {
             finish();
         }

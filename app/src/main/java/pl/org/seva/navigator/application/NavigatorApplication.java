@@ -53,6 +53,10 @@ public class NavigatorApplication extends Application {
         }
     }
 
+    public static Contact getLoggedInContact() {
+        return new Contact().setEmail(email).setName(displayName);
+    }
+
     private static void setFriendshipListeners() {
         friendshipListeners.addAll(
                 DatabaseManager

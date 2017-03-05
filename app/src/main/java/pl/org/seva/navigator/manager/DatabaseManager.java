@@ -38,7 +38,7 @@ public class DatabaseManager {
     private static final String DISPLAY_NAME = "display_name";
     private static final String LAT_LNG = "lat_lng";
     private static final String FRIENDSHIP_REQUESTS = "friendship_requests";
-    private static final String ACCEPTED_FRIENDSHIPS = "accepted_friendships";
+    private static final String FRIENDSHIP_ACCEPTED = "accepted_friendships";
 
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
@@ -75,14 +75,21 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
+        //
     }
 
     public void login(FirebaseUser user) {
-        String email64 = to64(user.getEmail());
-        DatabaseReference userReference = database.getReference(USER_ROOT);
-        userReference.setValue(email64);
-        userReference = userReference.child(email64);
-        userReference.child(DISPLAY_NAME).setValue(user.getDisplayName());
+        Contact contact = new Contact()
+                .setEmail(user.getEmail())
+                .setName(user.getDisplayName());
+        writeContact(database.getReference(USER_ROOT), contact);
+    }
+
+    private void writeContact(DatabaseReference reference, Contact contact) {
+        String email64 = to64(contact.getEmail());
+        reference.setValue(email64);
+        reference = reference.child(email64);
+        reference.child(DISPLAY_NAME).setValue(contact.getName());
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
@@ -93,14 +100,8 @@ public class DatabaseManager {
     }
 
     public Observable<Contact> readContactOnceForEmail(String email) {
-        return readDataOnce(emailReference(email))
+        return readDataOnce(email2Reference(email))
                 .map(DatabaseManager::snapshot2Contact);
-    }
-
-    private Observable<DataSnapshot> valueListener(DatabaseReference reference) {
-        ReplaySubject<DataSnapshot> result = ReplaySubject.create();
-        reference.addValueEventListener(new ValueEventListener(result));
-        return result.hide();
     }
 
     private Observable<DataSnapshot> childListener(DatabaseReference reference) {
@@ -121,10 +122,10 @@ public class DatabaseManager {
     }
 
     private DatabaseReference currentUserReference() {
-        return emailReference(NavigatorApplication.email);
+        return email2Reference(NavigatorApplication.email);
     }
 
-    private DatabaseReference emailReference(String email) {
+    private DatabaseReference email2Reference(String email) {
         return database.getReference(USER_ROOT + "/" + to64(email));
     }
 
@@ -139,21 +140,27 @@ public class DatabaseManager {
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
-                .doAfterNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
+                .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
                 .map(DatabaseManager::snapshot2Contact);
     }
 
     public Observable<Contact> friendshipAcceptedListener() {
-        DatabaseReference reference = currentUserReference().child(ACCEPTED_FRIENDSHIPS);
+        DatabaseReference reference = currentUserReference().child(FRIENDSHIP_ACCEPTED);
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
-                .doAfterNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
+                .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
                 .map(DatabaseManager::snapshot2Contact);
     }
 
     public void requestFriendship(Contact contact) {
+        DatabaseReference reference = email2Reference(contact.getEmail()).child(FRIENDSHIP_REQUESTS);
+        writeContact(reference, NavigatorApplication.getLoggedInContact());
+    }
 
+    public void acceptFriendship(Contact contact) {
+        DatabaseReference reference = email2Reference(contact.getEmail()).child(FRIENDSHIP_ACCEPTED);
+        writeContact(reference, NavigatorApplication.getLoggedInContact());
     }
 
     private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
