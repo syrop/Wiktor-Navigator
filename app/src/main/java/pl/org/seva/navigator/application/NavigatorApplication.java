@@ -22,12 +22,18 @@ import android.app.Application;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
 import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.manager.DatabaseManager;
 import pl.org.seva.navigator.manager.GpsManager;
+import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
+
+    private static CompositeDisposable friendshipListeners = new CompositeDisposable();
 
     public static boolean isLoggedIn;
     public static String email;
@@ -44,13 +50,42 @@ public class NavigatorApplication extends Application {
                 .subscribe(
                 latLng -> DatabaseManager.getInstance().onLocationReceived(email, latLng)
         );
-        DatabaseManager
-                .getInstance()
-                .friendshipAcceptedListener()
-                .subscribe(contact -> ContactManager.getInstance().onFriendshipAccepted(contact));
+        if (isLoggedIn) {
+            setFriendshipListeners();
+        }
     }
 
-    public static void setCurrentFirebaseUser(FirebaseUser user) {
+    private static void setFriendshipListeners() {
+        friendshipListeners.addAll(
+                DatabaseManager
+                    .getInstance()
+                    .friendshipAcceptedListener()
+                    .subscribe(NavigatorApplication::onFriendshipAccepted),
+                DatabaseManager
+                    .getInstance()
+                    .friendshipRequestedListener()
+                    .subscribe(NavigatorApplication::onFriendshipRequested));
+    }
+
+    private static void onFriendshipAccepted(Contact contact) {
+        ContactManager.getInstance().add(contact);
+    }
+
+    private static void onFriendshipRequested(Contact contact) {
+
+    }
+
+    public static void login(FirebaseUser user) {
+        setCurrentFirebaseUser(user);
+        setFriendshipListeners();
+    }
+
+    public static void logout() {
+        setCurrentFirebaseUser(null);
+        friendshipListeners.clear();
+    }
+
+    private static void setCurrentFirebaseUser(FirebaseUser user) {
         if (user != null) {
             isLoggedIn = true;
             email = user.getEmail();

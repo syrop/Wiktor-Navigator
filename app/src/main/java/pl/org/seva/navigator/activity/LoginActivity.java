@@ -88,11 +88,11 @@ public class LoginActivity extends AppCompatActivity implements
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                userLoggedIn(user);
+                onUserLoggedIn(user);
             }
             else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
-                userLoggedOut();
+                onUserLoggedOut();
             }
         };
 
@@ -116,21 +116,21 @@ public class LoginActivity extends AppCompatActivity implements
         logoutWhenReady = true;
         // Firebase sign out
         firebaseAuth.signOut();
-        NavigatorApplication.setCurrentFirebaseUser(null);
+        NavigatorApplication.logout();
         googleApiClient.connect();
         finish();
     }
 
-    private void userLoggedIn(FirebaseUser user) {
-        NavigatorApplication.setCurrentFirebaseUser(user);
+    private void onUserLoggedIn(FirebaseUser user) {
+        NavigatorApplication.login(user);
         DatabaseManager.getInstance().login(user);
         if (performedAction) {
             finish();
         }
     }
 
-    private void userLoggedOut() {
-        NavigatorApplication.setCurrentFirebaseUser(null);
+    private void onUserLoggedOut() {
+        NavigatorApplication.logout();
         if (performedAction) {
             finish();
         }
@@ -171,7 +171,7 @@ public class LoginActivity extends AppCompatActivity implements
                 firebaseAuthWithGoogle(account);
             }
             else {
-                userLoggedOut();
+                onUserLoggedOut();
             }
         }
     }
