@@ -139,6 +139,7 @@ public class DatabaseManager {
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
+                .doAfterNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
                 .map(DatabaseManager::snapshot2Contact);
     }
 
@@ -147,6 +148,7 @@ public class DatabaseManager {
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
+                .doAfterNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
                 .map(DatabaseManager::snapshot2Contact);
     }
 

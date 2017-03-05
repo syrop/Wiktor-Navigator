@@ -23,8 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
 import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.manager.DatabaseManager;
@@ -81,8 +79,8 @@ public class NavigatorApplication extends Application {
     }
 
     public static void logout() {
-        setCurrentFirebaseUser(null);
         friendshipListeners.clear();
+        setCurrentFirebaseUser(null);
     }
 
     private static void setCurrentFirebaseUser(FirebaseUser user) {
