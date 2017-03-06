@@ -31,7 +31,7 @@ import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
 
-    private static CompositeDisposable friendshipListeners = new CompositeDisposable();
+    private static final CompositeDisposable friendshipListeners = new CompositeDisposable();
 
     public static boolean isLoggedIn;
     public static String email;

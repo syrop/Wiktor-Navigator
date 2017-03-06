@@ -38,7 +38,7 @@ public class DatabaseManager {
     private static final String DISPLAY_NAME = "display_name";
     private static final String LAT_LNG = "lat_lng";
     private static final String FRIENDSHIP_REQUESTS = "friendship_requests";
-    private static final String FRIENDSHIP_ACCEPTED = "accepted_friendships";
+    private static final String FRIENDSHIP_ACCEPTED = "friendship_accepted";
 
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
@@ -165,34 +165,34 @@ public class DatabaseManager {
 
     private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
 
-        private final ReplaySubject<DataSnapshot> subject;
+        private final ReplaySubject<DataSnapshot> valueEventSubject;
 
         private ValueEventListener(ReplaySubject<DataSnapshot> subject) {
-            this.subject = subject;
+            this.valueEventSubject = subject;
         }
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            subject.onNext(dataSnapshot);
+            valueEventSubject.onNext(dataSnapshot);
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            subject.onError(new Exception(databaseError.getMessage()));
+            valueEventSubject.onError(new Exception(databaseError.getMessage()));
         }
     }
 
     private static class ChildEventListener implements com.google.firebase.database.ChildEventListener {
 
-        private final ReplaySubject<DataSnapshot> subject;
+        private final ReplaySubject<DataSnapshot> childEventSubject;
 
         private ChildEventListener(ReplaySubject<DataSnapshot> subject) {
-            this.subject = subject;
+            this.childEventSubject = subject;
         }
 
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            subject.onNext(dataSnapshot);
+            childEventSubject.onNext(dataSnapshot);
         }
 
         @Override
@@ -209,7 +209,7 @@ public class DatabaseManager {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            subject.onError(new Exception(databaseError.getMessage()));
+            childEventSubject.onError(new Exception(databaseError.getMessage()));
         }
     }
 }
