@@ -42,7 +42,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
-import pl.org.seva.navigator.manager.DatabaseManager;
+import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void onUserLoggedIn(FirebaseUser user) {
-        DatabaseManager.getInstance().login(user);
+        FirebaseDatabaseManager.getInstance().login(user);
         NavigatorApplication.login(user);
         if (performedAction) {
             finish();

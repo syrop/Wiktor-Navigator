@@ -34,7 +34,7 @@ import android.view.View;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.manager.ContactManager;
-import pl.org.seva.navigator.manager.DatabaseManager;
+import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.view.ContactAdapter;
 import pl.org.seva.navigator.view.SingleContactAdapter;
@@ -87,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void search(String query) {
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
-        DatabaseManager
+        FirebaseDatabaseManager
                 .getInstance()
                 .readContactOnceForEmail(query)
                 .subscribe(this::onContactReceived);
@@ -132,7 +132,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void contactApprovedAndFinish(Contact contact) {
-        DatabaseManager.getInstance().requestFriendship(contact);
+        FirebaseDatabaseManager.getInstance().requestFriendship(contact);
         finish();
     }
 }

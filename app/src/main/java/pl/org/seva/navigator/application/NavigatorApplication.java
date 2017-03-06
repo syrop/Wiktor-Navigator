@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
 import pl.org.seva.navigator.manager.ContactManager;
-import pl.org.seva.navigator.manager.DatabaseManager;
+import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
 import pl.org.seva.navigator.manager.GpsManager;
 import pl.org.seva.navigator.model.Contact;
 
@@ -46,7 +46,7 @@ public class NavigatorApplication extends Application {
         GpsManager.getInstance().locationListener()
                 .filter(latLng -> isLoggedIn)
                 .subscribe(
-                latLng -> DatabaseManager.getInstance().onLocationReceived(email, latLng)
+                latLng -> FirebaseDatabaseManager.getInstance().onLocationReceived(email, latLng)
         );
         if (isLoggedIn) {
             setFriendshipListeners();
@@ -59,11 +59,11 @@ public class NavigatorApplication extends Application {
 
     private static void setFriendshipListeners() {
         friendshipListeners.addAll(
-                DatabaseManager
+                FirebaseDatabaseManager
                     .getInstance()
                     .friendshipAcceptedListener()
                     .subscribe(NavigatorApplication::onFriendshipAccepted),
-                DatabaseManager
+                FirebaseDatabaseManager
                     .getInstance()
                     .friendshipRequestedListener()
                     .subscribe(NavigatorApplication::onFriendshipRequested));

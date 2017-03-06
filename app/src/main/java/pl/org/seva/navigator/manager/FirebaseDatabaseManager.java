@@ -31,7 +31,7 @@ import io.reactivex.subjects.ReplaySubject;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.model.Contact;
 
-public class DatabaseManager {
+public class FirebaseDatabaseManager {
 
     private static final String USER_ROOT = "user";
 
@@ -59,22 +59,22 @@ public class DatabaseManager {
         return new LatLng(lat, lon);
     }
 
-    private static DatabaseManager instance;
+    private static FirebaseDatabaseManager instance;
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    public static DatabaseManager getInstance() {
+    public static FirebaseDatabaseManager getInstance() {
         if (instance == null) {
-            synchronized (DatabaseManager.class) {
+            synchronized (FirebaseDatabaseManager.class) {
                 if (instance == null) {
-                    instance = new DatabaseManager();
+                    instance = new FirebaseDatabaseManager();
                 }
             }
         }
         return instance;
     }
 
-    private DatabaseManager() {
+    private FirebaseDatabaseManager() {
         //
     }
 
@@ -101,7 +101,7 @@ public class DatabaseManager {
 
     public Observable<Contact> readContactOnceForEmail(String email) {
         return readDataOnce(email2Reference(email))
-                .map(DatabaseManager::snapshot2Contact);
+                .map(FirebaseDatabaseManager::snapshot2Contact);
     }
 
     private Observable<DataSnapshot> childListener(DatabaseReference reference) {
@@ -141,7 +141,7 @@ public class DatabaseManager {
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
                 .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
-                .map(DatabaseManager::snapshot2Contact);
+                .map(FirebaseDatabaseManager::snapshot2Contact);
     }
 
     public Observable<Contact> friendshipAcceptedListener() {
@@ -150,7 +150,7 @@ public class DatabaseManager {
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
                 .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
-                .map(DatabaseManager::snapshot2Contact);
+                .map(FirebaseDatabaseManager::snapshot2Contact);
     }
 
     public void requestFriendship(Contact contact) {
