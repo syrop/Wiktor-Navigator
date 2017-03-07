@@ -116,21 +116,21 @@ public class LoginActivity extends AppCompatActivity implements
         logoutWhenReady = true;
         // Firebase sign out
         firebaseAuth.signOut();
-        NavigatorApplication.logout();
+        ((NavigatorApplication) getApplication()).logout();
         googleApiClient.connect();
         finish();
     }
 
     private void onUserLoggedIn(FirebaseUser user) {
         FirebaseDatabaseManager.getInstance().login(user);
-        NavigatorApplication.login(user);
+        ((NavigatorApplication) getApplication()).login(user);
         if (performedAction) {
             finish();
         }
     }
 
     private void onUserLoggedOut() {
-        NavigatorApplication.logout();
+        ((NavigatorApplication) getApplication()).logout();
         if (performedAction) {
             finish();
         }

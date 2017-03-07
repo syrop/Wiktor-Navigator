@@ -18,11 +18,13 @@
 package pl.org.seva.navigator.application;
 
 import android.app.Application;
+import android.support.v7.app.AlertDialog;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.disposables.CompositeDisposable;
+import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
 import pl.org.seva.navigator.manager.ContactManager;
 import pl.org.seva.navigator.manager.DatabaseManager;
@@ -32,7 +34,7 @@ import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
 
-    private static final CompositeDisposable friendshipListeners = new CompositeDisposable();
+    private final CompositeDisposable friendshipListeners = new CompositeDisposable();
 
     public static boolean isLoggedIn;
     public static String email;
@@ -43,13 +45,14 @@ public class NavigatorApplication extends Application {
         super.onCreate();
         setCurrentFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
         ActivityRecognitionManager.getInstance().init(this);
+        DatabaseManager.getInstance().init(this);
+        ContactManager.getInstance().addAll(DatabaseManager.getInstance().getFriends());
         GpsManager.getInstance().init(this);
         GpsManager.getInstance().locationListener()
                 .filter(latLng -> isLoggedIn)
                 .subscribe(
                 latLng -> FirebaseDatabaseManager.getInstance().onLocationReceived(email, latLng)
         );
-        DatabaseManager.getInstance().init(this);
         if (isLoggedIn) {
             setFriendshipListeners();
         }
@@ -59,7 +62,7 @@ public class NavigatorApplication extends Application {
         return new Contact().setEmail(email).setName(displayName);
     }
 
-    private static void setFriendshipListeners() {
+    private void setFriendshipListeners() {
         friendshipListeners.addAll(
                 FirebaseDatabaseManager
                     .getInstance()
@@ -68,23 +71,35 @@ public class NavigatorApplication extends Application {
                 FirebaseDatabaseManager
                     .getInstance()
                     .friendshipRequestedListener()
-                    .subscribe(NavigatorApplication::onFriendshipRequested));
+                    .subscribe(this::onFriendshipRequested));
+    }
+
+    private void onFriendshipRequested(Contact contact) {
+        String message = getResources()
+                .getString(R.string.friendship_confirmation)
+                .replace("[name]", contact.name())
+                .replace("[email]", contact.email());
+        new AlertDialog
+                .Builder(this)
+                .setCancelable(true)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, ((dialog, which) -> onFriendshipAccepted(contact)))
+                .setNegativeButton(android.R.string.no, ((dialog, which) -> {}))
+                .create()
+                .show();
     }
 
     private static void onFriendshipAccepted(Contact contact) {
         ContactManager.getInstance().add(contact);
+        DatabaseManager.getInstance().persistFriend(contact);
     }
 
-    private static void onFriendshipRequested(Contact contact) {
-
-    }
-
-    public static void login(FirebaseUser user) {
+    public void login(FirebaseUser user) {
         setCurrentFirebaseUser(user);
         setFriendshipListeners();
     }
 
-    public static void logout() {
+    public void logout() {
         friendshipListeners.clear();
         setCurrentFirebaseUser(null);
     }

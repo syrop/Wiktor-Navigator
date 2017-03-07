@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.manager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +59,11 @@ public class ContactManager {
     public void add(Contact contact) {
         contacts.add(contact);
         Collections.sort(contacts);
+    }
+
+    public void addAll(Collection<Contact> contacts) {
+        this.contacts.addAll(contacts);
+        Collections.sort(this.contacts);
     }
 
     public void remove(Contact contact) {

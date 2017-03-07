@@ -43,7 +43,7 @@ public class DatabaseManager {
         helper = new FriendsDbHelper(context);
     }
 
-    public void addFriend(Contact contact) {
+    public void persistFriend(Contact contact) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(NAME_COLUMN_NAME, contact.name());
