@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
 import pl.org.seva.navigator.manager.ContactManager;
+import pl.org.seva.navigator.manager.DatabaseManager;
 import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
 import pl.org.seva.navigator.manager.GpsManager;
 import pl.org.seva.navigator.model.Contact;
@@ -48,6 +49,7 @@ public class NavigatorApplication extends Application {
                 .subscribe(
                 latLng -> FirebaseDatabaseManager.getInstance().onLocationReceived(email, latLng)
         );
+        DatabaseManager.getInstance().init(this);
         if (isLoggedIn) {
             setFriendshipListeners();
         }

@@ -29,7 +29,7 @@ public class Contact implements Comparable<Contact> {
         return this;
     }
 
-    public String getName() {
+    public String name() {
         return displayName;
     }
 
@@ -38,7 +38,7 @@ public class Contact implements Comparable<Contact> {
         return this;
     }
 
-    public String getEmail() {
+    public String email() {
         return email;
     }
 

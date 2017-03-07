@@ -86,10 +86,10 @@ public class FirebaseDatabaseManager {
     }
 
     private void writeContact(DatabaseReference reference, Contact contact) {
-        String email64 = to64(contact.getEmail());
+        String email64 = to64(contact.email());
         reference.setValue(email64);
         reference = reference.child(email64);
-        reference.child(DISPLAY_NAME).setValue(contact.getName());
+        reference.child(DISPLAY_NAME).setValue(contact.name());
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
@@ -154,12 +154,12 @@ public class FirebaseDatabaseManager {
     }
 
     public void requestFriendship(Contact contact) {
-        DatabaseReference reference = email2Reference(contact.getEmail()).child(FRIENDSHIP_REQUESTS);
+        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_REQUESTS);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }
 
     public void acceptFriendship(Contact contact) {
-        DatabaseReference reference = email2Reference(contact.getEmail()).child(FRIENDSHIP_ACCEPTED);
+        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }
 

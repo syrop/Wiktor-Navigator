@@ -124,7 +124,7 @@ public class SearchActivity extends AppCompatActivity {
                 .Builder(this)
                 .setCancelable(true)
                 .setTitle(R.string.search_dialog_title)
-                .setMessage(getString(R.string.search_dialog_question).replace("%s", contact.getName()))
+                .setMessage(getString(R.string.search_dialog_question).replace("%s", contact.name()))
                 .setPositiveButton(android.R.string.yes, ((dialog, which) -> contactApprovedAndFinish(contact)))
                 .setNegativeButton(android.R.string.no, ((dialog, which) -> finish()))
                 .create()
