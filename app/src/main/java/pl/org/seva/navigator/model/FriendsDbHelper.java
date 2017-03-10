@@ -13,7 +13,7 @@ public class FriendsDbHelper extends SQLiteOpenHelper {
 
     private static final String CREATION_STATEMENT =
             "create table if not exists " + DatabaseManager.FRIENDS_TABLE_NAME +
-                    " (id integer primary key auto increment, " +
+                    " (id integer primary key autoincrement, " +
                     DatabaseManager.EMAIL_COLUMN_NAME + " text, " +
                     DatabaseManager.NAME_COLUMN_NAME + " text)";
 
