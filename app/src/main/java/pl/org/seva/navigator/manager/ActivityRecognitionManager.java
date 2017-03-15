@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.navigator.service.ActivityRecognitionIntentService;
+import pl.org.seva.navigator.receiver.ActivityRecognitionReceiver;
 
 public class ActivityRecognitionManager implements
         GoogleApiClient.ConnectionCallbacks,
@@ -83,8 +83,8 @@ public class ActivityRecognitionManager implements
         if (context == null) {
             return;
         }
-        Intent intent = new Intent(context, ActivityRecognitionIntentService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(
+        Intent intent = new Intent(context, ActivityRecognitionReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
                 intent,

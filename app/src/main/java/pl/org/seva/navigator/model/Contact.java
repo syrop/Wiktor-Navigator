@@ -17,12 +17,19 @@
 
 package pl.org.seva.navigator.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public class Contact implements Comparable<Contact> {
+public class Contact implements Comparable<Contact>, Parcelable {
+
+    public static final String PARCELABLE_NAME = "contact";
 
     private String email;
     private String displayName;
+
+    public Contact() {
+    }
 
     public boolean isEmpty() {
         return email == null || displayName == null;
@@ -59,5 +66,30 @@ public class Contact implements Comparable<Contact> {
     @Override
     public int hashCode() {
         return email.hashCode();
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(email);
+        out.writeString(displayName);
+    }
+
+    public static final Parcelable.Creator<Contact> CREATOR
+            = new Parcelable.Creator<Contact>() {
+        public Contact createFromParcel(Parcel in) {
+            return new Contact(in);
+        }
+
+        public Contact[] newArray(int size) {
+            return new Contact[size];
+        }
+    };
+
+    private Contact(Parcel in) {
+        email = in.readString();
+        displayName = in.readString();
     }
 }

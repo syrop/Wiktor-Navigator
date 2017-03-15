@@ -15,29 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.service;
+package pl.org.seva.navigator.receiver;
 
-import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
 import pl.org.seva.navigator.manager.ActivityRecognitionManager;
 
-public class ActivityRecognitionIntentService extends IntentService {
-
-    private final Handler handler;
-
-    public ActivityRecognitionIntentService() {
-        super(ActivityRecognitionIntentService.class.getSimpleName());
-        handler = new Handler();
-    }
+// https://shashikawlp.wordpress.com/2013/05/08/android-jelly-bean-notifications-with-actions/
+public class ActivityRecognitionReceiver extends BroadcastReceiver {
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
@@ -50,10 +43,10 @@ public class ActivityRecognitionIntentService extends IntentService {
     }
 
     private void onDeviceStationary() {
-        handler.post(() -> ActivityRecognitionManager.getInstance().onDeviceStationary());
+        ActivityRecognitionManager.getInstance().onDeviceStationary();
     }
 
     private void onDeviceMoving() {
-        handler.post(() -> ActivityRecognitionManager.getInstance().onDeviceMoving());
+        ActivityRecognitionManager.getInstance().onDeviceMoving();
     }
 }

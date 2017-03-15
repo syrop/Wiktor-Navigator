@@ -18,7 +18,12 @@
 package pl.org.seva.navigator.application;
 
 import android.app.Application;
-import android.support.v7.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -79,19 +84,40 @@ public class NavigatorApplication extends Application {
                 .getString(R.string.friendship_confirmation)
                 .replace("[name]", contact.name())
                 .replace("[email]", contact.email());
-        new AlertDialog
-                .Builder(this)
-                .setCancelable(true)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, ((dialog, which) -> onFriendshipAccepted(contact)))
-                .setNegativeButton(android.R.string.no, ((dialog, which) -> {}))
-                .create()
-                .show();
+        Intent friendshipAcceptedIntent = new Intent().putExtra(Contact.PARCELABLE_NAME, contact);
+        PendingIntent noPi = PendingIntent.getActivity(
+                getApplicationContext(),
+                0,
+                new Intent(),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, friendshipAcceptedIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                getApplicationContext(),
+                0,
+                new Intent(),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBigContentTitle(getString(R.string.app_name));
+        bigTextStyle.bigText(message);
+
+        // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
+        Notification notification = new NotificationCompat.Builder(this)
+                .setStyle(bigTextStyle)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(false)
+                .addAction(R.drawable.ic_close_black_24dp, getString(android.R.string.no), noPi)
+                .addAction(R.drawable.ic_check_black_24dp, getString(android.R.string.yes), pi)
+                .build();
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, notification);
     }
 
     private static void onFriendshipAccepted(Contact contact) {
-        ContactManager.getInstance().add(contact);
-        DatabaseManager.getInstance().persistFriend(contact);
+
     }
 
     public void login(FirebaseUser user) {

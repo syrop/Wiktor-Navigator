@@ -49,7 +49,8 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <service android:name=".service.ActivityRecognitionIntentService" />
+        <receiver android:name=".receiver.ActivityRecognitionReceiver" />
+        <receiver android:name=".receiver.FriendshipAcceptedReceiver" />
 
     </application>
 
