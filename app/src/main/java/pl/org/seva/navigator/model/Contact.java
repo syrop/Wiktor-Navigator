@@ -24,6 +24,10 @@ public class Contact implements Comparable<Contact> {
     private String email;
     private String displayName;
 
+    public boolean isEmpty() {
+        return email == null || displayName == null;
+    }
+
     public Contact setName(String name) {
         this.displayName = name;
         return this;

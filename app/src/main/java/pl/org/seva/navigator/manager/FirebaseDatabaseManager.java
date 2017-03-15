@@ -111,10 +111,10 @@ public class FirebaseDatabaseManager {
     }
 
     private static Contact snapshot2Contact(DataSnapshot snapshot) {
-        if (!snapshot.exists()) {
-            return null;
-        }
         Contact result = new Contact();
+        if (!snapshot.exists()) {
+            return result;
+        }
         result.setEmail(from64(snapshot.getKey()));
         result.setName((String) snapshot.child(DISPLAY_NAME).getValue());
 

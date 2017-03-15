@@ -96,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void onContactReceived(Contact contact) {
         progress.cancel();
-        if (contact == null) {
+        if (contact.isEmpty()) {
             binding.notFoundLabel.setVisibility(View.VISIBLE);
             return;
         }
