@@ -86,6 +86,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void search(String query) {
+        query = query.toLowerCase();
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
         FirebaseDatabaseManager
                 .getInstance()
@@ -95,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void onContactReceived(Contact contact) {
         progress.cancel();
-        if (contact == null) {
+        if (contact.isEmpty()) {
             binding.notFoundLabel.setVisibility(View.VISIBLE);
             return;
         }
