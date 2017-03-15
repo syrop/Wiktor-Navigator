@@ -87,7 +87,6 @@ public class FirebaseDatabaseManager {
 
     private void writeContact(DatabaseReference reference, Contact contact) {
         String email64 = to64(contact.email());
-        reference.setValue(email64);
         reference = reference.child(email64);
         reference.child(DISPLAY_NAME).setValue(contact.name());
     }
