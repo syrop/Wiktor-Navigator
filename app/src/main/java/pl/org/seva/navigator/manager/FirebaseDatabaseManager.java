@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.manager;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +33,8 @@ import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.model.Contact;
 
 public class FirebaseDatabaseManager {
+
+    private static final String TAG = FirebaseDatabaseManager.class.getSimpleName();
 
     private static final String USER_ROOT = "user";
 
@@ -126,7 +129,9 @@ public class FirebaseDatabaseManager {
     }
 
     private DatabaseReference email2Reference(String email) {
-        return database.getReference(USER_ROOT + "/" + to64(email));
+        String referencePath = USER_ROOT + "/" + to64(email);
+        Log.d(TAG, "Reference: " + referencePath);
+        return database.getReference(referencePath);
     }
 
     public void onLocationReceived(String email, LatLng latLng) {
