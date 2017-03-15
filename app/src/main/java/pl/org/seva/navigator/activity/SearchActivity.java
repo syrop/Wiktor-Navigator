@@ -86,6 +86,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void search(String query) {
+        query = query.toLowerCase();
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
         FirebaseDatabaseManager
                 .getInstance()
