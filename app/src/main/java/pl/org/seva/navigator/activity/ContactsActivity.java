@@ -58,11 +58,11 @@ public class ContactsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
-        contactsRecyclerView = binding.toolbar.contentContacts.contacts;
+        contactsRecyclerView = binding.activityToolbar.contentContacts.contacts;
 
-        Toolbar toolbar = binding.toolbar.toolbar;
+        Toolbar toolbar = binding.activityToolbar.appBarToolbar;
         setSupportActionBar(toolbar);
-        binding.toolbar.fab
+        binding.activityToolbar.fab
             .setOnClickListener(view -> startActivity(new Intent(this, SearchActivity.class)));
 
         DrawerLayout drawer = binding.drawerLayout;
@@ -81,13 +81,13 @@ public class ContactsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         clearDrawerSelection();
-        View pleaseLogIn = binding.toolbar.contentContacts.pleaseLogIn;
+        View pleaseLogIn = binding.activityToolbar.contentContacts.pleaseLogIn;
         View header = binding.navView.getHeaderView(0);
         TextView name = ((TextView) header.findViewById(R.id.name));
         TextView email = ((TextView) header.findViewById(R.id.email));
 
         if (NavigatorApplication.isLoggedIn) {
-            binding.toolbar.fab.setVisibility(View.VISIBLE);
+            binding.activityToolbar.fab.setVisibility(View.VISIBLE);
             pleaseLogIn.setVisibility(View.GONE);
             contactsRecyclerView.setVisibility(View.VISIBLE);
             binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(false);
@@ -99,7 +99,7 @@ public class ContactsActivity extends AppCompatActivity
         else {
             pleaseLogIn.setVisibility(View.VISIBLE);
             contactsRecyclerView.setVisibility(View.GONE);
-            binding.toolbar.fab.setVisibility(View.GONE);
+            binding.activityToolbar.fab.setVisibility(View.GONE);
             binding.navView.getMenu().findItem(R.id.drawer_login).setVisible(true);
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(false);
             name.setText(R.string.app_name);
@@ -171,7 +171,7 @@ public class ContactsActivity extends AppCompatActivity
 
     private void permissionDenied() {
         Snackbar.make(
-                binding.toolbar.contentContacts.contacts,
+                binding.activityToolbar.contentContacts.contacts,
                 R.string.permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.permission_retry, view -> requestLocationPermission())
