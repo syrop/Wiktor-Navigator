@@ -28,7 +28,7 @@ import pl.org.seva.navigator.database.SqliteDataBaseManager;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.model.Contact;
 
-public class FriendshipAcceptedReceiver extends BroadcastReceiver {
+public class FriendshipDeletedReceiver extends BroadcastReceiver {
 
     @Inject
     ContactsMemoryCache contactsMemoryCache;
@@ -39,7 +39,7 @@ public class FriendshipAcceptedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ((NavigatorApplication) context.getApplicationContext()).getGraph().inject(this);
         Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
-        contactsMemoryCache.add(contact);
-        sqliteDataBaseManager.persistFriend(contact);
+        contactsMemoryCache.delete(contact);
+        sqliteDataBaseManager.deleteFriend(contact);
     }
 }

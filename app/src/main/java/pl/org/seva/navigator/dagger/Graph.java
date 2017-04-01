@@ -25,6 +25,8 @@ import pl.org.seva.navigator.activity.LoginActivity;
 import pl.org.seva.navigator.activity.SearchActivity;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.intentreceiver.ActivityRecognitionReceiver;
+import pl.org.seva.navigator.intentreceiver.FriendshipAcceptedReceiver;
+import pl.org.seva.navigator.intentreceiver.FriendshipDeletedReceiver;
 import pl.org.seva.navigator.view.ContactAdapter;
 
 @Singleton
@@ -36,4 +38,6 @@ public interface Graph {
     void inject(SearchActivity searchActivity);
     void inject(ContactAdapter contactAdapter);
     void inject(ContactsActivity ca);
+    void inject(FriendshipAcceptedReceiver friendshipAcceptedReceiver);
+    void inject(FriendshipDeletedReceiver friendshipDeletedReceiver);
 }

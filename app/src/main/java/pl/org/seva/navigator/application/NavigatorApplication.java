@@ -92,14 +92,40 @@ public class NavigatorApplication extends Application {
         return new Contact().setEmail(email).setName(displayName);
     }
 
+    public void login(FirebaseUser user) {
+        setCurrentFirebaseUser(user);
+        setFriendshipListeners();
+    }
+
+    public void logout() {
+        friendshipListeners.clear();
+        setCurrentFirebaseUser(null);
+    }
+
+    private static void setCurrentFirebaseUser(FirebaseUser user) {
+        if (user != null) {
+            isLoggedIn = true;
+            email = user.getEmail();
+            displayName = user.getDisplayName();
+        }
+        else {
+            isLoggedIn = false;
+            email = null;
+            displayName = null;
+        }
+    }
+
     private void setFriendshipListeners() {
         friendshipListeners.addAll(
                 firebaseDatabaseManager
-                    .friendshipAcceptedListener()
-                    .subscribe(NavigatorApplication::onFriendshipAccepted),
+                        .friendshipAcceptedListener()
+                        .subscribe(this::onFriendshipAccepted),
                 firebaseDatabaseManager
-                    .friendshipRequestedListener()
-                    .subscribe(this::onFriendshipRequested));
+                        .friendshipRequestedListener()
+                        .subscribe(this::onFriendshipRequested),
+                firebaseDatabaseManager
+                        .friendshipDeletedListener()
+                        .subscribe(this::onFriendshipDeleted));
     }
 
     private void onFriendshipRequested(Contact contact) {
@@ -139,30 +165,13 @@ public class NavigatorApplication extends Application {
         mNotificationManager.notify(0, notification);
     }
 
-    private static void onFriendshipAccepted(Contact contact) {
+    private void onFriendshipAccepted(Contact contact) {
 
     }
 
-    public void login(FirebaseUser user) {
-        setCurrentFirebaseUser(user);
-        setFriendshipListeners();
+    private void onFriendshipDeleted(Contact contact) {
+
     }
 
-    public void logout() {
-        friendshipListeners.clear();
-        setCurrentFirebaseUser(null);
-    }
 
-    private static void setCurrentFirebaseUser(FirebaseUser user) {
-        if (user != null) {
-            isLoggedIn = true;
-            email = user.getEmail();
-            displayName = user.getDisplayName();
-        }
-        else {
-            isLoggedIn = false;
-            email = null;
-            displayName = null;
-        }
-    }
 }

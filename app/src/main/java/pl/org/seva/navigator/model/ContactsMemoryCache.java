@@ -56,7 +56,7 @@ public class ContactsMemoryCache {
         Collections.sort(this.contacts);
     }
 
-    public void remove(Contact contact) {
+    public void delete(Contact contact) {
         contacts.remove(contact);
     }
 

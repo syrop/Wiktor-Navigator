@@ -46,6 +46,7 @@ public class FirebaseDatabaseManager {
     private static final String LAT_LNG = "lat_lng";
     private static final String FRIENDSHIP_REQUESTS = "friendship_requests";
     private static final String FRIENDSHIP_ACCEPTED = "friendship_accepted";
+    private static final String FRIENDSHIP_DELETED = "friendship_deleted";
 
     private static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);
@@ -131,7 +132,11 @@ public class FirebaseDatabaseManager {
     }
 
     public Observable<Contact> friendshipRequestedListener() {
-        DatabaseReference reference = currentUserReference().child(FRIENDSHIP_REQUESTS);
+        return createContactObservable(FRIENDSHIP_REQUESTS);
+    }
+
+    public Observable<Contact> friendshipAcceptedListener() {
+        DatabaseReference reference = currentUserReference().child(FRIENDSHIP_ACCEPTED);
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
@@ -139,8 +144,12 @@ public class FirebaseDatabaseManager {
                 .map(FirebaseDatabaseManager::snapshot2Contact);
     }
 
-    public Observable<Contact> friendshipAcceptedListener() {
-        DatabaseReference reference = currentUserReference().child(FRIENDSHIP_ACCEPTED);
+    public Observable<Contact> friendshipDeletedListener() {
+        return  createContactObservable(FRIENDSHIP_DELETED);
+    }
+
+    private Observable<Contact> createContactObservable(String tag) {
+        DatabaseReference reference = currentUserReference().child(tag);
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
