@@ -1,4 +1,21 @@
-package pl.org.seva.navigator.manager;
+/*
+ * Copyright (C) 2017 Wiktor Nizio
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package pl.org.seva.navigator.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,39 +25,28 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.model.FriendsDbHelper;
 
-public class DatabaseManager {
+@Singleton
+public class SqliteDataBaseManager {
 
-    public static final String FRIENDS_TABLE_NAME = "friends";
-    public static final String EMAIL_COLUMN_NAME = "email";
-    public static final String NAME_COLUMN_NAME = "name";
+    static final String FRIENDS_TABLE_NAME = "friends";
+    static final String EMAIL_COLUMN_NAME = "email";
+    static final String NAME_COLUMN_NAME = "name";
 
-    private FriendsDbHelper helper;
+    private SqliteDbHelper helper;
 
-    private static DatabaseManager instance;
-
-    public static DatabaseManager getInstance() {
-        if (instance == null) {
-            synchronized (DatabaseManager.class) {
-                if (instance == null) {
-                    instance = new DatabaseManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private DatabaseManager() {
-        //
+    @Inject SqliteDataBaseManager() {
     }
 
     public void init(Context context) {
         if (helper != null) {
             throw new IllegalStateException("Database already initialized");
         }
-        helper = new FriendsDbHelper(context);
+        helper = new SqliteDbHelper(context);
     }
 
     public void persistFriend(Contact contact) {

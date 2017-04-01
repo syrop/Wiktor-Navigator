@@ -28,16 +28,31 @@ import android.support.v7.app.NotificationCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.R;
-import pl.org.seva.navigator.manager.ActivityRecognitionManager;
-import pl.org.seva.navigator.manager.ContactManager;
-import pl.org.seva.navigator.manager.DatabaseManager;
-import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
-import pl.org.seva.navigator.manager.GpsManager;
+import pl.org.seva.navigator.dagger.DaggerGraph;
+import pl.org.seva.navigator.dagger.Graph;
+import pl.org.seva.navigator.database.SqliteDataBaseManager;
+import pl.org.seva.navigator.model.ActivityRecognitionSource;
+import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.database.FirebaseDatabaseManager;
+import pl.org.seva.navigator.model.LocationSource;
 import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
+
+    @Inject
+    ActivityRecognitionSource activityRecognitionSource;
+    @Inject
+    SqliteDataBaseManager sqliteDataBaseManager;
+    @Inject
+    ContactsMemoryCache contactsMemoryCache;
+    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @Inject LocationSource locationSource;
+
+    private Graph graph;
 
     private final CompositeDisposable friendshipListeners = new CompositeDisposable();
 
@@ -48,19 +63,29 @@ public class NavigatorApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        graph = createGraph();
+        graph.inject(this);
         setCurrentFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
-        ActivityRecognitionManager.getInstance().init(this);
-        DatabaseManager.getInstance().init(this);
-        ContactManager.getInstance().addAll(DatabaseManager.getInstance().getFriends());
-        GpsManager.getInstance().init(this);
-        GpsManager.getInstance().locationListener()
+        activityRecognitionSource.init(this);
+        sqliteDataBaseManager.init(this);
+        contactsMemoryCache.addAll(sqliteDataBaseManager.getFriends());
+        locationSource.init(this);
+        locationSource.locationListener()
                 .filter(latLng -> isLoggedIn)
                 .subscribe(
-                latLng -> FirebaseDatabaseManager.getInstance().onLocationReceived(email, latLng)
+                latLng -> firebaseDatabaseManager.onMyLocationReceived(email, latLng)
         );
         if (isLoggedIn) {
             setFriendshipListeners();
         }
+    }
+
+    Graph createGraph() {
+        return DaggerGraph.create();
+    }
+
+    public Graph getGraph() {
+        return graph;
     }
 
     public static Contact getLoggedInContact() {
@@ -69,12 +94,10 @@ public class NavigatorApplication extends Application {
 
     private void setFriendshipListeners() {
         friendshipListeners.addAll(
-                FirebaseDatabaseManager
-                    .getInstance()
+                firebaseDatabaseManager
                     .friendshipAcceptedListener()
                     .subscribe(NavigatorApplication::onFriendshipAccepted),
-                FirebaseDatabaseManager
-                    .getInstance()
+                firebaseDatabaseManager
                     .friendshipRequestedListener()
                     .subscribe(this::onFriendshipRequested));
     }

@@ -24,19 +24,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ContactBinding;
-import pl.org.seva.navigator.manager.ContactManager;
+import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.model.Contact;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
+    @Inject
+    ContactsMemoryCache contactsMemoryCache;
+
     private final PublishSubject<Contact> clickSubject = PublishSubject.create();
 
     Contact getContact(int position) {
-        return ContactManager.getInstance().get(position);
+        return contactsMemoryCache.get(position);
     }
 
     @Override
@@ -67,14 +72,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return ContactManager.getInstance().size();
+        return contactsMemoryCache.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final TextView email;
         private final View view;
-
 
         private ViewHolder(ContactBinding binding) {
             super(binding.getRoot());

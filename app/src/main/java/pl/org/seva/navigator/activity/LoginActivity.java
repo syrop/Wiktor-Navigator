@@ -39,15 +39,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import javax.inject.Inject;
+
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
-import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
+import pl.org.seva.navigator.database.FirebaseDatabaseManager;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks {
+
+    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
 
     public static final String ACTION = "action";
     public static final String LOGIN = "login";
@@ -70,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((NavigatorApplication) getApplication()).getGraph().inject(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -122,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void onUserLoggedIn(FirebaseUser user) {
-        FirebaseDatabaseManager.getInstance().login(user);
+        firebaseDatabaseManager.login(user);
         ((NavigatorApplication) getApplication()).login(user);
         if (performedAction) {
             finish();

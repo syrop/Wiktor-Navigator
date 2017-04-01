@@ -31,15 +31,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import javax.inject.Inject;
+
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
-import pl.org.seva.navigator.manager.ContactManager;
-import pl.org.seva.navigator.manager.FirebaseDatabaseManager;
+import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.database.FirebaseDatabaseManager;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.view.ContactAdapter;
 import pl.org.seva.navigator.view.SingleContactAdapter;
 
 public class SearchActivity extends AppCompatActivity {
+
+    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @Inject
+    ContactsMemoryCache contactsMemoryCache;
 
     private ActivitySearchBinding binding;
 
@@ -48,6 +55,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((NavigatorApplication) getApplication()).getGraph().inject(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
 
@@ -88,8 +96,7 @@ public class SearchActivity extends AppCompatActivity {
     private void search(String query) {
         query = query.toLowerCase();
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
-        FirebaseDatabaseManager
-                .getInstance()
+        firebaseDatabaseManager
                 .readContactOnceForEmail(query)
                 .subscribe(this::onContactReceived);
     }
@@ -116,8 +123,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void onContactClick(Contact contact) {
-        ContactManager cm = ContactManager.getInstance();
-        if (cm.contains(contact)) {
+        if (contactsMemoryCache.contains(contact)) {
             finish();
             return;
         }
@@ -133,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void contactApprovedAndFinish(Contact contact) {
-        FirebaseDatabaseManager.getInstance().requestFriendship(contact);
+        firebaseDatabaseManager.requestFriendship(contact);
         finish();
     }
 }

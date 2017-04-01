@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.manager;
+package pl.org.seva.navigator.database;
 
 import android.util.Base64;
 import android.util.Log;
@@ -27,11 +27,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.ReplaySubject;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.model.Contact;
 
+@Singleton
 public class FirebaseDatabaseManager {
 
     private static final String TAG = FirebaseDatabaseManager.class.getSimpleName();
@@ -62,22 +66,9 @@ public class FirebaseDatabaseManager {
         return new LatLng(lat, lon);
     }
 
-    private static FirebaseDatabaseManager instance;
-
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    public static FirebaseDatabaseManager getInstance() {
-        if (instance == null) {
-            synchronized (FirebaseDatabaseManager.class) {
-                if (instance == null) {
-                    instance = new FirebaseDatabaseManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private FirebaseDatabaseManager() {
+    @Inject public FirebaseDatabaseManager() {
         //
     }
 
@@ -133,7 +124,7 @@ public class FirebaseDatabaseManager {
         return database.getReference(referencePath);
     }
 
-    public void onLocationReceived(String email, LatLng latLng) {
+    public void onMyLocationReceived(String email, LatLng latLng) {
         String email64 = to64(email);
         DatabaseReference ref = database.getReference(USER_ROOT).child(email64);
         ref.child(LAT_LNG).setValue(latLng2String(latLng));

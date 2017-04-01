@@ -15,34 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.manager;
+package pl.org.seva.navigator.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import pl.org.seva.navigator.application.NavigatorApplication;
-import pl.org.seva.navigator.model.Contact;
 
-public class ContactManager {
-
-    private static ContactManager instance;
+@Singleton
+public class ContactsMemoryCache {
 
     private final List<Contact> contacts;
 
-    public static ContactManager getInstance() {
-        if (instance == null) {
-            synchronized (ContactManager.class) {
-                if (instance == null) {
-                    instance = new ContactManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private ContactManager() {
+    @Inject public ContactsMemoryCache() {
         contacts = new ArrayList<>();
     }
 

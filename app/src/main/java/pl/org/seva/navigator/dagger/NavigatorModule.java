@@ -15,26 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.view;
+package pl.org.seva.navigator.dagger;
 
-import pl.org.seva.navigator.model.Contact;
+import dagger.Module;
 
-public class SingleContactAdapter extends ContactAdapter {
-
-    private final Contact contact;
-
-    public SingleContactAdapter(Contact contact) {
-        super();
-        this.contact = contact;
-    }
-
-    @Override
-    Contact getContact(int position) {
-        return contact;
-    }
-
-    @Override
-    public int getItemCount() {
-        return 1;
-    }
+@Module
+class NavigatorModule {
 }

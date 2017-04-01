@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.manager;
+package pl.org.seva.navigator.model;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,15 +26,18 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.ActivityRecognition;
 
 import java.lang.ref.WeakReference;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.navigator.receiver.ActivityRecognitionReceiver;
+import pl.org.seva.navigator.intentreceiver.ActivityRecognitionReceiver;
 
-public class ActivityRecognitionManager implements
+@Singleton
+public class ActivityRecognitionSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -47,17 +50,8 @@ public class ActivityRecognitionManager implements
     private GoogleApiClient googleApiClient;
     private WeakReference<Context> weakContext;
 
-    private static ActivityRecognitionManager instance;
-
-    public static ActivityRecognitionManager getInstance() {
-        if (instance == null) {
-            synchronized (ActivityRecognitionManager.class) {
-                if (instance == null) {
-                    instance = new ActivityRecognitionManager();
-                }
-            }
-        }
-        return instance;
+    @Inject
+    ActivityRecognitionSource() {
     }
 
     public void init(Context context) {
@@ -67,7 +61,7 @@ public class ActivityRecognitionManager implements
         weakContext = new WeakReference<>(context);
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context)
-                    .addApi(ActivityRecognition.API)
+                    .addApi(com.google.android.gms.location.ActivityRecognition.API)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
@@ -89,7 +83,7 @@ public class ActivityRecognitionManager implements
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
+        com.google.android.gms.location.ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
                 googleApiClient,
                 ACTIVITY_RECOGNITION_INTERVAL,
                 pendingIntent);

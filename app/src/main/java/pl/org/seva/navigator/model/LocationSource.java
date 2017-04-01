@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.manager;
+package pl.org.seva.navigator.model;
 
 import android.content.Context;
 import android.location.Location;
@@ -30,21 +30,27 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @SuppressWarnings("MissingPermission")
-public class GpsManager implements
+@Singleton
+public class LocationSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
-    private static final String TAG = GpsManager.class.getSimpleName();
+    @SuppressWarnings("WeakerAccess")
+    @Inject
+    ActivityRecognitionSource activityRecognitionSource;
+
+    private static final String TAG = LocationSource.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 100.0;  // [m]
     private static final long UPDATE_FREQUENCY = 30000;  // [ms]
-
-    private static GpsManager instance;
 
     /** Minimal distance (in meters) that will be counted between two subsequent updates. */
     private static final float MIN_DISTANCE = 5.0f;
@@ -61,19 +67,9 @@ public class GpsManager implements
 
     private boolean paused;
 
-    private GpsManager() {
+    @SuppressWarnings("WeakerAccess")
+    @Inject LocationSource() {
         locationChangedSubject = PublishSubject.create();
-    }
-
-    public static GpsManager getInstance() {
-        if (instance == null) {
-            synchronized (GpsManager.class) {
-                if (instance == null) {
-                    instance = new GpsManager();
-                }
-            }
-        }
-        return instance;
     }
 
     public void connectGoogleApiClient() {
@@ -136,7 +132,7 @@ public class GpsManager implements
         if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
-        if (!GpsManager.isBetterLocation(location, this.location)) {
+        if (!LocationSource.isBetterLocation(location, this.location)) {
             return;
         }
         this.location = location;
@@ -156,8 +152,8 @@ public class GpsManager implements
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE);
 
-        ActivityRecognitionManager.getInstance().stationaryListener().subscribe(stationary -> pauseUpdates());
-        ActivityRecognitionManager.getInstance().movingListener().subscribe(stationary -> resumeUpdates());
+        activityRecognitionSource.stationaryListener().subscribe(stationary -> pauseUpdates());
+        activityRecognitionSource.movingListener().subscribe(stationary -> resumeUpdates());
 
         requestLocationUpdates();
     }

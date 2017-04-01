@@ -49,8 +49,8 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <receiver android:name=".receiver.ActivityRecognitionReceiver" />
-        <receiver android:name=".receiver.FriendshipAcceptedReceiver" />
+        <receiver android:name=".intentreceiver.ActivityRecognitionReceiver" />
+        <receiver android:name=".intentreceiver.FriendshipAcceptedReceiver" />
 
     </application>
 

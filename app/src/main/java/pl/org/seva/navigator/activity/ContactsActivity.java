@@ -39,24 +39,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
-import pl.org.seva.navigator.manager.GpsManager;
+import pl.org.seva.navigator.model.LocationSource;
 import pl.org.seva.navigator.view.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @Inject LocationSource locationSource;
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
     private ActivityContactsBinding binding;
     private RecyclerView contactsRecyclerView;
     private boolean permissionAlreadyRequested;
+    private Graph graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        graph = ((NavigatorApplication) getApplication()).getGraph();
+        graph.inject(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
         contactsRecyclerView = binding.activityToolbar.contentContacts.contacts;
 
@@ -135,7 +143,9 @@ public class ContactsActivity extends AppCompatActivity
         contactsRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
         contactsRecyclerView.setLayoutManager(lm);
-        contactsRecyclerView.setAdapter(new ContactAdapter());
+        ContactAdapter ca = new ContactAdapter();
+        graph.inject(ca);
+        contactsRecyclerView.setAdapter(ca);
     }
 
     private void requestLocationPermission() {
@@ -165,7 +175,7 @@ public class ContactsActivity extends AppCompatActivity
     }
 
     private void locationPermissionGranted() {
-        GpsManager.getInstance().connectGoogleApiClient();
+        locationSource.connectGoogleApiClient();
         initContactsView();
     }
 
