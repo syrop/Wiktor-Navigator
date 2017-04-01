@@ -38,12 +38,10 @@ public class NavigationActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private GoogleMap map;
 
-    private ActivityNavigationBinding binding;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
+        ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
 
         int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
 

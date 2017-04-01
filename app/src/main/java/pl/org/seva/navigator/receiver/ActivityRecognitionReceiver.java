@@ -32,7 +32,8 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource;
 // https://shashikawlp.wordpress.com/2013/05/08/android-jelly-bean-notifications-with-actions/
 public class ActivityRecognitionReceiver extends BroadcastReceiver {
 
-    @Inject protected ActivityRecognitionSource activityRecognitionSource;
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
+    @Inject ActivityRecognitionSource activityRecognitionSource;
 
     @Override
     public void onReceive(Context context, Intent intent) {

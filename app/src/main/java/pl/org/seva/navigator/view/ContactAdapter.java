@@ -35,8 +35,8 @@ import pl.org.seva.navigator.model.Contact;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
-    @Inject
-    ContactsMemoryCache contactsMemoryCache;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject ContactsMemoryCache contactsMemoryCache;
 
     private final PublishSubject<Contact> clickSubject = PublishSubject.create();
 

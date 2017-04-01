@@ -51,6 +51,7 @@ import pl.org.seva.navigator.view.ContactAdapter;
 public class ContactsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject LocationSource locationSource;
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;

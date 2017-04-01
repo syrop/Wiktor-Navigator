@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener,
         GoogleApiClient.ConnectionCallbacks {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FirebaseDatabaseManager firebaseDatabaseManager;
 
     public static final String ACTION = "action";

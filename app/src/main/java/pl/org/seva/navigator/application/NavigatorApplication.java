@@ -31,21 +31,26 @@ import pl.org.seva.navigator.receiver.FriendshipReceiver;
 import pl.org.seva.navigator.receiver.LocationReceiver;
 import pl.org.seva.navigator.source.ActivityRecognitionSource;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
-import pl.org.seva.navigator.database.FirebaseDatabaseManager;
 import pl.org.seva.navigator.source.FriendshipSource;
 import pl.org.seva.navigator.source.LocationSource;
 import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionSource activityRecognitionSource;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SqliteDataBaseManager sqliteDataBaseManager;
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject ContactsMemoryCache contactsMemoryCache;
-    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject LocationSource locationSource;
-    @Inject FriendshipSource friendshipSource;
-    @Inject FriendshipReceiver friendshipReceiver;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject LocationReceiver locationReceiver;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject FriendshipSource friendshipSource;
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
+    @Inject FriendshipReceiver friendshipReceiver;
 
     private Graph graph;
 
@@ -69,7 +74,7 @@ public class NavigatorApplication extends Application {
         }
     }
 
-    Graph createGraph() {
+    private Graph createGraph() {
         return DaggerGraph.create();
     }
 

@@ -44,9 +44,8 @@ public class FriendshipReceiver {
     @Inject FriendshipReceiver() {
     }
 
-    public FriendshipReceiver init(Context context) {
+    public void init(Context context) {
         this.weakContext = new WeakReference<>(context);
-        return this;
     }
 
     public void onFriendshipRequested(Contact contact) {
@@ -105,10 +104,10 @@ public class FriendshipReceiver {
 
     public static class FriendshipAccepted extends BroadcastReceiver {
 
-        @Inject
-        ContactsMemoryCache contactsMemoryCache;
-        @Inject
-        SqliteDataBaseManager sqliteDataBaseManager;
+        @SuppressWarnings("CanBeFinal")
+        @Inject ContactsMemoryCache contactsMemoryCache;
+        @SuppressWarnings("CanBeFinal")
+        @Inject SqliteDataBaseManager sqliteDataBaseManager;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -121,10 +120,10 @@ public class FriendshipReceiver {
 
     public static class FriendshipDeleted extends BroadcastReceiver {
 
-        @Inject
-        ContactsMemoryCache contactsMemoryCache;
-        @Inject
-        SqliteDataBaseManager sqliteDataBaseManager;
+        @SuppressWarnings("CanBeFinal")
+        @Inject ContactsMemoryCache contactsMemoryCache;
+        @SuppressWarnings("CanBeFinal")
+        @Inject SqliteDataBaseManager sqliteDataBaseManager;
 
         @Override
         public void onReceive(Context context, Intent intent) {

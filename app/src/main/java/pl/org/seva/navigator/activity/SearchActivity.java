@@ -44,9 +44,10 @@ import pl.org.seva.navigator.view.SingleContactAdapter;
 
 public class SearchActivity extends AppCompatActivity {
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FirebaseDatabaseManager firebaseDatabaseManager;
-    @Inject
-    ContactsMemoryCache contactsMemoryCache;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject ContactsMemoryCache contactsMemoryCache;
 
     private ActivitySearchBinding binding;
 

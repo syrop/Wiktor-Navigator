@@ -60,7 +60,7 @@ public class LocationSource implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
-    private PublishSubject<LatLng> locationChangedSubject;
+    private final PublishSubject<LatLng> locationChangedSubject;
 
     /** Location last received from the update. */
     private Location location;

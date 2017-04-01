@@ -69,8 +69,8 @@ public class FirebaseDatabaseManager {
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    @Inject public FirebaseDatabaseManager() {
-        //
+    @SuppressWarnings("WeakerAccess")
+    @Inject FirebaseDatabaseManager() {
     }
 
     public void login(FirebaseUser user) {
