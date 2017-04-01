@@ -145,7 +145,7 @@ public class FirebaseDatabaseManager {
     }
 
     public Observable<Contact> friendshipDeletedListener() {
-        return  createContactObservable(FRIENDSHIP_DELETED);
+        return createContactObservable(FRIENDSHIP_DELETED);
     }
 
     private Observable<Contact> createContactObservable(String tag) {
@@ -163,6 +163,11 @@ public class FirebaseDatabaseManager {
     }
 
     public void acceptFriendship(Contact contact) {
+        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
+        writeContact(reference, NavigatorApplication.getLoggedInContact());
+    }
+
+    public void deleteFriendsdhip(Contact contact) {
         DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }

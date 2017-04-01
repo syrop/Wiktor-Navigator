@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.intentreceiver;
+package pl.org.seva.navigator.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,7 +27,7 @@ import com.google.android.gms.location.DetectedActivity;
 import javax.inject.Inject;
 
 import pl.org.seva.navigator.application.NavigatorApplication;
-import pl.org.seva.navigator.model.ActivityRecognitionSource;
+import pl.org.seva.navigator.source.ActivityRecognitionSource;
 
 // https://shashikawlp.wordpress.com/2013/05/08/android-jelly-bean-notifications-with-actions/
 public class ActivityRecognitionReceiver extends BroadcastReceiver {

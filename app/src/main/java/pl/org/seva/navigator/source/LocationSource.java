@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model;
+package pl.org.seva.navigator.source;
 
 import android.content.Context;
 import android.location.Location;
@@ -33,8 +33,9 @@ import com.google.android.gms.maps.model.LatLng;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+import pl.org.seva.navigator.application.NavigatorApplication;
+import pl.org.seva.navigator.receiver.LocationReceiver;
 
 @SuppressWarnings("MissingPermission")
 @Singleton
@@ -44,8 +45,7 @@ public class LocationSource implements
         com.google.android.gms.location.LocationListener {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject
-    ActivityRecognitionSource activityRecognitionSource;
+    @Inject ActivityRecognitionSource activityRecognitionSource;
 
     private static final String TAG = LocationSource.class.getSimpleName();
 
@@ -60,7 +60,7 @@ public class LocationSource implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
-    private final PublishSubject<LatLng> locationChangedSubject;
+    private PublishSubject<LatLng> locationChangedSubject;
 
     /** Location last received from the update. */
     private Location location;
@@ -72,11 +72,17 @@ public class LocationSource implements
         locationChangedSubject = PublishSubject.create();
     }
 
+    public void addLocationReceiver(LocationReceiver locationReceiver) {
+        locationChangedSubject
+                .filter(latLng -> NavigatorApplication.isLoggedIn)
+                .subscribe(locationReceiver::receive);
+    }
+
     public void connectGoogleApiClient() {
         googleApiClient.connect();
     }
 
-    public void init(Context context) {
+    public LocationSource init(Context context) {
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
@@ -84,10 +90,7 @@ public class LocationSource implements
                     .addApi(LocationServices.API)
                     .build();
         }
-    }
-
-    public Observable<LatLng> locationListener() {
-        return locationChangedSubject.hide();
+        return this;
     }
 
     private static boolean isBetterLocation(Location location, Location currentBestLocation) {

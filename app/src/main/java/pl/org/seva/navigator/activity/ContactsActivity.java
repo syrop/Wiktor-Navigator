@@ -45,7 +45,7 @@ import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
-import pl.org.seva.navigator.model.LocationSource;
+import pl.org.seva.navigator.source.LocationSource;
 import pl.org.seva.navigator.view.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity

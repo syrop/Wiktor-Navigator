@@ -18,43 +18,36 @@
 package pl.org.seva.navigator.application;
 
 import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
-import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.dagger.DaggerGraph;
 import pl.org.seva.navigator.dagger.Graph;
 import pl.org.seva.navigator.database.SqliteDataBaseManager;
-import pl.org.seva.navigator.model.ActivityRecognitionSource;
+import pl.org.seva.navigator.receiver.FriendshipReceiver;
+import pl.org.seva.navigator.receiver.LocationReceiver;
+import pl.org.seva.navigator.source.ActivityRecognitionSource;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.database.FirebaseDatabaseManager;
-import pl.org.seva.navigator.model.LocationSource;
+import pl.org.seva.navigator.source.FriendshipSource;
+import pl.org.seva.navigator.source.LocationSource;
 import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
 
-    @Inject
-    ActivityRecognitionSource activityRecognitionSource;
-    @Inject
-    SqliteDataBaseManager sqliteDataBaseManager;
-    @Inject
-    ContactsMemoryCache contactsMemoryCache;
+    @Inject ActivityRecognitionSource activityRecognitionSource;
+    @Inject SqliteDataBaseManager sqliteDataBaseManager;
+    @Inject ContactsMemoryCache contactsMemoryCache;
     @Inject FirebaseDatabaseManager firebaseDatabaseManager;
     @Inject LocationSource locationSource;
+    @Inject FriendshipSource friendshipSource;
+    @Inject FriendshipReceiver friendshipReceiver;
+    @Inject LocationReceiver locationReceiver;
 
     private Graph graph;
-
-    private final CompositeDisposable friendshipListeners = new CompositeDisposable();
 
     public static boolean isLoggedIn;
     public static String email;
@@ -69,12 +62,8 @@ public class NavigatorApplication extends Application {
         activityRecognitionSource.init(this);
         sqliteDataBaseManager.init(this);
         contactsMemoryCache.addAll(sqliteDataBaseManager.getFriends());
-        locationSource.init(this);
-        locationSource.locationListener()
-                .filter(latLng -> isLoggedIn)
-                .subscribe(
-                latLng -> firebaseDatabaseManager.onMyLocationReceived(email, latLng)
-        );
+        locationSource.init(this).addLocationReceiver(locationReceiver);
+        friendshipReceiver.init(this);
         if (isLoggedIn) {
             setFriendshipListeners();
         }
@@ -98,7 +87,7 @@ public class NavigatorApplication extends Application {
     }
 
     public void logout() {
-        friendshipListeners.clear();
+        clearFriendshipListeners();
         setCurrentFirebaseUser(null);
     }
 
@@ -116,62 +105,10 @@ public class NavigatorApplication extends Application {
     }
 
     private void setFriendshipListeners() {
-        friendshipListeners.addAll(
-                firebaseDatabaseManager
-                        .friendshipAcceptedListener()
-                        .subscribe(this::onFriendshipAccepted),
-                firebaseDatabaseManager
-                        .friendshipRequestedListener()
-                        .subscribe(this::onFriendshipRequested),
-                firebaseDatabaseManager
-                        .friendshipDeletedListener()
-                        .subscribe(this::onFriendshipDeleted));
+        friendshipSource.addFriendshipReceiver(friendshipReceiver);
     }
 
-    private void onFriendshipRequested(Contact contact) {
-        String message = getResources()
-                .getString(R.string.friendship_confirmation)
-                .replace("[name]", contact.name())
-                .replace("[email]", contact.email());
-        Intent friendshipAcceptedIntent = new Intent().putExtra(Contact.PARCELABLE_NAME, contact);
-        PendingIntent noPi = PendingIntent.getActivity(
-                getApplicationContext(),
-                0,
-                new Intent(),
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, friendshipAcceptedIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(),
-                0,
-                new Intent(),
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
-        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-        bigTextStyle.setBigContentTitle(getString(R.string.app_name));
-        bigTextStyle.bigText(message);
-
-        // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
-        Notification notification = new NotificationCompat.Builder(this)
-                .setStyle(bigTextStyle)
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setAutoCancel(false)
-                .addAction(R.drawable.ic_close_black_24dp, getString(android.R.string.no), noPi)
-                .addAction(R.drawable.ic_check_black_24dp, getString(android.R.string.yes), pi)
-                .build();
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(0, notification);
+    private void clearFriendshipListeners() {
+        friendshipSource.clearFriendshipReceivers();
     }
-
-    private void onFriendshipAccepted(Contact contact) {
-
-    }
-
-    private void onFriendshipDeleted(Contact contact) {
-
-    }
-
-
 }

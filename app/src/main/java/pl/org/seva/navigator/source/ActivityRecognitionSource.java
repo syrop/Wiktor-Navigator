@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model;
+package pl.org.seva.navigator.source;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -34,7 +34,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.navigator.intentreceiver.ActivityRecognitionReceiver;
+import pl.org.seva.navigator.receiver.ActivityRecognitionReceiver;
 
 @Singleton
 public class ActivityRecognitionSource implements
