@@ -25,7 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import pl.org.seva.navigator.application.NavigatorApplication;
+import pl.org.seva.navigator.NavigatorApplication;
 
 @Singleton
 public class ContactsMemoryCache {

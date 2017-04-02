@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
         <FrameLayout
-            tools:context="pl.org.seva.navigator.activity.ContactsActivity"
+            tools:context=".view.activity.ContactsActivity"
             tools:showIn="@layout/app_bar_navigation"
             android:id="@+id/map_container"
             android:layout_width="0dp"
