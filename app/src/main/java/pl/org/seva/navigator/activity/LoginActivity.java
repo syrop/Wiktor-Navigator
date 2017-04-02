@@ -43,7 +43,7 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
-import pl.org.seva.navigator.database.FirebaseDatabaseWriter;
+import pl.org.seva.navigator.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
 
 public class LoginActivity extends AppCompatActivity implements
@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
-    FirebaseDatabaseWriter firebaseDatabaseWriter;
+    FirebaseWriter firebaseWriter;
 
     public static final String ACTION = "action";
     public static final String LOGIN = "login";
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void onUserLoggedIn(FirebaseUser user) {
-        firebaseDatabaseWriter.login(user);
+        firebaseWriter.login(user);
         ((NavigatorApplication) getApplication()).login(user);
         if (performedAction) {
             finish();

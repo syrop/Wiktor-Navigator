@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.database;
+package pl.org.seva.navigator.database.firebase;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,11 +28,11 @@ import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.model.Contact;
 
 @Singleton
-public class FirebaseDatabaseWriter extends FirebaseUtils {
+public class FirebaseWriter extends FirebaseBase {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    FirebaseDatabaseWriter() {
+    FirebaseWriter() {
         super();
     }
 

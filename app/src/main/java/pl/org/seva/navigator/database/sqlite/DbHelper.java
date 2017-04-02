@@ -15,24 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.database;
+package pl.org.seva.navigator.database.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-class SqliteDbHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
+
+    static final String FRIENDS_TABLE_NAME = "friends";
+    static final String EMAIL_COLUMN_NAME = "email";
+    static final String NAME_COLUMN_NAME = "name";
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Friends.db";
 
     private static final String CREATION_STATEMENT =
-            "create table if not exists " + SqliteDataBaseManager.FRIENDS_TABLE_NAME +
+            "create table if not exists " + FRIENDS_TABLE_NAME +
                     " (id integer primary key autoincrement, " +
-                    SqliteDataBaseManager.EMAIL_COLUMN_NAME + " text, " +
-                    SqliteDataBaseManager.NAME_COLUMN_NAME + " text)";
+                    EMAIL_COLUMN_NAME + " text, " +
+                    NAME_COLUMN_NAME + " text)";
 
-    SqliteDbHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

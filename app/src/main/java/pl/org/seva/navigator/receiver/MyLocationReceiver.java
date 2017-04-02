@@ -23,20 +23,20 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.navigator.application.NavigatorApplication;
-import pl.org.seva.navigator.database.FirebaseDatabaseWriter;
+import pl.org.seva.navigator.database.firebase.FirebaseWriter;
 
 @Singleton
 public class MyLocationReceiver {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    FirebaseDatabaseWriter firebaseDatabaseWriter;
+    FirebaseWriter firebaseWriter;
 
     @Inject
     MyLocationReceiver() {
     }
 
     public void onLocationReceived(LatLng latLng) {
-        firebaseDatabaseWriter.storeMyLocation(NavigatorApplication.email, latLng);
+        firebaseWriter.storeMyLocation(NavigatorApplication.email, latLng);
     }
 }

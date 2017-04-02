@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.database;
+package pl.org.seva.navigator.database.firebase;
 
 import android.util.Base64;
 
@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import pl.org.seva.navigator.application.NavigatorApplication;
 
-public class FirebaseUtils {
+public class FirebaseBase {
 
     static final String USER_ROOT = "user";
     static final String DISPLAY_NAME = "display_name";

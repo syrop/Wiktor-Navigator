@@ -20,14 +20,14 @@ package pl.org.seva.navigator.source;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.database.FirebaseDatabaseReader;
+import pl.org.seva.navigator.database.firebase.FirebaseReader;
 import pl.org.seva.navigator.receiver.PeerLocationReceiver;
 
 public class PeerLocationSource {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    FirebaseDatabaseReader firebaseDatabaseReader;
+    FirebaseReader firebaseReader;
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -36,7 +36,7 @@ public class PeerLocationSource {
 
     public void addPeerLocationReceiver(String email, PeerLocationReceiver peerLocationReceiver) {
         compositeDisposable.add(
-                firebaseDatabaseReader
+                firebaseReader
                         .peerLocationListener(email)
                         .subscribe(peerLocationReceiver::onPeerLocationReceived));
     }

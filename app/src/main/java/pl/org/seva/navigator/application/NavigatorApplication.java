@@ -26,7 +26,9 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.dagger.DaggerGraph;
 import pl.org.seva.navigator.dagger.Graph;
-import pl.org.seva.navigator.database.SqliteDataBaseManager;
+import pl.org.seva.navigator.database.sqlite.DbHelper;
+import pl.org.seva.navigator.database.sqlite.SqliteReader;
+import pl.org.seva.navigator.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.receiver.FriendshipReceiver;
 import pl.org.seva.navigator.receiver.MyLocationReceiver;
 import pl.org.seva.navigator.source.ActivityRecognitionSource;
@@ -40,15 +42,15 @@ public class NavigatorApplication extends Application {
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ActivityRecognitionSource activityRecognitionSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SqliteDataBaseManager sqliteDataBaseManager;
+    @Inject SqliteWriter sqliteWriter;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject SqliteReader sqliteReader;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject ContactsMemoryCache contactsMemoryCache;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    MyLocationSource myLocationSource;
+    @Inject MyLocationSource myLocationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    MyLocationReceiver myLocationReceiver;
+    @Inject MyLocationReceiver myLocationReceiver;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FriendshipSource friendshipSource;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
@@ -67,8 +69,10 @@ public class NavigatorApplication extends Application {
         graph.inject(this);
         setCurrentFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
         activityRecognitionSource.init(this);
-        sqliteDataBaseManager.init(this);
-        contactsMemoryCache.addAll(sqliteDataBaseManager.getFriends());
+        DbHelper helper = new DbHelper(this);
+        sqliteWriter.setHelper(helper);
+        sqliteReader.setHelper(helper);
+        contactsMemoryCache.addAll(sqliteReader.getFriends());
         myLocationSource.init(this).addLocationReceiver(myLocationReceiver);
         friendshipReceiver.init(this);
         if (isLoggedIn) {

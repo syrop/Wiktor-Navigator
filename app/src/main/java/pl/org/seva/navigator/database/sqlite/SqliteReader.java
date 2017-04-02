@@ -15,10 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.database;
+package pl.org.seva.navigator.database.sqlite;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -31,47 +29,23 @@ import javax.inject.Singleton;
 import pl.org.seva.navigator.model.Contact;
 
 @Singleton
-public class SqliteDataBaseManager {
+public class SqliteReader {
 
-    static final String FRIENDS_TABLE_NAME = "friends";
-    static final String EMAIL_COLUMN_NAME = "email";
-    static final String NAME_COLUMN_NAME = "name";
+    private DbHelper helper;
 
-    private SqliteDbHelper helper;
-
-    @Inject SqliteDataBaseManager() {
+    @Inject SqliteReader() {
     }
 
-    public void init(Context context) {
-        if (helper != null) {
-            throw new IllegalStateException("Database already initialized");
-        }
-        helper = new SqliteDbHelper(context);
-    }
-
-    public void persistFriend(Contact contact) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(NAME_COLUMN_NAME, contact.name());
-        cv.put(EMAIL_COLUMN_NAME, contact.email());
-        db.insert(FRIENDS_TABLE_NAME, null, cv);
-        db.close();
-    }
-
-    public void deleteFriend(Contact contact) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        String query = EMAIL_COLUMN_NAME + " equals ?";
-        String[] args = { contact.email(), };
-        db.delete(FRIENDS_TABLE_NAME, query, args);
-        db.close();
+    public void setHelper(DbHelper helper) {
+        this.helper = helper;
     }
 
     public List<Contact> getFriends() {
         List<Contact> result = new ArrayList<>();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String[] projection = { NAME_COLUMN_NAME, EMAIL_COLUMN_NAME, };
+        String[] projection = { DbHelper.NAME_COLUMN_NAME, DbHelper.EMAIL_COLUMN_NAME, };
         Cursor cursor = db.query(
-                FRIENDS_TABLE_NAME,
+                DbHelper.FRIENDS_TABLE_NAME,
                 projection,
                 null,
                 null,

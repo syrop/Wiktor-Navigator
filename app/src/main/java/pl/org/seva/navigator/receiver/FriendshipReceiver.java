@@ -32,7 +32,7 @@ import javax.inject.Singleton;
 
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.application.NavigatorApplication;
-import pl.org.seva.navigator.database.SqliteDataBaseManager;
+import pl.org.seva.navigator.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 
@@ -42,7 +42,8 @@ public class FriendshipReceiver {
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject ContactsMemoryCache contactsMemoryCache;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject SqliteDataBaseManager sqliteDataBaseManager;
+    @Inject
+    SqliteWriter sqliteWriter;
 
     private WeakReference<Context> weakContext;
 
@@ -101,12 +102,12 @@ public class FriendshipReceiver {
 
     public void onPeerAcceptedFriendship(Contact contact) {
         contactsMemoryCache.add(contact);
-        sqliteDataBaseManager.persistFriend(contact);
+        sqliteWriter.persistFriend(contact);
     }
 
     public void onPeerDeletedFriendship(Contact contact) {
         contactsMemoryCache.delete(contact);
-        sqliteDataBaseManager.deleteFriend(contact);
+        sqliteWriter.deleteFriend(contact);
     }
 
     public static class FriendshipAccepted extends BroadcastReceiver {
@@ -114,14 +115,15 @@ public class FriendshipReceiver {
         @SuppressWarnings("CanBeFinal")
         @Inject ContactsMemoryCache contactsMemoryCache;
         @SuppressWarnings("CanBeFinal")
-        @Inject SqliteDataBaseManager sqliteDataBaseManager;
+        @Inject
+        SqliteWriter sqliteWriter;
 
         @Override
         public void onReceive(Context context, Intent intent) {
             ((NavigatorApplication) context.getApplicationContext()).getGraph().inject(this);
             Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
             contactsMemoryCache.add(contact);
-            sqliteDataBaseManager.persistFriend(contact);
+            sqliteWriter.persistFriend(contact);
         }
     }
 }

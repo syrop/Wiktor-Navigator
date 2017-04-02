@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.database;
+package pl.org.seva.navigator.database.firebase;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
@@ -31,9 +31,10 @@ import io.reactivex.subjects.ReplaySubject;
 import pl.org.seva.navigator.model.Contact;
 
 @Singleton
-public class FirebaseDatabaseReader extends FirebaseUtils {
+public class FirebaseReader extends FirebaseBase {
 
-    @Inject FirebaseDatabaseReader() {
+    @Inject
+    FirebaseReader() {
         super();
     }
 
@@ -41,7 +42,7 @@ public class FirebaseDatabaseReader extends FirebaseUtils {
         return readData(email2Reference(email).child(LAT_LNG))
                 .map(DataSnapshot::getValue)
                 .map(obj -> (String) obj)
-                .map(FirebaseUtils::string2LatLng);
+                .map(FirebaseBase::string2LatLng);
     }
 
     public Observable<Contact> friendshipRequestedListener() {
@@ -54,7 +55,7 @@ public class FirebaseDatabaseReader extends FirebaseUtils {
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
                 .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
-                .map(FirebaseDatabaseReader::snapshot2Contact);
+                .map(FirebaseReader::snapshot2Contact);
     }
 
     public Observable<Contact> friendshipDeletedListener() {
@@ -67,7 +68,7 @@ public class FirebaseDatabaseReader extends FirebaseUtils {
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
                 .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
-                .map(FirebaseDatabaseReader::snapshot2Contact);
+                .map(FirebaseReader::snapshot2Contact);
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
@@ -88,7 +89,7 @@ public class FirebaseDatabaseReader extends FirebaseUtils {
 
     public Observable<Contact> readContactOnceForEmail(String email) {
         return readDataOnce(email2Reference(email))
-                .map(FirebaseDatabaseReader::snapshot2Contact);
+                .map(FirebaseReader::snapshot2Contact);
     }
 
     private Observable<DataSnapshot> childListener(DatabaseReference reference) {
