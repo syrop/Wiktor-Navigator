@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
@@ -90,7 +91,7 @@ public class ActivityRecognitionSource implements
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        com.google.android.gms.location.ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
                 googleApiClient,
                 ACTIVITY_RECOGNITION_INTERVAL,
                 pendingIntent);
