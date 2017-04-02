@@ -37,7 +37,6 @@ import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.presenter.receiver.ActivityRecognitionReceiver;
 
