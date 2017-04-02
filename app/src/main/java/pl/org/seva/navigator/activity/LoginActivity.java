@@ -43,8 +43,8 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.database.FirebaseDatabaseWriter;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
-import pl.org.seva.navigator.database.FirebaseDatabaseManager;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -52,7 +52,8 @@ public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @Inject
+    FirebaseDatabaseWriter firebaseDatabaseWriter;
 
     public static final String ACTION = "action";
     public static final String LOGIN = "login";
@@ -128,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void onUserLoggedIn(FirebaseUser user) {
-        firebaseDatabaseManager.login(user);
+        firebaseDatabaseWriter.login(user);
         ((NavigatorApplication) getApplication()).login(user);
         if (performedAction) {
             finish();

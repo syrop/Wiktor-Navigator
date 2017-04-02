@@ -21,14 +21,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.database.FirebaseDatabaseManager;
+import pl.org.seva.navigator.database.FirebaseDatabaseReader;
 import pl.org.seva.navigator.receiver.FriendshipReceiver;
 
 @Singleton
 public class FriendshipSource {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @Inject
+    FirebaseDatabaseReader firebaseDatabaseReader;
 
     @Inject FriendshipSource() {
     }
@@ -37,13 +38,13 @@ public class FriendshipSource {
 
     public void addFriendshipReceiver(FriendshipReceiver friendshipReceiver) {
         compositeDisposable.addAll(
-                firebaseDatabaseManager
+                firebaseDatabaseReader
                         .friendshipRequestedListener()
                         .subscribe(friendshipReceiver::onPeerRequestedFriendship),
-                firebaseDatabaseManager
+                firebaseDatabaseReader
                         .friendshipAcceptedListener()
                         .subscribe(friendshipReceiver::onPeerAcceptedFriendship),
-                firebaseDatabaseManager
+                firebaseDatabaseReader
                         .friendshipDeletedListener()
                         .subscribe(friendshipReceiver::onPeerDeletedFriendship));
     }

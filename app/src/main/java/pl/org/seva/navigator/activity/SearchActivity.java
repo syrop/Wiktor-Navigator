@@ -35,9 +35,10 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.application.NavigatorApplication;
+import pl.org.seva.navigator.database.FirebaseDatabaseReader;
+import pl.org.seva.navigator.database.FirebaseDatabaseWriter;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
-import pl.org.seva.navigator.database.FirebaseDatabaseManager;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.view.ContactAdapter;
 import pl.org.seva.navigator.view.SingleContactAdapter;
@@ -45,7 +46,11 @@ import pl.org.seva.navigator.view.SingleContactAdapter;
 public class SearchActivity extends AppCompatActivity {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @Inject
+    FirebaseDatabaseWriter firebaseDatabaseWriter;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject
+    FirebaseDatabaseReader firebaseDatabaseReader;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ContactsMemoryCache contactsMemoryCache;
 
@@ -97,7 +102,7 @@ public class SearchActivity extends AppCompatActivity {
     private void search(String query) {
         query = query.toLowerCase();
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching));
-        firebaseDatabaseManager
+        firebaseDatabaseReader
                 .readContactOnceForEmail(query)
                 .subscribe(this::onContactReceived);
     }
@@ -140,7 +145,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void contactApprovedAndFinish(Contact contact) {
-        firebaseDatabaseManager.requestFriendship(contact);
+        firebaseDatabaseWriter.requestFriendship(contact);
         finish();
     }
 }
