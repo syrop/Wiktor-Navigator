@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import pl.org.seva.navigator.activity.ContactsActivity;
 import pl.org.seva.navigator.activity.LoginActivity;
+import pl.org.seva.navigator.activity.NavigationActivity;
 import pl.org.seva.navigator.activity.SearchActivity;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.receiver.ActivityRecognitionReceiver;
@@ -38,5 +39,5 @@ public interface Graph {
     void inject(ContactAdapter contactAdapter);
     void inject(ContactsActivity ca);
     void inject(FriendshipReceiver.FriendshipAccepted friendshipAccepted);
-    void inject(FriendshipReceiver.FriendshipDeleted friendshipDeleted);
+    void inject(NavigationActivity navigationActivity);
 }

@@ -18,7 +18,6 @@
 package pl.org.seva.navigator.database;
 
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,19 +25,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.ReplaySubject;
 import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.model.Contact;
 
 @Singleton
 public class FirebaseDatabaseManager {
-
-    private static final String TAG = FirebaseDatabaseManager.class.getSimpleName();
 
     private static final String USER_ROOT = "user";
 
@@ -87,10 +86,19 @@ public class FirebaseDatabaseManager {
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
-        ReplaySubject<DataSnapshot> result = ReplaySubject.create();
-        reference.addListenerForSingleValueEvent(new ValueEventListener(result));
+        PublishSubject<DataSnapshot> result = PublishSubject.create();
+        return result
+                .doOnSubscribe(__ -> reference.addListenerForSingleValueEvent(new ValueEventListener(result)))
+                .take(1);
+    }
 
-        return result.take(1);
+    private Observable<DataSnapshot> readData(DatabaseReference reference) {
+        PublishSubject<DataSnapshot> result = PublishSubject.create();
+        ValueEventListener val = new ValueEventListener(result);
+
+        return result
+                .doOnSubscribe(__ -> reference.addValueEventListener(val))
+                .doOnDispose(() -> reference.removeEventListener(val));
     }
 
     public Observable<Contact> readContactOnceForEmail(String email) {
@@ -121,14 +129,18 @@ public class FirebaseDatabaseManager {
 
     private DatabaseReference email2Reference(String email) {
         String referencePath = USER_ROOT + "/" + to64(email);
-        Log.d(TAG, "Reference: " + referencePath);
         return database.getReference(referencePath);
     }
 
-    public void onMyLocationReceived(String email, LatLng latLng) {
-        String email64 = to64(email);
-        DatabaseReference ref = database.getReference(USER_ROOT).child(email64);
-        ref.child(LAT_LNG).setValue(latLng2String(latLng));
+    public void storeMyLocation(String email, LatLng latLng) {
+        email2Reference(email).child(LAT_LNG).setValue(latLng2String(latLng));
+    }
+
+    public Observable<LatLng> peerLocationListener(String email) {
+        return readData(email2Reference(email).child(LAT_LNG))
+                .map(DataSnapshot::getValue)
+                .map(obj -> (String) obj)
+                .map(FirebaseDatabaseManager::string2LatLng);
     }
 
     public Observable<Contact> friendshipRequestedListener() {
@@ -174,9 +186,9 @@ public class FirebaseDatabaseManager {
 
     private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
 
-        private final ReplaySubject<DataSnapshot> valueEventSubject;
+        private final PublishSubject<DataSnapshot> valueEventSubject;
 
-        private ValueEventListener(ReplaySubject<DataSnapshot> subject) {
+        private ValueEventListener(PublishSubject<DataSnapshot> subject) {
             this.valueEventSubject = subject;
         }
 

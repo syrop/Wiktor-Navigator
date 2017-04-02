@@ -35,11 +35,11 @@ import javax.inject.Singleton;
 
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.application.NavigatorApplication;
-import pl.org.seva.navigator.receiver.LocationReceiver;
+import pl.org.seva.navigator.receiver.MyLocationReceiver;
 
 @SuppressWarnings("MissingPermission")
 @Singleton
-public class LocationSource implements
+public class MyLocationSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
@@ -47,7 +47,7 @@ public class LocationSource implements
     @SuppressWarnings("WeakerAccess")
     @Inject ActivityRecognitionSource activityRecognitionSource;
 
-    private static final String TAG = LocationSource.class.getSimpleName();
+    private static final String TAG = MyLocationSource.class.getSimpleName();
 
     private static final double ACCURACY_THRESHOLD = 100.0;  // [m]
     private static final long UPDATE_FREQUENCY = 30000;  // [ms]
@@ -68,21 +68,22 @@ public class LocationSource implements
     private boolean paused;
 
     @SuppressWarnings("WeakerAccess")
-    @Inject LocationSource() {
+    @Inject
+    MyLocationSource() {
         locationChangedSubject = PublishSubject.create();
     }
 
-    public void addLocationReceiver(LocationReceiver locationReceiver) {
+    public void addLocationReceiver(MyLocationReceiver myLocationReceiver) {
         locationChangedSubject
                 .filter(latLng -> NavigatorApplication.isLoggedIn)
-                .subscribe(locationReceiver::receive);
+                .subscribe(myLocationReceiver::onLocationReceived);
     }
 
     public void connectGoogleApiClient() {
         googleApiClient.connect();
     }
 
-    public LocationSource init(Context context) {
+    public MyLocationSource init(Context context) {
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
@@ -135,7 +136,7 @@ public class LocationSource implements
         if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
-        if (!LocationSource.isBetterLocation(location, this.location)) {
+        if (!MyLocationSource.isBetterLocation(location, this.location)) {
             return;
         }
         this.location = location;

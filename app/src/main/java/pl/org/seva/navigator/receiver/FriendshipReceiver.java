@@ -48,7 +48,7 @@ public class FriendshipReceiver {
         this.weakContext = new WeakReference<>(context);
     }
 
-    public void onFriendshipRequested(Contact contact) {
+    public void onPeerRequestedFriendship(Contact contact) {
         Context context = weakContext.get();
         if (context == null) {
             return;
@@ -94,11 +94,11 @@ public class FriendshipReceiver {
         notificationManager.notify(0, notification);
     }
 
-    public void onFriendshipAccepted(Contact contact) {
+    public void onPeerAcceptedFriendship(Contact contact) {
 
     }
 
-    public void onFriendshipDeleted(Contact contact) {
+    public void onPeerDeletedFriendship(Contact contact) {
 
     }
 
@@ -115,22 +115,6 @@ public class FriendshipReceiver {
             Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
             contactsMemoryCache.add(contact);
             sqliteDataBaseManager.persistFriend(contact);
-        }
-    }
-
-    public static class FriendshipDeleted extends BroadcastReceiver {
-
-        @SuppressWarnings("CanBeFinal")
-        @Inject ContactsMemoryCache contactsMemoryCache;
-        @SuppressWarnings("CanBeFinal")
-        @Inject SqliteDataBaseManager sqliteDataBaseManager;
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ((NavigatorApplication) context.getApplicationContext()).getGraph().inject(this);
-            Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
-            contactsMemoryCache.delete(contact);
-            sqliteDataBaseManager.deleteFriend(contact);
         }
     }
 }

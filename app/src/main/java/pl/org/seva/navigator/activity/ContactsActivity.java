@@ -45,14 +45,14 @@ import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
-import pl.org.seva.navigator.source.LocationSource;
+import pl.org.seva.navigator.source.MyLocationSource;
 import pl.org.seva.navigator.view.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject LocationSource locationSource;
+    @Inject MyLocationSource myLocationSource;
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
@@ -176,7 +176,7 @@ public class ContactsActivity extends AppCompatActivity
     }
 
     private void locationPermissionGranted() {
-        locationSource.connectGoogleApiClient();
+        myLocationSource.connectGoogleApiClient();
         initContactsView();
     }
 

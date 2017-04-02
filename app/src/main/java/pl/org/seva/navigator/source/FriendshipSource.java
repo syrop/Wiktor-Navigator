@@ -33,22 +33,22 @@ public class FriendshipSource {
     @Inject FriendshipSource() {
     }
 
-    private final CompositeDisposable friendshipListeners = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public void addFriendshipReceiver(FriendshipReceiver friendshipReceiver) {
-        friendshipListeners.addAll(
+        compositeDisposable.addAll(
                 firebaseDatabaseManager
                         .friendshipRequestedListener()
-                        .subscribe(friendshipReceiver::onFriendshipRequested),
+                        .subscribe(friendshipReceiver::onPeerRequestedFriendship),
                 firebaseDatabaseManager
                         .friendshipAcceptedListener()
-                        .subscribe(friendshipReceiver::onFriendshipAccepted),
+                        .subscribe(friendshipReceiver::onPeerAcceptedFriendship),
                 firebaseDatabaseManager
                         .friendshipDeletedListener()
-                        .subscribe(friendshipReceiver::onFriendshipDeleted));
+                        .subscribe(friendshipReceiver::onPeerDeletedFriendship));
     }
 
     public void clearFriendshipReceivers() {
-        friendshipListeners.clear();
+        compositeDisposable.clear();
     }
 }

@@ -15,26 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.receiver;
-
-import com.google.android.gms.maps.model.LatLng;
+package pl.org.seva.navigator.source;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import pl.org.seva.navigator.application.NavigatorApplication;
+import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.database.FirebaseDatabaseManager;
+import pl.org.seva.navigator.receiver.PeerLocationReceiver;
 
-@Singleton
-public class LocationReceiver {
+public class PeerLocationSource {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject FirebaseDatabaseManager firebaseDatabaseManager;
+    @Inject
+    FirebaseDatabaseManager firebaseDatabaseManager;
 
-    @Inject LocationReceiver() {
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @Inject PeerLocationSource() {
     }
 
-    public void receive(LatLng latLng) {
-        firebaseDatabaseManager.onMyLocationReceived(NavigatorApplication.email, latLng);
+    public void addPeerLocationReceiver(String email, PeerLocationReceiver peerLocationReceiver) {
+        compositeDisposable.add(
+                firebaseDatabaseManager
+                        .peerLocationListener(email)
+                        .subscribe(peerLocationReceiver::onPeerLocationReceived));
+    }
+
+    public void clearPeerLocationReceivers() {
+        compositeDisposable.clear();
     }
 }

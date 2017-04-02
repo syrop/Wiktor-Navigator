@@ -26,22 +26,35 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
+import javax.inject.Inject;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.application.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
+import pl.org.seva.navigator.receiver.PeerLocationReceiver;
+import pl.org.seva.navigator.source.PeerLocationSource;
 
 @SuppressWarnings("MissingPermission")
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends AppCompatActivity implements PeerLocationReceiver {
+
+    public static final String EMAIL = "email";
+
+    @Inject PeerLocationSource peerLocationSource;
 
     private static final String MAP_FRAGMENT_TAG = "map";
 
     private MapFragment mapFragment;
     private GoogleMap map;
+    private String email;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((NavigatorApplication) getApplication()).getGraph().inject(this);
         ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
+        email = getIntent().getStringExtra(EMAIL);
 
         int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
 
@@ -59,6 +72,20 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (email != null) {
+            peerLocationSource.addPeerLocationReceiver(email, this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        peerLocationSource.clearPeerLocationReceivers();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (mapFragment != null) {
             // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
@@ -66,5 +93,10 @@ public class NavigationActivity extends AppCompatActivity {
             mapFragment = null;
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onPeerLocationReceived(LatLng latLng) {
+
     }
 }
