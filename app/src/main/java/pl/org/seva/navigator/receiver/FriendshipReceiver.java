@@ -39,9 +39,9 @@ import pl.org.seva.navigator.model.ContactsMemoryCache;
 @Singleton
 public class FriendshipReceiver {
 
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject ContactsMemoryCache contactsMemoryCache;
-    @SuppressWarnings("CanBeFinal")
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject SqliteDataBaseManager sqliteDataBaseManager;
 
     private WeakReference<Context> weakContext;
