@@ -22,7 +22,6 @@ import android.util.Base64;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -88,13 +87,13 @@ public class FirebaseDatabaseManager {
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
         PublishSubject<DataSnapshot> result = PublishSubject.create();
         return result
-                .doOnSubscribe(__ -> reference.addListenerForSingleValueEvent(new ValueEventListener(result)))
+                .doOnSubscribe(__ -> reference.addListenerForSingleValueEvent(new RxValueEventListener(result)))
                 .take(1);
     }
 
     private Observable<DataSnapshot> readData(DatabaseReference reference) {
         PublishSubject<DataSnapshot> result = PublishSubject.create();
-        ValueEventListener val = new ValueEventListener(result);
+        ValueEventListener val = new RxValueEventListener(result);
 
         return result
                 .doOnSubscribe(__ -> reference.addValueEventListener(val))
@@ -108,7 +107,7 @@ public class FirebaseDatabaseManager {
 
     private Observable<DataSnapshot> childListener(DatabaseReference reference) {
         ReplaySubject<DataSnapshot> result = ReplaySubject.create();
-        reference.addChildEventListener(new ChildEventListener(result));
+        reference.addChildEventListener(new RxChildEventListener(result));
         return result.hide();
     }
 
@@ -182,55 +181,5 @@ public class FirebaseDatabaseManager {
     public void deleteFriendsdhip(Contact contact) {
         DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
-    }
-
-    private static class ValueEventListener implements com.google.firebase.database.ValueEventListener {
-
-        private final PublishSubject<DataSnapshot> valueEventSubject;
-
-        private ValueEventListener(PublishSubject<DataSnapshot> subject) {
-            this.valueEventSubject = subject;
-        }
-
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            valueEventSubject.onNext(dataSnapshot);
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            valueEventSubject.onError(new Exception(databaseError.getMessage()));
-        }
-    }
-
-    private static class ChildEventListener implements com.google.firebase.database.ChildEventListener {
-
-        private final ReplaySubject<DataSnapshot> childEventSubject;
-
-        private ChildEventListener(ReplaySubject<DataSnapshot> subject) {
-            this.childEventSubject = subject;
-        }
-
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            childEventSubject.onNext(dataSnapshot);
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            childEventSubject.onError(new Exception(databaseError.getMessage()));
-        }
     }
 }
