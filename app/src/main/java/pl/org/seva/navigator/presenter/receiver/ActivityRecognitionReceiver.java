@@ -17,43 +17,8 @@
 
 package pl.org.seva.navigator.presenter.receiver;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+public interface ActivityRecognitionReceiver {
 
-import com.google.android.gms.location.ActivityRecognitionResult;
-import com.google.android.gms.location.DetectedActivity;
-
-import javax.inject.Inject;
-
-import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.source.ActivityRecognitionSource;
-
-// https://shashikawlp.wordpress.com/2013/05/08/android-jelly-bean-notifications-with-actions/
-public class ActivityRecognitionReceiver extends BroadcastReceiver {
-
-    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject ActivityRecognitionSource activityRecognitionSource;
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        ((NavigatorApplication) context.getApplicationContext()).getGraph().inject(this);
-        if (ActivityRecognitionResult.hasResult(intent)) {
-            ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
-                onDeviceStationary();
-            }
-            else {
-                onDeviceMoving();
-            }
-        }
-    }
-
-    private void onDeviceStationary() {
-        activityRecognitionSource.onDeviceStationary();
-    }
-
-    private void onDeviceMoving() {
-        activityRecognitionSource.onDeviceMoving();
-    }
+    void onDeviceStationary();
+    void onDeviceMoving();
 }

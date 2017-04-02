@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
+import pl.org.seva.navigator.presenter.receiver.ActivityRecognitionReceiver;
 import pl.org.seva.navigator.presenter.receiver.MyLocationReceiver;
 
 @SuppressWarnings("MissingPermission")
@@ -42,7 +43,8 @@ import pl.org.seva.navigator.presenter.receiver.MyLocationReceiver;
 public class MyLocationSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+        com.google.android.gms.location.LocationListener,
+        ActivityRecognitionReceiver {
 
     @SuppressWarnings("WeakerAccess")
     @Inject ActivityRecognitionSource activityRecognitionSource;
@@ -136,7 +138,7 @@ public class MyLocationSource implements
         if (location.getAccuracy() >= ACCURACY_THRESHOLD) {
             return;
         }
-        if (!MyLocationSource.isBetterLocation(location, this.location)) {
+        if (!isBetterLocation(location, this.location)) {
             return;
         }
         this.location = location;
@@ -156,8 +158,7 @@ public class MyLocationSource implements
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE);
 
-        activityRecognitionSource.stationaryListener().subscribe(stationary -> pauseUpdates());
-        activityRecognitionSource.movingListener().subscribe(stationary -> resumeUpdates());
+        activityRecognitionSource.addActivityRecognitionReceiver(this);
 
         requestLocationUpdates();
     }
@@ -165,6 +166,11 @@ public class MyLocationSource implements
     private void requestLocationUpdates() {
         LocationServices.FusedLocationApi.
                 requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    @Override
+    public void onDeviceStationary() {
+        pauseUpdates();
     }
 
     private void pauseUpdates() {
@@ -175,6 +181,11 @@ public class MyLocationSource implements
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
 
         paused = true;
+    }
+
+    @Override
+    public void onDeviceMoving() {
+        resumeUpdates();
     }
 
     private void resumeUpdates() {

@@ -18,14 +18,18 @@
 package pl.org.seva.navigator.presenter.source;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognitionResult;
+import com.google.android.gms.location.DetectedActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -40,6 +44,8 @@ import pl.org.seva.navigator.presenter.receiver.ActivityRecognitionReceiver;
 public class ActivityRecognitionSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+
+    private static final String ACTIVITY_RECOGNITION = "activity_recognition_intent";
 
     private static final long ACTIVITY_RECOGNITION_INTERVAL = 1000;  // [ms]
 
@@ -59,6 +65,7 @@ public class ActivityRecognitionSource implements
             return;
         }
         weakContext = new WeakReference<>(context);
+        context.registerReceiver(new ActivityRecognitionBroadcastReceiver(), new IntentFilter(ACTIVITY_RECOGNITION));
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(com.google.android.gms.location.ActivityRecognition.API)
@@ -77,7 +84,7 @@ public class ActivityRecognitionSource implements
         if (context == null) {
             return;
         }
-        Intent intent = new Intent(context, ActivityRecognitionReceiver.class);
+        Intent intent = new Intent(ACTIVITY_RECOGNITION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
@@ -99,19 +106,24 @@ public class ActivityRecognitionSource implements
 
     }
 
-    Observable<Object> stationaryListener() {
-        return stationarySubject.hide();
+    void addActivityRecognitionReceiver(ActivityRecognitionReceiver activityRecognitionReceiver) {
+        stationarySubject.subscribe(__ -> activityRecognitionReceiver.onDeviceStationary());
+        movingSubject.subscribe(__ -> activityRecognitionReceiver.onDeviceMoving());
     }
 
-    Observable<Object> movingListener() {
-        return movingSubject.hide();
-    }
+    private class ActivityRecognitionBroadcastReceiver extends BroadcastReceiver {
 
-    public void onDeviceStationary() {
-        stationarySubject.onNext(0);
-    }
-
-    public void onDeviceMoving() {
-        movingSubject.onNext(0);
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ActivityRecognitionResult.hasResult(intent)) {
+                ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+                if (result.getMostProbableActivity().getType() == DetectedActivity.STILL) {
+                    stationarySubject.onNext(0);
+                }
+                else {
+                    movingSubject.onNext(0);
+                }
+            }
+        }
     }
 }
