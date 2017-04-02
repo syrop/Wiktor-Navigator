@@ -39,6 +39,11 @@ import pl.org.seva.navigator.model.ContactsMemoryCache;
 @Singleton
 public class FriendshipReceiver {
 
+    @SuppressWarnings("CanBeFinal")
+    @Inject ContactsMemoryCache contactsMemoryCache;
+    @SuppressWarnings("CanBeFinal")
+    @Inject SqliteDataBaseManager sqliteDataBaseManager;
+
     private WeakReference<Context> weakContext;
 
     @Inject FriendshipReceiver() {
@@ -95,11 +100,13 @@ public class FriendshipReceiver {
     }
 
     public void onPeerAcceptedFriendship(Contact contact) {
-
+        contactsMemoryCache.add(contact);
+        sqliteDataBaseManager.persistFriend(contact);
     }
 
     public void onPeerDeletedFriendship(Contact contact) {
-
+        contactsMemoryCache.delete(contact);
+        sqliteDataBaseManager.deleteFriend(contact);
     }
 
     public static class FriendshipAccepted extends BroadcastReceiver {
