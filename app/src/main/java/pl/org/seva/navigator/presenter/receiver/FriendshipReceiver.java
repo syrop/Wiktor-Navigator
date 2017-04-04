@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
 import java.lang.ref.WeakReference;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,8 +43,9 @@ public class FriendshipReceiver {
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject ContactsMemoryCache contactsMemoryCache;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject
-    SqliteWriter sqliteWriter;
+    @Inject SqliteWriter sqliteWriter;
+
+    private static final String NOTIFICATION_ID = "notification_id";
 
     private WeakReference<Context> weakContext;
 
@@ -68,8 +70,10 @@ public class FriendshipReceiver {
                 0,
                 new Intent(),
                 PendingIntent.FLAG_UPDATE_CURRENT);
+        int notificationId = new Random().nextInt();
         Intent friendshipAcceptedIntent = new Intent(context, FriendshipAccepted.class)
-                .putExtra(Contact.PARCELABLE_NAME, contact);
+                .putExtra(Contact.PARCELABLE_NAME, contact)
+                .putExtra(NOTIFICATION_ID, notificationId);
         PendingIntent yesPi = PendingIntent.getBroadcast(
                 context,
                 0,
@@ -97,7 +101,7 @@ public class FriendshipReceiver {
                 .build();
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
+        notificationManager.notify(notificationId, notification);
     }
 
     public void onPeerAcceptedFriendship(Contact contact) {
@@ -121,7 +125,14 @@ public class FriendshipReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             ((NavigatorApplication) context.getApplicationContext()).getGraph().inject(this);
+            int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+            NotificationManager notificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
             Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
+            if (contactsMemoryCache.contains(contact)) {
+                return;
+            }
             contactsMemoryCache.add(contact);
             sqliteWriter.persistFriend(contact);
         }
