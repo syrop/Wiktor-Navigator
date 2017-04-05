@@ -38,6 +38,5 @@ public interface Graph {
     void inject(SearchActivity searchActivity);
     void inject(ContactAdapter contactAdapter);
     void inject(ContactsActivity ca);
-    void inject(FriendshipReceiver.FriendshipAccepted friendshipAccepted);
     void inject(NavigationActivity navigationActivity);
 }

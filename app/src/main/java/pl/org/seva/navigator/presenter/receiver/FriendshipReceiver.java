@@ -23,6 +23,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.NotificationCompat;
 
 import java.lang.ref.WeakReference;
@@ -32,7 +33,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.navigator.R;
-import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
@@ -45,7 +45,11 @@ public class FriendshipReceiver {
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject SqliteWriter sqliteWriter;
 
+    private static final String FRIENDSHIP_ACCEPTED_INTENT = "friendship_accepted_intent";
+    private static final String FRIENDSHIP_REJECTED_INTENT = "friendship_rejected_intent";
     private static final String NOTIFICATION_ID = "notification_id";
+    private BroadcastReceiver acceptedReceiver;
+    private BroadcastReceiver rejectedReceiver;
 
     private WeakReference<Context> weakContext;
 
@@ -61,17 +65,16 @@ public class FriendshipReceiver {
         if (context == null) {
             return;
         }
+        acceptedReceiver = new FriendshipAccepted();
+        rejectedReceiver = new FriendshipRejected();
+        context.registerReceiver(acceptedReceiver, new IntentFilter(FRIENDSHIP_ACCEPTED_INTENT));
+        context.registerReceiver(rejectedReceiver, new IntentFilter(FRIENDSHIP_REJECTED_INTENT));
         String message = context.getResources()
                 .getString(R.string.friendship_confirmation)
                 .replace("[name]", contact.name())
                 .replace("[email]", contact.email());
-        PendingIntent noPi = PendingIntent.getActivity(
-                context,
-                0,
-                new Intent(),
-                PendingIntent.FLAG_UPDATE_CURRENT);
         int notificationId = new Random().nextInt();
-        Intent friendshipAcceptedIntent = new Intent(context, FriendshipAccepted.class)
+        Intent friendshipAcceptedIntent = new Intent(FRIENDSHIP_ACCEPTED_INTENT)
                 .putExtra(Contact.PARCELABLE_NAME, contact)
                 .putExtra(NOTIFICATION_ID, notificationId);
         PendingIntent yesPi = PendingIntent.getBroadcast(
@@ -79,10 +82,13 @@ public class FriendshipReceiver {
                 0,
                 friendshipAcceptedIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent contentPi = PendingIntent.getActivity(
+        Intent friendshipRejectedIntent = new Intent(FRIENDSHIP_REJECTED_INTENT)
+                .putExtra(Contact.PARCELABLE_NAME, contact)
+                .putExtra(NOTIFICATION_ID, notificationId);
+        PendingIntent noPi = PendingIntent.getActivity(
                 context,
                 0,
-                new Intent(),
+                friendshipRejectedIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
@@ -93,7 +99,6 @@ public class FriendshipReceiver {
         // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
         Notification notification = new NotificationCompat.Builder(context)
                 .setStyle(bigTextStyle)
-                .setContentIntent(contentPi)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(false)
                 .addAction(R.drawable.ic_close_black_24dp, context.getString(android.R.string.no), noPi)
@@ -114,17 +119,10 @@ public class FriendshipReceiver {
         sqliteWriter.deleteFriend(contact);
     }
 
-    public static class FriendshipAccepted extends BroadcastReceiver {
-
-        @SuppressWarnings("CanBeFinal")
-        @Inject ContactsMemoryCache contactsMemoryCache;
-        @SuppressWarnings("CanBeFinal")
-        @Inject
-        SqliteWriter sqliteWriter;
+    private class FriendshipAccepted extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            ((NavigatorApplication) context.getApplicationContext()).getGraph().inject(this);
             int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
             NotificationManager notificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -135,6 +133,21 @@ public class FriendshipReceiver {
             }
             contactsMemoryCache.add(contact);
             sqliteWriter.persistFriend(contact);
+            context.unregisterReceiver(this);
+            context.unregisterReceiver(rejectedReceiver);
+        }
+    }
+
+    private class FriendshipRejected extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+            NotificationManager notificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+            context.unregisterReceiver(this);
+            context.unregisterReceiver(acceptedReceiver);
         }
     }
 }

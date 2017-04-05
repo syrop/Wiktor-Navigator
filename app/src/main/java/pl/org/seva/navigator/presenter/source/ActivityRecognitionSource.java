@@ -45,7 +45,7 @@ public class ActivityRecognitionSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String ACTIVITY_RECOGNITION = "activity_recognition_intent";
+    private static final String ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent";
 
     private static final long ACTIVITY_RECOGNITION_INTERVAL = 1000;  // [ms]
 
@@ -65,7 +65,9 @@ public class ActivityRecognitionSource implements
             return;
         }
         weakContext = new WeakReference<>(context);
-        context.registerReceiver(new ActivityRecognitionBroadcastReceiver(), new IntentFilter(ACTIVITY_RECOGNITION));
+        context.registerReceiver(
+                new ActivityRecognitionBroadcastReceiver(),
+                new IntentFilter(ACTIVITY_RECOGNITION_INTENT));
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(com.google.android.gms.location.ActivityRecognition.API)
@@ -84,7 +86,7 @@ public class ActivityRecognitionSource implements
         if (context == null) {
             return;
         }
-        Intent intent = new Intent(ACTIVITY_RECOGNITION);
+        Intent intent = new Intent(ACTIVITY_RECOGNITION_INTENT);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,

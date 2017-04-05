@@ -48,10 +48,5 @@
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
-
-        <receiver android:name=".presenter.receiver.ActivityRecognitionReceiver" />
-        <receiver android:name=".presenter.receiver.FriendshipReceiver$FriendshipAccepted" />
-        <receiver android:name=".presenter.receiver.FriendshipReceiver$FriendshipDeleted" />
-
     </application>
 </manifest>
