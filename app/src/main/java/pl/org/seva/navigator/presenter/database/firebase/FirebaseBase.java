@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Locale;
+
 import pl.org.seva.navigator.NavigatorApplication;
 
 public class FirebaseBase {
@@ -45,7 +47,8 @@ public class FirebaseBase {
     }
 
     public static String latLng2String(LatLng latLng) {
-        return Double.toString(latLng.latitude) + ";" + latLng.longitude;
+        return String.format(Locale.US, "%.3f%", latLng.latitude) + ";" +
+                String.format(Locale.US, "%.3f", latLng.longitude);
     }
 
     public static LatLng string2LatLng(String str) {
