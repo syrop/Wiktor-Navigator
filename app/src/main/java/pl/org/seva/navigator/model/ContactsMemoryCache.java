@@ -25,12 +25,16 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
+import pl.org.seva.navigator.presenter.receiver.ContactsUpdatedReceiver;
 
 @Singleton
 public class ContactsMemoryCache {
 
     private final List<Contact> contacts;
+    private PublishSubject<Contact> contactsUpdatedSubject = PublishSubject.create();
 
     @Inject public ContactsMemoryCache() {
         contacts = new ArrayList<>();
@@ -49,6 +53,7 @@ public class ContactsMemoryCache {
     public void add(Contact contact) {
         contacts.add(contact);
         Collections.sort(contacts);
+        contactsUpdatedSubject.onNext(contact);
     }
 
     public void addAll(Collection<Contact> contacts) {
@@ -58,6 +63,7 @@ public class ContactsMemoryCache {
 
     public void delete(Contact contact) {
         contacts.remove(contact);
+        contactsUpdatedSubject.onNext(contact);
     }
 
     public Contact get(int position) {
@@ -66,5 +72,15 @@ public class ContactsMemoryCache {
 
     public int size() {
         return contacts.size() + 1;
+    }
+
+    public Disposable addContactsUpdatedReceiver(String email, ContactsUpdatedReceiver contactsUpdatedReceiver) {
+        return contactsUpdatedSubject
+                .filter(contact -> email == null || contact.email().equals(email))
+                .subscribe(__ -> contactsUpdatedReceiver.onContactsUpdated());
+    }
+
+    public Disposable addContactsUpdatedReceiver(ContactsUpdatedReceiver contactsUpdatedReceiver) {
+        return addContactsUpdatedReceiver(null, contactsUpdatedReceiver);
     }
 }

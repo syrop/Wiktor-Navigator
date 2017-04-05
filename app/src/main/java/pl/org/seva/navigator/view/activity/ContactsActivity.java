@@ -43,16 +43,19 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
+import pl.org.seva.navigator.presenter.receiver.ContactsUpdatedReceiver;
 import pl.org.seva.navigator.presenter.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ContactsUpdatedReceiver {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject MyLocationSource myLocationSource;
+    @Inject ContactsMemoryCache contactsMemoryCache;
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
@@ -84,17 +87,27 @@ public class ContactsActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         binding.navView.setNavigationItemSelectedListener(this);
+        contactsMemoryCache.addContactsUpdatedReceiver(this);
+        if (NavigatorApplication.isLoggedIn) {
+            alreadyLoggedIn();
+        }
+        else {
+            startLoginActivity();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         clearDrawerSelection();
+        updateContactsRecyclerView();
+    }
+
+    private void updateContactsRecyclerView() {
         View pleaseLogIn = binding.activityToolbar.contentContacts.pleaseLogIn;
         View header = binding.navView.getHeaderView(0);
         TextView name = ((TextView) header.findViewById(R.id.name));
         TextView email = ((TextView) header.findViewById(R.id.email));
-
         if (NavigatorApplication.isLoggedIn) {
             binding.activityToolbar.fab.setVisibility(View.VISIBLE);
             pleaseLogIn.setVisibility(View.GONE);
@@ -103,7 +116,6 @@ public class ContactsActivity extends AppCompatActivity
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(true);
             name.setText(NavigatorApplication.displayName);
             email.setText(NavigatorApplication.email);
-            alreadyLoggedIn();
         }
         else {
             pleaseLogIn.setVisibility(View.VISIBLE);
@@ -113,7 +125,6 @@ public class ContactsActivity extends AppCompatActivity
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(false);
             name.setText(R.string.app_name);
             email.setText(R.string.drawer_header_not_logged_in);
-            login();
         }
     }
 
@@ -222,7 +233,7 @@ public class ContactsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void login() {
+    private void startLoginActivity() {
         startActivity(new Intent(this, LoginActivity.class)
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGIN));
     }
@@ -239,7 +250,7 @@ public class ContactsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.drawer_login) {
-            login();
+            startLoginActivity();
         }
         else if (id == R.id.drawer_logout) {
             logout();
@@ -260,5 +271,10 @@ public class ContactsActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onContactsUpdated() {
+        updateContactsRecyclerView();
     }
 }
