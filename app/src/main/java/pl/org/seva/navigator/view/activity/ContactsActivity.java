@@ -37,6 +37,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import javax.inject.Inject;
@@ -61,6 +62,7 @@ public class ContactsActivity extends AppCompatActivity
 
     private ActivityContactsBinding binding;
     private RecyclerView contactsRecyclerView;
+    private ContactAdapter contactAdapter;
     private boolean permissionAlreadyRequested;
     private Graph graph;
 
@@ -88,22 +90,12 @@ public class ContactsActivity extends AppCompatActivity
         toggle.syncState();
         binding.navView.setNavigationItemSelectedListener(this);
         contactsMemoryCache.addContactsUpdatedReceiver(this);
-        if (NavigatorApplication.isLoggedIn) {
-            alreadyLoggedIn();
-        }
-        else {
-            startLoginActivity();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         clearDrawerSelection();
-        updateContactsRecyclerView();
-    }
-
-    private void updateContactsRecyclerView() {
         View pleaseLogIn = binding.activityToolbar.contentContacts.pleaseLogIn;
         View header = binding.navView.getHeaderView(0);
         TextView name = ((TextView) header.findViewById(R.id.name));
@@ -116,6 +108,7 @@ public class ContactsActivity extends AppCompatActivity
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(true);
             name.setText(NavigatorApplication.displayName);
             email.setText(NavigatorApplication.email);
+            alreadyLoggedIn();
         }
         else {
             pleaseLogIn.setVisibility(View.VISIBLE);
@@ -125,6 +118,7 @@ public class ContactsActivity extends AppCompatActivity
             binding.navView.getMenu().findItem(R.id.drawer_logout).setVisible(false);
             name.setText(R.string.app_name);
             email.setText(R.string.drawer_header_not_logged_in);
+            startLoginActivity();
         }
     }
 
@@ -155,9 +149,9 @@ public class ContactsActivity extends AppCompatActivity
         contactsRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
         contactsRecyclerView.setLayoutManager(lm);
-        ContactAdapter ca = new ContactAdapter();
-        graph.inject(ca);
-        contactsRecyclerView.setAdapter(ca);
+        contactAdapter = new ContactAdapter();
+        graph.inject(contactAdapter);
+        contactsRecyclerView.setAdapter(contactAdapter);
     }
 
     private void requestLocationPermission() {
@@ -275,6 +269,6 @@ public class ContactsActivity extends AppCompatActivity
 
     @Override
     public void onContactsUpdated() {
-        updateContactsRecyclerView();
+        contactAdapter.notifyDataSetChanged();
     }
 }

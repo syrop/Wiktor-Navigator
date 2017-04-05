@@ -59,11 +59,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         Contact contact = getContact(position);
         holder.name.setText(contact.name());
         holder.email.setText(contact.email());
-        holder.view.setOnClickListener(v -> onItemClick(position));
+        holder.view.setOnClickListener(__ -> onItemClick(position));
+        holder.view.setOnLongClickListener(__ -> onItemLongClick(position));
     }
 
     private void onItemClick(int position) {
         clickSubject.onNext(getContact(position));
+    }
+
+    private boolean onItemLongClick(int position) {
+        return position != 0;
     }
 
     public Observable<Contact> clickListener() {
