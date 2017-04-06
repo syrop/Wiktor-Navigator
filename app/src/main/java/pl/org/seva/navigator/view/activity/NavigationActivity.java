@@ -25,14 +25,16 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import javax.inject.Inject;
 
-import io.reactivex.disposables.Disposable;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
+import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.presenter.receiver.ContactsUpdatedReceiver;
 import pl.org.seva.navigator.presenter.receiver.PeerLocationReceiver;
@@ -41,7 +43,7 @@ import pl.org.seva.navigator.presenter.source.PeerLocationSource;
 @SuppressWarnings("MissingPermission")
 public class NavigationActivity extends AppCompatActivity implements PeerLocationReceiver, ContactsUpdatedReceiver {
 
-    public static final String EMAIL = "email";
+    public static final String CONTACT = "contact";
 
     @Inject PeerLocationSource peerLocationSource;
     @Inject ContactsMemoryCache contactsMemoryCache;
@@ -50,14 +52,14 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
     private MapFragment mapFragment;
     private GoogleMap map;
-    private String email;
+    private Contact contact;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((NavigatorApplication) getApplication()).getGraph().inject(this);
         ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
-        email = getIntent().getStringExtra(EMAIL);
+        contact = getIntent().getParcelableExtra(CONTACT);
 
         int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
 
@@ -72,16 +74,16 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
             map = googleMap;
             map.setMyLocationEnabled(true);
         });
-        if (email != null) {
-            contactsMemoryCache.addContactsUpdatedReceiver(email, this);
+        if (contact != null) {
+            contactsMemoryCache.addContactsUpdatedReceiver(contact.email(), this);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (email != null) {
-            peerLocationSource.addPeerLocationReceiver(email, this);
+        if (contact != null) {
+            peerLocationSource.addPeerLocationReceiver(contact.email(), this);
         }
     }
 
@@ -103,17 +105,26 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
     @Override
     public void onPeerLocationReceived(LatLng latLng) {
-        putPeerMapMarker(latLng);
+        putPeerMarker(latLng);
     }
 
     @Override
     public void onContactsUpdated() {
-        email = null;
+        contact = null;
         peerLocationSource.clearPeerLocationReceivers();
-        putPeerMapMarker(null);
+        clearMap();
     }
 
-    private void putPeerMapMarker(LatLng latLng) {
+    private void clearMap() {
+        map.clear();
+    }
 
+    private void putPeerMarker(LatLng latLng) {
+        clearMap();
+        map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(contact.name()))
+                .setIcon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
     }
 }
