@@ -47,7 +47,7 @@ public class FirebaseBase {
     }
 
     public static String latLng2String(LatLng latLng) {
-        return String.format(Locale.US, "%.3f%", latLng.latitude) + ";" +
+        return String.format(Locale.US, "%.3f", latLng.latitude) + ";" +
                 String.format(Locale.US, "%.3f", latLng.longitude);
     }
 
