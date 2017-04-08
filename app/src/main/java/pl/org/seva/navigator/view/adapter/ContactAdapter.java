@@ -39,6 +39,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Inject ContactsMemoryCache contactsMemoryCache;
 
     private final PublishSubject<Contact> clickSubject = PublishSubject.create();
+    private final PublishSubject<Contact> longClickSubject = PublishSubject.create();
 
     Contact getContact(int position) {
         return contactsMemoryCache.get(position);
@@ -68,11 +69,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     private boolean onItemLongClick(int position) {
-        return position != 0;
+        if (position == 0) {
+            return false;
+        }
+        longClickSubject.onNext(getContact(position));
+        return true;
     }
 
     public Observable<Contact> clickListener() {
         return clickSubject.hide();
+    }
+
+    public Observable<Contact> longClickListener() {
+        return longClickSubject.hide();
     }
 
     @Override

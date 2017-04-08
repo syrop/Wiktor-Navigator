@@ -37,13 +37,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
@@ -151,7 +151,17 @@ public class ContactsActivity extends AppCompatActivity
         contactsRecyclerView.setLayoutManager(lm);
         contactAdapter = new ContactAdapter();
         graph.inject(contactAdapter);
+        contactAdapter.clickListener().subscribe(this::onContactClick);
+        contactAdapter.longClickListener().subscribe(this::onContactLongClick);
         contactsRecyclerView.setAdapter(contactAdapter);
+    }
+
+    private void onContactClick(Contact contact) {
+        startActivity(new Intent(this, NavigationActivity.class).putExtra(NavigationActivity.CONTACT, contact));
+    }
+
+    private void onContactLongClick(Contact contact) {
+
     }
 
     private void requestLocationPermission() {
