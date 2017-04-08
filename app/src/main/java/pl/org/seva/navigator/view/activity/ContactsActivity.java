@@ -237,29 +237,16 @@ public class ContactsActivity extends AppCompatActivity
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT));
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.drawer_login) {
-            startLoginActivity();
-        }
-        else if (id == R.id.drawer_logout) {
-            logout();
-        }
-        else if (id == R.id.nav_slideshow) {
-
-        }
-        else if (id == R.id.nav_manage) {
-
-        }
-        else if (id == R.id.nav_share) {
-
-        }
-        else if (id == R.id.nav_send) {
-
+        switch (item.getItemId()) {
+            case R.id.drawer_login:
+                startLoginActivity();
+            break;
+            case R.id.drawer_logout:
+                logout();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
