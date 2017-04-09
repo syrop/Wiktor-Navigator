@@ -35,7 +35,7 @@ import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 import pl.org.seva.navigator.presenter.listener.PeerLocationListener;
 import pl.org.seva.navigator.presenter.source.PeerLocationSource;
@@ -46,7 +46,8 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     public static final String CONTACT = "contact";
 
     @Inject PeerLocationSource peerLocationSource;
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
 
     private static final String MAP_FRAGMENT_TAG = "map";
 
@@ -75,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
             map.setMyLocationEnabled(true);
         });
         if (contact != null) {
-            contactsMemoryCache.addContactsUpdatedListener(contact.email(), this);
+            contactsCache.addContactsUpdatedListener(contact.email(), this);
         }
     }
 

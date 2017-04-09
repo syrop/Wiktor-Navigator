@@ -32,7 +32,7 @@ import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.presenter.listener.FriendshipListener;
 import pl.org.seva.navigator.presenter.listener.MyLocationListener;
 import pl.org.seva.navigator.presenter.source.ActivityRecognitionSource;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.source.FriendshipSource;
 import pl.org.seva.navigator.presenter.source.MyLocationSource;
 import pl.org.seva.navigator.model.Contact;
@@ -46,7 +46,8 @@ public class NavigatorApplication extends Application {
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject SqliteReader sqliteReader;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject MyLocationSource myLocationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
@@ -72,7 +73,7 @@ public class NavigatorApplication extends Application {
         DbHelper helper = new DbHelper(this);
         sqliteWriter.setHelper(helper);
         sqliteReader.setHelper(helper);
-        contactsMemoryCache.addAll(sqliteReader.getFriends());
+        contactsCache.addAll(sqliteReader.getFriends());
         myLocationSource.init(this).addLocationListener(myLocationListener);
         friendshipListener.init(this);
         if (isLoggedIn) {

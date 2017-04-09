@@ -44,7 +44,7 @@ import javax.inject.Inject;
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
 import pl.org.seva.navigator.presenter.listener.ContactClickListener;
@@ -61,7 +61,8 @@ public class ContactsActivity extends AppCompatActivity implements
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject MyLocationSource myLocationSource;
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
@@ -94,7 +95,7 @@ public class ContactsActivity extends AppCompatActivity implements
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         binding.navView.setNavigationItemSelectedListener(this);
-        contactsMemoryCache.addContactsUpdatedListener(this);
+        contactsCache.addContactsUpdatedListener(this);
     }
 
     @Override

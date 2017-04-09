@@ -33,16 +33,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
 
 @Singleton
 public class FriendshipListener {
 
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject SqliteWriter sqliteWriter;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
@@ -114,12 +115,12 @@ public class FriendshipListener {
     }
 
     public void onPeerAcceptedFriendship(Contact contact) {
-        contactsMemoryCache.add(contact);
+        contactsCache.add(contact);
         sqliteWriter.persistFriend(contact);
     }
 
     public void onPeerDeletedFriendship(Contact contact) {
-        contactsMemoryCache.delete(contact);
+        contactsCache.delete(contact);
         sqliteWriter.deleteFriend(contact);
     }
 
@@ -132,10 +133,10 @@ public class FriendshipListener {
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(notificationId);
             Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
-            if (contactsMemoryCache.contains(contact)) {
+            if (contactsCache.contains(contact)) {
                 return;
             }
-            contactsMemoryCache.add(contact);
+            contactsCache.add(contact);
             sqliteWriter.persistFriend(contact);
             firebaseWriter.acceptFriendship(contact);
             context.unregisterReceiver(this);

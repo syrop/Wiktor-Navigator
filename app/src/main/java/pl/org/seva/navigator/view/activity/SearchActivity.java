@@ -35,10 +35,10 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.NavigatorApplication;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.database.firebase.FirebaseReader;
 import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.presenter.listener.ContactClickListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
@@ -51,7 +51,8 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FirebaseReader firebaseReader;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
 
     private ActivitySearchBinding binding;
 
@@ -129,7 +130,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
 
     @Override
     public void onClick(Contact contact) {
-        if (contactsMemoryCache.contains(contact)) {
+        if (contactsCache.contains(contact)) {
             finish();
             return;
         }

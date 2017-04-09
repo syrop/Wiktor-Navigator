@@ -31,12 +31,12 @@ import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 
 @Singleton
-public class ContactsMemoryCache {
+public class ContactsCache {
 
     private final List<Contact> contacts;
     private PublishSubject<Contact> contactsUpdatedSubject = PublishSubject.create();
 
-    @Inject public ContactsMemoryCache() {
+    @Inject public ContactsCache() {
         contacts = new ArrayList<>();
     }
 

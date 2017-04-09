@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ContactBinding;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.presenter.listener.ContactClickListener;
 import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
@@ -37,13 +37,14 @@ import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
 
     private final PublishSubject<Contact> clickSubject = PublishSubject.create();
     private final PublishSubject<Contact> longClickSubject = PublishSubject.create();
 
     Contact getContact(int position) {
-        return contactsMemoryCache.get(position);
+        return contactsCache.get(position);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return contactsMemoryCache.size();
+        return contactsCache.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

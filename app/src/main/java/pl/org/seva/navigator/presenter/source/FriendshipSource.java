@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.model.ContactsMemoryCache;
+import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.database.firebase.FirebaseReader;
 import pl.org.seva.navigator.presenter.listener.FriendshipListener;
 
@@ -31,7 +31,8 @@ public class FriendshipSource {
     @SuppressWarnings("WeakerAccess")
     @Inject FirebaseReader firebaseReader;
     @SuppressWarnings("WeakerAccess")
-    @Inject ContactsMemoryCache contactsMemoryCache;
+    @Inject
+    ContactsCache contactsCache;
 
     @Inject FriendshipSource() {
     }
@@ -42,7 +43,7 @@ public class FriendshipSource {
         compositeDisposable.addAll(
                 firebaseReader
                         .friendshipRequestedListener()
-                        .filter(contact -> !contactsMemoryCache.contains(contact))
+                        .filter(contact -> !contactsCache.contains(contact))
                         .subscribe(friendshipListener::onPeerRequestedFriendship),
                 firebaseReader
                         .friendshipAcceptedListener()
