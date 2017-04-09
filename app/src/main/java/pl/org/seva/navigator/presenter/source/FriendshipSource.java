@@ -28,8 +28,7 @@ import pl.org.seva.navigator.presenter.listener.FriendshipListener;
 public class FriendshipSource {
 
     @SuppressWarnings("WeakerAccess")
-    @Inject
-    FirebaseReader firebaseReader;
+    @Inject FirebaseReader firebaseReader;
 
     @Inject FriendshipSource() {
     }

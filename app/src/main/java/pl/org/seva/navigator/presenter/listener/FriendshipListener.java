@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
@@ -44,6 +45,8 @@ public class FriendshipListener {
     @Inject ContactsMemoryCache contactsMemoryCache;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject SqliteWriter sqliteWriter;
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
+    @Inject FirebaseWriter firebaseWriter;
 
     private static final String FRIENDSHIP_ACCEPTED_INTENT = "friendship_accepted_intent";
     private static final String FRIENDSHIP_REJECTED_INTENT = "friendship_rejected_intent";
@@ -66,8 +69,8 @@ public class FriendshipListener {
         if (context == null) {
             return;
         }
-        acceptedReceiver = new FriendshipAccepted();
-        rejectedReceiver = new FriendshipRejected();
+        acceptedReceiver = new FriendshipAcceptedBroadcastReceiver();
+        rejectedReceiver = new FriendshipRejectedBroadcastReceiver();
         context.registerReceiver(acceptedReceiver, new IntentFilter(FRIENDSHIP_ACCEPTED_INTENT));
         context.registerReceiver(rejectedReceiver, new IntentFilter(FRIENDSHIP_REJECTED_INTENT));
         String message = context.getResources()
@@ -120,7 +123,7 @@ public class FriendshipListener {
         sqliteWriter.deleteFriend(contact);
     }
 
-    private class FriendshipAccepted extends BroadcastReceiver {
+    private class FriendshipAcceptedBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -134,12 +137,13 @@ public class FriendshipListener {
             }
             contactsMemoryCache.add(contact);
             sqliteWriter.persistFriend(contact);
+            firebaseWriter.acceptFriendship(contact);
             context.unregisterReceiver(this);
             context.unregisterReceiver(rejectedReceiver);
         }
     }
 
-    private class FriendshipRejected extends BroadcastReceiver {
+    private class FriendshipRejectedBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
