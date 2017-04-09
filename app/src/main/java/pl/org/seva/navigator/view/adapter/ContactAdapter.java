@@ -26,12 +26,13 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ContactBinding;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.model.Contact;
+import pl.org.seva.navigator.presenter.listener.ContactClickListener;
+import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
@@ -76,12 +77,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return true;
     }
 
-    public Observable<Contact> clickListener() {
-        return clickSubject.hide();
+    public void addClickListener(ContactClickListener contactClickListener) {
+        clickSubject.subscribe(contactClickListener::onClick);
     }
 
-    public Observable<Contact> longClickListener() {
-        return longClickSubject.hide();
+    public void addLongClickListener(ContactLongClickListener contactLongClickListener) {
+        longClickSubject.subscribe(contactLongClickListener::onLongClick);
     }
 
     @Override

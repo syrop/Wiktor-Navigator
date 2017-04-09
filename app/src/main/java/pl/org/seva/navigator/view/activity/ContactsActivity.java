@@ -47,12 +47,17 @@ import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
+import pl.org.seva.navigator.presenter.listener.ContactClickListener;
+import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
 import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 import pl.org.seva.navigator.presenter.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 
-public class ContactsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ContactsUpdatedListener {
+public class ContactsActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        ContactsUpdatedListener,
+        ContactClickListener,
+        ContactLongClickListener {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject MyLocationSource myLocationSource;
@@ -151,16 +156,18 @@ public class ContactsActivity extends AppCompatActivity
         contactsRecyclerView.setLayoutManager(lm);
         contactAdapter = new ContactAdapter();
         graph.inject(contactAdapter);
-        contactAdapter.clickListener().subscribe(this::onContactClick);
-        contactAdapter.longClickListener().subscribe(this::onContactLongClick);
+        contactAdapter.addClickListener(this);
+        contactAdapter.addLongClickListener(this);
         contactsRecyclerView.setAdapter(contactAdapter);
     }
 
-    private void onContactClick(Contact contact) {
+    @Override
+    public void onClick(Contact contact) {
         startActivity(new Intent(this, NavigationActivity.class).putExtra(NavigationActivity.CONTACT, contact));
     }
 
-    private void onContactLongClick(Contact contact) {
+    @Override
+    public void onLongClick(Contact contact) {
 
     }
 

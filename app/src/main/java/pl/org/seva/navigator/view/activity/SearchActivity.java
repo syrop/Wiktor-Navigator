@@ -40,10 +40,11 @@ import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.model.Contact;
+import pl.org.seva.navigator.presenter.listener.ContactClickListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements ContactClickListener {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FirebaseWriter firebaseWriter;
@@ -123,10 +124,11 @@ public class SearchActivity extends AppCompatActivity {
         rv.setLayoutManager(lm);
         ContactAdapter adapter = new SingleContactAdapter(contact);
         rv.setAdapter(adapter);
-        adapter.clickListener().subscribe(this::onContactClick);
+        adapter.addClickListener(this::onClick);
     }
 
-    private void onContactClick(Contact contact) {
+    @Override
+    public void onClick(Contact contact) {
         if (contactsMemoryCache.contains(contact)) {
             finish();
             return;
