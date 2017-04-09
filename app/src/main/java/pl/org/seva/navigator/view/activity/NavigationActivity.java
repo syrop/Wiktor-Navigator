@@ -36,12 +36,12 @@ import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
-import pl.org.seva.navigator.presenter.receiver.ContactsUpdatedReceiver;
-import pl.org.seva.navigator.presenter.receiver.PeerLocationReceiver;
+import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
+import pl.org.seva.navigator.presenter.listener.PeerLocationListener;
 import pl.org.seva.navigator.presenter.source.PeerLocationSource;
 
 @SuppressWarnings("MissingPermission")
-public class NavigationActivity extends AppCompatActivity implements PeerLocationReceiver, ContactsUpdatedReceiver {
+public class NavigationActivity extends AppCompatActivity implements PeerLocationListener, ContactsUpdatedListener {
 
     public static final String CONTACT = "contact";
 
@@ -75,7 +75,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
             map.setMyLocationEnabled(true);
         });
         if (contact != null) {
-            contactsMemoryCache.addContactsUpdatedReceiver(contact.email(), this);
+            contactsMemoryCache.addContactsUpdatedListener(contact.email(), this);
         }
     }
 
@@ -83,14 +83,14 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     protected void onResume() {
         super.onResume();
         if (contact != null) {
-            peerLocationSource.addPeerLocationReceiver(contact.email(), this);
+            peerLocationSource.addPeerLocationListener(contact.email(), this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        peerLocationSource.clearPeerLocationReceivers();
+        peerLocationSource.clearPeerLocationListeners();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     @Override
     public void onContactsUpdated() {
         contact = null;
-        peerLocationSource.clearPeerLocationReceivers();
+        peerLocationSource.clearPeerLocationListeners();
         clearMap();
     }
 

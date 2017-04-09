@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.subjects.PublishSubject;
-import pl.org.seva.navigator.presenter.receiver.ActivityRecognitionReceiver;
+import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
 
 @Singleton
 public class ActivityRecognitionSource implements
@@ -108,9 +108,9 @@ public class ActivityRecognitionSource implements
 
     }
 
-    void addActivityRecognitionReceiver(ActivityRecognitionReceiver activityRecognitionReceiver) {
-        stationarySubject.subscribe(__ -> activityRecognitionReceiver.onDeviceStationary());
-        movingSubject.subscribe(__ -> activityRecognitionReceiver.onDeviceMoving());
+    void addActivityRecognitionListener(ActivityRecognitionListener activityRecognitionListener) {
+        stationarySubject.subscribe(__ -> activityRecognitionListener.onDeviceStationary());
+        movingSubject.subscribe(__ -> activityRecognitionListener.onDeviceMoving());
     }
 
     private class ActivityRecognitionBroadcastReceiver extends BroadcastReceiver {

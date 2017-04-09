@@ -15,10 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.receiver;
+package pl.org.seva.navigator.presenter.listener;
 
-import com.google.android.gms.maps.model.LatLng;
-
-public interface PeerLocationReceiver {
-    void onPeerLocationReceived(LatLng latLng);
+public interface ContactsUpdatedListener {
+    void onContactsUpdated();
 }

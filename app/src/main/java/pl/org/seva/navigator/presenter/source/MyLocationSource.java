@@ -35,8 +35,8 @@ import javax.inject.Singleton;
 
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.receiver.ActivityRecognitionReceiver;
-import pl.org.seva.navigator.presenter.receiver.MyLocationReceiver;
+import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
+import pl.org.seva.navigator.presenter.listener.MyLocationListener;
 
 @SuppressWarnings("MissingPermission")
 @Singleton
@@ -44,7 +44,7 @@ public class MyLocationSource implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener,
-        ActivityRecognitionReceiver {
+        ActivityRecognitionListener {
 
     @SuppressWarnings("WeakerAccess")
     @Inject ActivityRecognitionSource activityRecognitionSource;
@@ -75,10 +75,10 @@ public class MyLocationSource implements
         locationChangedSubject = PublishSubject.create();
     }
 
-    public void addLocationReceiver(MyLocationReceiver myLocationReceiver) {
+    public void addLocationListener(MyLocationListener myLocationListener) {
         locationChangedSubject
                 .filter(latLng -> NavigatorApplication.isLoggedIn)
-                .subscribe(myLocationReceiver::onLocationReceived);
+                .subscribe(myLocationListener::onLocationReceived);
     }
 
     public void connectGoogleApiClient() {
@@ -158,7 +158,7 @@ public class MyLocationSource implements
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE);
 
-        activityRecognitionSource.addActivityRecognitionReceiver(this);
+        activityRecognitionSource.addActivityRecognitionListener(this);
 
         requestLocationUpdates();
     }

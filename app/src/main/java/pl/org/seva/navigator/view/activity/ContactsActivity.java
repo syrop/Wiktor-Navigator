@@ -47,12 +47,12 @@ import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
-import pl.org.seva.navigator.presenter.receiver.ContactsUpdatedReceiver;
+import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 import pl.org.seva.navigator.presenter.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 
 public class ContactsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ContactsUpdatedReceiver {
+        implements NavigationView.OnNavigationItemSelectedListener, ContactsUpdatedListener {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject MyLocationSource myLocationSource;
@@ -89,7 +89,7 @@ public class ContactsActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         binding.navView.setNavigationItemSelectedListener(this);
-        contactsMemoryCache.addContactsUpdatedReceiver(this);
+        contactsMemoryCache.addContactsUpdatedListener(this);
     }
 
     @Override

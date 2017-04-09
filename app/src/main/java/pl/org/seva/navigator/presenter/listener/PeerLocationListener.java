@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.receiver;
+package pl.org.seva.navigator.presenter.listener;
 
-public interface ActivityRecognitionReceiver {
+import com.google.android.gms.maps.model.LatLng;
 
-    void onDeviceStationary();
-    void onDeviceMoving();
+public interface PeerLocationListener {
+    void onPeerLocationReceived(LatLng latLng);
 }

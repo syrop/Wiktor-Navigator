@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.presenter.database.firebase.FirebaseReader;
-import pl.org.seva.navigator.presenter.receiver.FriendshipReceiver;
+import pl.org.seva.navigator.presenter.listener.FriendshipListener;
 
 @Singleton
 public class FriendshipSource {
@@ -36,20 +36,20 @@ public class FriendshipSource {
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public void addFriendshipReceiver(FriendshipReceiver friendshipReceiver) {
+    public void addFriendshipListener(FriendshipListener friendshipListener) {
         compositeDisposable.addAll(
                 firebaseReader
                         .friendshipRequestedListener()
-                        .subscribe(friendshipReceiver::onPeerRequestedFriendship),
+                        .subscribe(friendshipListener::onPeerRequestedFriendship),
                 firebaseReader
                         .friendshipAcceptedListener()
-                        .subscribe(friendshipReceiver::onPeerAcceptedFriendship),
+                        .subscribe(friendshipListener::onPeerAcceptedFriendship),
                 firebaseReader
                         .friendshipDeletedListener()
-                        .subscribe(friendshipReceiver::onPeerDeletedFriendship));
+                        .subscribe(friendshipListener::onPeerDeletedFriendship));
     }
 
-    public void clearFriendshipReceivers() {
+    public void clearFriendshipListeners() {
         compositeDisposable.clear();
     }
 }

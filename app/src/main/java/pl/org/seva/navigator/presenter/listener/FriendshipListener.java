@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.receiver;
+package pl.org.seva.navigator.presenter.listener;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -38,7 +38,7 @@ import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 
 @Singleton
-public class FriendshipReceiver {
+public class FriendshipListener {
 
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject ContactsMemoryCache contactsMemoryCache;
@@ -53,7 +53,8 @@ public class FriendshipReceiver {
 
     private WeakReference<Context> weakContext;
 
-    @Inject FriendshipReceiver() {
+    @Inject
+    FriendshipListener() {
     }
 
     public void init(Context context) {

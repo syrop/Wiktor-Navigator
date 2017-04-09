@@ -29,8 +29,8 @@ import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.presenter.database.sqlite.DbHelper;
 import pl.org.seva.navigator.presenter.database.sqlite.SqliteReader;
 import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
-import pl.org.seva.navigator.presenter.receiver.FriendshipReceiver;
-import pl.org.seva.navigator.presenter.receiver.MyLocationReceiver;
+import pl.org.seva.navigator.presenter.listener.FriendshipListener;
+import pl.org.seva.navigator.presenter.listener.MyLocationListener;
 import pl.org.seva.navigator.presenter.source.ActivityRecognitionSource;
 import pl.org.seva.navigator.model.ContactsMemoryCache;
 import pl.org.seva.navigator.presenter.source.FriendshipSource;
@@ -50,11 +50,11 @@ public class NavigatorApplication extends Application {
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject MyLocationSource myLocationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject MyLocationReceiver myLocationReceiver;
+    @Inject MyLocationListener myLocationListener;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FriendshipSource friendshipSource;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject FriendshipReceiver friendshipReceiver;
+    @Inject FriendshipListener friendshipListener;
 
     private Graph graph;
 
@@ -73,8 +73,8 @@ public class NavigatorApplication extends Application {
         sqliteWriter.setHelper(helper);
         sqliteReader.setHelper(helper);
         contactsMemoryCache.addAll(sqliteReader.getFriends());
-        myLocationSource.init(this).addLocationReceiver(myLocationReceiver);
-        friendshipReceiver.init(this);
+        myLocationSource.init(this).addLocationListener(myLocationListener);
+        friendshipListener.init(this);
         if (isLoggedIn) {
             setFriendshipListeners();
         }
@@ -116,10 +116,10 @@ public class NavigatorApplication extends Application {
     }
 
     private void setFriendshipListeners() {
-        friendshipSource.addFriendshipReceiver(friendshipReceiver);
+        friendshipSource.addFriendshipListener(friendshipListener);
     }
 
     private void clearFriendshipListeners() {
-        friendshipSource.clearFriendshipReceivers();
+        friendshipSource.clearFriendshipListeners();
     }
 }

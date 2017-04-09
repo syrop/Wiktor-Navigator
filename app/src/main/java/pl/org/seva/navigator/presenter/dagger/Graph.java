@@ -25,15 +25,14 @@ import pl.org.seva.navigator.view.activity.LoginActivity;
 import pl.org.seva.navigator.view.activity.NavigationActivity;
 import pl.org.seva.navigator.view.activity.SearchActivity;
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.receiver.ActivityRecognitionReceiver;
-import pl.org.seva.navigator.presenter.receiver.FriendshipReceiver;
+import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 
 @Singleton
 @Component(modules = { pl.org.seva.navigator.presenter.dagger.NavigatorModule.class })
 public interface Graph {
     void inject(NavigatorApplication navigatorApplication);
-    void inject(ActivityRecognitionReceiver activityRecognitionReceiver);
+    void inject(ActivityRecognitionListener activityRecognitionListener);
     void inject(LoginActivity loginActivity);
     void inject(SearchActivity searchActivity);
     void inject(ContactAdapter contactAdapter);

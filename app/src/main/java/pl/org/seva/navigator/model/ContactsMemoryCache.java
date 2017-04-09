@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.receiver.ContactsUpdatedReceiver;
+import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 
 @Singleton
 public class ContactsMemoryCache {
@@ -74,13 +74,13 @@ public class ContactsMemoryCache {
         return contacts.size() + 1;
     }
 
-    public Disposable addContactsUpdatedReceiver(String email, ContactsUpdatedReceiver contactsUpdatedReceiver) {
+    public Disposable addContactsUpdatedListener(String email, ContactsUpdatedListener contactsUpdatedListener) {
         return contactsUpdatedSubject
                 .filter(contact -> email == null || contact.email().equals(email))
-                .subscribe(__ -> contactsUpdatedReceiver.onContactsUpdated());
+                .subscribe(__ -> contactsUpdatedListener.onContactsUpdated());
     }
 
-    public Disposable addContactsUpdatedReceiver(ContactsUpdatedReceiver contactsUpdatedReceiver) {
-        return addContactsUpdatedReceiver(null, contactsUpdatedReceiver);
+    public Disposable addContactsUpdatedListener(ContactsUpdatedListener contactsUpdatedListener) {
+        return addContactsUpdatedListener(null, contactsUpdatedListener);
     }
 }
