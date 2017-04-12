@@ -31,8 +31,7 @@ public class FriendshipSource {
     @SuppressWarnings("WeakerAccess")
     @Inject FirebaseReader firebaseReader;
     @SuppressWarnings("WeakerAccess")
-    @Inject
-    ContactsCache contactsCache;
+    @Inject ContactsCache contactsCache;
 
     @Inject FriendshipSource() {
     }
