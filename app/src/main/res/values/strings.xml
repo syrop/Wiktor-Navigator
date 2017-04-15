@@ -15,7 +15,6 @@
     <string name="navigation_activity_label">Navigation</string>
 
     <!-- Login activity. -->
-    <string name="login_activity_label">Google Sign In</string>
     <string name="login_authentication_failed">Authentication failed.</string>
     <string name="login_loading">Loading…</string>
     <string name="login_please_log_in">Please log in.</string>
