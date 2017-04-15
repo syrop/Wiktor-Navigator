@@ -22,6 +22,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -69,6 +70,11 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         }
         mapFragment.getMapAsync(this::onMapReady);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         contact = getIntent().getParcelableExtra(CONTACT);
         if (contact != null) {
             contactsCache.addContactsUpdatedListener(contact.email(), this);
@@ -102,6 +108,17 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
             mapFragment = null;
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

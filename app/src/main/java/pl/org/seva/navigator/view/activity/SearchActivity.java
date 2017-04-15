@@ -70,6 +70,11 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
             String query = intent.getStringExtra(SearchManager.QUERY);
             search(query);
         }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
     @Override
@@ -89,14 +94,18 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_search) {
-            binding.notFoundLabel.setVisibility(View.GONE);
-            binding.contacts.setVisibility(View.GONE);
-            onSearchRequested();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                binding.notFoundLabel.setVisibility(View.GONE);
+                binding.contacts.setVisibility(View.GONE);
+                onSearchRequested();
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void search(String query) {
