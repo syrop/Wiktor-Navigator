@@ -46,13 +46,12 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     public static final String CONTACT = "contact";
 
     @Inject PeerLocationSource peerLocationSource;
-    @Inject
-    ContactsCache contactsCache;
+    @Inject ContactsCache contactsCache;
 
-    private static final String MAP_FRAGMENT_TAG = "map";
+    private static final String MAP_FRAGMENT_TAG = "googleMap";
 
     private MapFragment mapFragment;
-    private GoogleMap map;
+    private GoogleMap googleMap;
     private Contact contact;
 
     @Override
@@ -60,8 +59,6 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         super.onCreate(savedInstanceState);
         ((NavigatorApplication) getApplication()).getGraph().inject(this);
         ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
-        contact = getIntent().getParcelableExtra(CONTACT);
-
         int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
 
         FragmentManager fm = getFragmentManager();
@@ -70,14 +67,23 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
             mapFragment = new MapFragment();
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit();
         }
+        mapFragment.getMapAsync(this::onMapReady);
 
-        mapFragment.getMapAsync(googleMap -> {
-            map = googleMap;
-            map.setMyLocationEnabled(true);
-        });
+        contact = getIntent().getParcelableExtra(CONTACT);
         if (contact != null) {
             contactsCache.addContactsUpdatedListener(contact.email(), this);
         }
+    }
+
+    private void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        this.googleMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        peerLocationSource.clearPeerLocationListeners();
     }
 
     @Override
@@ -86,12 +92,6 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         if (contact != null) {
             peerLocationSource.addPeerLocationListener(contact.email(), this);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        peerLocationSource.clearPeerLocationListeners();
     }
 
     @Override
@@ -106,7 +106,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
     @Override
     public void onPeerLocationReceived(LatLng latLng) {
-        putPeerMarker(latLng);
+        putPeerMarkerOnMap(latLng);
     }
 
     @Override
@@ -117,12 +117,12 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     }
 
     private void clearMap() {
-        map.clear();
+        googleMap.clear();
     }
 
-    private void putPeerMarker(LatLng latLng) {
+    private void putPeerMarkerOnMap(LatLng latLng) {
         clearMap();
-        map.addMarker(new MarkerOptions()
+        googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(contact.name()))
                 .setIcon(BitmapDescriptorFactory
