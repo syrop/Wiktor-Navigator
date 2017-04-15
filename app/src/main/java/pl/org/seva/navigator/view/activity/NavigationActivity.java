@@ -60,7 +60,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         super.onCreate(savedInstanceState);
         ((NavigatorApplication) getApplication()).getGraph().inject(this);
         ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
-        int mapContainerId = binding.toolbar.contentNavigation.mapContainer.getId();
+        int mapContainerId = binding.mapContainer.getId();
 
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag(MAP_FRAGMENT_TAG);
