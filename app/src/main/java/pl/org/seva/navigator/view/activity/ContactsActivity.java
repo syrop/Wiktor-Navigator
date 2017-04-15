@@ -147,11 +147,10 @@ public class ContactsActivity extends AppCompatActivity implements
     private boolean isLocationPermissionGranted() {
         return ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-            PackageManager.PERMISSION_GRANTED;
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void initContactsView() {
+    private void initContactsRecyclerView() {
         contactsRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this);
         contactsRecyclerView.setLayoutManager(lm);
@@ -164,7 +163,11 @@ public class ContactsActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(Contact contact) {
-        startActivity(new Intent(this, NavigationActivity.class).putExtra(NavigationActivity.CONTACT, contact));
+        Intent intent = new Intent(this, NavigationActivity.class);
+        if (!contact.email().equals(NavigatorApplication.email)) {
+            intent.putExtra(NavigationActivity.CONTACT, contact);
+        }
+        startActivity(intent);
     }
 
     @Override
@@ -200,7 +203,7 @@ public class ContactsActivity extends AppCompatActivity implements
 
     private void locationPermissionGranted() {
         myLocationSource.connectGoogleApiClient();
-        initContactsView();
+        initContactsRecyclerView();
     }
 
     private void permissionDenied() {

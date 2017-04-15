@@ -40,22 +40,29 @@ import pl.org.seva.navigator.model.Contact;
 public class NavigatorApplication extends Application {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject ActivityRecognitionSource activityRecognitionSource;
+    @Inject
+    ActivityRecognitionSource activityRecognitionSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SqliteWriter sqliteWriter;
+    @Inject
+    SqliteWriter sqliteWriter;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject SqliteReader sqliteReader;
+    @Inject
+    SqliteReader sqliteReader;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject
     ContactsCache contactsCache;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject MyLocationSource myLocationSource;
+    @Inject
+    MyLocationSource myLocationSource;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject MyLocationListener myLocationListener;
+    @Inject
+    MyLocationListener myLocationListener;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject FriendshipSource friendshipSource;
+    @Inject
+    FriendshipSource friendshipSource;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject FriendshipListener friendshipListener;
+    @Inject
+    FriendshipListener friendshipListener;
 
     private Graph graph;
 
