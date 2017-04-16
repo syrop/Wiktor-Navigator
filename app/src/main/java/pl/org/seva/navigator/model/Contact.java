@@ -55,7 +55,11 @@ public class Contact implements Comparable<Contact>, Parcelable {
 
     @Override
     public int compareTo(@NonNull Contact o) {
-        return displayName.compareTo(o.displayName);
+        int result = displayName.compareTo(o.displayName);
+        if (result == 0) {
+            result = email.compareTo(o.email);
+        }
+        return result;
     }
 
     @Override
