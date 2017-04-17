@@ -29,5 +29,5 @@
     <string name="search_dialog_title">Adding a user</string>
     <string name="search_dialog_question">Do you want to add user %s?</string>
     <string name="friendship_confirmation">[name] ([email]) wants to be added as a friend. Do you accept?</string>
-
+    <string name="friendship_confirmation_short">Friendship requested…</string>
 </resources>

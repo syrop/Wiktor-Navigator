@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 
 public class Contact implements Comparable<Contact>, Parcelable {
 
-    public static final String PARCELABLE_NAME = "contact";
+    public static final String PARCELABLE_KEY = "contact";
 
     private String email;
     private String displayName;
