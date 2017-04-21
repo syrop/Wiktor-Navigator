@@ -37,6 +37,7 @@ import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
+import pl.org.seva.navigator.view.notification.FriendshipRequestedNotificationBuilder;
 
 @Singleton
 public class FriendshipListener {
@@ -96,20 +97,12 @@ public class FriendshipListener {
                 friendshipRejected,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
-        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-        bigTextStyle.setBigContentTitle(context.getString(R.string.app_name));
-        bigTextStyle.bigText(message);
-
-        // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
-        Notification notification = new NotificationCompat.Builder(context)
-                .setStyle(bigTextStyle)
-                .setContentText(context.getText(R.string.friendship_confirmation_short))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setAutoCancel(false)
-                .addAction(R.drawable.ic_close_black_24dp, context.getString(android.R.string.no), noPi)
-                .addAction(R.drawable.ic_check_black_24dp, context.getString(android.R.string.yes), yesPi)
+        Notification notification = new FriendshipRequestedNotificationBuilder(context)
+                .setMessage(message)
+                .setNoPendingIntent(noPi)
+                .setYesPendingIntent(yesPi)
                 .build();
+
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId, notification);
