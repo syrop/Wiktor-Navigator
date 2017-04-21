@@ -79,21 +79,21 @@ public class FriendshipListener {
                 .replace("[name]", contact.name())
                 .replace("[email]", contact.email());
         int notificationId = new Random().nextInt();
-        Intent friendshipAcceptedIntent = new Intent(FRIENDSHIP_ACCEPTED_INTENT)
-                .putExtra(Contact.PARCELABLE_NAME, contact)
+        Intent friendshipAccepted = new Intent(FRIENDSHIP_ACCEPTED_INTENT)
+                .putExtra(Contact.PARCELABLE_KEY, contact)
                 .putExtra(NOTIFICATION_ID, notificationId);
         PendingIntent yesPi = PendingIntent.getBroadcast(
                 context,
                 0,
-                friendshipAcceptedIntent,
+                friendshipAccepted,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        Intent friendshipRejectedIntent = new Intent(FRIENDSHIP_REJECTED_INTENT)
-                .putExtra(Contact.PARCELABLE_NAME, contact)
+        Intent friendshipRejected = new Intent(FRIENDSHIP_REJECTED_INTENT)
+                .putExtra(Contact.PARCELABLE_KEY, contact)
                 .putExtra(NOTIFICATION_ID, notificationId);
-        PendingIntent noPi = PendingIntent.getActivity(
+        PendingIntent noPi = PendingIntent.getBroadcast(
                 context,
                 0,
-                friendshipRejectedIntent,
+                friendshipRejected,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
@@ -104,6 +104,7 @@ public class FriendshipListener {
         // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
         Notification notification = new NotificationCompat.Builder(context)
                 .setStyle(bigTextStyle)
+                .setContentText(context.getText(R.string.friendship_confirmation_short))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(false)
                 .addAction(R.drawable.ic_close_black_24dp, context.getString(android.R.string.no), noPi)
@@ -132,7 +133,7 @@ public class FriendshipListener {
             NotificationManager notificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(notificationId);
-            Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_NAME);
+            Contact contact = intent.getParcelableExtra(Contact.PARCELABLE_KEY);
             if (contactsCache.contains(contact)) {
                 return;
             }
