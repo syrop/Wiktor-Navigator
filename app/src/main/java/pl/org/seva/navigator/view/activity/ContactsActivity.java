@@ -60,7 +60,9 @@ public class ContactsActivity extends AppCompatActivity implements
         ContactLongClickListener {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject MyLocationSource myLocationSource;
+    @Inject
+    MyLocationSource myLocationSource;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
     ContactsCache contactsCache;
 

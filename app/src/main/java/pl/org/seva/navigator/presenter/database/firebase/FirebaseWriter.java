@@ -63,7 +63,7 @@ public class FirebaseWriter extends FirebaseBase {
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }
 
-    public void deleteFriendsdhip(Contact contact) {
+    public void deleteFriendship(Contact contact) {
         DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }

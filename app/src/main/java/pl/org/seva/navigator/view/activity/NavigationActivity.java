@@ -46,7 +46,9 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
     public static final String CONTACT = "contact";
 
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject PeerLocationSource peerLocationSource;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ContactsCache contactsCache;
 
     private static final String MAP_FRAGMENT_TAG = "googleMap";

@@ -36,7 +36,7 @@ public class FirebaseBase {
     static final String FRIENDSHIP_ACCEPTED = "friendship_accepted";
     static final String FRIENDSHIP_DELETED = "friendship_deleted";
 
-    protected final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     static String to64(String str) {
         return Base64.encodeToString(str.getBytes(), Base64.NO_WRAP);

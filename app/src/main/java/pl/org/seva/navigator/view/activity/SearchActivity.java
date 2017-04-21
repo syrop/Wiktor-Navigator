@@ -134,7 +134,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
         rv.setLayoutManager(lm);
         ContactAdapter adapter = new SingleContactAdapter(contact);
         rv.setAdapter(adapter);
-        adapter.addClickListener(this::onClick);
+        adapter.addClickListener(this);
     }
 
     @Override

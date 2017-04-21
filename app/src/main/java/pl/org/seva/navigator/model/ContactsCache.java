@@ -34,7 +34,7 @@ import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 public class ContactsCache {
 
     private final List<Contact> contacts;
-    private PublishSubject<Contact> contactsUpdatedSubject = PublishSubject.create();
+    private final PublishSubject<Contact> contactsUpdatedSubject = PublishSubject.create();
 
     @Inject public ContactsCache() {
         contacts = new ArrayList<>();
@@ -80,7 +80,7 @@ public class ContactsCache {
                 .subscribe(__ -> contactsUpdatedListener.onContactsUpdated());
     }
 
-    public Disposable addContactsUpdatedListener(ContactsUpdatedListener contactsUpdatedListener) {
-        return addContactsUpdatedListener(null, contactsUpdatedListener);
+    public void addContactsUpdatedListener(ContactsUpdatedListener contactsUpdatedListener) {
+        addContactsUpdatedListener(null, contactsUpdatedListener);
     }
 }
