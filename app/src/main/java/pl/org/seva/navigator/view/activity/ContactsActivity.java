@@ -47,11 +47,13 @@ import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.presenter.dagger.Graph;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
+import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.presenter.listener.ContactClickListener;
 import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
 import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
 import pl.org.seva.navigator.presenter.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
+import pl.org.seva.navigator.view.dialog.FriendshipDeleteDialogBuilder;
 
 public class ContactsActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -65,6 +67,9 @@ public class ContactsActivity extends AppCompatActivity implements
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
     ContactsCache contactsCache;
+    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
+    @Inject
+    FirebaseWriter firebaseWriter;
 
     private static final int PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0;
 
@@ -174,7 +179,11 @@ public class ContactsActivity extends AppCompatActivity implements
 
     @Override
     public void onLongClick(Contact contact) {
-
+        new FriendshipDeleteDialogBuilder(this)
+                .setContact(contact)
+                .setOnConfirmedAction(() -> firebaseWriter.deleteFriendship(contact))
+                .build()
+                .show();
     }
 
     private void requestLocationPermission() {

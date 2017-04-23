@@ -75,10 +75,6 @@ public class FriendshipListener {
         rejectedReceiver = new FriendshipRejectedBroadcastReceiver();
         context.registerReceiver(acceptedReceiver, new IntentFilter(FRIENDSHIP_ACCEPTED_INTENT));
         context.registerReceiver(rejectedReceiver, new IntentFilter(FRIENDSHIP_REJECTED_INTENT));
-        String message = context.getResources()
-                .getString(R.string.friendship_confirmation)
-                .replace("[name]", contact.name())
-                .replace("[email]", contact.email());
         int notificationId = new Random().nextInt();
         Intent friendshipAccepted = new Intent(FRIENDSHIP_ACCEPTED_INTENT)
                 .putExtra(Contact.PARCELABLE_KEY, contact)
@@ -98,7 +94,7 @@ public class FriendshipListener {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new FriendshipRequestedNotificationBuilder(context)
-                .setMessage(message)
+                .setContact(contact)
                 .setNoPendingIntent(noPi)
                 .setYesPendingIntent(yesPi)
                 .build();

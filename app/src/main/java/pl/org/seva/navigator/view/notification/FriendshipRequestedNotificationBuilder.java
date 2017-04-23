@@ -6,13 +6,17 @@ import android.content.Context;
 import android.support.v7.app.NotificationCompat;
 
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.model.Contact;
 
 public final class FriendshipRequestedNotificationBuilder  {
+
+    private static final String NAME_TAG = "[name]";
+    private static final String EMAIL_TAG = "[email]";
 
     private Context context;
     private PendingIntent yesPi;
     private PendingIntent noPi;
-    private String message;
+    private Contact contact;
 
     public FriendshipRequestedNotificationBuilder(Context context) {
         this.context = context;
@@ -23,8 +27,8 @@ public final class FriendshipRequestedNotificationBuilder  {
         return this;
     }
 
-    public FriendshipRequestedNotificationBuilder setMessage(String message) {
-        this.message = message;
+    public FriendshipRequestedNotificationBuilder setContact(Contact contact) {
+        this.contact = contact;
         return this;
     }
 
@@ -34,6 +38,11 @@ public final class FriendshipRequestedNotificationBuilder  {
     }
 
     public Notification build() {
+        String message = context.getResources()
+                .getString(R.string.friendship_confirmation)
+                .replace(NAME_TAG, contact.name())
+                .replace(EMAIL_TAG, contact.email());
+
         // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.setBigContentTitle(context.getString(R.string.app_name));

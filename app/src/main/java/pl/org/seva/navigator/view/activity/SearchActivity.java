@@ -43,6 +43,7 @@ import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.presenter.listener.ContactClickListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter;
+import pl.org.seva.navigator.view.dialog.FriendshipAddDialogBuilder;
 
 public class SearchActivity extends AppCompatActivity implements ContactClickListener {
 
@@ -143,14 +144,11 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
             finish();
             return;
         }
-        new AlertDialog
-                .Builder(this)
-                .setCancelable(true)
-                .setTitle(R.string.search_dialog_title)
-                .setMessage(getString(R.string.search_dialog_question).replace("%s", contact.name()))
-                .setPositiveButton(android.R.string.yes, ((dialog, which) -> contactApprovedAndFinish(contact)))
-                .setNegativeButton(android.R.string.no, ((dialog, which) -> finish()))
-                .create()
+        new FriendshipAddDialogBuilder(this)
+                .setContact(contact)
+                .setYesAction(() -> contactApprovedAndFinish(contact))
+                .setNoAction(this::finish)
+                .build()
                 .show();
     }
 
