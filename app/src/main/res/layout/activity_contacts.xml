@@ -25,6 +25,5 @@
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/contacts_drawer" />
 
-
     </android.support.v4.widget.DrawerLayout>
 </layout>
