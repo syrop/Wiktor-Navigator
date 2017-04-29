@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -77,11 +78,12 @@ public class MyLocationSource implements
     @Inject
     MyLocationSource() {
         locationSubject = PublishSubject.create();
-        locationObservable = locationSubject
-                .filter(latLng -> NavigatorApplication.isLoggedIn)
+
+        locationObservable = Observable.interval(0, UPDATE_FREQUENCY, TimeUnit.MILLISECONDS)
                 .withLatestFrom(
-                        Observable.interval(0, UPDATE_FREQUENCY, TimeUnit.MILLISECONDS),
-                        (first, second) -> first);
+                        locationSubject.filter(latLng -> NavigatorApplication.isLoggedIn),
+                        (first, second) -> second)
+                .distinctUntilChanged();
     }
 
     public void addLocationListener(MyLocationListener myLocationListener) {
