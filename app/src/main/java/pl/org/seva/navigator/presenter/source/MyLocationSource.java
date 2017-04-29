@@ -30,9 +30,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
@@ -62,7 +65,8 @@ public class MyLocationSource implements
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
 
-    private final PublishSubject<LatLng> locationChangedSubject;
+    private final PublishSubject<LatLng> locationSubject;
+    private final Observable<LatLng> locationObservable;
 
     /** Location last received from the update. */
     private Location location;
@@ -72,13 +76,16 @@ public class MyLocationSource implements
     @SuppressWarnings("WeakerAccess")
     @Inject
     MyLocationSource() {
-        locationChangedSubject = PublishSubject.create();
+        locationSubject = PublishSubject.create();
+        locationObservable = locationSubject
+                .filter(latLng -> NavigatorApplication.isLoggedIn)
+                .withLatestFrom(
+                        Observable.interval(0, UPDATE_FREQUENCY, TimeUnit.MILLISECONDS),
+                        (first, second) -> first);
     }
 
     public void addLocationListener(MyLocationListener myLocationListener) {
-        locationChangedSubject
-                .filter(latLng -> NavigatorApplication.isLoggedIn)
-                .subscribe(myLocationListener::onLocationReceived);
+        locationObservable.subscribe(myLocationListener::onLocationReceived);
     }
 
     public void connectGoogleApiClient() {
@@ -142,7 +149,7 @@ public class MyLocationSource implements
             return;
         }
         this.location = location;
-        locationChangedSubject.onNext(new LatLng(location.getLatitude(), location.getLongitude()));
+        locationSubject.onNext(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     @Override
