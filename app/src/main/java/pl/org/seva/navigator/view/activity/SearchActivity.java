@@ -67,6 +67,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
 
         Intent intent = getIntent();
+        //noinspection EqualsReplaceableByObjectsCall
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             search(query);
@@ -81,6 +82,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
+        //noinspection EqualsReplaceableByObjectsCall
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             search(query);

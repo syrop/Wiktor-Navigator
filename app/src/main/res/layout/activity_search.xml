@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android">
-
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <TextView
             android:id="@+id/not_found_label"
             android:layout_width="wrap_content"
@@ -16,11 +14,9 @@
             android:text="@string/search_no_user_found"
             android:visibility="gone"
             android:textAppearance="@style/TextAppearance.AppCompat" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </RelativeLayout>
 </layout>

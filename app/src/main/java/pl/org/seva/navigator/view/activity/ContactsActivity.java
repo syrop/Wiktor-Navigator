@@ -90,7 +90,7 @@ public class ContactsActivity extends AppCompatActivity implements
         Toolbar toolbar = binding.activityToolbar.appBarToolbar;
         setSupportActionBar(toolbar);
         binding.activityToolbar.fab
-            .setOnClickListener(view -> startActivity(new Intent(this, SearchActivity.class)));
+            .setOnClickListener(__ -> startActivity(new Intent(this, SearchActivity.class)));
 
         DrawerLayout drawer = binding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -171,6 +171,7 @@ public class ContactsActivity extends AppCompatActivity implements
     @Override
     public void onClick(Contact contact) {
         Intent intent = new Intent(this, NavigationActivity.class);
+        //noinspection EqualsReplaceableByObjectsCall
         if (!contact.email().equals(NavigatorApplication.email)) {
             intent.putExtra(NavigationActivity.CONTACT, contact);
         }
