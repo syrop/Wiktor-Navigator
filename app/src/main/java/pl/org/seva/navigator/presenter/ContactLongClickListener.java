@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.listener;
+package pl.org.seva.navigator.presenter;
 
 import pl.org.seva.navigator.model.Contact;
 
-public interface ContactClickListener {
-    void onClick(Contact contact);
+public interface ContactLongClickListener {
+    void onLongClick(Contact contact);
 }

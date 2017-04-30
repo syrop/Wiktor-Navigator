@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.dagger;
+package pl.org.seva.navigator;
 
 import javax.inject.Singleton;
 
@@ -25,12 +25,12 @@ import pl.org.seva.navigator.view.activity.LoginActivity;
 import pl.org.seva.navigator.view.activity.NavigationActivity;
 import pl.org.seva.navigator.view.activity.SearchActivity;
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
+import pl.org.seva.navigator.presenter.ActivityRecognitionListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 
 @Singleton
-@Component(modules = { pl.org.seva.navigator.presenter.dagger.NavigatorModule.class })
-public interface Graph {
+@Component(modules = { pl.org.seva.navigator.NavigatorModule.class })
+public interface NavigatorComponent {
     void inject(NavigatorApplication navigatorApplication);
     void inject(ActivityRecognitionListener activityRecognitionListener);
     void inject(LoginActivity loginActivity);

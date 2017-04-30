@@ -37,9 +37,9 @@ import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
-import pl.org.seva.navigator.presenter.listener.PeerLocationListener;
-import pl.org.seva.navigator.presenter.source.PeerLocationSource;
+import pl.org.seva.navigator.presenter.ContactsUpdatedListener;
+import pl.org.seva.navigator.presenter.PeerLocationListener;
+import pl.org.seva.navigator.source.PeerLocationSource;
 
 @SuppressWarnings("MissingPermission")
 public class NavigationActivity extends AppCompatActivity implements PeerLocationListener, ContactsUpdatedListener {

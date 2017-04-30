@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.listener;
+package pl.org.seva.navigator.presenter;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -24,7 +24,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.NotificationCompat;
 
 import java.lang.ref.WeakReference;
 import java.util.Random;
@@ -32,12 +31,11 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
-import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
+import pl.org.seva.navigator.model.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.view.notification.FriendshipRequestedNotificationBuilder;
+import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder;
 
 @Singleton
 public class FriendshipListener {
@@ -93,7 +91,7 @@ public class FriendshipListener {
                 friendshipRejected,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification = new FriendshipRequestedNotificationBuilder(context)
+        Notification notification = new PeerRequestedFriendshipNotificationBuilder(context)
                 .setContact(contact)
                 .setNoPendingIntent(noPi)
                 .setYesPendingIntent(yesPi)

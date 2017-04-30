@@ -1,4 +1,4 @@
-package pl.org.seva.navigator.view.notification;
+package pl.org.seva.navigator.view.builder.notification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,7 +8,7 @@ import android.support.v7.app.NotificationCompat;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.model.Contact;
 
-public final class FriendshipRequestedNotificationBuilder  {
+public final class PeerRequestedFriendshipNotificationBuilder {
 
     private static final String NAME_TAG = "[name]";
     private static final String EMAIL_TAG = "[email]";
@@ -18,21 +18,21 @@ public final class FriendshipRequestedNotificationBuilder  {
     private PendingIntent noPi;
     private Contact contact;
 
-    public FriendshipRequestedNotificationBuilder(Context context) {
+    public PeerRequestedFriendshipNotificationBuilder(Context context) {
         this.context = context;
     }
 
-    public FriendshipRequestedNotificationBuilder setYesPendingIntent(PendingIntent yesPi) {
+    public PeerRequestedFriendshipNotificationBuilder setYesPendingIntent(PendingIntent yesPi) {
         this.yesPi = yesPi;
         return this;
     }
 
-    public FriendshipRequestedNotificationBuilder setContact(Contact contact) {
+    public PeerRequestedFriendshipNotificationBuilder setContact(Contact contact) {
         this.contact = contact;
         return this;
     }
 
-    public FriendshipRequestedNotificationBuilder setNoPendingIntent(PendingIntent noPi) {
+    public PeerRequestedFriendshipNotificationBuilder setNoPendingIntent(PendingIntent noPi) {
         this.noPi = noPi;
         return this;
     }

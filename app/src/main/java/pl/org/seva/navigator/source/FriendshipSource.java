@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.source;
+package pl.org.seva.navigator.source;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseReader;
-import pl.org.seva.navigator.presenter.listener.FriendshipListener;
+import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
+import pl.org.seva.navigator.presenter.FriendshipListener;
 
 @Singleton
 public class FriendshipSource {

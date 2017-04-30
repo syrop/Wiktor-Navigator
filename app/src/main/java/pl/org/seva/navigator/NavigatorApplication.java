@@ -24,17 +24,15 @@ import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
-import pl.org.seva.navigator.presenter.dagger.DaggerGraph;
-import pl.org.seva.navigator.presenter.dagger.Graph;
-import pl.org.seva.navigator.presenter.database.sqlite.DbHelper;
-import pl.org.seva.navigator.presenter.database.sqlite.SqliteReader;
-import pl.org.seva.navigator.presenter.database.sqlite.SqliteWriter;
-import pl.org.seva.navigator.presenter.listener.FriendshipListener;
-import pl.org.seva.navigator.presenter.listener.MyLocationListener;
-import pl.org.seva.navigator.presenter.source.ActivityRecognitionSource;
+import pl.org.seva.navigator.model.database.sqlite.DbHelper;
+import pl.org.seva.navigator.model.database.sqlite.SqliteReader;
+import pl.org.seva.navigator.model.database.sqlite.SqliteWriter;
+import pl.org.seva.navigator.presenter.FriendshipListener;
+import pl.org.seva.navigator.presenter.MyLocationListener;
+import pl.org.seva.navigator.source.ActivityRecognitionSource;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.source.FriendshipSource;
-import pl.org.seva.navigator.presenter.source.MyLocationSource;
+import pl.org.seva.navigator.source.FriendshipSource;
+import pl.org.seva.navigator.source.MyLocationSource;
 import pl.org.seva.navigator.model.Contact;
 
 public class NavigatorApplication extends Application {
@@ -64,7 +62,7 @@ public class NavigatorApplication extends Application {
     @Inject
     FriendshipListener friendshipListener;
 
-    private Graph graph;
+    private NavigatorComponent graph;
 
     public static boolean isLoggedIn;
     public static String email;
@@ -88,11 +86,11 @@ public class NavigatorApplication extends Application {
         }
     }
 
-    private Graph createGraph() {
-        return DaggerGraph.create();
+    private NavigatorComponent createGraph() {
+        return DaggerNavigatorComponent.create();
     }
 
-    public Graph getGraph() {
+    public NavigatorComponent getGraph() {
         return graph;
     }
 

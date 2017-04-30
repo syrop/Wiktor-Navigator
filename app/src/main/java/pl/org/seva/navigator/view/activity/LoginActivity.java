@@ -43,7 +43,7 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
 
 public class LoginActivity extends AppCompatActivity implements

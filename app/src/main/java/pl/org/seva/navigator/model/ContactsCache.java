@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
+import pl.org.seva.navigator.presenter.ContactsUpdatedListener;
 
 @Singleton
 public class ContactsCache {

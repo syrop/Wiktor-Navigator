@@ -15,10 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.database.sqlite;
+package pl.org.seva.navigator.model.database.sqlite;
 
-import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,32 +29,39 @@ import javax.inject.Singleton;
 import pl.org.seva.navigator.model.Contact;
 
 @Singleton
-public class SqliteWriter {
+public class SqliteReader {
 
     private DbHelper helper;
 
-    @Inject
-    SqliteWriter() {
+    @Inject SqliteReader() {
     }
 
     public void setHelper(DbHelper helper) {
         this.helper = helper;
     }
 
-    public void persistFriend(Contact contact) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(DbHelper.NAME_COLUMN_NAME, contact.name());
-        cv.put(DbHelper.EMAIL_COLUMN_NAME, contact.email());
-        db.insert(DbHelper.FRIENDS_TABLE_NAME, null, cv);
-        db.close();
-    }
+    public List<Contact> getFriends() {
+        List<Contact> result = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = { DbHelper.NAME_COLUMN_NAME, DbHelper.EMAIL_COLUMN_NAME, };
+        Cursor cursor = db.query(
+                DbHelper.FRIENDS_TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
 
-    public void deleteFriend(Contact contact) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        String query = DbHelper.EMAIL_COLUMN_NAME + " equals ?";
-        String[] args = { contact.email(), };
-        db.delete(DbHelper.FRIENDS_TABLE_NAME, query, args);
+        while (cursor.moveToNext()) {
+            Contact contact = new Contact();
+            contact.setName(cursor.getString(0));
+            contact.setEmail(cursor.getString(1));
+            result.add(contact);
+        }
+        cursor.close();
         db.close();
+
+        return result;
     }
 }

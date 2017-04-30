@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.source;
+package pl.org.seva.navigator.source;
 
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseReader;
-import pl.org.seva.navigator.presenter.listener.PeerLocationListener;
+import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
+import pl.org.seva.navigator.presenter.PeerLocationListener;
 
 public class PeerLocationSource {
 

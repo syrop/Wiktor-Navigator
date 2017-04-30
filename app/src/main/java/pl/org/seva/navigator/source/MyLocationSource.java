@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.source;
+package pl.org.seva.navigator.source;
 
 import android.content.Context;
 import android.location.Location;
@@ -30,8 +30,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -39,8 +37,8 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Timed;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
-import pl.org.seva.navigator.presenter.listener.MyLocationListener;
+import pl.org.seva.navigator.presenter.ActivityRecognitionListener;
+import pl.org.seva.navigator.presenter.MyLocationListener;
 
 @SuppressWarnings("MissingPermission")
 @Singleton

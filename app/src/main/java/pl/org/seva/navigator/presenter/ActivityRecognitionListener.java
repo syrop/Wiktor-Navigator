@@ -15,8 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.listener;
+package pl.org.seva.navigator.presenter;
 
-public interface ContactsUpdatedListener {
-    void onContactsUpdated();
+public interface ActivityRecognitionListener {
+
+    void onDeviceStationary();
+    void onDeviceMoving();
 }

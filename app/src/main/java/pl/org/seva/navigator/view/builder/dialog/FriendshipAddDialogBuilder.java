@@ -1,4 +1,4 @@
-package pl.org.seva.navigator.view.dialog;
+package pl.org.seva.navigator.view.builder.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

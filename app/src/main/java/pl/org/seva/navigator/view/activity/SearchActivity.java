@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,14 +35,14 @@ import javax.inject.Inject;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseReader;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
+import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.presenter.listener.ContactClickListener;
+import pl.org.seva.navigator.presenter.ContactClickListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter;
-import pl.org.seva.navigator.view.dialog.FriendshipAddDialogBuilder;
+import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder;
 
 public class SearchActivity extends AppCompatActivity implements ContactClickListener {
 
@@ -84,7 +83,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
         setIntent(intent);
         //noinspection EqualsReplaceableByObjectsCall
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            String query = intent.getStringExtra(SearchManager.QUERY).trim();
             search(query);
         }
     }

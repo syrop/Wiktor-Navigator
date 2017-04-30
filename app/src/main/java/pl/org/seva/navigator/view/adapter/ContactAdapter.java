@@ -31,8 +31,8 @@ import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.databinding.ContactBinding;
 import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.presenter.listener.ContactClickListener;
-import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
+import pl.org.seva.navigator.presenter.ContactClickListener;
+import pl.org.seva.navigator.presenter.ContactLongClickListener;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 

@@ -15,10 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter.dagger;
+package pl.org.seva.navigator.presenter;
 
-import dagger.Module;
+import com.google.android.gms.maps.model.LatLng;
 
-@Module
-class NavigatorModule {
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import pl.org.seva.navigator.NavigatorApplication;
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
+
+@Singleton
+public class MyLocationListener {
+
+    @SuppressWarnings("WeakerAccess")
+    @Inject
+    FirebaseWriter firebaseWriter;
+
+    @Inject
+    MyLocationListener() {
+    }
+
+    public void onLocationReceived(LatLng latLng) {
+        firebaseWriter.storeMyLocation(NavigatorApplication.email, latLng);
+    }
 }

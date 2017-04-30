@@ -45,15 +45,15 @@ import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.dagger.Graph;
+import pl.org.seva.navigator.NavigatorComponent;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
-import pl.org.seva.navigator.presenter.database.firebase.FirebaseWriter;
-import pl.org.seva.navigator.presenter.listener.ContactClickListener;
-import pl.org.seva.navigator.presenter.listener.ContactLongClickListener;
-import pl.org.seva.navigator.presenter.listener.ContactsUpdatedListener;
-import pl.org.seva.navigator.presenter.source.MyLocationSource;
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
+import pl.org.seva.navigator.presenter.ContactClickListener;
+import pl.org.seva.navigator.presenter.ContactLongClickListener;
+import pl.org.seva.navigator.presenter.ContactsUpdatedListener;
+import pl.org.seva.navigator.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
-import pl.org.seva.navigator.view.dialog.FriendshipDeleteDialogBuilder;
+import pl.org.seva.navigator.view.builder.dialog.FriendshipDeleteDialogBuilder;
 
 public class ContactsActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -77,7 +77,7 @@ public class ContactsActivity extends AppCompatActivity implements
     private RecyclerView contactsRecyclerView;
     private ContactAdapter contactAdapter;
     private boolean permissionAlreadyRequested;
-    private Graph graph;
+    private NavigatorComponent graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
