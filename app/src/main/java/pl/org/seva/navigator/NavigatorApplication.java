@@ -75,7 +75,7 @@ public class NavigatorApplication extends Application {
         super.onCreate();
         graph = createGraph();
         graph.inject(this);
-        setCurrentFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
+        setCurrentUser(FirebaseAuth.getInstance().getCurrentUser());
         activityRecognitionSource.init(this);
         DbHelper helper = new DbHelper(this);
         sqliteWriter.setHelper(helper);
@@ -101,16 +101,16 @@ public class NavigatorApplication extends Application {
     }
 
     public void login(FirebaseUser user) {
-        setCurrentFirebaseUser(user);
+        setCurrentUser(user);
         setFriendshipListeners();
     }
 
     public void logout() {
         clearFriendshipListeners();
-        setCurrentFirebaseUser(null);
+        setCurrentUser(null);
     }
 
-    private static void setCurrentFirebaseUser(FirebaseUser user) {
+    private static void setCurrentUser(FirebaseUser user) {
         if (user != null) {
             isLoggedIn = true;
             email = user.getEmail();

@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements
             }
         };
 
+        //noinspection EqualsReplaceableByObjectsCall
         if (getIntent().getStringExtra(ACTION).equals(LOGOUT)) {
             logout();
             finish();
