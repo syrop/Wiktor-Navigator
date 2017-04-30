@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Timed;
 import io.reactivex.subjects.PublishSubject;
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.presenter.listener.ActivityRecognitionListener;
@@ -78,11 +79,11 @@ public class MyLocationSource implements
     MyLocationSource() {
         locationSubject = PublishSubject.create();
 
-        locationObservable = Observable.interval(0, UPDATE_FREQUENCY, TimeUnit.MILLISECONDS)
-                .withLatestFrom(
-                        locationSubject.filter(latLng -> NavigatorApplication.isLoggedIn),
-                        (first, second) -> second)
-                .distinctUntilChanged();
+        locationObservable = locationSubject
+                .filter(latLng -> NavigatorApplication.isLoggedIn)
+                .timeInterval()
+                .filter(a -> a.time() >= UPDATE_FREQUENCY)
+                .map(Timed::value);
     }
 
     public void addLocationListener(MyLocationListener myLocationListener) {
