@@ -13,7 +13,7 @@ public final class PeerRequestedFriendshipNotificationBuilder {
     private static final String NAME_TAG = "[name]";
     private static final String EMAIL_TAG = "[email]";
 
-    private Context context;
+    private final Context context;
     private PendingIntent yesPi;
     private PendingIntent noPi;
     private Contact contact;

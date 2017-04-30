@@ -104,7 +104,8 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (mapFragment != null) {
+        if (mapFragment != null) //noinspection SpellCheckingInspection
+        {
             // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
             getFragmentManager().beginTransaction().remove(mapFragment).commitAllowingStateLoss();
             mapFragment = null;

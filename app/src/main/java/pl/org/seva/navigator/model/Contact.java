@@ -64,6 +64,7 @@ public class Contact implements Comparable<Contact>, Parcelable {
 
     @Override
     public boolean equals(Object obj) {
+        //noinspection EqualsReplaceableByObjectsCall
         return !(obj == null || !(obj instanceof Contact)) && email.equals(((Contact) obj).email);
     }
 
@@ -81,6 +82,7 @@ public class Contact implements Comparable<Contact>, Parcelable {
         out.writeString(displayName);
     }
 
+    @SuppressWarnings("unused")
     public static final Parcelable.Creator<Contact> CREATOR
             = new Parcelable.Creator<Contact>() {
         public Contact createFromParcel(Parcel in) {

@@ -24,15 +24,12 @@ import pl.org.seva.navigator.view.activity.ContactsActivity;
 import pl.org.seva.navigator.view.activity.LoginActivity;
 import pl.org.seva.navigator.view.activity.NavigationActivity;
 import pl.org.seva.navigator.view.activity.SearchActivity;
-import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.presenter.ActivityRecognitionListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 
 @Singleton
 @Component(modules = { pl.org.seva.navigator.NavigatorModule.class })
 public interface NavigatorComponent {
     void inject(NavigatorApplication navigatorApplication);
-    void inject(ActivityRecognitionListener activityRecognitionListener);
     void inject(LoginActivity loginActivity);
     void inject(SearchActivity searchActivity);
     void inject(ContactAdapter contactAdapter);

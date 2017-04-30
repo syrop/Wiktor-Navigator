@@ -11,7 +11,7 @@ public class FriendshipAddDialogBuilder {
 
     private static final String NAME_TAG = "[name]";
 
-    private Context context;
+    private final Context context;
     private Contact contact;
     private Runnable yesAction;
     private Runnable noAction;
