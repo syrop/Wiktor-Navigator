@@ -64,7 +64,7 @@ public class FirebaseWriter extends FirebaseBase {
     }
 
     public void deleteFriendship(Contact contact) {
-        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
+        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_DELETED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }
 }

@@ -182,9 +182,15 @@ public class ContactsActivity extends AppCompatActivity implements
     public void onLongClick(Contact contact) {
         new FriendshipDeleteDialogBuilder(this)
                 .setContact(contact)
-                .setOnConfirmedAction(() -> firebaseWriter.deleteFriendship(contact))
+                .setOnConfirmedAction(() -> onDeleteFriendConfirmed(contact))
                 .build()
                 .show();
+    }
+
+    private void onDeleteFriendConfirmed(Contact contact) {
+        firebaseWriter.deleteFriendship(contact);
+        contactsCache.delete(contact);
+        contactAdapter.notifyDataSetChanged();
     }
 
     private void requestLocationPermission() {

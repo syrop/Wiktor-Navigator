@@ -38,8 +38,8 @@ public class FriendshipAddDialogBuilder {
     public Dialog build() {
         return new AlertDialog.Builder(context)
                 .setCancelable(true)
-                .setTitle(R.string.search_dialog_title)
-                .setMessage(context.getString(R.string.search_dialog_question).replace(NAME_TAG, contact.name()))
+                .setTitle(R.string.adding_friend_title)
+                .setMessage(context.getString(R.string.add_friend_confirmation).replace(NAME_TAG, contact.name()))
                 .setPositiveButton(android.R.string.yes, ((dialog, which) -> yesAction.run()))
                 .setNegativeButton(android.R.string.no, ((dialog, which) -> noAction.run()))
                 .create();

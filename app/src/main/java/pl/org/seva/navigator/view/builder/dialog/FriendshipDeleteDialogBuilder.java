@@ -10,7 +10,7 @@ import pl.org.seva.navigator.model.Contact;
 
 public class FriendshipDeleteDialogBuilder {
 
-    private static final String NAME_TAG = "[name]";
+    private static final String NAME_PLACEHOLDER = "[name]";
 
     private final Context context;
     private Contact contact;
@@ -31,10 +31,11 @@ public class FriendshipDeleteDialogBuilder {
     }
 
     public Dialog build() {
-        String message = context.getString(R.string.search_dialog_question).replace(NAME_TAG, contact.name());
+        String message = context.getString(R.string.delete_friend_confirmation)
+                .replace(NAME_PLACEHOLDER, contact.name());
         return new AlertDialog.Builder(context)
                 .setCancelable(true)
-                .setTitle(R.string.search_dialog_title)
+                .setTitle(R.string.deleting_friend_title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes, ((dialog, which) -> onConfirmed(dialog)))
                 .setNegativeButton(android.R.string.no, ((dialog, which) -> dialog.dismiss()))
