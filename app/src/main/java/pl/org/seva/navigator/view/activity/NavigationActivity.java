@@ -141,6 +141,9 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     }
 
     private void putPeerMarkerOnMap(LatLng latLng) {
+        if (googleMap == null) {
+            return;
+        }
         clearMap();
         googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
