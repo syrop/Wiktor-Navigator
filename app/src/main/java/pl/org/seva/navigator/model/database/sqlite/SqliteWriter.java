@@ -49,7 +49,7 @@ public class SqliteWriter {
 
     public void deleteFriend(Contact contact) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        String query = DbHelper.EMAIL_COLUMN_NAME + " equals ?";
+        String query = DbHelper.EMAIL_COLUMN_NAME + " = ?";
         String[] args = { contact.email(), };
         db.delete(DbHelper.FRIENDS_TABLE_NAME, query, args);
         db.close();
