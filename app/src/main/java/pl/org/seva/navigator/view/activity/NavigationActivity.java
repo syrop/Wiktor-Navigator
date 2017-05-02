@@ -56,22 +56,13 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     private MapFragment mapFragment;
     private GoogleMap googleMap;
     private Contact contact;
+    private ActivityNavigationBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((NavigatorApplication) getApplication()).getGraph().inject(this);
-        ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
-        int mapContainerId = binding.mapContainer.getId();
-
-        // TODO: how come map disappears?
-        FragmentManager fm = getFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentByTag(MAP_FRAGMENT_TAG);
-        if (mapFragment == null) {
-            mapFragment = new MapFragment();
-            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit();
-        }
-        mapFragment.getMapAsync(this::onMapReady);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -101,6 +92,14 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         if (contact != null) {
             peerLocationSource.addPeerLocationListener(contact.email(), this);
         }
+        int mapContainerId = binding.mapContainer.getId();
+        FragmentManager fm = getFragmentManager();
+        mapFragment = (MapFragment) fm.findFragmentByTag(MAP_FRAGMENT_TAG);
+        if (mapFragment == null) {
+            mapFragment = new MapFragment();
+            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit();
+        }
+        mapFragment.getMapAsync(this::onMapReady);
     }
 
     @Override
