@@ -104,7 +104,7 @@ public class FriendshipListener {
 
     public void onPeerAcceptedFriendship(Contact contact) {
         contactsCache.add(contact);
-        sqliteWriter.persistFriend(contact);
+        sqliteWriter.addFriend(contact);
     }
 
     public void onPeerDeletedFriendship(Contact contact) {
@@ -125,7 +125,7 @@ public class FriendshipListener {
                 return;
             }
             contactsCache.add(contact);
-            sqliteWriter.persistFriend(contact);
+            sqliteWriter.addFriend(contact);
             firebaseWriter.acceptFriendship(contact);
             context.unregisterReceiver(this);
             context.unregisterReceiver(rejectedReceiver);

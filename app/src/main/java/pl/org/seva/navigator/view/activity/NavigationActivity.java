@@ -64,6 +64,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         ActivityNavigationBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
         int mapContainerId = binding.mapContainer.getId();
 
+        // TODO: how come map disappears?
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag(MAP_FRAGMENT_TAG);
         if (mapFragment == null) {

@@ -38,7 +38,7 @@ public class SqliteWriter {
         this.helper = helper;
     }
 
-    public void persistFriend(Contact contact) {
+    public void addFriend(Contact contact) {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(DbHelper.NAME_COLUMN_NAME, contact.name());
