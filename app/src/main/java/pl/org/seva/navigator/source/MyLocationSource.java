@@ -69,8 +69,8 @@ public class MyLocationSource implements
 
     /** Location last received from the update. */
     private Location location;
-
     private boolean paused;
+    private long lastSentLocationTime;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -79,10 +79,10 @@ public class MyLocationSource implements
 
         locationObservable = locationSubject
                 .filter(latLng -> NavigatorApplication.isLoggedIn)
-                .timeInterval()
-                .filter(a -> a.time() >= UPDATE_FREQUENCY)
+                .timestamp()
+                .filter(a -> (a.time() - lastSentLocationTime >= UPDATE_FREQUENCY))
+                .doOnNext(a -> lastSentLocationTime = a.time())
                 .map(Timed::value);
-        // TODO: Invalid observable
     }
 
     public void addLocationListener(MyLocationListener myLocationListener) {
