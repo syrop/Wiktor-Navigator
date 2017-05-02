@@ -82,6 +82,7 @@ public class MyLocationSource implements
                 .timeInterval()
                 .filter(a -> a.time() >= UPDATE_FREQUENCY)
                 .map(Timed::value);
+        // TODO: Invalid observable
     }
 
     public void addLocationListener(MyLocationListener myLocationListener) {

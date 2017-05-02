@@ -49,7 +49,7 @@ public class FirebaseWriter extends FirebaseBase {
         reference.child(DISPLAY_NAME).setValue(contact.name());
     }
 
-    public void storeMyLocation(String email, LatLng latLng) {
+    public void writeMyLocation(String email, LatLng latLng) {
         email2Reference(email).child(LAT_LNG).setValue(latLng2String(latLng));
     }
 

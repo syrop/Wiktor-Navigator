@@ -53,6 +53,7 @@ public class ContactsCache {
         contacts.add(contact);
         Collections.sort(contacts);
         contactsUpdatedSubject.onNext(contact);
+        // TODO: Adding the same contact twice.
     }
 
     public void addAll(Collection<Contact> contacts) {

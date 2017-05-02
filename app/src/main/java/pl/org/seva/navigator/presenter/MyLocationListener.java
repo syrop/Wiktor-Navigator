@@ -37,6 +37,6 @@ public class MyLocationListener {
     }
 
     public void onLocationReceived(LatLng latLng) {
-        firebaseWriter.storeMyLocation(NavigatorApplication.email, latLng);
+        firebaseWriter.writeMyLocation(NavigatorApplication.email, latLng);
     }
 }
