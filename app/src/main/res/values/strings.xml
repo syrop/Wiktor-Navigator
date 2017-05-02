@@ -24,6 +24,7 @@
     <string name="search_activity_label">Add a new user</string>
     <string name="search_activity_hint">Search by e-mail</string>
     <string name="search_search">Search</string>
+    <string name="search_press_to_begin">Please press [image] to begin your search.</string>
     <string name="search_no_user_found">No user is found.</string>
     <string name="search_searching">Searching…</string>
     <string name="adding_friend_title">Adding a user</string>

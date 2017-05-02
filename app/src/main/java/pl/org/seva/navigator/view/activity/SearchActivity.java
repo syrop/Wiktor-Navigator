@@ -19,13 +19,19 @@ package pl.org.seva.navigator.view.activity;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +52,9 @@ import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder;
 
 public class SearchActivity extends AppCompatActivity implements ContactClickListener {
 
+    private static final String IMAGE_PLACEHOLDER = "[image]";
+    private static final int IMAGE_PLACEHOLDER_LENGTH = IMAGE_PLACEHOLDER.length();
+
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject FirebaseWriter firebaseWriter;
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
@@ -55,7 +64,6 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     ContactsCache contactsCache;
 
     private ActivitySearchBinding binding;
-
     private ProgressDialog progress;
 
     @Override
@@ -76,6 +84,26 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        setLabelSpannableString(R.string.search_press_to_begin);
+    }
+
+    // http://stackoverflow.com/questions/3176033/spannablestring-with-image-example
+    private void setLabelSpannableString(int id) {
+        String str = getString(id);
+        SpannableString ss = new SpannableString(str);
+        Drawable d = getResources().getDrawable(R.drawable.ic_search_black_24dp);
+        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+        ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
+        int idPlaceholder = str.indexOf(IMAGE_PLACEHOLDER);
+        if (idPlaceholder >= 0) {
+            ss.setSpan(
+                    span,
+                    idPlaceholder,
+                    idPlaceholder + IMAGE_PLACEHOLDER_LENGTH,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+        binding.label.setText(ss);
     }
 
     @Override
@@ -91,14 +119,35 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_overflow_menu, menu);
+
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        searchMenuItem.collapseActionView();
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setOnSearchClickListener(__ -> onSearchClicked());
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnCloseListener(this::onSearchViewClosed);
         return true;
+    }
+
+    private boolean onSearchViewClosed() {
+        binding.label.setVisibility(View.VISIBLE);
+        setLabelSpannableString(R.string.search_press_to_begin);
+        System.out.println("wiktor close");
+        return false;
+    }
+
+    private void onSearchClicked() {
+        binding.label.setVisibility(View.GONE);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                binding.notFoundLabel.setVisibility(View.GONE);
+                binding.label.setVisibility(View.GONE);
                 binding.contacts.setVisibility(View.GONE);
                 onSearchRequested();
                 return true;
@@ -121,10 +170,11 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     private void onContactReceived(Contact contact) {
         progress.cancel();
         if (contact.isEmpty()) {
-            binding.notFoundLabel.setVisibility(View.VISIBLE);
+            binding.label.setVisibility(View.VISIBLE);
+            setLabelSpannableString(R.string.search_no_user_found);
             return;
         }
-        binding.notFoundLabel.setVisibility(View.GONE);
+        binding.label.setVisibility(View.GONE);
         binding.contacts.setVisibility(View.VISIBLE);
         initRecyclerView(contact);
     }

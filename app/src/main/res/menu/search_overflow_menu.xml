@@ -6,5 +6,6 @@
         android:orderInCategory="100"
         android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/search_search"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 </menu>
