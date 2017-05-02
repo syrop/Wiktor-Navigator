@@ -44,6 +44,8 @@ import pl.org.seva.navigator.source.PeerLocationSource;
 @SuppressWarnings("MissingPermission")
 public class NavigationActivity extends AppCompatActivity implements PeerLocationListener, ContactsUpdatedListener {
 
+    private static final float MARKER_HUE = 34.0f;  // calculated from #00bfa5
+
     public static final String CONTACT = "contact";
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
@@ -149,6 +151,6 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
                 .position(latLng)
                 .title(contact.name()))
                 .setIcon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        .defaultMarker(MARKER_HUE));
     }
 }
