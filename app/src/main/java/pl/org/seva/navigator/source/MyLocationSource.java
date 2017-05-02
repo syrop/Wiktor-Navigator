@@ -80,7 +80,7 @@ public class MyLocationSource implements
         locationObservable = locationSubject
                 .filter(latLng -> NavigatorApplication.isLoggedIn)
                 .timestamp()
-                .filter(a -> (a.time() - lastSentLocationTime >= UPDATE_FREQUENCY))
+                .filter(a -> a.time() - lastSentLocationTime >= UPDATE_FREQUENCY)
                 .doOnNext(a -> lastSentLocationTime = a.time())
                 .map(Timed::value);
     }
