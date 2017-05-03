@@ -42,7 +42,6 @@ public class FriendshipSource {
         compositeDisposable.addAll(
                 firebaseReader
                         .friendshipRequestedListener()
-                        .filter(contact -> !contactsCache.contains(contact))
                         .subscribe(friendshipListener::onPeerRequestedFriendship),
                 firebaseReader
                         .friendshipAcceptedListener()
