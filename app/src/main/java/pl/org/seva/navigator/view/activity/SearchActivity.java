@@ -46,12 +46,11 @@ import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
 import pl.org.seva.navigator.databinding.ActivitySearchBinding;
 import pl.org.seva.navigator.model.Contact;
-import pl.org.seva.navigator.presenter.ContactClickListener;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter;
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder;
 
-public class SearchActivity extends AppCompatActivity implements ContactClickListener {
+public class SearchActivity extends AppCompatActivity {
 
     private static final String IMAGE_PLACEHOLDER = "[image]";
     private static final int IMAGE_PLACEHOLDER_LENGTH = IMAGE_PLACEHOLDER.length();
@@ -189,11 +188,10 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
         rv.setLayoutManager(lm);
         ContactAdapter adapter = new SingleContactAdapter(contact);
         rv.setAdapter(adapter);
-        adapter.addClickListener(this);
+        adapter.addClickListener(this::onContactClicked);
     }
 
-    @Override
-    public void onClick(Contact contact) {
+    private void onContactClicked(Contact contact) {
         if (contactsCache.contains(contact)) {
             finish();
             return;

@@ -35,10 +35,9 @@ public class PeerLocationSource {
     }
 
     public void addPeerLocationListener(String email, PeerLocationListener peerLocationListener) {
-        compositeDisposable.add(
-                firebaseReader
-                        .peerLocationListener(email)
-                        .subscribe(peerLocationListener::onPeerLocationReceived));
+        compositeDisposable.add(firebaseReader
+                .peerLocationListener(email)
+                .subscribe(peerLocationListener::onPeerLocationReceived));
     }
 
     public void clearPeerLocationListeners() {

@@ -20,5 +20,5 @@ package pl.org.seva.navigator.presenter;
 import pl.org.seva.navigator.model.Contact;
 
 public interface ContactLongClickListener {
-    void onLongClick(Contact contact);
+    void onContactLongClicked(Contact contact);
 }

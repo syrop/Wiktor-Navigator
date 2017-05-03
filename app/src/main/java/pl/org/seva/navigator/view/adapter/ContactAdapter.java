@@ -79,11 +79,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     public void addClickListener(ContactClickListener contactClickListener) {
-        clickSubject.subscribe(contactClickListener::onClick);
+        clickSubject.subscribe(contactClickListener::onContactClicked);
     }
 
     public void addLongClickListener(ContactLongClickListener contactLongClickListener) {
-        longClickSubject.subscribe(contactLongClickListener::onLongClick);
+        longClickSubject.subscribe(contactLongClickListener::onContactLongClicked);
     }
 
     @Override

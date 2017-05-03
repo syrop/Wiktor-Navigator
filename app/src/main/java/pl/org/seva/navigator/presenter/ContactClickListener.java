@@ -20,5 +20,5 @@ package pl.org.seva.navigator.presenter;
 import pl.org.seva.navigator.model.Contact;
 
 public interface ContactClickListener {
-    void onClick(Contact contact);
+    void onContactClicked(Contact contact);
 }

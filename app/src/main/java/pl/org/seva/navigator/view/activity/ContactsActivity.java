@@ -23,7 +23,6 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -48,18 +47,11 @@ import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.NavigatorComponent;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
-import pl.org.seva.navigator.presenter.ContactClickListener;
-import pl.org.seva.navigator.presenter.ContactLongClickListener;
-import pl.org.seva.navigator.presenter.ContactsUpdatedListener;
 import pl.org.seva.navigator.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 import pl.org.seva.navigator.view.builder.dialog.FriendshipDeleteDialogBuilder;
 
-public class ContactsActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        ContactsUpdatedListener,
-        ContactClickListener,
-        ContactLongClickListener {
+public class ContactsActivity extends AppCompatActivity {
 
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
@@ -101,8 +93,8 @@ public class ContactsActivity extends AppCompatActivity implements
                 R.string.drawer_accessibility_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        binding.navView.setNavigationItemSelectedListener(this);
-        contactsCache.addContactsUpdatedListener(this);
+        binding.navView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
+        contactsCache.addContactsUpdatedListener(this::onContactsUpdated);
     }
 
     @Override
@@ -163,13 +155,12 @@ public class ContactsActivity extends AppCompatActivity implements
         contactsRecyclerView.setLayoutManager(lm);
         contactAdapter = new ContactAdapter();
         graph.inject(contactAdapter);
-        contactAdapter.addClickListener(this);
-        contactAdapter.addLongClickListener(this);
+        contactAdapter.addClickListener(this::onContactClicked);
+        contactAdapter.addLongClickListener(this::onContactLongClicked);
         contactsRecyclerView.setAdapter(contactAdapter);
     }
 
-    @Override
-    public void onClick(Contact contact) {
+    private void onContactClicked(Contact contact) {
         Intent intent = new Intent(this, NavigationActivity.class);
         //noinspection EqualsReplaceableByObjectsCall
         if (!contact.email().equals(NavigatorApplication.email)) {
@@ -178,8 +169,7 @@ public class ContactsActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    @Override
-    public void onLongClick(Contact contact) {
+    private void onContactLongClicked(Contact contact) {
         new FriendshipDeleteDialogBuilder(this)
                 .setContact(contact)
                 .setOnConfirmedAction(() -> onDeleteFriendConfirmed(contact))
@@ -276,8 +266,7 @@ public class ContactsActivity extends AppCompatActivity implements
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT));
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    private boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.drawer_login:
@@ -293,8 +282,7 @@ public class ContactsActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public void onContactsUpdated() {
+    private void onContactsUpdated() {
         contactAdapter.notifyDataSetChanged();
     }
 }
