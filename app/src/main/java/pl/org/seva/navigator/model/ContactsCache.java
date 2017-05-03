@@ -50,6 +50,9 @@ public class ContactsCache {
     }
 
     public void add(Contact contact) {
+        if (contacts.contains(contact)) {
+            return;
+        }
         contacts.add(contact);
         Collections.sort(contacts);
         contactsUpdatedSubject.onNext(contact);

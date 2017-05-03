@@ -34,7 +34,8 @@ public class DbHelper extends SQLiteOpenHelper {
             "create table if not exists " + FRIENDS_TABLE_NAME +
                     " (id integer primary key autoincrement, " +
                     EMAIL_COLUMN_NAME + " text, " +
-                    NAME_COLUMN_NAME + " text)";
+                    NAME_COLUMN_NAME + " text, " +
+                    "constraint unique_name unique (" + EMAIL_COLUMN_NAME + "))";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

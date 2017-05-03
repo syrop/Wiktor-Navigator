@@ -43,7 +43,11 @@ public class SqliteWriter {
         ContentValues cv = new ContentValues();
         cv.put(DbHelper.NAME_COLUMN_NAME, contact.name());
         cv.put(DbHelper.EMAIL_COLUMN_NAME, contact.email());
-        db.insert(DbHelper.FRIENDS_TABLE_NAME, null, cv);
+        db.insertWithOnConflict(
+                DbHelper.FRIENDS_TABLE_NAME,
+                null,
+                cv,
+                SQLiteDatabase.CONFLICT_ROLLBACK);
         db.close();
     }
 
