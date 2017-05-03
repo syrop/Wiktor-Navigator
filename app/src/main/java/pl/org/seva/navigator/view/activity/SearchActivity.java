@@ -134,7 +134,9 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     }
 
     private boolean onSearchViewClosed() {
-        binding.label.setVisibility(View.VISIBLE);
+        if (binding.contacts.getVisibility() != View.VISIBLE) {
+            binding.label.setVisibility(View.VISIBLE);
+        }
         setLabelSpannableString(R.string.search_press_to_begin);
         return false;
     }
@@ -171,6 +173,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
         progress.cancel();
         if (contact.isEmpty()) {
             binding.label.setVisibility(View.VISIBLE);
+            binding.contacts.setVisibility(View.GONE);
             setLabelSpannableString(R.string.search_no_user_found);
             return;
         }
