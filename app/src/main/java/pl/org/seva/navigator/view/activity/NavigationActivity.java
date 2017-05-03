@@ -71,6 +71,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     private static final float ZOOM_DEFAULT_VALUE = 7.5f;
 
     private boolean animateCamera = true;
+    private boolean moveCameraToPeerLocation = true;
     private float zoom;
 
     @Override
@@ -109,6 +110,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         else {
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
+        moveCameraToPeerLocation = false;
         animateCamera = false;
     }
 
@@ -173,7 +175,9 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     public void onPeerLocationReceived(LatLng latLng) {
         peerLocation = latLng;
         putPeerMarkerOnMap();
-        moveCameraToPeerLocation();
+        if (moveCameraToPeerLocation) {
+            moveCameraToPeerLocation();
+        }
     }
 
     @Override
