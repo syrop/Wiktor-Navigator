@@ -136,7 +136,6 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     private boolean onSearchViewClosed() {
         binding.label.setVisibility(View.VISIBLE);
         setLabelSpannableString(R.string.search_press_to_begin);
-        System.out.println("wiktor close");
         return false;
     }
 
