@@ -35,6 +35,7 @@ import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -204,6 +205,7 @@ public class SearchActivity extends AppCompatActivity implements ContactClickLis
     }
 
     private void contactApprovedAndFinish(Contact contact) {
+        Toast.makeText(this, R.string.search_waiting_for_party, Toast.LENGTH_SHORT).show();
         firebaseWriter.requestFriendship(contact);
         finish();
     }

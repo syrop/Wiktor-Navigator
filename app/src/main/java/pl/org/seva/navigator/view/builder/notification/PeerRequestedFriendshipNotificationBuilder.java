@@ -51,7 +51,7 @@ public final class PeerRequestedFriendshipNotificationBuilder {
         // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
         return new NotificationCompat.Builder(context)
                 .setStyle(bigTextStyle)
-                .setContentText(context.getText(R.string.friendship_confirmation_short))
+                .setContentText(context.getText(R.string.friendship_requested_notification_short))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(false)
                 .addAction(R.drawable.ic_close_black_24dp, context.getString(android.R.string.no), noPi)
