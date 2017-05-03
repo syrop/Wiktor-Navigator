@@ -20,13 +20,16 @@ package pl.org.seva.navigator.view.activity;
 import android.app.FragmentManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -53,16 +56,36 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject ContactsCache contactsCache;
 
-    private static final String MAP_FRAGMENT_TAG = "googleMap";
+    private static final String MAP_FRAGMENT_TAG = "map";
 
     private MapFragment mapFragment;
-    private GoogleMap googleMap;
+    private GoogleMap map;
     private Contact contact;
     private ActivityNavigationBinding binding;
+
+    private LatLng peerLocation;
+
+    private static final String SAVED_PEER_LOCATION = "saved_peer_location";
+
+    private static final String ZOOM_PROPERTY_NAME = "navigation_map_zoom";
+    private static final float ZOOM_DEFAULT_VALUE = 7.5f;
+
+    private boolean animateCamera = true;
+    private float zoom;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        zoom = PreferenceManager.getDefaultSharedPreferences(this)
+                .getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
+        if (savedInstanceState != null) {
+            animateCamera = false;
+            peerLocation = savedInstanceState.getParcelable(SAVED_PEER_LOCATION);
+            if (peerLocation != null) {
+                moveCameraToPeerLocation();
+            }
+        }
+
         ((NavigatorApplication) getApplication()).getGraph().inject(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_navigation);
 
@@ -77,9 +100,28 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         }
     }
 
+    private void moveCameraToPeerLocation() {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(peerLocation).zoom(zoom).build();
+        if (animateCamera) {
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        animateCamera = false;
+    }
+
     private void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        this.googleMap.setMyLocationEnabled(true);
+        map = googleMap;
+        map.setMyLocationEnabled(true);
+        map.setOnCameraIdleListener(this::onCameraIdle);
+    }
+
+    private void onCameraIdle() {
+        zoom = map.getCameraPosition().zoom;
+        PreferenceManager.getDefaultSharedPreferences(this).edit().
+                putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
     }
 
     @Override
@@ -112,6 +154,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
             getFragmentManager().beginTransaction().remove(mapFragment).commitAllowingStateLoss();
             mapFragment = null;
         }
+        outState.putParcelable(SAVED_PEER_LOCATION, peerLocation);
         super.onSaveInstanceState(outState);
     }
 
@@ -128,7 +171,9 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
     @Override
     public void onPeerLocationReceived(LatLng latLng) {
-        putPeerMarkerOnMap(latLng);
+        peerLocation = latLng;
+        putPeerMarkerOnMap();
+        moveCameraToPeerLocation();
     }
 
     @Override
@@ -139,18 +184,17 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     }
 
     private void clearMap() {
-        googleMap.clear();
+        map.clear();
     }
 
-    private void putPeerMarkerOnMap(LatLng latLng) {
-        if (googleMap == null) {
+    private void putPeerMarkerOnMap() {
+        if (map == null) {
             return;
         }
         clearMap();
-        googleMap.addMarker(new MarkerOptions()
-                .position(latLng)
+        map.addMarker(new MarkerOptions()
+                .position(peerLocation)
                 .title(contact.name()))
-                .setIcon(BitmapDescriptorFactory
-                        .defaultMarker(MARKER_HUE));
+                .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE));
     }
 }
