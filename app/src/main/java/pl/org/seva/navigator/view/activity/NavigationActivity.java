@@ -40,12 +40,10 @@ import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.databinding.ActivityNavigationBinding;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.presenter.ContactsUpdatedListener;
-import pl.org.seva.navigator.presenter.PeerLocationListener;
 import pl.org.seva.navigator.source.PeerLocationSource;
 
 @SuppressWarnings("MissingPermission")
-public class NavigationActivity extends AppCompatActivity implements PeerLocationListener, ContactsUpdatedListener {
+public class NavigationActivity extends AppCompatActivity {
 
     private static final float MARKER_HUE = 34.0f;  // calculated from #00bfa5
 
@@ -97,7 +95,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
 
         contact = getIntent().getParcelableExtra(CONTACT);
         if (contact != null) {
-            contactsCache.addContactsUpdatedListener(contact.email(), this);
+            contactsCache.addContactsUpdatedListener(contact.email(), this::onContactsUpdated);
         }
     }
 
@@ -118,6 +116,9 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         map = googleMap;
         map.setMyLocationEnabled(true);
         map.setOnCameraIdleListener(this::onCameraIdle);
+        if (contact != null) {
+            peerLocationSource.addPeerLocationListener(contact.email(), this::onPeerLocationReceived);
+        }
     }
 
     private void onCameraIdle() {
@@ -135,9 +136,6 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
     @Override
     protected void onResume() {
         super.onResume();
-        if (contact != null) {
-            peerLocationSource.addPeerLocationListener(contact.email(), this);
-        }
         int mapContainerId = binding.mapContainer.getId();
         FragmentManager fm = getFragmentManager();
         mapFragment = (MapFragment) fm.findFragmentByTag(MAP_FRAGMENT_TAG);
@@ -171,8 +169,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         }
     }
 
-    @Override
-    public void onPeerLocationReceived(LatLng latLng) {
+    private void onPeerLocationReceived(LatLng latLng) {
         peerLocation = latLng;
         putPeerMarkerOnMap();
         if (moveCameraToPeerLocation) {
@@ -180,8 +177,7 @@ public class NavigationActivity extends AppCompatActivity implements PeerLocatio
         }
     }
 
-    @Override
-    public void onContactsUpdated() {
+    private void onContactsUpdated() {
         contact = null;
         peerLocationSource.clearPeerLocationListeners();
         clearMap();
