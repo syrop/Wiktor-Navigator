@@ -17,7 +17,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${googleMapsKey}"/>
+            android:value="AIzaSyDECNjt1fl18jA2W5O2n3e_JMFueCjEdBs"/>
 
         <activity
             android:name=".view.activity.ContactsActivity"
