@@ -66,7 +66,7 @@ public class NavigationActivity extends AppCompatActivity {
     private static final String SAVED_PEER_LOCATION = "saved_peer_location";
 
     private static final String ZOOM_PROPERTY_NAME = "navigation_map_zoom";
-    private static final float ZOOM_DEFAULT_VALUE = 7.5f;
+    private static final float DEFAULT_ZOOM = 7.5f;
 
     private boolean animateCamera = true;
     private boolean moveCameraToPeerLocation = true;
@@ -76,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         zoom = PreferenceManager.getDefaultSharedPreferences(this)
-                .getFloat(ZOOM_PROPERTY_NAME, ZOOM_DEFAULT_VALUE);
+                .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM);
         if (savedInstanceState != null) {
             animateCamera = false;
             peerLocation = savedInstanceState.getParcelable(SAVED_PEER_LOCATION);
@@ -122,7 +122,9 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     private void onCameraIdle() {
-        zoom = map.getCameraPosition().zoom;
+        if (!moveCameraToPeerLocation) {
+            zoom = map.getCameraPosition().zoom;
+        }
         PreferenceManager.getDefaultSharedPreferences(this).edit().
                 putFloat(ZOOM_PROPERTY_NAME, zoom).apply();
     }
