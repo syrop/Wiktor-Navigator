@@ -38,58 +38,29 @@ public class FirebaseReader extends FirebaseBase {
         super();
     }
 
-    public Observable<LatLng> peerLocationListener(String email) {
-        return readData(email2Reference(email).child(LAT_LNG))
-                .map(DataSnapshot::getValue)
-                .map(obj -> (String) obj)
-                .map(FirebaseBase::string2LatLng);
-    }
-
-    public Observable<Contact> friendshipRequestedListener() {
-        return createContactObservable(FRIENDSHIP_REQUESTS);
-    }
-
-    public Observable<Contact> friendshipAcceptedListener() {
-        DatabaseReference reference = currentUserReference().child(FRIENDSHIP_ACCEPTED);
-        return readDataOnce(reference)
-                .concatMapIterable(DataSnapshot::getChildren)
-                .concatWith(childListener(reference))
-                .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
-                .map(FirebaseReader::snapshot2Contact);
-    }
-
-    public Observable<Contact> friendshipDeletedListener() {
-        return createContactObservable(FRIENDSHIP_DELETED);
-    }
-
-    private Observable<Contact> createContactObservable(String tag) {
+    private Observable<Contact> createContactObservable(String tag, boolean delete) {
         DatabaseReference reference = currentUserReference().child(tag);
         return readDataOnce(reference)
                 .concatMapIterable(DataSnapshot::getChildren)
                 .concatWith(childListener(reference))
-                .doOnNext(snapshot -> reference.child(snapshot.getKey()).removeValue())
+                .doOnNext(snapshot -> { if (delete) reference.child(snapshot.getKey()).removeValue();} )
                 .map(FirebaseReader::snapshot2Contact);
     }
 
     private Observable<DataSnapshot> readDataOnce(DatabaseReference reference) {
-        PublishSubject<DataSnapshot> result = PublishSubject.create();
-        return result
-                .doOnSubscribe(__ -> reference.addListenerForSingleValueEvent(new RxValueEventListener(result)))
+        PublishSubject<DataSnapshot> resultSubject = PublishSubject.create();
+        return resultSubject
+                .doOnSubscribe(__ -> reference.addListenerForSingleValueEvent(new RxValueEventListener(resultSubject)))
                 .take(1);
     }
 
     private Observable<DataSnapshot> readData(DatabaseReference reference) {
-        PublishSubject<DataSnapshot> result = PublishSubject.create();
-        ValueEventListener val = new RxValueEventListener(result);
+        PublishSubject<DataSnapshot> resultSubject = PublishSubject.create();
+        ValueEventListener val = new RxValueEventListener(resultSubject);
 
-        return result
+        return resultSubject
                 .doOnSubscribe(__ -> reference.addValueEventListener(val))
                 .doOnDispose(() -> reference.removeEventListener(val));
-    }
-
-    public Observable<Contact> readContactOnceForEmail(String email) {
-        return readDataOnce(email2Reference(email))
-                .map(FirebaseReader::snapshot2Contact);
     }
 
     private Observable<DataSnapshot> childListener(DatabaseReference reference) {
@@ -99,13 +70,41 @@ public class FirebaseReader extends FirebaseBase {
     }
 
     private static Contact snapshot2Contact(DataSnapshot snapshot) {
-        Contact result = new Contact();
+        Contact resultContact = new Contact();
         if (!snapshot.exists()) {
-            return result;
+            return resultContact;
         }
-        result.setEmail(from64(snapshot.getKey()));
-        result.setName((String) snapshot.child(DISPLAY_NAME).getValue());
+        resultContact.setEmail(from64(snapshot.getKey()));
+        resultContact.setName((String) snapshot.child(DISPLAY_NAME).getValue());
 
-        return result;
+        return resultContact;
+    }
+
+    public Observable<LatLng> peerLocationListener(String email) {
+        return readData(email2Reference(email).child(LAT_LNG))
+                .map(DataSnapshot::getValue)
+                .map(obj -> (String) obj)
+                .map(FirebaseBase::string2LatLng);
+    }
+
+    public Observable<Contact> friendshipRequestedListener() {
+        return createContactObservable(FRIENDSHIP_REQUESTED, true);
+    }
+
+    public Observable<Contact> friendshipAcceptedListener() {
+        return createContactObservable(FRIENDSHIP_ACCEPTED, true);
+    }
+
+    public Observable<Contact> friendshipDeletedListener() {
+        return createContactObservable(FRIENDSHIP_DELETED, true);
+    }
+
+    public Observable<Contact> friendsListener() {
+        return createContactObservable(FRIENDS, false);
+    }
+
+    public Observable<Contact> readContactOnceForEmail(String email) {
+        return readDataOnce(email2Reference(email))
+                .map(FirebaseReader::snapshot2Contact);
     }
 }

@@ -112,6 +112,10 @@ public class FriendshipListener {
         sqliteWriter.deleteFriend(contact);
     }
 
+    public void onFriendRead(Contact contact) {
+        contactsCache.add(contact);
+    }
+
     private class FriendshipAcceptedBroadcastReceiver extends BroadcastReceiver {
 
         @Override

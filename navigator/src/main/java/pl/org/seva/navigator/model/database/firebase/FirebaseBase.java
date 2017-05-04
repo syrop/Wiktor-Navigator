@@ -32,9 +32,10 @@ public class FirebaseBase {
     static final String USER_ROOT = "user";
     static final String DISPLAY_NAME = "display_name";
     static final String LAT_LNG = "lat_lng";
-    static final String FRIENDSHIP_REQUESTS = "friendship_requests";
+    static final String FRIENDSHIP_REQUESTED = "friendship_requested";
     static final String FRIENDSHIP_ACCEPTED = "friendship_accepted";
     static final String FRIENDSHIP_DELETED = "friendship_deleted";
+    static final String FRIENDS = "friends";
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
 

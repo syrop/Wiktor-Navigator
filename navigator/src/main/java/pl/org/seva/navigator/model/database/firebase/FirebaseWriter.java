@@ -30,7 +30,6 @@ import pl.org.seva.navigator.model.Contact;
 @Singleton
 public class FirebaseWriter extends FirebaseBase {
 
-    @SuppressWarnings("WeakerAccess")
     @Inject
     FirebaseWriter() {
         super();
@@ -54,17 +53,21 @@ public class FirebaseWriter extends FirebaseBase {
     }
 
     public void requestFriendship(Contact contact) {
-        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_REQUESTS);
+        DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_REQUESTED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
     }
 
     public void acceptFriendship(Contact contact) {
         DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_ACCEPTED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
+        reference = email2Reference(NavigatorApplication.getLoggedInContact().email()).child(FRIENDS);
+        writeContact(reference, contact);
     }
 
     public void deleteFriendship(Contact contact) {
         DatabaseReference reference = email2Reference(contact.email()).child(FRIENDSHIP_DELETED);
         writeContact(reference, NavigatorApplication.getLoggedInContact());
+        reference = email2Reference(NavigatorApplication.getLoggedInContact().email()).child(FRIENDS);
+        reference.child(to64(contact.email())).removeValue();
     }
 }

@@ -49,6 +49,9 @@ public class FriendshipSource {
                 firebaseReader
                         .friendshipDeletedListener()
                         .subscribe(friendshipListener::onPeerDeletedFriendship));
+                firebaseReader
+                        .friendsListener()
+                        .subscribe(friendshipListener::onFriendRead);
     }
 
     public void clearFriendshipListeners() {
