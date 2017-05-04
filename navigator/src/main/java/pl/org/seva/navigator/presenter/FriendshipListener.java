@@ -33,7 +33,6 @@ import javax.inject.Singleton;
 
 import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
-import pl.org.seva.navigator.model.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder;
 
@@ -43,8 +42,6 @@ public class FriendshipListener {
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject
     ContactsCache contactsCache;
-    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
-    @Inject SqliteWriter sqliteWriter;
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject FirebaseWriter firebaseWriter;
 
@@ -104,12 +101,10 @@ public class FriendshipListener {
 
     public void onPeerAcceptedFriendship(Contact contact) {
         contactsCache.add(contact);
-        sqliteWriter.addFriend(contact);
     }
 
     public void onPeerDeletedFriendship(Contact contact) {
         contactsCache.delete(contact);
-        sqliteWriter.deleteFriend(contact);
     }
 
     public void onFriendRead(Contact contact) {
@@ -129,7 +124,6 @@ public class FriendshipListener {
                 return;
             }
             contactsCache.add(contact);
-            sqliteWriter.addFriend(contact);
             firebaseWriter.acceptFriendship(contact);
             context.unregisterReceiver(this);
             context.unregisterReceiver(rejectedReceiver);
