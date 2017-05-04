@@ -24,9 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
-import pl.org.seva.navigator.model.database.sqlite.DbHelper;
-import pl.org.seva.navigator.model.database.sqlite.SqliteReader;
-import pl.org.seva.navigator.model.database.sqlite.SqliteWriter;
 import pl.org.seva.navigator.presenter.FriendshipListener;
 import pl.org.seva.navigator.presenter.MyLocationListener;
 import pl.org.seva.navigator.source.ActivityRecognitionSource;
@@ -40,12 +37,7 @@ public class NavigatorApplication extends Application {
     @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
     @Inject
     ActivityRecognitionSource activityRecognitionSource;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    SqliteWriter sqliteWriter;
-    @SuppressWarnings({"WeakerAccess", "CanBeFinal"})
-    @Inject
-    SqliteReader sqliteReader;
+
     @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     @Inject
     ContactsCache contactsCache;
@@ -75,10 +67,6 @@ public class NavigatorApplication extends Application {
         graph.inject(this);
         setCurrentUser(FirebaseAuth.getInstance().getCurrentUser());
         activityRecognitionSource.init(this);
-        DbHelper helper = new DbHelper(this);
-        sqliteWriter.setHelper(helper);
-        sqliteReader.setHelper(helper);
-        contactsCache.addAll(sqliteReader.getFriends());
         myLocationSource.init(this).addLocationListener(myLocationListener);
         friendshipListener.init(this);
         if (isLoggedIn) {

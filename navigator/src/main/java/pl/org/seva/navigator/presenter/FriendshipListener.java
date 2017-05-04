@@ -32,7 +32,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
+import pl.org.seva.navigator.model.firebase.FirebaseWriter;
 import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder;
 

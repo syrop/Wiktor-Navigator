@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 import pl.org.seva.navigator.model.ContactsCache;
-import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
+import pl.org.seva.navigator.model.firebase.FirebaseReader;
 import pl.org.seva.navigator.presenter.FriendshipListener;
 
 @Singleton

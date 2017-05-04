@@ -46,7 +46,7 @@ import pl.org.seva.navigator.model.Contact;
 import pl.org.seva.navigator.model.ContactsCache;
 import pl.org.seva.navigator.NavigatorComponent;
 import pl.org.seva.navigator.databinding.ActivityContactsBinding;
-import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
+import pl.org.seva.navigator.model.firebase.FirebaseWriter;
 import pl.org.seva.navigator.source.MyLocationSource;
 import pl.org.seva.navigator.view.adapter.ContactAdapter;
 import pl.org.seva.navigator.view.builder.dialog.FriendshipDeleteDialogBuilder;
