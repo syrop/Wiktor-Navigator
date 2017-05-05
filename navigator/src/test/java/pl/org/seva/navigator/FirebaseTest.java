@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
 
-import pl.org.seva.navigator.model.firebase.FirebaseBase;
+import pl.org.seva.navigator.model.database.firebase.FirebaseBase;
 
 import static org.junit.Assert.assertEquals;
 

@@ -20,7 +20,7 @@ package pl.org.seva.navigator.source;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.model.firebase.FirebaseReader;
+import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
 import pl.org.seva.navigator.presenter.PeerLocationListener;
 
 public class PeerLocationSource {

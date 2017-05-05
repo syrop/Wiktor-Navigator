@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.org.seva.navigator.NavigatorApplication;
-import pl.org.seva.navigator.model.firebase.FirebaseWriter;
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
 
 @Singleton
 public class MyLocationListener {
