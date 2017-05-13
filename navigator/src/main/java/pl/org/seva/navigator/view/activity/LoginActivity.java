@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements
             return;
         }
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_google_sign_in);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         binding.signInButton.setOnClickListener(this);
     }
 
