@@ -43,8 +43,8 @@ import javax.inject.Inject;
 
 import pl.org.seva.navigator.NavigatorApplication;
 import pl.org.seva.navigator.R;
+import pl.org.seva.navigator.databinding.ActivityLoginBinding;
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter;
-import pl.org.seva.navigator.databinding.ActivityGoogleSignInBinding;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener authStateListener;
 
     private GoogleApiClient googleApiClient;
-    private ActivityGoogleSignInBinding binding;
+    private ActivityLoginBinding binding;
 
     private ProgressDialog progressDialog;
     private boolean performedAction;
