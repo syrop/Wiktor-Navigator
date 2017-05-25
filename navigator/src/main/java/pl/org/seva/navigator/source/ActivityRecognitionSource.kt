@@ -99,12 +99,20 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
                 if (result.mostProbableActivity.type == DetectedActivity.STILL) {
-                    stationarySubject.onNext(0)
+                    onDeviceStationary()
                 } else {
-                    movingSubject.onNext(0)
+                    onDeviceMoving()
                 }
             }
         }
+    }
+
+    private fun onDeviceStationary() {
+        stationarySubject.onNext(0)
+    }
+
+    private fun onDeviceMoving() {
+        movingSubject.onNext(0)
     }
 
     companion object {
