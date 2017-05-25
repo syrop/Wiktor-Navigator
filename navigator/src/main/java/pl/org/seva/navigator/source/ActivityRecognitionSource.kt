@@ -89,7 +89,9 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     }
 
     fun addActivityRecognitionListener(activityRecognitionListener: ActivityRecognitionListener) {
-        stationarySubject.subscribe { _ -> activityRecognitionListener.onDeviceStationary() }
+        stationarySubject
+                .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
+                .subscribe { _ -> activityRecognitionListener.onDeviceStationary() }
         movingSubject.subscribe { _ -> activityRecognitionListener.onDeviceMoving() }
     }
 
@@ -99,7 +101,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
                 if (result.mostProbableActivity.type == DetectedActivity.STILL) {
-                    onDeviceStationary()
+                    onDeviceStationary(result.getActivityConfidence(DetectedActivity.STILL))
                 } else {
                     onDeviceMoving()
                 }
@@ -107,8 +109,8 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
         }
     }
 
-    private fun onDeviceStationary() {
-        stationarySubject.onNext(0)
+    private fun onDeviceStationary(confidence: Int) {
+        stationarySubject.onNext(confidence)
     }
 
     private fun onDeviceMoving() {
@@ -118,10 +120,10 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     companion object {
 
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
+        private val ACTIVITY_RECOGNITION_INTERVAL = 1000L  // [ms]
+        private val STATIONARY_CONFIDENCE_THRESHOLD = 55
 
-        private val ACTIVITY_RECOGNITION_INTERVAL: Long = 1000  // [ms]
-
-        private val stationarySubject = PublishSubject.create<Any>()
+        private val stationarySubject = PublishSubject.create<Int>()
         private val movingSubject = PublishSubject.create<Any>()
     }
 }
