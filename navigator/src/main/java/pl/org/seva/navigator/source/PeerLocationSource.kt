@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.model.database.firebase.FirebaseReader
-import pl.org.seva.navigator.presenter.PeerLocationListener
 
 class PeerLocationSource @Inject internal constructor() {
 

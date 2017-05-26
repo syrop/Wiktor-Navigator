@@ -74,7 +74,7 @@ class ContactsCache @Inject constructor() {
 
     fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {
         contactsUpdatedSubject
-                .filter { contact -> email == null || contact.email() == email }
+                .filter { email == null || it.email() == email }
                 .subscribe { contactsUpdatedListener.invoke() }
     }
 

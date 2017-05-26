@@ -77,8 +77,8 @@ class LoginActivity :
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        authStateListener = { firebaseAuth ->
-            val user = firebaseAuth.currentUser
+        authStateListener = {
+            val user = it.currentUser
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.uid)
                 onUserLoggedIn(user)
@@ -174,15 +174,15 @@ class LoginActivity :
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(
                         this
-                ) { task ->
-                    Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful)
+                ) {
+                    Log.d(TAG, "signInWithCredential:onComplete:" + it.isSuccessful)
                     hideProgressDialog()
 
                     // If sign in fails, display a message to the user. If sign in succeeds
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
-                    if (!task.isSuccessful) {
-                        signInFailed(task.exception)
+                    if (!it.isSuccessful) {
+                        signInFailed(it.exception)
                     }
                 }
     }

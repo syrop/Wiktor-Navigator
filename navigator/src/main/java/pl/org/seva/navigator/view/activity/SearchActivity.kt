@@ -183,7 +183,7 @@ class SearchActivity : AppCompatActivity() {
         contacts!!.layoutManager = lm
         val adapter = SingleContactAdapter(contact)
         contacts!!.adapter = adapter
-        adapter.addClickListener { contact: Contact -> this.onContactClicked(contact) }
+        adapter.addClickListener { this.onContactClicked(it) }
     }
 
     private fun onContactClicked(contact: Contact) {
