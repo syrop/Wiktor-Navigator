@@ -76,9 +76,9 @@ class SearchActivity : AppCompatActivity() {
             search(query)
         }
 
-        if (supportActionBar != null) {
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
         }
 
         setLabelSpannableString(R.string.search_press_to_begin)

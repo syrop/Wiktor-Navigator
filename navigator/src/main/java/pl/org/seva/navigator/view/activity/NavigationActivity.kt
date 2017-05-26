@@ -62,25 +62,23 @@ class NavigationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         zoom = PreferenceManager.getDefaultSharedPreferences(this)
                 .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
-        if (savedInstanceState != null) {
+        savedInstanceState?.let {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng>(SAVED_PEER_LOCATION)
-            if (peerLocation != null) {
-                moveCameraToPeerLocation()
-            }
+            peerLocation?.let {  moveCameraToPeerLocation() }
         }
 
         (application as NavigatorApplication).graph.inject(this)
         setContentView(R.layout.activity_navigation)
 
-        if (supportActionBar != null) {
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
         }
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)
-        if (contact != null) {
-            contactsCache.addContactsUpdatedListener(contact!!.email(), { this.onContactsUpdated() })
+        contact?.let {
+            contactsCache.addContactsUpdatedListener(it.email(), { this.onContactsUpdated() })
         }
         mapContainerId = findViewById<View>(R.id.map_container).id
     }
@@ -102,8 +100,8 @@ class NavigationActivity : AppCompatActivity() {
         map = googleMap
         map!!.isMyLocationEnabled = true
         map!!.setOnCameraIdleListener { this.onCameraIdle() }
-        if (contact != null) {
-            peerLocationSource.addPeerLocationListener(contact!!.email(), { this.onPeerLocationReceived(it) })
+        contact?.let {
+            peerLocationSource.addPeerLocationListener(it.email(), { this.onPeerLocationReceived(it) })
         }
     }
 
@@ -131,9 +129,9 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (mapFragment != null) {
+        mapFragment?.let {
             // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
-            fragmentManager.beginTransaction().remove(mapFragment).commitAllowingStateLoss()
+            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
             mapFragment = null
         }
         outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
