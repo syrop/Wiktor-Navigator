@@ -52,8 +52,8 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
         val contact = getContact(position)
         holder.name.text = contact.name()
         holder.email.text = contact.email()
-        holder.view.setOnClickListener { _ -> onItemClick(position) }
-        holder.view.setOnLongClickListener { _ -> onItemLongClick(position) }
+        holder.view.setOnClickListener { onItemClick(position) }
+        holder.view.setOnLongClickListener { onItemLongClick(position) }
     }
 
     private fun onItemClick(position: Int) {

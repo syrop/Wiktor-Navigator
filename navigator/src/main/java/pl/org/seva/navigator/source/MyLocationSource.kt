@@ -63,10 +63,10 @@ internal constructor() :
     init {
 
         locationObservable = locationSubject
-                .filter { _ -> NavigatorApplication.isLoggedIn }
+                .filter { NavigatorApplication.isLoggedIn }
                 .timestamp()
-                .filter { a -> a.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
-                .doOnNext { a -> lastSentLocationTime = a.time() }
+                .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
+                .doOnNext { lastSentLocationTime = it.time() }
                 .map<LatLng> { it.value() }
     }
 

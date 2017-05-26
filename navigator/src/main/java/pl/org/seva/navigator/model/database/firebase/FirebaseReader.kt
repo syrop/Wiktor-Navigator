@@ -45,7 +45,7 @@ internal constructor() : FirebaseBase() {
     private fun readDataOnce(reference: DatabaseReference): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
         return resultSubject
-                .doOnSubscribe { _ ->
+                .doOnSubscribe {
                     reference.addListenerForSingleValueEvent(RxValueEventListener(resultSubject))
                 }
                 .take(1)
@@ -56,7 +56,7 @@ internal constructor() : FirebaseBase() {
         val `val` = RxValueEventListener(resultSubject)
 
         return resultSubject
-                .doOnSubscribe { _ -> reference.addValueEventListener(`val`) }
+                .doOnSubscribe { reference.addValueEventListener(`val`) }
                 .doOnDispose { reference.removeEventListener(`val`) }
     }
 

@@ -75,7 +75,7 @@ class ContactsActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.app_bar_toolbar)
         setSupportActionBar(toolbar)
         fab = findViewById<View>(R.id.fab)
-        fab.setOnClickListener { _ -> startActivity(Intent(this, SearchActivity::class.java)) }
+        fab.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
 
         drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
@@ -208,7 +208,7 @@ class ContactsActivity : AppCompatActivity() {
                 contactsRecyclerView,
                 R.string.permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.permission_retry) { _ -> requestLocationPermission() }
+                .setAction(R.string.permission_retry) { requestLocationPermission() }
                 .show()
     }
 

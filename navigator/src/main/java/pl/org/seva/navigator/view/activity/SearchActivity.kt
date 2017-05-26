@@ -119,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
         val searchMenuItem = menu.findItem(R.id.action_search)
         searchMenuItem.collapseActionView()
         val searchView = searchMenuItem.actionView as SearchView
-        searchView.setOnSearchClickListener { _ -> onSearchClicked() }
+        searchView.setOnSearchClickListener { onSearchClicked() }
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))

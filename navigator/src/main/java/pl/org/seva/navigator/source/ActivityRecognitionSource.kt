@@ -91,8 +91,8 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     fun addActivityRecognitionListener(activityRecognitionListener: ActivityRecognitionListener) {
         stationarySubject
                 .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
-                .subscribe { _ -> activityRecognitionListener.onDeviceStationary() }
-        movingSubject.subscribe { _ -> activityRecognitionListener.onDeviceMoving() }
+                .subscribe { activityRecognitionListener.onDeviceStationary() }
+        movingSubject.subscribe { activityRecognitionListener.onDeviceMoving() }
     }
 
     private inner class ActivityRecognitionBroadcastReceiver : BroadcastReceiver() {
