@@ -17,9 +17,6 @@
 
 package pl.org.seva.navigator.model.database.sqlite
 
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-
 import java.util.ArrayList
 
 import javax.inject.Inject
