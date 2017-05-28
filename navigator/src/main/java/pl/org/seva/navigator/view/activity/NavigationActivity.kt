@@ -80,7 +80,7 @@ class NavigationActivity : AppCompatActivity() {
         contact?.let {
             contactsCache.addContactsUpdatedListener(it.email(), { this.onContactsUpdated() })
         }
-        mapContainerId = findViewById<View>(R.id.map_container).id
+        mapContainerId = findViewById(R.id.map_container).id
     }
 
     private fun moveCameraToPeerLocation() {
