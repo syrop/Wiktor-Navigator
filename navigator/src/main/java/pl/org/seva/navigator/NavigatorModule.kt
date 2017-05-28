@@ -15,10 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter;
+package pl.org.seva.navigator
 
-import pl.org.seva.navigator.model.Contact;
+import dagger.Module
 
-public interface ContactLongClickListener {
-    void onContactLongClicked(Contact contact);
-}
+@Module
+internal class NavigatorModule

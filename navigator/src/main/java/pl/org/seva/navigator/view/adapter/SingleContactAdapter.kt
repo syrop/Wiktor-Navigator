@@ -15,10 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter;
+package pl.org.seva.navigator.view.adapter
 
-public interface ActivityRecognitionListener {
+import pl.org.seva.navigator.model.Contact
 
-    void onDeviceStationary();
-    void onDeviceMoving();
+class SingleContactAdapter(private val contact: Contact) : ContactAdapter() {
+
+    override fun getContact(position: Int): Contact {
+        return contact
+    }
+
+    override fun getItemCount(): Int {
+        return 1
+    }
 }

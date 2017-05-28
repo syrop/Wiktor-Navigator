@@ -34,13 +34,13 @@ public class FirebaseTest {
     public void latLng2String() {
         double lat = Double.parseDouble(LAT);
         double lon = Double.parseDouble(LON);
-        String str = FirebaseBase.latLng2String(new LatLng(lat, lon));
+        String str = FirebaseBase.Companion.latLng2String(new LatLng(lat, lon));
         assertEquals(LAT + ";" + LON, str);
     }
 
     @Test
     public void string2LatLng() {
-        LatLng latLng = FirebaseBase.string2LatLng(LAT + ";" + LON);
+        LatLng latLng = FirebaseBase.Companion.string2LatLng(LAT + ";" + LON);
         assertEquals(LAT, Double.toString(latLng.latitude));
         assertEquals(LON, Double.toString(latLng.longitude));
     }

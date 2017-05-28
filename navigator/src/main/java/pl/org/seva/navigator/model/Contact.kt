@@ -1,0 +1,86 @@
+/*
+ * Copyright (C) 2017 Wiktor Nizio
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package pl.org.seva.navigator.model
+
+import android.os.Parcel
+import android.os.Parcelable
+
+class Contact : Comparable<Contact>, Parcelable {
+
+    private var email: String? = null
+    private var displayName: String? = null
+
+    constructor()
+
+    val isEmpty: Boolean
+        get() = email == null || displayName == null
+
+    fun setName(name: String): Contact {
+        this.displayName = name
+        return this
+    }
+
+    fun name(): String {
+        return displayName!!
+    }
+
+    fun setEmail(email: String): Contact {
+        this.email = email
+        return this
+    }
+
+    fun email(): String {
+        return email!!
+    }
+
+    override fun compareTo(other: Contact): Int {
+        var result = displayName!!.compareTo(other.displayName!!)
+        if (result == 0) {
+            result = email!!.compareTo(other.email!!)
+        }
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+
+        return !(other == null || other !is Contact) && email == other.email
+    }
+
+    override fun hashCode(): Int {
+        return email!!.hashCode()
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(out: Parcel, flags: Int) {
+        out.writeString(email)
+        out.writeString(displayName)
+    }
+
+    private constructor(`in`: Parcel) {
+        email = `in`.readString()
+        displayName = `in`.readString()
+    }
+
+    companion object {
+
+        val PARCELABLE_KEY = "contact"
+    }
+}

@@ -15,26 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.view.adapter;
+package pl.org.seva.navigator.model.database.firebase
 
-import pl.org.seva.navigator.model.Contact;
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
-public class SingleContactAdapter extends ContactAdapter {
+import io.reactivex.subjects.PublishSubject
 
-    private final Contact contact;
+internal class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) :
+        ValueEventListener {
 
-    public SingleContactAdapter(Contact contact) {
-        super();
-        this.contact = contact;
+    override fun onDataChange(dataSnapshot: DataSnapshot) {
+        valueEventSubject.onNext(dataSnapshot)
     }
 
-    @Override
-    Contact getContact(int position) {
-        return contact;
-    }
-
-    @Override
-    public int getItemCount() {
-        return 1;
+    override fun onCancelled(databaseError: DatabaseError) {
+        valueEventSubject.onError(Exception(databaseError.message))
     }
 }

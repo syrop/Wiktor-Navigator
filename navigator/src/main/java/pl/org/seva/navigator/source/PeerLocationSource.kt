@@ -15,32 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.source;
+package pl.org.seva.navigator.source
 
-import javax.inject.Inject;
+import com.google.android.gms.maps.model.LatLng
+import javax.inject.Inject
 
-import io.reactivex.disposables.CompositeDisposable;
-import pl.org.seva.navigator.model.database.firebase.FirebaseReader;
-import pl.org.seva.navigator.presenter.PeerLocationListener;
+import io.reactivex.disposables.CompositeDisposable
+import pl.org.seva.navigator.model.database.firebase.FirebaseReader
 
-public class PeerLocationSource {
+class PeerLocationSource @Inject internal constructor() {
 
-    @SuppressWarnings("WeakerAccess")
     @Inject
-    FirebaseReader firebaseReader;
+    lateinit var firebaseReader: FirebaseReader
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private val compositeDisposable = CompositeDisposable()
 
-    @Inject PeerLocationSource() {
-    }
-
-    public void addPeerLocationListener(String email, PeerLocationListener peerLocationListener) {
+    fun addPeerLocationListener(email: String, peerLocationListener: (latLng : LatLng) -> Unit) {
         compositeDisposable.add(firebaseReader
                 .peerLocationListener(email)
-                .subscribe(peerLocationListener::onPeerLocationReceived));
+                .subscribe { peerLocationListener.invoke(it) })
     }
 
-    public void clearPeerLocationListeners() {
-        compositeDisposable.clear();
+    fun clearPeerLocationListeners() {
+        compositeDisposable.clear()
     }
 }
