@@ -122,7 +122,7 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun clearDrawerSelection() {
         val menu = navigationView.menu
-        for (i in 0..menu.size() - 1) {
+        for (i in 0 until menu.size()) {
             menu.getItem(i).isChecked = false
         }
     }
