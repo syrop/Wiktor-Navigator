@@ -33,7 +33,7 @@ class PeerLocationSource @Inject internal constructor() {
     fun addPeerLocationListener(email: String, peerLocationListener: (latLng : LatLng) -> Unit) {
         compositeDisposable.add(firebaseReader
                 .peerLocationListener(email)
-                .subscribe { peerLocationListener.invoke(it) })
+                .subscribe { peerLocationListener(it) })
     }
 
     fun clearPeerLocationListeners() {

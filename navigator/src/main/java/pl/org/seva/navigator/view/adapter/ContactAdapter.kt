@@ -42,7 +42,9 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
         return contactsCache[position]
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int): ContactAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.contact, parent, false)
         return ViewHolder(view)
@@ -69,7 +71,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     }
 
     fun addClickListener(contactClickListener: (contact : Contact) -> Unit) {
-        clickSubject.subscribe { contactClickListener.invoke(it) }
+        clickSubject.subscribe { contactClickListener(it) }
     }
 
     fun addLongClickListener(contactLongClickListener: (contact : Contact) -> Unit) {
