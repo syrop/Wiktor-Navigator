@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.view.View
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -120,7 +119,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment
+        mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment?
         if (mapFragment == null) {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
