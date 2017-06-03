@@ -49,8 +49,8 @@ class FriendshipAddDialogBuilder(private val context: Context) {
                 .setCancelable(true)
                 .setTitle(R.string.adding_friend_title)
                 .setMessage(context.getString(R.string.add_friend_confirmation).replace(NAME_TAG, contact.name()))
-                .setPositiveButton(android.R.string.yes) { _, _ -> yesAction.invoke() }
-                .setNegativeButton(android.R.string.no) { _, _ -> noAction.invoke() }
+                .setPositiveButton(android.R.string.yes) { _, _ -> yesAction() }
+                .setNegativeButton(android.R.string.no) { _, _ -> noAction() }
                 .create()
     }
 

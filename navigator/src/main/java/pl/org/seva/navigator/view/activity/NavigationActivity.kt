@@ -118,6 +118,10 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        prepareMapFragment()
+    }
+
+    private fun prepareMapFragment() {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment?
         if (mapFragment == null) {
@@ -126,15 +130,23 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapFragment!!.getMapAsync( { this.onMapReady(it) })
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
-        mapFragment?.let {
-            // see http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit#10261449
-            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
-            mapFragment = null
-        }
+        deleteMapFragment()
         outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        deleteMapFragment()
+        super.onDestroy()
+    }
+
+    private fun deleteMapFragment() {
+        if (mapFragment == null) {
+            return
+        }
+        fragmentManager.beginTransaction().remove(mapFragment).commitAllowingStateLoss()
+        mapFragment = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
