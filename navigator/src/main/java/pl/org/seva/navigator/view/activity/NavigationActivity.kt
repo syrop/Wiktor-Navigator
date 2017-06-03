@@ -54,7 +54,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private var animateCamera = true
     private var moveCameraToPeerLocation = true
-    private var zoom: Float = 0.toFloat()
+    private var zoom = 0.0f
     private var mapContainerId: Int = 0
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +98,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map!!.isMyLocationEnabled = true
-        map!!.setOnCameraIdleListener { this.onCameraIdle() }
+        map!!.setOnCameraIdleListener { onCameraIdle() }
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email(), { this.onPeerLocationReceived(it) })
         }
