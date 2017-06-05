@@ -79,7 +79,7 @@ internal constructor() :
     }
 
     fun init(context: Context): MyLocationSource {
-        if (googleApiClient == null) {
+        googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -102,8 +102,7 @@ internal constructor() :
 
     @SuppressLint("MissingPermission")
     override fun onConnected(bundle: Bundle?) {
-        if (location == null) {
-
+        location?:let {
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
         }
 
@@ -168,10 +167,7 @@ internal constructor() :
         private val SIGNIFICANT_TIME_LAPSE = 1000 * 60 * 2
 
         private fun isBetterLocation(location: Location, currentBestLocation: Location?): Boolean {
-            if (currentBestLocation == null) {
-                // A new location is always better than no location
-                return true
-            }
+            currentBestLocation?: return true // A new location is always better than no location
 
             // Check whether the new location fix is newer or older
             val timeDelta = location.time - currentBestLocation.time

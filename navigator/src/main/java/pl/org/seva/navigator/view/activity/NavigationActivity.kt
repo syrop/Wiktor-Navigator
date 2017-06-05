@@ -124,7 +124,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun prepareMapFragment() {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment?
-        if (mapFragment == null) {
+        mapFragment?:let {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
         }
@@ -142,11 +142,10 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun deleteMapFragment() {
-        if (mapFragment == null) {
-            return
+        mapFragment?.let {
+            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+            mapFragment = null
         }
-        fragmentManager.beginTransaction().remove(mapFragment).commitAllowingStateLoss()
-        mapFragment = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -178,14 +177,13 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun putPeerMarkerOnMap() {
-        if (map == null) {
-            return
+        map?.let {
+            clearMap()
+            it.addMarker(MarkerOptions()
+                    .position(peerLocation!!)
+                    .title(contact!!.name()))
+                    .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
-        clearMap()
-        map!!.addMarker(MarkerOptions()
-                .position(peerLocation!!)
-                .title(contact!!.name()))
-                .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
     }
 
     companion object {

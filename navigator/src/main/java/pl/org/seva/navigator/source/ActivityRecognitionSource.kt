@@ -54,7 +54,7 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
         context.registerReceiver(
                 ActivityRecognitionBroadcastReceiver(),
                 IntentFilter(ACTIVITY_RECOGNITION_INTENT))
-        if (googleApiClient == null) {
+        googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(context)
                     .addApi(com.google.android.gms.location.ActivityRecognition.API)
                     .addConnectionCallbacks(this)
