@@ -83,8 +83,8 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     }
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.name) as TextView
-        val email: TextView = view.findViewById(R.id.email) as TextView
+        val name: TextView = view.findViewById<TextView>(R.id.name)
+        val email: TextView = view.findViewById<TextView>(R.id.email)
         val view: View = view.findViewById(R.id.card_view)
     }
 }

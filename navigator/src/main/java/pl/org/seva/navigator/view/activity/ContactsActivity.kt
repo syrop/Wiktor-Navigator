@@ -70,14 +70,14 @@ class ContactsActivity : AppCompatActivity() {
         graph = (application as NavigatorApplication).graph
         graph.inject(this)
         setContentView(R.layout.activity_contacts)
-        contactsRecyclerView = findViewById(R.id.contacts) as RecyclerView
+        contactsRecyclerView = findViewById<RecyclerView>(R.id.contacts)
 
-        val toolbar = findViewById (R.id.app_bar_toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.app_bar_toolbar)
         setSupportActionBar(toolbar)
         fab = findViewById(R.id.fab)
         fab.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
 
-        drawer = findViewById (R.id.drawer_layout) as DrawerLayout
+        drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
                 this,
                 drawer,
@@ -86,7 +86,7 @@ class ContactsActivity : AppCompatActivity() {
                 R.string.drawer_accessibility_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
-        navigationView = findViewById(R.id.nav_view) as NavigationView
+        navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { this.onNavigationItemSelected(it) }
         contactsCache.addContactsUpdatedListener { this.onContactsUpdated() }
     }
@@ -94,11 +94,11 @@ class ContactsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         clearDrawerSelection()
-        val pleaseLogIn = findViewById(R.id.please_log_in)
+        val pleaseLogIn = findViewById<View>(R.id.please_log_in)
 
         val header = navigationView.getHeaderView(0)
-        val name = header.findViewById(R.id.name) as TextView
-        val email = header.findViewById(R.id.email) as TextView
+        val name = header.findViewById<View>(R.id.name) as TextView
+        val email = header.findViewById<View>(R.id.email) as TextView
         if (NavigatorApplication.isLoggedIn) {
             fab.visibility = View.VISIBLE
             pleaseLogIn.visibility = View.GONE

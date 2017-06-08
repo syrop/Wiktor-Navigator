@@ -82,8 +82,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         setLabelSpannableString(R.string.search_press_to_begin)
-        label = findViewById(R.id.label) as TextView
-        contacts = findViewById(R.id.contacts) as RecyclerView
+        label = findViewById<TextView>(R.id.label) as TextView
+        contacts = findViewById<RecyclerView>(R.id.contacts)
     }
 
     // http://stackoverflow.com/questions/3176033/spannablestring-with-image-example

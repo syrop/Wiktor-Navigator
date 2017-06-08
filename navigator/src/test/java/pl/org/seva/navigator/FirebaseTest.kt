@@ -47,11 +47,4 @@ class FirebaseTest {
         private val LAT = "54.5922815"
         private val LON = "-5.9634933"
     }
-
-    @Test
-    fun zaba() {
-        val zaba: String? = null
-
-        zaba?: println("bocian")
-    }
 }

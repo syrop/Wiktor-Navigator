@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -79,7 +80,7 @@ class NavigationActivity : AppCompatActivity() {
         contact?.let {
             contactsCache.addContactsUpdatedListener(it.email(), { this.onContactsUpdated() })
         }
-        mapContainerId = findViewById(R.id.map_container).id
+        mapContainerId = findViewById<View>(R.id.map_container).id
     }
 
     private fun moveCameraToPeerLocation() {
@@ -130,6 +131,7 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapFragment!!.getMapAsync( { this.onMapReady(it) })
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         deleteMapFragment()
         outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
@@ -188,7 +190,9 @@ class NavigationActivity : AppCompatActivity() {
 
     companion object {
 
-        private val MARKER_HUE = 34.0f  // calculated from #00bfa5
+
+        /** Calculated from #00bfa5, or A700 Teal. */
+        private val MARKER_HUE = 34.0f
 
         val CONTACT = "contact"
 

@@ -96,7 +96,7 @@ class LoginActivity :
         }
 
         setContentView(R.layout.activity_login)
-        findViewById(R.id.sign_in_button).setOnClickListener({ onLoginClicked() })
+        findViewById<View>(R.id.sign_in_button).setOnClickListener({ onLoginClicked() })
     }
 
     private fun login() {
