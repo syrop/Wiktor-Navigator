@@ -35,7 +35,6 @@ import javax.inject.Singleton
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.NavigatorApplication
-import pl.org.seva.navigator.presenter.ActivityRecognitionListener
 import pl.org.seva.navigator.presenter.MyLocationListener
 
 @Singleton
@@ -43,8 +42,7 @@ class MyLocationSource @Inject
 internal constructor() :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener,
-        ActivityRecognitionListener {
+        com.google.android.gms.location.LocationListener {
 
     @Inject
     lateinit var activityRecognitionSource: ActivityRecognitionSource
@@ -112,18 +110,24 @@ internal constructor() :
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE)
 
-        activityRecognitionSource.addActivityRecognitionListener(this)
+        activityRecognitionSource.addActivityRecognitionListener(
+                stationaryListener = { onDeviceStationary() },
+                movingListener = { onDeviceMoving() })
 
         requestLocationUpdates()
+    }
+
+    private fun onDeviceStationary() {
+        pauseUpdates()
+    }
+
+    private fun onDeviceMoving() {
+        resumeUpdates()
     }
 
     @SuppressLint("MissingPermission")
     private fun requestLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
-    }
-
-    override fun onDeviceStationary() {
-        pauseUpdates()
     }
 
     private fun pauseUpdates() {
@@ -136,9 +140,7 @@ internal constructor() :
         paused = true
     }
 
-    override fun onDeviceMoving() {
-        resumeUpdates()
-    }
+
 
     private fun resumeUpdates() {
         if (!paused) {

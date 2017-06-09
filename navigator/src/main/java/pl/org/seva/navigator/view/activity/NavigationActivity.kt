@@ -58,6 +58,8 @@ class NavigationActivity : AppCompatActivity() {
     private var map: GoogleMap? = null
     private var contact: Contact? = null
 
+    private val fab by lazy { findViewById<View>(R.id.fab) }
+
     private var peerLocation: LatLng? = null
 
     private var animateCamera = true
