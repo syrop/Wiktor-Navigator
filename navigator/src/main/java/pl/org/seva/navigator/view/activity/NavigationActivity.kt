@@ -17,9 +17,12 @@
 
 package pl.org.seva.navigator.view.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
@@ -38,6 +41,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.PeerLocationSource
 
 class NavigationActivity : AppCompatActivity() {
@@ -46,6 +50,8 @@ class NavigationActivity : AppCompatActivity() {
     lateinit var peerLocationSource: PeerLocationSource
     @Inject
     lateinit var contactsCache: ContactsCache
+    @Inject
+    lateinit var permissionsUtils: PermissionsUtils
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -57,6 +63,7 @@ class NavigationActivity : AppCompatActivity() {
     private var moveCameraToPeerLocation = true
     private var zoom = 0.0f
     private var mapContainerId: Int = 0
+    private var locationPermissionGranted = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,12 +104,32 @@ class NavigationActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun onMapReady(googleMap: GoogleMap) {
+        processLocationPermission()
         map = googleMap
-        map!!.isMyLocationEnabled = true
         map!!.setOnCameraIdleListener { onCameraIdle() }
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email(), { this.onPeerLocationReceived(it) })
         }
+    }
+
+    private fun processLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true
+            map?.isMyLocationEnabled = true
+        } else {
+            permissionsUtils.permissionGrantedListener()
+                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
+                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
+                    .subscribe { onLocationPermissionGranted() }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun onLocationPermissionGranted() {
+        locationPermissionGranted = true
+        map?.isMyLocationEnabled = true
     }
 
     private fun onCameraIdle() {
@@ -129,7 +156,7 @@ class NavigationActivity : AppCompatActivity() {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
         }
-        mapFragment!!.getMapAsync( { this.onMapReady(it) })
+        mapFragment!!.getMapAsync( { onMapReady(it) })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
