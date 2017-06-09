@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -123,7 +124,18 @@ class NavigationActivity : AppCompatActivity() {
                     .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
                     .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
                     .subscribe { onLocationPermissionGranted() }
+            ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
         }
+    }
+
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray) {
+        permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     @SuppressLint("MissingPermission")
