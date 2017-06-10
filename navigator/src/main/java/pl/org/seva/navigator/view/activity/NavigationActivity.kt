@@ -19,13 +19,13 @@ package pl.org.seva.navigator.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
 import android.view.View
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -81,16 +81,16 @@ class NavigationActivity : AppCompatActivity() {
         (application as NavigatorApplication).graph.inject(this)
         setContentView(R.layout.activity_navigation)
 
-        supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
-        }
-
         contact = intent.getParcelableExtra<Contact>(CONTACT)
         contact?.let {
             contactsCache.addContactsUpdatedListener(it.email(), { this.onContactsUpdated() })
         }
         mapContainerId = findViewById<View>(R.id.map_container).id
+        fab.setOnClickListener { onFabClicked() }
+    }
+
+    private fun onFabClicked() {
+        startActivity(Intent(this, ContactsActivity::class.java))
     }
 
     private fun moveCameraToPeerLocation() {
@@ -105,11 +105,10 @@ class NavigationActivity : AppCompatActivity() {
         animateCamera = false
     }
 
-    @SuppressLint("MissingPermission")
     private fun onMapReady(googleMap: GoogleMap) {
-        processLocationPermission()
         map = googleMap
         map!!.setOnCameraIdleListener { onCameraIdle() }
+        processLocationPermission()
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email(), { this.onPeerLocationReceived(it) })
         }
@@ -119,8 +118,7 @@ class NavigationActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true
-            map?.isMyLocationEnabled = true
+            onLocationPermissionGranted()
         } else {
             permissionsUtils.permissionGrantedListener()
                     .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
@@ -191,16 +189,6 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun onPeerLocationReceived(latLng: LatLng) {
         peerLocation = latLng
         putPeerMarkerOnMap()
@@ -230,7 +218,6 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     companion object {
-
 
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f

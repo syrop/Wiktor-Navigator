@@ -21,20 +21,17 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 
 import javax.inject.Inject
 
@@ -61,7 +58,6 @@ class ContactsActivity : AppCompatActivity() {
     private lateinit var contactAdapter: ContactAdapter
     private var permissionAlreadyRequested: Boolean = false
     private lateinit var graph: NavigatorComponent
-    private lateinit var navigationView: NavigationView
     private lateinit var fab: View
     private lateinit var drawer: DrawerLayout
 
@@ -77,53 +73,29 @@ class ContactsActivity : AppCompatActivity() {
         fab = findViewById(R.id.fab)
         fab.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
 
-        drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val toggle = ActionBarDrawerToggle(
-                this,
-                drawer,
-                toolbar,
-                R.string.drawer_accessibility_open,
-                R.string.drawer_accessibility_close)
-        drawer.addDrawerListener(toggle)
-        toggle.syncState()
-        navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener { this.onNavigationItemSelected(it) }
+
         contactsCache.addContactsUpdatedListener { this.onContactsUpdated() }
+
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        clearDrawerSelection()
         val pleaseLogIn = findViewById<View>(R.id.please_log_in)
 
-        val header = navigationView.getHeaderView(0)
-        val name = header.findViewById<View>(R.id.name) as TextView
-        val email = header.findViewById<View>(R.id.email) as TextView
         if (NavigatorApplication.isLoggedIn) {
             fab.visibility = View.VISIBLE
             pleaseLogIn.visibility = View.GONE
             contactsRecyclerView.visibility = View.VISIBLE
-            navigationView.menu.findItem(R.id.drawer_login).isVisible = false
-            navigationView.menu.findItem(R.id.drawer_logout).isVisible = true
-            name.text = NavigatorApplication.displayName
-            email.text = NavigatorApplication.email
             alreadyLoggedIn()
         } else {
             pleaseLogIn.visibility = View.VISIBLE
             contactsRecyclerView.visibility = View.GONE
             fab.visibility = View.GONE
-            navigationView.menu.findItem(R.id.drawer_login).isVisible = true
-            navigationView.menu.findItem(R.id.drawer_logout).isVisible = false
-            name.setText(R.string.app_name)
-            email.setText(R.string.drawer_header_not_logged_in)
             startLoginActivity()
-        }
-    }
-
-    private fun clearDrawerSelection() {
-        val menu = navigationView.menu
-        for (i in 0 until menu.size()) {
-            menu.getItem(i).isChecked = false
         }
     }
 
@@ -230,15 +202,14 @@ class ContactsActivity : AppCompatActivity() {
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
     }
 
-    private fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.drawer_login -> startLoginActivity()
-            R.id.drawer_logout -> logout()
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
-
-        drawer.closeDrawer(GravityCompat.START)
-        return true
     }
 
     private fun onContactsUpdated() {
@@ -246,7 +217,6 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     companion object {
-
         private val PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0
     }
 }
