@@ -19,13 +19,12 @@ package pl.org.seva.navigator.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.arch.lifecycle.LifecycleActivity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -45,7 +44,7 @@ import pl.org.seva.navigator.model.ContactsCache
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.PeerLocationSource
 
-class NavigationActivity : AppCompatActivity() {
+class NavigationActivity : LifecycleActivity() {
 
     @Inject
     lateinit var peerLocationSource: PeerLocationSource
@@ -120,14 +119,12 @@ class NavigationActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onLocationPermissionGranted()
         } else {
-            permissionsUtils.permissionGrantedListener()
-                    .filter { it.first == PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID }
-                    .filter { it.second == Manifest.permission.ACCESS_FINE_LOCATION }
-                    .subscribe { onLocationPermissionGranted() }
-            ActivityCompat.requestPermissions(
+            permissionsUtils.request(
                     this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID)
+                    PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID,
+                    arrayOf(PermissionsUtils.PermissionRequest(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            grantedListener = { onLocationPermissionGranted() })))
         }
     }
 
