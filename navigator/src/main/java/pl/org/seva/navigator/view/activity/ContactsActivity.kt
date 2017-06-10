@@ -17,13 +17,8 @@
 
 package pl.org.seva.navigator.view.activity
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
@@ -56,7 +51,6 @@ class ContactsActivity : AppCompatActivity() {
 
     private lateinit var contactsRecyclerView: RecyclerView
     private lateinit var contactAdapter: ContactAdapter
-    private var permissionAlreadyRequested: Boolean = false
     private lateinit var graph: NavigatorComponent
     private lateinit var fab: View
     private lateinit var drawer: DrawerLayout
@@ -80,37 +74,9 @@ class ContactsActivity : AppCompatActivity() {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
         }
+
+        initContactsRecyclerView()
     }
-
-    override fun onResume() {
-        super.onResume()
-        val pleaseLogIn = findViewById<View>(R.id.please_log_in)
-
-        if (NavigatorApplication.isLoggedIn) {
-            fab.visibility = View.VISIBLE
-            pleaseLogIn.visibility = View.GONE
-            contactsRecyclerView.visibility = View.VISIBLE
-            alreadyLoggedIn()
-        } else {
-            pleaseLogIn.visibility = View.VISIBLE
-            contactsRecyclerView.visibility = View.GONE
-            fab.visibility = View.GONE
-            startLoginActivity()
-        }
-    }
-
-    private fun alreadyLoggedIn() {
-        if (isLocationPermissionGranted) {
-            locationPermissionGranted()
-        } else if (!permissionAlreadyRequested) {
-            requestLocationPermission()
-        }
-    }
-
-    private val isLocationPermissionGranted: Boolean
-        get() = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     private fun initContactsRecyclerView() {
         contactsRecyclerView.setHasFixedSize(true)
@@ -146,55 +112,12 @@ class ContactsActivity : AppCompatActivity() {
         contactAdapter.notifyDataSetChanged()
     }
 
-    private fun requestLocationPermission() {
-        permissionAlreadyRequested = true
-        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        ActivityCompat.requestPermissions(
-                this,
-                permissions,
-                PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID)
-    }
-
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray) {
-        if (requestCode != PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID) {
-            return
-        }
-
-        if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted()
-        } else {
-            permissionDenied()
-        }
-    }
-
-    private fun locationPermissionGranted() {
-        myLocationSource.connectGoogleApiClient()
-        initContactsRecyclerView()
-    }
-
-    private fun permissionDenied() {
-        Snackbar.make(
-                contactsRecyclerView,
-                R.string.permission_request_denied,
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.permission_retry) { requestLocationPermission() }
-                .show()
-    }
-
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
-    }
-
-    private fun startLoginActivity() {
-        startActivity(Intent(this, LoginActivity::class.java)
-                .putExtra(LoginActivity.ACTION, LoginActivity.LOGIN))
     }
 
     private fun logout() {

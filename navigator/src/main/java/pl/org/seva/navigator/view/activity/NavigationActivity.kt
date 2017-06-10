@@ -24,6 +24,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.View
 
@@ -58,6 +59,7 @@ class NavigationActivity : LifecycleActivity() {
     private var contact: Contact? = null
 
     private val fab by lazy { findViewById<View>(R.id.fab) }
+    private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
 
     private var peerLocation: LatLng? = null
 
@@ -84,7 +86,7 @@ class NavigationActivity : LifecycleActivity() {
         contact?.let {
             contactsCache.addContactsUpdatedListener(it.email(), { this.onContactsUpdated() })
         }
-        mapContainerId = findViewById<View>(R.id.map_container).id
+        mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
     }
 
@@ -119,13 +121,33 @@ class NavigationActivity : LifecycleActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onLocationPermissionGranted()
         } else {
-            permissionsUtils.request(
-                    this,
-                    PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID,
-                    arrayOf(PermissionsUtils.PermissionRequest(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            grantedListener = { onLocationPermissionGranted() })))
+            requestLocationPermission()
         }
+    }
+
+    private fun requestLocationPermission() {
+        permissionsUtils.request(
+                this,
+                PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID,
+                arrayOf(PermissionsUtils.PermissionRequest(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        grantedListener = { onLocationPermissionGranted() },
+                        deniedListener = { onLocationPermissionDenied() })))
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun onLocationPermissionGranted() {
+        locationPermissionGranted = true
+        map?.isMyLocationEnabled = true
+    }
+
+    private fun onLocationPermissionDenied() {
+        Snackbar.make(
+                mapContainer,
+                R.string.permission_request_denied,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.permission_retry) { requestLocationPermission() }
+                .show()
     }
 
     override fun onRequestPermissionsResult(
@@ -135,10 +157,9 @@ class NavigationActivity : LifecycleActivity() {
         permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun onLocationPermissionGranted() {
-        locationPermissionGranted = true
-        map?.isMyLocationEnabled = true
+    private fun logout() {
+        startActivity(Intent(this, LoginActivity::class.java)
+                .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
     }
 
     private fun onCameraIdle() {
