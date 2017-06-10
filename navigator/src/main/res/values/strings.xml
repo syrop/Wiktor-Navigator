@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wiktor Navigator</string>
+    <string name="app_name">Victor Navigator</string>
 
     <!-- Contacts activity -->
     <string name="overflow_menu_settings">Settings</string>
