@@ -50,7 +50,7 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
     private var weakContext: WeakReference<Context>? = null
     private var activityRecognitionReceiver : BroadcastReceiver? = null
 
-    fun initWithContext(context: Context) {
+    fun initGoogleApiClient(context: Context) {
         if (initialized) {
             return
         }

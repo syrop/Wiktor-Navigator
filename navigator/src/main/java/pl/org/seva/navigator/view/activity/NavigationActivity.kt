@@ -43,6 +43,7 @@ import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsCache
 import pl.org.seva.navigator.presenter.PermissionsUtils
+import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 
 class NavigationActivity : LifecycleActivity() {
@@ -53,6 +54,8 @@ class NavigationActivity : LifecycleActivity() {
     lateinit var contactsCache: ContactsCache
     @Inject
     lateinit var permissionsUtils: PermissionsUtils
+    @Inject
+    lateinit var myLocationSource: MyLocationSource
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -138,6 +141,7 @@ class NavigationActivity : LifecycleActivity() {
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
         locationPermissionGranted = true
+        myLocationSource.onLocationGranted(applicationContext)
         map?.isMyLocationEnabled = true
     }
 

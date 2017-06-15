@@ -54,7 +54,7 @@ internal constructor() :
     private val locationObservable: Observable<LatLng>
 
     private var location: Location? = null
-    private var paused: Boolean = false
+    public var paused: Boolean = false
     private var lastSentLocationTime: Long = 0
 
     init {
@@ -67,6 +67,19 @@ internal constructor() :
                 .map<LatLng> { it.value() }
     }
 
+    fun onLocationGranted(applicationContext: Context) {
+        if (googleApiClient != null) {
+            return
+        }
+        googleApiClient = GoogleApiClient.Builder(applicationContext)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build()
+
+        connectGoogleApiClient()
+    }
+
     fun addLocationListener(myLocationListener: MyLocationListener) {
         locationObservable.subscribe{ myLocationListener.onLocationReceived(it) }
     }
@@ -75,7 +88,7 @@ internal constructor() :
         googleApiClient!!.connect()
     }
 
-    fun init(context: Context): MyLocationSource {
+    fun initGoogleApiClient(context: Context): MyLocationSource {
         googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
@@ -109,46 +122,20 @@ internal constructor() :
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE)
 
-        activityRecognitionSource.addActivityRecognitionListener(
-                stationaryListener = { onDeviceStationary() },
-                movingListener = { onDeviceMoving() })
-
-        requestLocationUpdates()
-    }
-
-    private fun onDeviceStationary() {
-        pauseUpdates()
-    }
-
-    private fun onDeviceMoving() {
-        resumeUpdates()
+        request()
     }
 
     @SuppressLint("MissingPermission")
-    private fun requestLocationUpdates() {
+    fun request() {
+        if (paused || googleApiClient == null || locationRequest == null) {
+            return
+        }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
     }
 
-    private fun pauseUpdates() {
-        if (paused) {
-            return
-        }
-        Log.d(TAG, "Pause updates.")
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
-
-        paused = true
-    }
-
-
-
-    private fun resumeUpdates() {
-        if (!paused) {
-            return
-        }
-        Log.d(TAG, "Resume updates.")
-        requestLocationUpdates()
-
-        paused = false
+    fun removeRequest() {
+        googleApiClient?.let {
+            LocationServices.FusedLocationApi.removeLocationUpdates(it, this) }
     }
 
     override fun onConnectionSuspended(i: Int) {}

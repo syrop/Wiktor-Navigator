@@ -61,11 +61,13 @@ class NavigatorService : LifecycleService() {
     }
 
     private fun onDeviceStationary() {
-
+        myLocationSource.paused = true
+        myLocationSource.removeRequest()
     }
 
     private fun onDeviceMoving() {
-
+        myLocationSource.paused = false
+        myLocationSource.request()
     }
 
     private fun createOngoingNotification(): Notification {
