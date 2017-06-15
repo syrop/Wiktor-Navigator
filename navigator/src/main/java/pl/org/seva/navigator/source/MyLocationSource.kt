@@ -54,7 +54,7 @@ internal constructor() :
     private val locationObservable: Observable<LatLng>
 
     private var location: Location? = null
-    public var paused: Boolean = false
+    var paused: Boolean = false
     private var lastSentLocationTime: Long = 0
 
     init {
