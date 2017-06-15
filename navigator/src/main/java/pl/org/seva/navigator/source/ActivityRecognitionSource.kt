@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.source
 
 import android.app.PendingIntent
+import android.arch.lifecycle.Lifecycle
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -29,6 +30,8 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 import java.lang.ref.WeakReference
 
@@ -38,24 +41,23 @@ import javax.inject.Singleton
 import io.reactivex.subjects.PublishSubject
 
 @Singleton
-class ActivityRecognitionSource @Inject
-internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+open class ActivityRecognitionSource @Inject
+internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false
     private var googleApiClient: GoogleApiClient? = null
-    lateinit var weakContext: WeakReference<Context>
+    private var weakContext: WeakReference<Context>? = null
+    private var activityRecognitionReceiver : BroadcastReceiver? = null
 
-    fun init(context: Context) {
+    fun initWithContext(context: Context) {
         if (initialized) {
             return
         }
         weakContext = WeakReference(context)
-        context.registerReceiver(
-                ActivityRecognitionBroadcastReceiver(),
-                IntentFilter(ACTIVITY_RECOGNITION_INTENT))
         googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(context)
-                    .addApi(com.google.android.gms.location.ActivityRecognition.API)
+                    .addApi(ActivityRecognition.API)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build()
@@ -66,8 +68,10 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     }
 
     override fun onConnected(bundle: Bundle?) {
-        val context = weakContext.get() ?: return
+        val context = weakContext!!.get() ?: return
+        registerReceiver()
         val intent = Intent(ACTIVITY_RECOGNITION_INTENT)
+
         val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
@@ -80,23 +84,47 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
     }
 
     override fun onConnectionSuspended(i: Int) {
+        unregisterReceiver()
+    }
 
+    private fun registerReceiver() {
+        val context = weakContext!!.get() ?: return
+        activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
+        context.registerReceiver(activityRecognitionReceiver, IntentFilter(ACTIVITY_RECOGNITION_INTENT))
+    }
+
+    private fun unregisterReceiver() {
+        val context = weakContext!!.get() ?: return
+        activityRecognitionReceiver?: return
+        context.unregisterReceiver(activityRecognitionReceiver)
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
-
     }
 
     fun addActivityRecognitionListener(
+            lifecycle: Lifecycle,
             stationaryListener: () -> Unit,
             movingListener: () -> Unit) {
-        stationarySubject
-                .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
-                .subscribe { stationaryListener() }
-        movingSubject.subscribe { movingListener() }
+        val disposable = CompositeDisposable()
+        disposable.addAll(
+                stationarySubject
+                        .filter { it >= STATIONARY_CONFIDENCE_THRESHOLD }
+                        .subscribe { stationaryListener() },
+                movingSubject.subscribe { movingListener() })
+        lifecycle.observe(disposable)
+
     }
 
-    private inner class ActivityRecognitionBroadcastReceiver : BroadcastReceiver() {
+    private fun onDeviceStationary(confidence: Int) {
+        stationarySubject.onNext(confidence)
+    }
+
+    private fun onDeviceMoving() {
+        movingSubject.onNext(0)
+    }
+
+    private inner class ActivityRecognitionReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
@@ -108,14 +136,6 @@ internal constructor() : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.On
                 }
             }
         }
-    }
-
-    private fun onDeviceStationary(confidence: Int) {
-        stationarySubject.onNext(confidence)
-    }
-
-    private fun onDeviceMoving() {
-        movingSubject.onNext(0)
     }
 
     companion object {

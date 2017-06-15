@@ -53,7 +53,6 @@ internal constructor() :
     private val locationSubject: PublishSubject<LatLng> = PublishSubject.create<LatLng>()
     private val locationObservable: Observable<LatLng>
 
-    /** Location last received from the update.  */
     private var location: Location? = null
     private var paused: Boolean = false
     private var lastSentLocationTime: Long = 0
