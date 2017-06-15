@@ -57,7 +57,7 @@ class ContactsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        graph = (application as NavigatorApplication).graph
+        graph = (application as NavigatorApplication).component
         graph.inject(this)
         setContentView(R.layout.activity_contacts)
         contactsRecyclerView = findViewById<RecyclerView>(R.id.contacts)

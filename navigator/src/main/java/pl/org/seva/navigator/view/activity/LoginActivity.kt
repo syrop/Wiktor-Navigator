@@ -62,7 +62,7 @@ class LoginActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as NavigatorApplication).graph.inject(this)
+        (application as NavigatorApplication).component.inject(this)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))

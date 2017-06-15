@@ -79,7 +79,7 @@ class NavigationActivity : LifecycleActivity() {
             peerLocation?.let {  moveCameraToPeerLocation() }
         }
 
-        (application as NavigatorApplication).graph.inject(this)
+        (application as NavigatorApplication).component.inject(this)
         setContentView(R.layout.activity_navigation)
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)

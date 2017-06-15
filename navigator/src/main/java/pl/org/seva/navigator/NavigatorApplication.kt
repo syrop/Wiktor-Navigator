@@ -54,12 +54,12 @@ class NavigatorApplication : Application() {
     @Inject
     lateinit var friendshipListener: FriendshipListener
 
-    lateinit var graph: NavigatorComponent
+    lateinit var component: NavigatorComponent
 
     override fun onCreate() {
         super.onCreate()
-        graph = createGraph()
-        graph.inject(this)
+        component = createComponent()
+        component.inject(this)
         setCurrentUser(FirebaseAuth.getInstance().currentUser)
         activityRecognitionSource.init(this)
         val helper = DbHelper(this)
@@ -73,7 +73,7 @@ class NavigatorApplication : Application() {
         }
     }
 
-    private fun createGraph(): NavigatorComponent {
+    private fun createComponent(): NavigatorComponent {
         return DaggerNavigatorComponent.create()
     }
 
