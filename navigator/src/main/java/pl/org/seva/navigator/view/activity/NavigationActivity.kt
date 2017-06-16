@@ -26,6 +26,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.view.Menu
 import android.view.View
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -126,6 +127,11 @@ class NavigationActivity : LifecycleActivity() {
         } else {
             requestLocationPermission()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.navigation_overflow_menu, menu)
+        return NavigatorApplication.isLoggedIn
     }
 
     private fun requestLocationPermission() {
