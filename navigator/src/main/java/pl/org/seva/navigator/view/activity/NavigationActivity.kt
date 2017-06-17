@@ -76,14 +76,14 @@ class NavigationActivity : AppCompatActivity() {
     private var mapContainerId: Int = 0
     private var locationPermissionGranted = false
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         zoom = PreferenceManager.getDefaultSharedPreferences(this)
                 .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
         savedInstanceState?.let {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng>(SAVED_PEER_LOCATION)
-            peerLocation?.let {  moveCameraToPeerLocation() }
+            if (peerLocation != null) {  moveCameraToPeerLocation() }
         }
 
         (application as NavigatorApplication).component.inject(this)
