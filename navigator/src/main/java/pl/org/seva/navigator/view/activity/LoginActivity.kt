@@ -24,7 +24,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 
 import com.google.android.gms.auth.api.Auth
@@ -54,7 +53,7 @@ class LoginActivity :
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var authStateListener: (firebaseAuth : FirebaseAuth) -> Unit
 
-    private var googleApiClient: GoogleApiClient? = null
+    private lateinit var googleApiClient: GoogleApiClient
 
     private var progressDialog: ProgressDialog? = null
     private var performedAction: Boolean = false
@@ -89,14 +88,16 @@ class LoginActivity :
         }
 
 
-        if (intent.getStringExtra(ACTION) == LOGOUT) {
-            logout()
-            finish()
-            return
+        when (intent.getStringExtra(ACTION)) {
+            LOGOUT -> {
+                logout()
+                finish()
+                return
+            }
+            LOGIN -> {
+                login()
+            }
         }
-
-        setContentView(R.layout.activity_login)
-        findViewById<View>(R.id.sign_in_button).setOnClickListener({ onLoginClicked() })
     }
 
     private fun login() {
@@ -110,7 +111,7 @@ class LoginActivity :
         // Firebase sign out
         firebaseAuth.signOut()
         (application as NavigatorApplication).logout()
-        googleApiClient!!.connect()
+        googleApiClient.connect()
         finish()
     }
 
@@ -213,19 +214,13 @@ class LoginActivity :
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
     }
 
-    fun onLoginClicked() {
-        login()
-    }
-
     override fun onConnected(bundle: Bundle?) {
         if (logoutWhenReady) {
             Auth.GoogleSignInApi.signOut(googleApiClient)
         }
     }
 
-    override fun onConnectionSuspended(i: Int) {
-        //
-    }
+    override fun onConnectionSuspended(i: Int) {}
 
     companion object {
 

@@ -95,6 +95,10 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
+
+        if (!NavigatorApplication.isLoggedIn) {
+            showLoginSnackbar()
+        }
     }
 
     private fun onFabClicked() {
@@ -134,6 +138,10 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.navigation_overflow_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         return NavigatorApplication.isLoggedIn
     }
 
@@ -174,9 +182,18 @@ class NavigationActivity : AppCompatActivity() {
         permissionDisposable.dispose()
         Snackbar.make(
                 mapContainer,
-                R.string.permission_request_denied,
+                R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.permission_retry) { requestLocationPermission() }
+                .setAction(R.string.snackbar_retry) { requestLocationPermission() }
+                .show()
+    }
+
+    private fun showLoginSnackbar() {
+        Snackbar.make(
+                mapContainer,
+                R.string.snackbar_please_log_in,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_login) { login() }
                 .show()
     }
 
@@ -185,6 +202,11 @@ class NavigationActivity : AppCompatActivity() {
             permissions: Array<String>,
             grantResults: IntArray) {
         permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun login() {
+        startActivity(Intent(this, LoginActivity::class.java)
+                .putExtra(LoginActivity.ACTION, LoginActivity.LOGIN))
     }
 
     private fun logout() {
@@ -207,6 +229,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         prepareMapFragment()
+        invalidateOptionsMenu()
     }
 
     private fun prepareMapFragment() {
