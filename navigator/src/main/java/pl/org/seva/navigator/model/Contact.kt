@@ -57,7 +57,6 @@ class Contact : Comparable<Contact>, Parcelable {
     }
 
     override fun equals(other: Any?): Boolean {
-
         return !(other == null || other !is Contact) && email == other.email
     }
 
@@ -79,8 +78,14 @@ class Contact : Comparable<Contact>, Parcelable {
         displayName = `in`.readString()
     }
 
-    companion object {
 
+    companion object {
         val PARCELABLE_KEY = "contact"
+
+        @Suppress("unused")
+        val CREATOR = object : Parcelable.Creator<Contact> {
+            override fun createFromParcel(`in`: Parcel) = Contact(`in`)
+            override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
+        }
     }
 }

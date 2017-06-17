@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -143,8 +142,6 @@ internal constructor() :
     override fun onConnectionFailed(connectionResult: ConnectionResult) {}
 
     companion object {
-
-        private val TAG = MyLocationSource::class.java.simpleName
 
         private val ACCURACY_THRESHOLD = 100.0  // [m]
         private val UPDATE_FREQUENCY: Long = 30000  // [ms]

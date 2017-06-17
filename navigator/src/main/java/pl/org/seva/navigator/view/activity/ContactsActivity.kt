@@ -120,11 +120,6 @@ class ContactsActivity : AppCompatActivity() {
         }
     }
 
-    private fun logout() {
-        startActivity(Intent(this, LoginActivity::class.java)
-                .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -137,9 +132,5 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun onContactsUpdated() {
         contactAdapter.notifyDataSetChanged()
-    }
-
-    companion object {
-        private val PERMISSION_ACCESS_FINE_LOCATION_REQUEST_ID = 0
     }
 }
