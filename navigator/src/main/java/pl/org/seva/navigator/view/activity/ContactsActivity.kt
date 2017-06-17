@@ -17,6 +17,7 @@
 
 package pl.org.seva.navigator.view.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
@@ -95,7 +96,8 @@ class ContactsActivity : AppCompatActivity() {
         if (contact.email() != NavigatorApplication.email) {
             intent.putExtra(NavigationActivity.CONTACT, contact)
         }
-        startActivity(intent)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     private fun onContactLongClicked(contact: Contact) {

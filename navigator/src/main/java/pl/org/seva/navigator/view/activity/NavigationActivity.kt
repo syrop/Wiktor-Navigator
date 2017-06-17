@@ -19,6 +19,7 @@ package pl.org.seva.navigator.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -99,10 +100,19 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun onFabClicked() {
         if (NavigatorApplication.isLoggedIn) {
-            startActivity(Intent(this, ContactsActivity::class.java))
+            startActivityForResult(Intent(this, ContactsActivity::class.java), CONTACTS_ACTIVITY_ID)
         }
         else {
             showLoginSnackbar()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == CONTACTS_ACTIVITY_ID && resultCode == Activity.RESULT_OK) {
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+            contact = data.getParcelableExtra(CONTACT)
         }
     }
 
@@ -305,5 +315,7 @@ class NavigationActivity : AppCompatActivity() {
 
         private val ZOOM_PROPERTY_NAME = "navigation_map_zoom"
         private val DEFAULT_ZOOM = 7.5f
+
+        private val CONTACTS_ACTIVITY_ID = 1
     }
 }
