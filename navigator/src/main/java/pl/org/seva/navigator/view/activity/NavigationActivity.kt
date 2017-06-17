@@ -102,7 +102,12 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun onFabClicked() {
-        startActivity(Intent(this, ContactsActivity::class.java))
+        if (NavigatorApplication.isLoggedIn) {
+            startActivity(Intent(this, ContactsActivity::class.java))
+        }
+        else {
+            showLoginSnackbar()
+        }
     }
 
     private fun moveCameraToPeerLocation() {
