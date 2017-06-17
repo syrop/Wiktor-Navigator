@@ -109,16 +109,14 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == CONTACTS_ACTIVITY_ID && resultCode == Activity.RESULT_OK) {
-
+            contact = data.getParcelableExtra(CONTACT)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
-            contact = data.getParcelableExtra(CONTACT)
         }
     }
 
     private fun moveCameraToPeerLocation() {
-        val cameraPosition = CameraPosition.Builder()
-                .target(peerLocation).zoom(zoom).build()
+        val cameraPosition = CameraPosition.Builder().target(peerLocation).zoom(zoom).build()
         if (animateCamera) {
             map!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         } else {
