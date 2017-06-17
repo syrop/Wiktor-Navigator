@@ -27,6 +27,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -134,6 +135,16 @@ class NavigationActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.navigation_overflow_menu, menu)
         return NavigatorApplication.isLoggedIn
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_logout -> {
+                logout()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun requestLocationPermission() {
