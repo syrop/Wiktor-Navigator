@@ -17,10 +17,7 @@
 
 package pl.org.seva.navigator.presenter
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleActivity
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import io.reactivex.disposables.CompositeDisposable
@@ -36,13 +33,13 @@ internal constructor() {
     private val permissionDeniedSubject = PublishSubject.create<PermissionResult>()
 
     fun request(
-            activity: LifecycleActivity,
+            activity: Activity,
             requestCode: Int,
-            permissions: Array<PermissionRequest>) {
+            permissions: Array<PermissionRequest>) : Disposable {
         val permissionsToRequest = ArrayList<String>()
+        val composite = CompositeDisposable()
         permissions.forEach { permission->
             permissionsToRequest.add(permission.permission)
-            val composite = CompositeDisposable()
             composite.addAll(
                     permissionGrantedSubject
                             .filter { it.requestCode == requestCode && it.permission == permission.permission }
@@ -50,9 +47,9 @@ internal constructor() {
                     permissionDeniedSubject
                             .filter { it.requestCode == requestCode && it.permission == permission.permission }
                             .subscribe { permission.deniedListener() })
-            activity.lifecycle.addObserver(PermissionObserver(composite))
         }
         ActivityCompat.requestPermissions(activity, permissionsToRequest.toTypedArray(), requestCode)
+        return composite
     }
 
     fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
@@ -87,12 +84,4 @@ internal constructor() {
             val permission: String,
             val grantedListener: () -> Unit = {},
             val deniedListener: () -> Unit = {})
-
-    @Suppress("unused")
-    class PermissionObserver(var disposable: Disposable) : LifecycleObserver {
-        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        fun onStop() {
-            disposable.dispose()
-        }
-    }
 }

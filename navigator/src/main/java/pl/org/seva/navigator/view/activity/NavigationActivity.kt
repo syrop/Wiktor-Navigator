@@ -19,13 +19,13 @@ package pl.org.seva.navigator.view.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LifecycleActivity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.View
 
@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import io.reactivex.disposables.Disposables
 
 import javax.inject.Inject
 
@@ -47,7 +48,7 @@ import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 
-class NavigationActivity : LifecycleActivity() {
+class NavigationActivity : AppCompatActivity() {
 
     @Inject
     lateinit var peerLocationSource: PeerLocationSource
@@ -61,6 +62,7 @@ class NavigationActivity : LifecycleActivity() {
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
     private var contact: Contact? = null
+    private var permissionDisposable = Disposables.empty()
 
     private val fab by lazy { findViewById<View>(R.id.fab) }
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
@@ -135,7 +137,7 @@ class NavigationActivity : LifecycleActivity() {
     }
 
     private fun requestLocationPermission() {
-        permissionsUtils.request(
+        permissionDisposable = permissionsUtils.request(
                 this,
                 PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(PermissionsUtils.PermissionRequest(
@@ -144,14 +146,21 @@ class NavigationActivity : LifecycleActivity() {
                         deniedListener = { onLocationPermissionDenied() })))
     }
 
+    override fun onStop() {
+        permissionDisposable.dispose()
+        super.onStop()
+    }
+
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
+        permissionDisposable.dispose()
         locationPermissionGranted = true
         myLocationSource.onLocationGranted(applicationContext)
         map?.isMyLocationEnabled = true
     }
 
     private fun onLocationPermissionDenied() {
+        permissionDisposable.dispose()
         Snackbar.make(
                 mapContainer,
                 R.string.permission_request_denied,
