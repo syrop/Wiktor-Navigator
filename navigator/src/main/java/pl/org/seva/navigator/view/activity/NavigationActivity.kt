@@ -95,10 +95,6 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
-
-        if (!NavigatorApplication.isLoggedIn) {
-            showLoginSnackbar()
-        }
     }
 
     private fun onFabClicked() {
@@ -181,6 +177,9 @@ class NavigationActivity : AppCompatActivity() {
         locationPermissionGranted = true
         myLocationSource.onLocationGranted(applicationContext)
         map?.isMyLocationEnabled = true
+        if (!NavigatorApplication.isLoggedIn) {
+            showLoginSnackbar()
+        }
     }
 
     private fun onLocationPermissionDenied() {
