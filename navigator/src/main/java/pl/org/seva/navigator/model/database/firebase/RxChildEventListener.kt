@@ -37,6 +37,5 @@ internal class RxChildEventListener(private val childEventSubject: ReplaySubject
     override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
 
     override fun onCancelled(databaseError: DatabaseError) {
-        childEventSubject.onError(Exception(databaseError.message))
     }
 }
