@@ -68,7 +68,7 @@ class ContactsActivity : AppCompatActivity() {
         fab.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
 
 
-        contactsCache.addContactsUpdatedListener { this.onContactsUpdated() }
+        contactsCache.addContactsUpdatedListener { onContactsUpdated() }
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -84,8 +84,8 @@ class ContactsActivity : AppCompatActivity() {
         contactsRecyclerView.layoutManager = lm
         contactAdapter = ContactAdapter()
         graph.inject(contactAdapter)
-        contactAdapter.addClickListener { this.onContactClicked(it) }
-        contactAdapter.addLongClickListener { this.onContactLongClicked(it) }
+        contactAdapter.addClickListener { onContactClicked(it) }
+        contactAdapter.addLongClickListener { onContactLongClicked(it) }
         contactsRecyclerView.adapter = contactAdapter
     }
 

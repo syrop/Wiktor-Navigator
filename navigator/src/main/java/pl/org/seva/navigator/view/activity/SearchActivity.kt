@@ -124,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
-        searchView.setOnCloseListener { this.onSearchViewClosed() }
+        searchView.setOnCloseListener { onSearchViewClosed() }
         return true
     }
 
@@ -161,7 +161,7 @@ class SearchActivity : AppCompatActivity() {
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching))
         firebaseReader
                 .readContactOnceForEmail(localQuery)
-                .subscribe { this.onContactReceived(it) }
+                .subscribe { onContactReceived(it) }
     }
 
     private fun onContactReceived(contact: Contact) {
@@ -183,7 +183,7 @@ class SearchActivity : AppCompatActivity() {
         contacts!!.layoutManager = lm
         val adapter = SingleContactAdapter(contact)
         contacts!!.adapter = adapter
-        adapter.addClickListener { this.onContactClicked(it) }
+        adapter.addClickListener { onContactClicked(it) }
     }
 
     private fun onContactClicked(contact: Contact) {
@@ -194,7 +194,7 @@ class SearchActivity : AppCompatActivity() {
         FriendshipAddDialogBuilder(this)
                 .setContact(contact)
                 .setYesAction { contactApprovedAndFinish(contact) }
-                .setNoAction { this.finish() }
+                .setNoAction { finish() }
                 .build()
                 .show()
     }

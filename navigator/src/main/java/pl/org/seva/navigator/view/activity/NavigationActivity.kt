@@ -91,7 +91,7 @@ class NavigationActivity : AppCompatActivity() {
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)
         contact?.let {
-            contactsCache.addContactsUpdatedListener(it.email(), { this.onContactsUpdated() })
+            contactsCache.addContactsUpdatedListener(it.email(), { onContactsUpdated() })
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
@@ -127,7 +127,7 @@ class NavigationActivity : AppCompatActivity() {
         map!!.setOnCameraIdleListener { onCameraIdle() }
         processLocationPermission()
         contact?.let {
-            peerLocationSource.addPeerLocationListener(it.email(), { this.onPeerLocationReceived(it) })
+            peerLocationSource.addPeerLocationListener(it.email(), { onPeerLocationReceived(it) })
         }
     }
 
