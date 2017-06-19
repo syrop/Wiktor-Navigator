@@ -48,6 +48,6 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <service android:name=".presenter.NavigatorService"/>
+        <service android:name=".NavigatorService"/>
     </application>
 </manifest>

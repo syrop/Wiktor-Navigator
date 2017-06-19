@@ -34,7 +34,6 @@ import javax.inject.Singleton
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.NavigatorApplication
-import pl.org.seva.navigator.presenter.MyLocationListener
 
 @Singleton
 class MyLocationSource @Inject
@@ -79,8 +78,8 @@ internal constructor() :
         connectGoogleApiClient()
     }
 
-    fun addLocationListener(myLocationListener: MyLocationListener) {
-        locationObservable.subscribe{ myLocationListener.onLocationReceived(it) }
+    fun addLocationListener(myLocationListener: (LatLng) -> Unit) {
+        locationObservable.subscribe{ myLocationListener(it) }
     }
 
     fun connectGoogleApiClient() {

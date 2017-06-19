@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter
+package pl.org.seva.navigator
 
 import android.app.*
 import android.arch.lifecycle.LifecycleService
@@ -23,30 +23,34 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import com.google.android.gms.maps.model.LatLng
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import javax.inject.Inject
 
-class NavigatorService : LifecycleService() {
+class NavigatorService : android.arch.lifecycle.LifecycleService() {
 
+    @javax.inject.Inject
+    lateinit var activityRecognitionSource : pl.org.seva.navigator.source.ActivityRecognitionSource
+    @javax.inject.Inject
+    lateinit var myLocationSource : pl.org.seva.navigator.source.MyLocationSource
     @Inject
-    lateinit var activityRecognitionSource : ActivityRecognitionSource
-    @Inject
-    lateinit var myLocationSource : MyLocationSource
+    lateinit var firebaseWriter: FirebaseWriter
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        (application as NavigatorApplication).component.inject(this)
-        startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
+        (application as pl.org.seva.navigator.NavigatorApplication).component.inject(this)
+        startForeground(pl.org.seva.navigator.NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addActivityRecognitionListeners()
+        addMyLocationListener()
 
-
-        return Service.START_STICKY
+        return android.app.Service.START_STICKY
     }
 
     private fun addActivityRecognitionListeners() {
@@ -54,6 +58,10 @@ class NavigatorService : LifecycleService() {
                 lifecycle,
                 stationaryListener = { onDeviceStationary() },
                 movingListener = { onDeviceMoving() })
+    }
+
+    private fun addMyLocationListener() {
+        myLocationSource.addLocationListener { onLocationReceived(it) }
     }
 
     private fun onDeviceStationary() {
@@ -66,26 +74,30 @@ class NavigatorService : LifecycleService() {
         myLocationSource.request()
     }
 
-    private fun createOngoingNotification(): Notification {
-        val mainActivityIntent = Intent(this, NavigationActivity::class.java)
+    fun onLocationReceived(latLng: LatLng) {
+        firebaseWriter.writeMyLocation(NavigatorApplication.email!!, latLng)
+    }
 
-        val pi = PendingIntent.getActivity(
+    private fun createOngoingNotification(): android.app.Notification {
+        val mainActivityIntent = android.content.Intent(this, NavigationActivity::class.java)
+
+        val pi = android.app.PendingIntent.getActivity(
                 this,
                 System.currentTimeMillis().toInt(),
                 mainActivityIntent,
                 0)
         return notificationBuilder
-                .setContentTitle(getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ic_navigation_white_24dp)
+                .setContentTitle(getString(pl.org.seva.navigator.R.string.app_name))
+                .setSmallIcon(pl.org.seva.navigator.R.drawable.ic_navigation_white_24dp)
                 .setContentIntent(pi)
                 .setAutoCancel(false)
                 .build()
     }
 
-    private fun createNotificationBuilder() : Notification.Builder {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+    private fun createNotificationBuilder() : android.app.Notification.Builder {
+        return if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
             @Suppress("DEPRECATION")
-            Notification.Builder(this)
+            (android.app.Notification.Builder(this))
         }
         else {
             val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
