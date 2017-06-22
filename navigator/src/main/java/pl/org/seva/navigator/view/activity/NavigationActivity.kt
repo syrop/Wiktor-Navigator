@@ -22,14 +22,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Typeface
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -68,6 +73,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private val fab by lazy { findViewById<View>(R.id.fab) }
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
+    private val following by lazy { findViewById<TextView>(R.id.following) }
 
     private var peerLocation: LatLng? = null
 
@@ -83,7 +89,7 @@ class NavigationActivity : AppCompatActivity() {
                 .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
         savedInstanceState?.let {
             animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng>(SAVED_PEER_LOCATION)
+            peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
             if (peerLocation != null) {  moveCameraToPeerLocation() }
         }
 
@@ -96,6 +102,27 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
+        updateFollowing()
+    }
+
+    private fun updateFollowing() {
+        if (contact == null) {
+            following.visibility = View.GONE
+        }
+        else {
+            following.visibility = View.VISIBLE
+            following.text = contactNameCharSequence()
+        }
+    }
+
+    private fun contactNameCharSequence() : CharSequence {
+        val str = getString(R.string.following_name)
+        val idName = str.indexOf(NAME_PLACEHOLDER)
+        val idEndName = idName + contact!!.name().length
+        val ssBuilder = SpannableStringBuilder(str.replace(NAME_PLACEHOLDER, contact!!.name()))
+        val boldSpan = StyleSpan(Typeface.BOLD)
+        ssBuilder.setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        return ssBuilder
     }
 
     private fun onFabClicked() {
@@ -301,6 +328,8 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     companion object {
+
+        val NAME_PLACEHOLDER = "[name]"
 
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f

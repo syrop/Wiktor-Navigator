@@ -13,13 +13,13 @@
     <string name="drawer_accessibility_close">Close navigation drawer</string>
     <string name="drawer_header_not_logged_in">(Not logged in.)</string>
 
-
     <!-- Navigation activity. -->
     <string name="navigation_activity_label">Navigation</string>
     <string name="snackbar_permission_request_denied">Location permission request was denied.</string>
     <string name="snackbar_retry">Retry</string>
     <string name="snackbar_login">Log in</string>
     <string name="snackbar_please_log_in">Please log in</string>
+    <string name="following_name">Following [name]</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>

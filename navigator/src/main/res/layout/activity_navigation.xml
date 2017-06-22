@@ -7,11 +7,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        android:id="@+id/map_container"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
+        <FrameLayout
+
+            android:id="@+id/map_container"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:id="@+id/following"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#99000000"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:textColor="#ffffff"
+            tools:text="Following:"/>
+    </RelativeLayout>
+
     <android.support.design.widget.FloatingActionButton
     android:id="@+id/fab"
     android:layout_width="wrap_content"

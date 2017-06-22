@@ -20,7 +20,6 @@ package pl.org.seva.navigator
 import javax.inject.Singleton
 
 import dagger.Component
-import pl.org.seva.navigator.presenter.NavigatorService
 import pl.org.seva.navigator.view.activity.ContactsActivity
 import pl.org.seva.navigator.view.activity.LoginActivity
 import pl.org.seva.navigator.view.activity.NavigationActivity
