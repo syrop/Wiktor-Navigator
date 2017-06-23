@@ -102,10 +102,11 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
-        updateFollowing()
+        updateFollowingHud()
+        prepareMapFragment()
     }
 
-    private fun updateFollowing() {
+    private fun updateFollowingHud() {
         if (contact == null) {
             following.visibility = View.GONE
         }
@@ -219,6 +220,10 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun onLocationPermissionDenied() {
         permissionDisposable.dispose()
+        showLocationPermissionSnackbar()
+    }
+
+    private fun showLocationPermissionSnackbar() {
         Snackbar.make(
                 mapContainer,
                 R.string.snackbar_permission_request_denied,
@@ -267,7 +272,6 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        prepareMapFragment()
         invalidateOptionsMenu()
     }
 
