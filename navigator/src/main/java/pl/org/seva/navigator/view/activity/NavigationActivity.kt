@@ -20,11 +20,14 @@ package pl.org.seva.navigator.view.activity
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -34,6 +37,7 @@ import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.webkit.WebView
 import android.widget.TextView
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -44,6 +48,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.reactivex.disposables.Disposables
+import org.apache.commons.io.IOUtils
 
 import javax.inject.Inject
 
@@ -54,6 +59,7 @@ import pl.org.seva.navigator.model.ContactsCache
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
+import java.io.IOException
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -75,6 +81,7 @@ class NavigationActivity : AppCompatActivity() {
     private val fab by lazy { findViewById<View>(R.id.fab) }
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
     private val following by lazy { findViewById<TextView>(R.id.following) }
+    private lateinit var dialog: Dialog
 
     private var peerLocation: LatLng? = null
 
@@ -197,8 +204,39 @@ class NavigationActivity : AppCompatActivity() {
                 logout()
                 return true
             }
+            R.id.action_help -> {
+                showLocationPermissionHelp()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showLocationPermissionHelp() {
+        dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_help_location_permission)
+        val web = dialog.findViewById<WebView>(R.id.web)
+        web.settings.defaultTextEncodingName = UTF_8
+
+        try {
+            val content = IOUtils.toString(assets.open(HELP_FILE_EN), UTF_8)
+            web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+        }
+
+        dialog.findViewById<View>(R.id.settings).setOnClickListener { onSettingsClicked() }
+        dialog.show()
+    }
+
+    @SuppressLint("InlinedApi")
+    private fun onSettingsClicked() {
+        dialog.dismiss()
+        val intent = Intent()
+        intent.action = Settings.ACTION_MANAGE_OVERLAY_PERMISSION
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
     }
 
     private fun requestLocationPermission() {
@@ -347,6 +385,11 @@ class NavigationActivity : AppCompatActivity() {
 
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f
+
+        private val UTF_8 = "UTF-8"
+        private val ASSET_DIR = "file:///android_asset/"
+        private val PLAIN_TEXT = "text/html"
+        private val HELP_FILE_EN = "help_en.html"
 
         val CONTACT = "contact"
 
