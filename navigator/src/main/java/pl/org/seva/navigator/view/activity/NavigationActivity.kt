@@ -86,6 +86,7 @@ class NavigationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         zoom = PreferenceManager.getDefaultSharedPreferences(this)
                 .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
+        supportActionBar?.title = getString(R.string.navigation_activity_label)
         savedInstanceState?.let {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)

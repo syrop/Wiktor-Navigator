@@ -19,23 +19,23 @@
             android:value="AIzaSyDECNjt1fl18jA2W5O2n3e_JMFueCjEdBs"/>
 
         <activity
+            android:name=".view.activity.NavigationActivity"
+            android:label="@string/app_name_short" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".view.activity.ContactsActivity"
-            android:label="@string/app_name"
+            android:label="@string/contacts_activity_label"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
             android:name=".view.activity.LoginActivity"
             android:label="@string/app_name" />
-
-        <activity
-            android:name=".view.activity.NavigationActivity"
-            android:label="@string/navigation_activity_label" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".view.activity.SearchActivity"
