@@ -81,7 +81,6 @@ class NavigationActivity : AppCompatActivity() {
     private var moveCameraToPeerLocation = true
     private var zoom = 0.0f
     private var mapContainerId: Int = 0
-    private var locationPermissionGranted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +102,7 @@ class NavigationActivity : AppCompatActivity() {
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
         updateFollowingHud()
-        prepareMapFragment()
+        processLocationPermission()
     }
 
     private fun updateFollowingHud() {
@@ -157,19 +156,19 @@ class NavigationActivity : AppCompatActivity() {
     private fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map!!.setOnCameraIdleListener { onCameraIdle() }
-        processLocationPermission()
+        processLocationPermission(onDenied = null)
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email(), { onPeerLocationReceived(it) })
         }
     }
 
-    private fun processLocationPermission() {
+    private fun processLocationPermission(onDenied : (() -> Unit)? = { requestLocationPermission() } ) {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             onLocationPermissionGranted()
         } else {
-            requestLocationPermission()
+            onDenied?.invoke()
         }
     }
 
@@ -210,9 +209,8 @@ class NavigationActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
         permissionDisposable.dispose()
-        locationPermissionGranted = true
-        myLocationSource.onLocationGranted(applicationContext)
         map?.isMyLocationEnabled = true
+        myLocationSource.onLocationGranted(applicationContext)
         if (!NavigatorApplication.isLoggedIn) {
             showLoginSnackbar()
         }
@@ -273,6 +271,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         invalidateOptionsMenu()
+        prepareMapFragment()
     }
 
     private fun prepareMapFragment() {
