@@ -70,6 +70,7 @@ class NavigationActivity : AppCompatActivity() {
     private var map: GoogleMap? = null
     private var contact: Contact? = null
     private var permissionDisposable = Disposables.empty()
+    private var isLocationPermissionGranted = false
 
     private val fab by lazy { findViewById<View>(R.id.fab) }
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
@@ -103,7 +104,7 @@ class NavigationActivity : AppCompatActivity() {
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
         updateFollowingHud()
-        processLocationPermission()
+        checkLocationPermission()
     }
 
     private fun updateFollowingHud() {
@@ -154,20 +155,26 @@ class NavigationActivity : AppCompatActivity() {
         animateCamera = false
     }
 
+    @SuppressLint("MissingPermission")
     private fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map!!.setOnCameraIdleListener { onCameraIdle() }
-        processLocationPermission(onDenied = null)
+        checkLocationPermission(
+                onGranted = { map?.isMyLocationEnabled = true },
+                onDenied = {})
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email(), { onPeerLocationReceived(it) })
         }
     }
 
-    private fun processLocationPermission(onDenied : (() -> Unit)? = { requestLocationPermission() } ) {
+    private fun checkLocationPermission(
+            onGranted : (() -> Unit)? = { onLocationPermissionGranted() },
+            onDenied : (() -> Unit)? = { requestLocationPermission() } ) {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            onLocationPermissionGranted()
+            isLocationPermissionGranted = true
+            onGranted?.invoke()
         } else {
             onDenied?.invoke()
         }
@@ -178,8 +185,10 @@ class NavigationActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        return NavigatorApplication.isLoggedIn
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(R.id.action_help).isVisible = !isLocationPermissionGranted
+        menu.findItem(R.id.action_logout).isVisible = NavigatorApplication.isLoggedIn
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -198,8 +207,8 @@ class NavigationActivity : AppCompatActivity() {
                 PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(PermissionsUtils.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        grantedListener = { onLocationPermissionGranted() },
-                        deniedListener = { onLocationPermissionDenied() })))
+                        onGranted = { onLocationPermissionGranted() },
+                        onDenied = { onLocationPermissionDenied() })))
     }
 
     override fun onStop() {
@@ -210,6 +219,7 @@ class NavigationActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
         permissionDisposable.dispose()
+        invalidateOptionsMenu()
         map?.isMyLocationEnabled = true
         myLocationSource.onLocationGranted(applicationContext)
         if (!NavigatorApplication.isLoggedIn) {

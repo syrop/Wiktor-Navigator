@@ -43,10 +43,10 @@ internal constructor() {
             composite.addAll(
                     permissionGrantedSubject
                             .filter { it.requestCode == requestCode && it.permission == permission.permission }
-                            .subscribe { permission.grantedListener() },
+                            .subscribe { permission.onGranted() },
                     permissionDeniedSubject
                             .filter { it.requestCode == requestCode && it.permission == permission.permission }
-                            .subscribe { permission.deniedListener() })
+                            .subscribe { permission.onDenied() })
         }
         ActivityCompat.requestPermissions(activity, permissionsToRequest.toTypedArray(), requestCode)
         return composite
@@ -82,6 +82,6 @@ internal constructor() {
     class PermissionResult(val requestCode: Int, val permission: String)
     class PermissionRequest(
             val permission: String,
-            val grantedListener: () -> Unit = {},
-            val deniedListener: () -> Unit = {})
+            val onGranted: () -> Unit = {},
+            val onDenied: () -> Unit = {})
 }
