@@ -118,8 +118,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun updateFollowingHud() {
         if (contact == null) {
             following.visibility = View.GONE
-        }
-        else {
+        } else {
             following.visibility = View.VISIBLE
             following.text = contactNameCharSequence()
         }
@@ -136,10 +135,11 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun onFabClicked() {
-        if (NavigatorApplication.isLoggedIn) {
+        if (!isLocationPermissionGranted) {
+            checkLocationPermission()
+        } else if (NavigatorApplication.isLoggedIn) {
             startActivityForResult(Intent(this, ContactsActivity::class.java), CONTACTS_ACTIVITY_ID)
-        }
-        else {
+        } else {
             showLoginSnackbar()
         }
     }
