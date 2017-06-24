@@ -21,22 +21,20 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class ParcelableInt(val value: Int) : Parcelable {
-
-    constructor(parcel: Parcel) : this(parcel.readInt())
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(out: Parcel, flags: Int) {
-        out.writeInt(value)
-    }
-
     companion object {
-        @Suppress("unused")
-        val CREATOR = object : Parcelable.Creator<ParcelableInt> {
-            override fun createFromParcel(parcel: Parcel) = ParcelableInt(parcel)
+        @JvmField val CREATOR: Parcelable.Creator<ParcelableInt> = object : Parcelable.Creator<ParcelableInt> {
+            override fun createFromParcel(source: Parcel): ParcelableInt = ParcelableInt(source)
             override fun newArray(size: Int): Array<ParcelableInt?> = arrayOfNulls(size)
         }
+    }
+
+    constructor(source: Parcel) : this(
+    source.readInt()
+    )
+
+    override fun describeContents() = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeInt(value)
     }
 }
