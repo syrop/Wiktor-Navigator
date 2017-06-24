@@ -20,12 +20,9 @@ package pl.org.seva.navigator.view.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 
@@ -35,7 +32,6 @@ import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsCache
-import pl.org.seva.navigator.NavigatorComponent
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
@@ -50,22 +46,16 @@ class ContactsActivity : AppCompatActivity() {
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
 
-    private lateinit var contactsRecyclerView: RecyclerView
-    private lateinit var contactAdapter: ContactAdapter
-    private lateinit var graph: NavigatorComponent
-    private lateinit var fab: View
-    private lateinit var drawer: DrawerLayout
+    private val contactsRecyclerView by lazy { findViewById<RecyclerView>(R.id.contacts) }
+    private val contactAdapter = ContactAdapter()
+    private val component by lazy { (application as NavigatorApplication).component }
+    private val fab by lazy { findViewById<View>(R.id.fab) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        graph = (application as NavigatorApplication).component
-        graph.inject(this)
+        component.inject(this)
         setContentView(R.layout.activity_contacts)
-        contactsRecyclerView = findViewById<RecyclerView>(R.id.contacts)
-
-        fab = findViewById(R.id.fab)
-        fab.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
-
+        fab.setOnClickListener { onFabClicked() }
 
         contactsCache.addContactsUpdatedListener { onContactsUpdated() }
 
@@ -77,12 +67,15 @@ class ContactsActivity : AppCompatActivity() {
         initContactsRecyclerView()
     }
 
+    private fun onFabClicked() {
+        startActivity(Intent(this, SearchActivity::class.java))
+    }
+
     private fun initContactsRecyclerView() {
         contactsRecyclerView.setHasFixedSize(true)
         val lm = LinearLayoutManager(this)
         contactsRecyclerView.layoutManager = lm
-        contactAdapter = ContactAdapter()
-        graph.inject(contactAdapter)
+        component.inject(contactAdapter)
         contactAdapter.addClickListener { onContactClicked(it) }
         contactAdapter.addLongClickListener { onContactLongClicked(it) }
         contactsRecyclerView.adapter = contactAdapter
@@ -110,14 +103,6 @@ class ContactsActivity : AppCompatActivity() {
         firebaseWriter.deleteFriendship(contact)
         contactsCache.delete(contact)
         contactAdapter.notifyDataSetChanged()
-    }
-
-    override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
