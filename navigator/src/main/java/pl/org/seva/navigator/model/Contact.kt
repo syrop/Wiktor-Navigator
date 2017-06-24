@@ -80,7 +80,7 @@ class Contact : Comparable<Contact>, Parcelable {
 
     companion object {
         @Suppress("unused")
-        val CREATOR = object : Parcelable.Creator<Contact> {
+        @JvmField val CREATOR = object : Parcelable.Creator<Contact> {
             override fun createFromParcel(parcel: Parcel) = Contact(parcel)
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         }
