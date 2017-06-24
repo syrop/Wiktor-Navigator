@@ -58,10 +58,11 @@ class SearchActivity : AppCompatActivity() {
     @Inject
     lateinit var contactsCache: ContactsCache
 
-    private var label: TextView? = null
+    private val promptLabel by lazy { findViewById<TextView>(R.id.promptLabel) }
+    private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
 
     private var progress: ProgressDialog? = null
-    private var contacts: RecyclerView? = null
+
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +70,8 @@ class SearchActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_search)
 
-        val intent = intent
-
         if (Intent.ACTION_SEARCH == intent.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY)
-            search(query)
+            search(intent.getStringExtra(SearchManager.QUERY))
         }
 
         supportActionBar?.let {
@@ -81,13 +79,11 @@ class SearchActivity : AppCompatActivity() {
             it.setDisplayShowHomeEnabled(true)
         }
 
-        setLabelSpannableString(R.string.search_press_to_begin)
-        label = findViewById<TextView>(R.id.label) as TextView
-        contacts = findViewById<RecyclerView>(R.id.contacts)
+        setPromptLabelText(R.string.search_press_to_begin)
     }
 
     // http://stackoverflow.com/questions/3176033/spannablestring-with-image-example
-    private fun setLabelSpannableString(id: Int) {
+    private fun setPromptLabelText(id: Int) {
         val str = getString(id)
         val ss = SpannableString(str)
         val d = resources.getDrawable(R.drawable.ic_search_black_24dp)
@@ -101,7 +97,7 @@ class SearchActivity : AppCompatActivity() {
                     idPlaceholder + IMAGE_PLACEHOLDER_LENGTH,
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         }
-        label!!.text = ss
+        promptLabel!!.text = ss
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -130,20 +126,20 @@ class SearchActivity : AppCompatActivity() {
 
     private fun onSearchViewClosed(): Boolean {
         if (contacts!!.visibility != View.VISIBLE) {
-            label!!.visibility = View.VISIBLE
+            promptLabel!!.visibility = View.VISIBLE
         }
-        setLabelSpannableString(R.string.search_press_to_begin)
+        setPromptLabelText(R.string.search_press_to_begin)
         return false
     }
 
     private fun onSearchClicked() {
-        label!!.visibility = View.GONE
+        promptLabel!!.visibility = View.GONE
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> {
-                label!!.visibility = View.GONE
+                promptLabel!!.visibility = View.GONE
                 contacts!!.visibility = View.GONE
                 onSearchRequested()
                 return true
@@ -167,12 +163,12 @@ class SearchActivity : AppCompatActivity() {
     private fun onContactReceived(contact: Contact) {
         progress!!.cancel()
         if (contact.isEmpty) {
-            label!!.visibility = View.VISIBLE
+            promptLabel!!.visibility = View.VISIBLE
             contacts!!.visibility = View.GONE
-            setLabelSpannableString(R.string.search_no_user_found)
+            setPromptLabelText(R.string.search_no_user_found)
             return
         }
-        label!!.visibility = View.GONE
+        promptLabel!!.visibility = View.GONE
         contacts!!.visibility = View.VISIBLE
         initRecyclerView(contact)
     }
