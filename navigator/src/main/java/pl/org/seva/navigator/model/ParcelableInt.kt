@@ -24,9 +24,7 @@ class ParcelableInt(val value: Int) : Parcelable {
 
     constructor(parcel: Parcel) : this(parcel.readInt())
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         out.writeInt(value)

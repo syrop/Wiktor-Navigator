@@ -64,9 +64,7 @@ class Contact : Comparable<Contact>, Parcelable {
         return email!!.hashCode()
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         out.writeString(email)
