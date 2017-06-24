@@ -16,5 +16,5 @@
         android:layout_height="wrap_content"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_alignParentBottom="true"
-        android:text="@string/dialog_settings_button"/>
+        android:text="@string/dialog_login_button"/>
 </RelativeLayout>

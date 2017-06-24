@@ -81,8 +81,8 @@ class NavigationActivity : AppCompatActivity() {
     private val fab by lazy { findViewById<View>(R.id.fab) }
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
     private val following by lazy { findViewById<TextView>(R.id.following) }
-    private lateinit var dialog: Dialog
-    private var locationPermissionSnackbar: Snackbar? = null
+    private var dialog: Dialog? = null
+    private var snackbar: Snackbar? = null
 
     private var peerLocation: LatLng? = null
 
@@ -127,9 +127,9 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun contactNameCharSequence() : CharSequence {
         val str = getString(R.string.following_name)
-        val idName = str.indexOf(NAME_PLACEHOLDER)
+        val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name().length
-        val ssBuilder = SpannableStringBuilder(str.replace(NAME_PLACEHOLDER, contact!!.name()))
+        val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name()))
         val boldSpan = StyleSpan(Typeface.BOLD)
         ssBuilder.setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         return ssBuilder
@@ -194,7 +194,8 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_help).isVisible = !isLocationPermissionGranted
+        menu.findItem(R.id.action_help).isVisible =
+                !isLocationPermissionGranted || !NavigatorApplication.isLoggedIn
         menu.findItem(R.id.action_logout).isVisible = NavigatorApplication.isLoggedIn
         return true
     }
@@ -206,7 +207,11 @@ class NavigationActivity : AppCompatActivity() {
                 return true
             }
             R.id.action_help -> {
-                showLocationPermissionHelp()
+                if (!isLocationPermissionGranted) {
+                    showLocationPermissionHelp()
+                } else if (!NavigatorApplication.isLoggedIn) {
+                    showLoginHelp()
+                }
                 return true
             }
         }
@@ -214,13 +219,25 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun showLocationPermissionHelp() {
+        showHelp(R.layout.dialog_help_location_permission, HELP_LOCATION_PERMISSION_EN) {
+            onSettingsClicked()
+        }
+    }
+
+    private fun showLoginHelp() {
+        showHelp(R.layout.dialog_help_login, HELP_LOGIN_EN) {
+            login()
+        }
+    }
+
+    private fun showHelp(layout : Int, file: String, action: () -> Unit) {
         dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_help_location_permission)
-        val web = dialog.findViewById<WebView>(R.id.web)
+        dialog!!.setContentView(layout)
+        val web = dialog!!.findViewById<WebView>(R.id.web)
         web.settings.defaultTextEncodingName = UTF_8
 
         try {
-            val content = IOUtils.toString(assets.open(HELP_FILE_EN), UTF_8)
+            val content = IOUtils.toString(assets.open(file), UTF_8)
                     .replace(APP_VERSION_PLACEHOLDER, versionName)
                     .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
             web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
@@ -228,8 +245,8 @@ class NavigationActivity : AppCompatActivity() {
             ex.printStackTrace()
         }
 
-        dialog.findViewById<View>(R.id.settings).setOnClickListener { onSettingsClicked() }
-        dialog.show()
+        dialog!!.findViewById<View>(R.id.action_button).setOnClickListener { action() }
+        dialog!!.show()
     }
 
     private val versionName: String
@@ -242,9 +259,8 @@ class NavigationActivity : AppCompatActivity() {
 
         }
 
-    @SuppressLint("InlinedApi")
     private fun onSettingsClicked() {
-        dialog.dismiss()
+        dialog?.dismiss()
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         val uri = Uri.fromParts("package", packageName, null)
@@ -284,21 +300,21 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun showLocationPermissionSnackbar() {
-        locationPermissionSnackbar = Snackbar.make(
+        snackbar = Snackbar.make(
                 mapContainer,
                 R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry) { requestLocationPermission() }
-        locationPermissionSnackbar!!.show()
+        snackbar!!.show()
     }
 
     private fun showLoginSnackbar() {
-        Snackbar.make(
+        snackbar = Snackbar.make(
                 mapContainer,
                 R.string.snackbar_please_log_in,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_login) { login() }
-                .show()
+        snackbar!!.show()
     }
 
     override fun onRequestPermissionsResult(
@@ -309,6 +325,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun login() {
+        dialog?.dismiss()
         startActivity(Intent(this, LoginActivity::class.java)
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGIN))
     }
@@ -334,7 +351,7 @@ class NavigationActivity : AppCompatActivity() {
         super.onResume()
         checkLocationPermission(
                 onGranted = {
-                    locationPermissionSnackbar?.dismiss()
+                    snackbar?.dismiss()
                     if (!NavigatorApplication.isLoggedIn) {
                         showLoginSnackbar()
                     }},
@@ -401,7 +418,7 @@ class NavigationActivity : AppCompatActivity() {
 
     companion object {
 
-        val NAME_PLACEHOLDER = "[name]"
+        val CONTACT_NAME_PLACEHOLDER = "[name]"
 
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f
@@ -409,9 +426,10 @@ class NavigationActivity : AppCompatActivity() {
         private val UTF_8 = "UTF-8"
         private val ASSET_DIR = "file:///android_asset/"
         private val PLAIN_TEXT = "text/html"
-        private val HELP_FILE_EN = "help_en.html"
         private val APP_VERSION_PLACEHOLDER = "[app_version]"
         private val APP_NAME_PLACEHOLDER = "[app_name]"
+        private val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
+        private val HELP_LOGIN_EN = "help_login_en.html"
 
         val CONTACT = "contact"
 
