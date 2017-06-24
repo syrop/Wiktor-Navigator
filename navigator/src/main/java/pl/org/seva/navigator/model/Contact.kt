@@ -79,8 +79,6 @@ class Contact : Comparable<Contact>, Parcelable {
     }
 
     companion object {
-        val PARCELABLE_KEY = "contact"
-
         @Suppress("unused")
         val CREATOR = object : Parcelable.Creator<Contact> {
             override fun createFromParcel(parcel: Parcel) = Contact(parcel)

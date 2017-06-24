@@ -64,7 +64,7 @@ internal constructor() {
         context.registerReceiver(rejectedReceiver, IntentFilter(FRIENDSHIP_REJECTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
         val friendshipAccepted = Intent(FRIENDSHIP_ACCEPTED_INTENT)
-                .putExtra(Contact.PARCELABLE_KEY, contact)
+                .putExtra(CONTACT_EXTRA, contact)
                 .putExtra(NOTIFICATION_ID, notificationId)
         val yesPi = PendingIntent.getBroadcast(
                 context,
@@ -72,7 +72,7 @@ internal constructor() {
                 friendshipAccepted,
                 PendingIntent.FLAG_UPDATE_CURRENT)
         val friendshipRejected = Intent(FRIENDSHIP_REJECTED_INTENT)
-                .putExtra(Contact.PARCELABLE_KEY, contact)
+                .putExtra(CONTACT_EXTRA, contact)
                 .putExtra(NOTIFICATION_ID, notificationId)
         val noPi = PendingIntent.getBroadcast(
                 context,
@@ -111,7 +111,7 @@ internal constructor() {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
                     as NotificationManager
             notificationManager.cancel(notificationId)
-            val contact = intent.getParcelableExtra<Contact>(Contact.PARCELABLE_KEY)
+            val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
             if (contactsCache.contains(contact)) {
                 return
             }
@@ -140,5 +140,6 @@ internal constructor() {
         private val FRIENDSHIP_ACCEPTED_INTENT = "friendship_accepted_intent"
         private val FRIENDSHIP_REJECTED_INTENT = "friendship_rejected_intent"
         private val NOTIFICATION_ID = "notification_id"
+        private val CONTACT_EXTRA = "contact_extra"
     }
 }
