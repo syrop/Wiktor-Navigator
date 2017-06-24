@@ -221,6 +221,8 @@ class NavigationActivity : AppCompatActivity() {
 
         try {
             val content = IOUtils.toString(assets.open(HELP_FILE_EN), UTF_8)
+                    .replace(APP_VERSION_PLACEHOLDER, versionName)
+                    .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
             web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
         } catch (ex: IOException) {
             ex.printStackTrace()
@@ -229,6 +231,16 @@ class NavigationActivity : AppCompatActivity() {
         dialog.findViewById<View>(R.id.settings).setOnClickListener { onSettingsClicked() }
         dialog.show()
     }
+
+    private val versionName: String
+        get() {
+            try {
+                return packageManager.getPackageInfo(packageName, 0).versionName
+            } catch (ex: PackageManager.NameNotFoundException) {
+                return ""
+            }
+
+        }
 
     @SuppressLint("InlinedApi")
     private fun onSettingsClicked() {
@@ -398,6 +410,8 @@ class NavigationActivity : AppCompatActivity() {
         private val ASSET_DIR = "file:///android_asset/"
         private val PLAIN_TEXT = "text/html"
         private val HELP_FILE_EN = "help_en.html"
+        private val APP_VERSION_PLACEHOLDER = "[app_version]"
+        private val APP_NAME_PLACEHOLDER = "[app_name]"
 
         val CONTACT = "contact"
 
