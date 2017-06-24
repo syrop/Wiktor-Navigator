@@ -63,8 +63,6 @@ class ContactsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_contacts)
         contactsRecyclerView = findViewById<RecyclerView>(R.id.contacts)
 
-        val toolbar = findViewById<Toolbar>(R.id.app_bar_toolbar)
-        setSupportActionBar(toolbar)
         fab = findViewById(R.id.fab)
         fab.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
 

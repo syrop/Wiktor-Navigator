@@ -29,8 +29,7 @@
 
         <activity
             android:name=".view.activity.ContactsActivity"
-            android:label="@string/contacts_activity_label"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/contacts_activity_label">
         </activity>
 
         <activity
