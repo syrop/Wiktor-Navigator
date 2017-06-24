@@ -33,6 +33,7 @@ import javax.inject.Singleton
 import pl.org.seva.navigator.model.ContactsCache
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.Contact
+import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.model.database.sqlite.SqliteWriter
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder
 
@@ -61,7 +62,7 @@ internal constructor() {
         rejectedReceiver = FriendshipRejectedBroadcastReceiver()
         context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_ACCEPTED_INTENT))
         context.registerReceiver(rejectedReceiver, IntentFilter(FRIENDSHIP_REJECTED_INTENT))
-        val notificationId = Random().nextInt()
+        val notificationId = ParcelableInt(Random().nextInt())
         val friendshipAccepted = Intent(FRIENDSHIP_ACCEPTED_INTENT)
                 .putExtra(Contact.PARCELABLE_KEY, contact)
                 .putExtra(NOTIFICATION_ID, notificationId)
@@ -86,7 +87,7 @@ internal constructor() {
                 .build()
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId, notification)
+        notificationManager.notify(notificationId.value, notification)
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
@@ -106,7 +107,7 @@ internal constructor() {
     private inner class FriendshipAcceptedBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-            val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
+            val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
                     as NotificationManager
             notificationManager.cancel(notificationId)
@@ -125,7 +126,7 @@ internal constructor() {
     private inner class FriendshipRejectedBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-            val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
+            val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
                     as NotificationManager
             notificationManager.cancel(notificationId)

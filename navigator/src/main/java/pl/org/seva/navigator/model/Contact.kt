@@ -73,18 +73,17 @@ class Contact : Comparable<Contact>, Parcelable {
         out.writeString(displayName)
     }
 
-    private constructor(`in`: Parcel) {
-        email = `in`.readString()
-        displayName = `in`.readString()
+    private constructor(parcel: Parcel) {
+        email = parcel.readString()
+        displayName = parcel.readString()
     }
-
 
     companion object {
         val PARCELABLE_KEY = "contact"
 
         @Suppress("unused")
         val CREATOR = object : Parcelable.Creator<Contact> {
-            override fun createFromParcel(`in`: Parcel) = Contact(`in`)
+            override fun createFromParcel(parcel: Parcel) = Contact(parcel)
             override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
         }
     }
