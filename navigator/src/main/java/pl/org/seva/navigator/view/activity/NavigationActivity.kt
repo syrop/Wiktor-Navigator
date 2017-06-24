@@ -82,6 +82,7 @@ class NavigationActivity : AppCompatActivity() {
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
     private val following by lazy { findViewById<TextView>(R.id.following) }
     private lateinit var dialog: Dialog
+    private var locationPermissionSnackbar: Snackbar? = null
 
     private var peerLocation: LatLng? = null
 
@@ -233,7 +234,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun onSettingsClicked() {
         dialog.dismiss()
         val intent = Intent()
-        intent.action = Settings.ACTION_MANAGE_OVERLAY_PERMISSION
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
         val uri = Uri.fromParts("package", packageName, null)
         intent.data = uri
         startActivity(intent)
@@ -271,12 +272,12 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun showLocationPermissionSnackbar() {
-        Snackbar.make(
+        locationPermissionSnackbar = Snackbar.make(
                 mapContainer,
                 R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry) { requestLocationPermission() }
-                .show()
+        locationPermissionSnackbar!!.show()
     }
 
     private fun showLoginSnackbar() {
@@ -319,6 +320,13 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        checkLocationPermission(
+                onGranted = {
+                    locationPermissionSnackbar?.dismiss()
+                    if (!NavigatorApplication.isLoggedIn) {
+                        showLoginSnackbar()
+                    }},
+                onDenied = {})
         invalidateOptionsMenu()
         prepareMapFragment()
     }
