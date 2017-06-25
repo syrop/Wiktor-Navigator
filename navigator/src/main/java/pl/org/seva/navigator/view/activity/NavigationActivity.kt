@@ -147,6 +147,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CONTACTS_ACTIVITY_ID && resultCode == Activity.RESULT_OK) {
             contact = data?.getParcelableExtra(CONTACT)
+            updateFollowingHud()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

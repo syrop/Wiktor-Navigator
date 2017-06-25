@@ -66,14 +66,14 @@ class Contact : Comparable<Contact>, Parcelable {
 
     override fun describeContents() = 0
 
-    override fun writeToParcel(out: Parcel, flags: Int) {
-        out.writeString(email)
-        out.writeString(displayName)
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(email)
+        dest.writeString(displayName)
     }
 
-    private constructor(parcel: Parcel) {
-        email = parcel.readString()
-        displayName = parcel.readString()
+    private constructor(source: Parcel) {
+        email = source.readString()
+        displayName = source.readString()
     }
 
     companion object {
