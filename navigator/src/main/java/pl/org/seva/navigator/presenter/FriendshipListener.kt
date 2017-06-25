@@ -100,10 +100,6 @@ internal constructor() {
         sqliteWriter.deleteFriend(contact)
     }
 
-    fun onFriendRead(contact: Contact) {
-        contactsStore.add(contact)
-    }
-
     private inner class FriendshipAcceptedBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {

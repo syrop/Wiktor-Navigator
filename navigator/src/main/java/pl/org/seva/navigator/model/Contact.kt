@@ -20,60 +20,44 @@ package pl.org.seva.navigator.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class Contact : Comparable<Contact>, Parcelable {
+class Contact() : Comparable<Contact>, Parcelable {
 
-    private var email: String? = null
-    private var displayName: String? = null
-
-    constructor()
+    var email: String? = null
+        get() = field!!
+    var name: String? = null
+        get() = field!!
 
     val isEmpty: Boolean
-        get() = email == null || displayName == null
+        get() = email == null || name == null
 
-    fun setName(name: String): Contact {
-        this.displayName = name
-        return this
-    }
-
-    fun name(): String {
-        return displayName!!
-    }
-
-    fun setEmail(email: String): Contact {
+    constructor(email: String, name: String): this() {
         this.email = email
-        return this
-    }
-
-    fun email(): String {
-        return email!!
+        this.name = name
     }
 
     override fun compareTo(other: Contact): Int {
-        var result = displayName!!.compareTo(other.displayName!!)
+        var result = name!!.compareTo(other.name!!)
         if (result == 0) {
             result = email!!.compareTo(other.email!!)
         }
         return result
     }
 
-    override fun equals(other: Any?): Boolean {
-        return !(other == null || other !is Contact) && email == other.email
-    }
+    override fun equals(other: Any?) =
+        !(other == null || other !is Contact) && email == other.email
 
-    override fun hashCode(): Int {
-        return email!!.hashCode()
-    }
+    override fun hashCode() = email!!.hashCode()
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(email)
-        dest.writeString(displayName)
+        dest.writeString(name)
     }
 
-    private constructor(source: Parcel) {
-        email = source.readString()
-        displayName = source.readString()
+    private constructor(parcel: Parcel) : this() {
+        email = parcel.readString()
+        name = parcel.readString()
     }
 
     companion object {

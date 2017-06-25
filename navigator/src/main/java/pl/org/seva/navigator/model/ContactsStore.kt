@@ -37,9 +37,7 @@ class ContactsStore @Inject constructor() {
     }
 
     private val me: Contact
-        get() = Contact()
-                .setEmail(NavigatorApplication.email!!)
-                .setName(NavigatorApplication.displayName!!)
+        get() = Contact(NavigatorApplication.email!!, NavigatorApplication.displayName!!)
 
     operator fun contains(contact: Contact): Boolean {
         return me == contact || contacts.contains(contact)
@@ -64,6 +62,8 @@ class ContactsStore @Inject constructor() {
         contactsUpdatedSubject.onNext(contact)
     }
 
+    fun clear() = contacts.clear()
+
     operator fun get(position: Int): Contact {
         return if (position == 0) me else contacts[position - 1]
     }
@@ -74,7 +74,7 @@ class ContactsStore @Inject constructor() {
 
     fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {
         contactsUpdatedSubject
-                .filter { email == null || it.email() == email }
+                .filter { email == null || it.email == email }
                 .subscribe { contactsUpdatedListener() }
     }
 

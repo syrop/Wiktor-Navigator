@@ -44,9 +44,7 @@ class SqliteReader @Inject internal constructor() {
                     null, null, null, null, null)
 
             while (cursor.moveToNext()) {
-                val contact = Contact()
-                contact.setName(cursor.getString(0))
-                contact.setEmail(cursor.getString(1))
+                val contact = Contact(cursor.getString(0), cursor.getString(1))
                 result.add(contact)
             }
             cursor.close()

@@ -32,16 +32,14 @@ class FirebaseWriter @Inject
 internal constructor() : FirebaseBase() {
 
     fun login(user: FirebaseUser) {
-        val contact = Contact()
-                .setEmail(user.email!!)
-                .setName(user.displayName!!)
+        val contact = Contact(user.email!!, user.displayName!!)
         writeContact(database.getReference(FirebaseBase.Companion.USER_ROOT), contact)
     }
 
     private fun writeContact(reference: DatabaseReference, contact: Contact) {
-        val email64 = FirebaseBase.Companion.to64(contact.email())
+        val email64 = FirebaseBase.Companion.to64(contact.email!!)
         val localReference = reference.child(email64)
-        localReference.child(FirebaseBase.Companion.DISPLAY_NAME).setValue(contact.name())
+        localReference.child(FirebaseBase.Companion.DISPLAY_NAME).setValue(contact.name!!)
     }
 
     fun writeMyLocation(email: String, latLng: LatLng) {
@@ -50,23 +48,23 @@ internal constructor() : FirebaseBase() {
     }
 
     fun requestFriendship(contact: Contact) {
-        val reference = email2Reference(contact.email()).child(FirebaseBase.Companion.FRIENDSHIP_REQUESTED)
+        val reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_REQUESTED)
         writeContact(reference, NavigatorApplication.loggedInContact)
     }
 
     fun acceptFriendship(contact: Contact) {
-        var reference = email2Reference(contact.email()).child(FirebaseBase.Companion.FRIENDSHIP_ACCEPTED)
+        var reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_ACCEPTED)
         writeContact(reference, NavigatorApplication.loggedInContact)
         reference = email2Reference(NavigatorApplication.loggedInContact
-                .email()).child(FirebaseBase.Companion.FRIENDS)
+                .email!!).child(FirebaseBase.Companion.FRIENDS)
         writeContact(reference, contact)
     }
 
     fun deleteFriendship(contact: Contact) {
-        var reference = email2Reference(contact.email()).child(FirebaseBase.Companion.FRIENDSHIP_DELETED)
+        var reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_DELETED)
         writeContact(reference, NavigatorApplication.loggedInContact)
         reference = email2Reference(NavigatorApplication.loggedInContact
-                .email()).child(FirebaseBase.Companion.FRIENDS)
-        reference.child(FirebaseBase.Companion.to64(contact.email())).removeValue()
+                .email!!).child(FirebaseBase.Companion.FRIENDS)
+        reference.child(FirebaseBase.Companion.to64(contact.email!!)).removeValue()
     }
 }

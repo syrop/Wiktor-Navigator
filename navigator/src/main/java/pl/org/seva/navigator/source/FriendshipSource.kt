@@ -21,7 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.model.ContactsStore
+import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.database.firebase.FirebaseReader
 import pl.org.seva.navigator.presenter.FriendshipListener
 
@@ -30,8 +30,6 @@ class FriendshipSource @Inject internal constructor() {
 
     @Inject
     lateinit var firebaseReader: FirebaseReader
-    @Inject
-    lateinit var contactsStore: ContactsStore
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -46,9 +44,10 @@ class FriendshipSource @Inject internal constructor() {
                 firebaseReader
                         .friendshipDeletedListener()
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
-        firebaseReader
-                .friendsListener()
-                .subscribe { friendshipListener.onFriendRead(it) }
+    }
+
+    fun downloadFriendsFromServer(listener: (Contact) -> Unit) {
+        firebaseReader.readFriendsOnce().subscribe { listener(it) }
     }
 
     fun clearFriendshipListeners() {

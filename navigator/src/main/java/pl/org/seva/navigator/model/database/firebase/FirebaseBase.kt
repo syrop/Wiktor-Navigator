@@ -50,18 +50,12 @@ open class FirebaseBase {
         val FRIENDSHIP_DELETED = "friendship_deleted"
         val FRIENDS = "friends"
 
-        fun to64(str: String): String {
-            return Base64.encodeToString(str.toByteArray(), Base64.NO_WRAP)
-        }
+        fun to64(str: String) : String = Base64.encodeToString(str.toByteArray(), Base64.NO_WRAP)
 
-        fun from64(str: String): String {
-            return String(Base64.decode(str.toByteArray(), Base64.NO_WRAP))
-        }
+        fun from64(str: String) = String(Base64.decode(str.toByteArray(), Base64.NO_WRAP))
 
-        fun latLng2String(latLng: LatLng): String {
-            return String.format(Locale.US, "%.3f", latLng.latitude) + ";" +
+        fun latLng2String(latLng: LatLng) = String.format(Locale.US, "%.3f", latLng.latitude) + ";" +
                     String.format(Locale.US, "%.3f", latLng.longitude)
-        }
 
         fun string2LatLng(str: String): LatLng {
             val semicolon = str.indexOf(';')

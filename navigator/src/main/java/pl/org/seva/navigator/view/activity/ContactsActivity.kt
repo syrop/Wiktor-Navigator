@@ -84,7 +84,7 @@ class ContactsActivity : AppCompatActivity() {
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)
 
-        if (contact.email() != NavigatorApplication.email) {
+        if (contact.email!! != NavigatorApplication.email) {
             intent.putExtra(NavigationActivity.CONTACT, contact)
         }
         setResult(Activity.RESULT_OK, intent)

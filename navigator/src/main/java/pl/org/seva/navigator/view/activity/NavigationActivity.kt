@@ -107,7 +107,7 @@ class NavigationActivity : AppCompatActivity() {
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)
         contact?.let {
-            contactsStore.addContactsUpdatedListener(it.email(), { onContactsUpdated() })
+            contactsStore.addContactsUpdatedListener(it.email!!, { onContactsUpdated() })
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
@@ -127,8 +127,8 @@ class NavigationActivity : AppCompatActivity() {
     private fun contactNameCharSequence() : CharSequence {
         val str = getString(R.string.following_name)
         val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
-        val idEndName = idName + contact!!.name().length
-        val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name()))
+        val idEndName = idName + contact!!.name!!.length
+        val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name!!))
         val boldSpan = StyleSpan(Typeface.BOLD)
         ssBuilder.setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         return ssBuilder
@@ -172,7 +172,7 @@ class NavigationActivity : AppCompatActivity() {
                 onGranted = { map?.isMyLocationEnabled = true },
                 onDenied = {})
         contact?.let {
-            peerLocationSource.addPeerLocationListener(it.email(), { onPeerLocationReceived(it) })
+            peerLocationSource.addPeerLocationListener(it.email!!, { onPeerLocationReceived(it) })
         }
     }
 
@@ -412,7 +412,7 @@ class NavigationActivity : AppCompatActivity() {
             clearMap()
             it.addMarker(MarkerOptions()
                     .position(peerLocation!!)
-                    .title(contact!!.name()))
+                    .title(contact!!.name!!))
                     .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }

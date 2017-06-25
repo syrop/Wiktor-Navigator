@@ -41,7 +41,7 @@ class FriendshipDeleteDialogBuilder(private val context: Context) {
 
     fun build(): Dialog {
         val message = context.getString(R.string.delete_friend_confirmation)
-                .replace(NAME_PLACEHOLDER, contact.name())
+                .replace(NAME_PLACEHOLDER, contact.name!!)
         return AlertDialog.Builder(context)
                 .setCancelable(true)
                 .setTitle(R.string.deleting_friend_title)
