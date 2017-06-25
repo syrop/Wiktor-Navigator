@@ -30,7 +30,7 @@ import java.util.Random
 import javax.inject.Inject
 import javax.inject.Singleton
 
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
@@ -42,7 +42,7 @@ class FriendshipListener @Inject
 internal constructor() {
 
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
     @Inject
     lateinit var sqliteWriter: SqliteWriter
     @Inject
@@ -91,17 +91,17 @@ internal constructor() {
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
-        contactsCache.add(contact)
+        contactsStore.add(contact)
         sqliteWriter.addFriend(contact)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
-        contactsCache.delete(contact)
+        contactsStore.delete(contact)
         sqliteWriter.deleteFriend(contact)
     }
 
     fun onFriendRead(contact: Contact) {
-        contactsCache.add(contact)
+        contactsStore.add(contact)
     }
 
     private inner class FriendshipAcceptedBroadcastReceiver : BroadcastReceiver() {
@@ -111,15 +111,16 @@ internal constructor() {
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
                     as NotificationManager
             notificationManager.cancel(notificationId)
-            val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
-            if (contactsCache.contains(contact)) {
-                return
-            }
-            contactsCache.add(contact)
-            sqliteWriter.addFriend(contact)
-            firebaseWriter.acceptFriendship(contact)
             context.unregisterReceiver(this)
             context.unregisterReceiver(rejectedReceiver)
+            val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
+            if (contactsStore.contains(contact)) {
+                return
+            }
+            contactsStore.add(contact)
+            sqliteWriter.addFriend(contact)
+            firebaseWriter.acceptFriendship(contact)
+
         }
     }
 

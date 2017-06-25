@@ -27,19 +27,19 @@ import javax.inject.Inject
 
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Contact
 
 open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
 
     private val clickSubject = PublishSubject.create<Contact>()
     private val longClickSubject = PublishSubject.create<Contact>()
 
     internal open fun getContact(position: Int): Contact {
-        return contactsCache[position]
+        return contactsStore[position]
     }
 
     override fun onCreateViewHolder(
@@ -78,7 +78,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return contactsCache.size()
+        return contactsStore.size()
     }
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {

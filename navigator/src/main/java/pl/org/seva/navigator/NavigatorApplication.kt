@@ -29,7 +29,7 @@ import pl.org.seva.navigator.model.database.sqlite.SqliteReader
 import pl.org.seva.navigator.model.database.sqlite.SqliteWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.model.Contact
@@ -43,7 +43,7 @@ class NavigatorApplication : Application() {
     @Inject
     lateinit var sqliteReader: SqliteReader
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
     @Inject
     lateinit var myLocationSource: MyLocationSource
     @Inject
@@ -62,7 +62,7 @@ class NavigatorApplication : Application() {
         val helper = DbHelper(this)
         sqliteWriter.setHelper(helper)
         sqliteReader.setHelper(helper)
-        contactsCache.addAll(sqliteReader.friends)
+        contactsStore.addAll(sqliteReader.friends)
         myLocationSource.initGoogleApiClient(this)
         friendshipListener.init(this)
         if (isLoggedIn) {

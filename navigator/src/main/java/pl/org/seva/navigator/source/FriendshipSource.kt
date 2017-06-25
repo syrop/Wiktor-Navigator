@@ -21,7 +21,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.database.firebase.FirebaseReader
 import pl.org.seva.navigator.presenter.FriendshipListener
 
@@ -31,7 +31,7 @@ class FriendshipSource @Inject internal constructor() {
     @Inject
     lateinit var firebaseReader: FirebaseReader
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
 
     private val compositeDisposable = CompositeDisposable()
 

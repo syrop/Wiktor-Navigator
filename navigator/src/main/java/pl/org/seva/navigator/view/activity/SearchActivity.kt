@@ -41,7 +41,7 @@ import javax.inject.Inject
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.database.firebase.FirebaseReader
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.Contact
@@ -56,7 +56,7 @@ class SearchActivity : AppCompatActivity() {
     @Inject
     lateinit var firebaseReader: FirebaseReader
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
 
     private val promptLabel by lazy { findViewById<TextView>(R.id.promptLabel) }
     private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
@@ -179,7 +179,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onContactClicked(contact: Contact) {
-        if (contactsCache.contains(contact)) {
+        if (contactsStore.contains(contact)) {
             finish()
             return
         }

@@ -27,7 +27,7 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.NavigatorApplication
 
 @Singleton
-class ContactsCache @Inject constructor() {
+class ContactsStore @Inject constructor() {
 
     private val contacts: MutableList<Contact>
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()

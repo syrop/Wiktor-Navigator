@@ -31,7 +31,7 @@ import javax.inject.Inject
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
@@ -42,7 +42,7 @@ class ContactsActivity : AppCompatActivity() {
     @Inject
     lateinit var myLocationSource: MyLocationSource
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
 
@@ -57,7 +57,7 @@ class ContactsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_contacts)
         fab.setOnClickListener { onFabClicked() }
 
-        contactsCache.addContactsUpdatedListener { onContactsUpdated() }
+        contactsStore.addContactsUpdatedListener { onContactsUpdated() }
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -101,7 +101,7 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun onDeleteFriendConfirmed(contact: Contact) {
         firebaseWriter.deleteFriendship(contact)
-        contactsCache.delete(contact)
+        contactsStore.delete(contact)
         contactAdapter.notifyDataSetChanged()
     }
 

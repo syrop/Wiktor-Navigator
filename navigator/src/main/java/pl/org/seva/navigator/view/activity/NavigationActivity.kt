@@ -55,7 +55,7 @@ import javax.inject.Inject
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.ContactsCache
+import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
@@ -66,7 +66,7 @@ class NavigationActivity : AppCompatActivity() {
     @Inject
     lateinit var peerLocationSource: PeerLocationSource
     @Inject
-    lateinit var contactsCache: ContactsCache
+    lateinit var contactsStore: ContactsStore
     @Inject
     lateinit var permissionsUtils: PermissionsUtils
     @Inject
@@ -107,7 +107,7 @@ class NavigationActivity : AppCompatActivity() {
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)
         contact?.let {
-            contactsCache.addContactsUpdatedListener(it.email(), { onContactsUpdated() })
+            contactsStore.addContactsUpdatedListener(it.email(), { onContactsUpdated() })
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
