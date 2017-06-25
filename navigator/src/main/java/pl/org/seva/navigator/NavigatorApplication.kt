@@ -77,15 +77,21 @@ class NavigatorApplication : Application() {
     fun login(user: FirebaseUser) {
         setCurrentUser(user)
         setFriendshipListeners()
+        restoreFriendsFromServer()
     }
 
     fun logout() {
         clearFriendshipListeners()
+        contactsStore.clear()
         setCurrentUser(null)
     }
 
     private fun setFriendshipListeners() {
         friendshipSource.addFriendshipListener(friendshipListener)
+    }
+
+    private fun restoreFriendsFromServer() {
+        friendshipSource.downloadFriendsFromServer { contactsStore.add(it) }
     }
 
     private fun clearFriendshipListeners() {
@@ -99,7 +105,7 @@ class NavigatorApplication : Application() {
         var displayName: String? = null
 
         val loggedInContact: Contact
-            get() = Contact().setEmail(email!!).setName(displayName!!)
+            get() = Contact(email!!, displayName!!)
 
         private fun setCurrentUser(user: FirebaseUser?) {
             if (user != null) {

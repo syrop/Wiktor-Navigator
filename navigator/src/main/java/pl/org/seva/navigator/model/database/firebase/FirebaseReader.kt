@@ -71,8 +71,8 @@ internal constructor() : FirebaseBase() {
         if (!snapshot.exists()) {
             return resultContact
         }
-        resultContact.setEmail(FirebaseBase.Companion.from64(snapshot.key))
-        resultContact.setName(snapshot.child(FirebaseBase.Companion.DISPLAY_NAME).value as String)
+        resultContact.email = FirebaseBase.Companion.from64(snapshot.key)
+        resultContact.name = snapshot.child(FirebaseBase.Companion.DISPLAY_NAME).value as String
 
         return resultContact
     }
@@ -96,8 +96,12 @@ internal constructor() : FirebaseBase() {
         return createContactObservable(FirebaseBase.Companion.FRIENDSHIP_DELETED, true)
     }
 
-    fun friendsListener(): Observable<Contact> {
-        return createContactObservable(FirebaseBase.Companion.FRIENDS, false)
+    fun readFriendsOnce(): Observable<Contact> {
+        val reference = currentUserReference().child(FirebaseBase.Companion.FRIENDS)
+        return readDataOnce(reference)
+                .concatMapIterable { it.children }
+                .filter { it.exists() }
+                .map<Contact> { snapshot2Contact(it) }
     }
 
     fun readContactOnceForEmail(email: String): Observable<Contact> {
