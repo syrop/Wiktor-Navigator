@@ -387,11 +387,6 @@ class NavigationActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onDestroy() {
-        deleteMapFragment()
-        super.onDestroy()
-    }
-
     private fun deleteMapFragment() {
         mapFragment?.let {
             fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
