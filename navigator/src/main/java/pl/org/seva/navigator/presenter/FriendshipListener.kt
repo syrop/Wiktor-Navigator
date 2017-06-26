@@ -93,6 +93,7 @@ internal constructor() {
     fun onPeerAcceptedFriendship(contact: Contact) {
         contactsStore.add(contact)
         sqliteWriter.addFriend(contact)
+        firebaseWriter.addFriendship(contact)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {

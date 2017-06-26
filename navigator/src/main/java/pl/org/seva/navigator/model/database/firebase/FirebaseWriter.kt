@@ -53,18 +53,22 @@ internal constructor() : FirebaseBase() {
     }
 
     fun acceptFriendship(contact: Contact) {
-        var reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_ACCEPTED)
+        val reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_ACCEPTED)
         writeContact(reference, NavigatorApplication.loggedInContact)
-        reference = email2Reference(NavigatorApplication.loggedInContact
-                .email!!).child(FirebaseBase.Companion.FRIENDS)
+        addFriendship(contact)
+    }
+
+    fun addFriendship(contact: Contact) {
+        val reference = email2Reference(NavigatorApplication.loggedInContact.email!!)
+                .child(FirebaseBase.Companion.FRIENDS)
         writeContact(reference, contact)
     }
 
     fun deleteFriendship(contact: Contact) {
         var reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_DELETED)
         writeContact(reference, NavigatorApplication.loggedInContact)
-        reference = email2Reference(NavigatorApplication.loggedInContact
-                .email!!).child(FirebaseBase.Companion.FRIENDS)
+        reference = email2Reference(NavigatorApplication.loggedInContact.email!!)
+                .child(FirebaseBase.Companion.FRIENDS)
         reference.child(FirebaseBase.Companion.to64(contact.email!!)).removeValue()
     }
 }
