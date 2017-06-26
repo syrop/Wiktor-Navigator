@@ -341,6 +341,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        stopWatchingContact()
         startActivity(Intent(this, LoginActivity::class.java)
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
     }
