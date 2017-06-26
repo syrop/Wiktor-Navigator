@@ -56,6 +56,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
+import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
@@ -80,7 +81,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private val fab by lazy { findViewById<View>(R.id.fab) }
     private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
-    private val following by lazy { findViewById<TextView>(R.id.following) }
+    private val hud by lazy { findViewById<TextView>(R.id.hud) }
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
@@ -107,7 +108,7 @@ class NavigationActivity : AppCompatActivity() {
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)
         contact?.let {
-            contactsStore.addContactsUpdatedListener(it.email!!, { onContactsUpdated() })
+            contactsStore.addContactsUpdatedListener(it.email!!, { stopWatchingContact() })
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
@@ -117,11 +118,20 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun updateFollowingHud() {
         if (contact == null) {
-            following.visibility = View.GONE
+            hud.visibility = View.GONE
+            hud.setOnTouchListener(null)
         } else {
-            following.visibility = View.VISIBLE
-            following.text = contactNameCharSequence()
+            hud.visibility = View.VISIBLE
+            hud.text = contactNameCharSequence()
+            hud.setOnTouchListener(
+                    OnSwipeListener(this, onLeft = { onHudSwiped() } , onRight = { onHudSwiped() } ))
         }
+    }
+
+    private fun onHudSwiped() {
+        hud.animate().alpha(0.0f).withEndAction { hud.visibility = View.GONE }
+        hud.setOnTouchListener(null)
+        stopWatchingContact()
     }
 
     private fun contactNameCharSequence() : CharSequence {
@@ -257,7 +267,6 @@ class NavigationActivity : AppCompatActivity() {
             } catch (ex: PackageManager.NameNotFoundException) {
                 return ""
             }
-
         }
 
     private fun onSettingsClicked() {
@@ -397,7 +406,7 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
-    private fun onContactsUpdated() {
+    private fun stopWatchingContact() {
         contact = null
         peerLocationSource.clearPeerLocationListeners()
         clearMap()
