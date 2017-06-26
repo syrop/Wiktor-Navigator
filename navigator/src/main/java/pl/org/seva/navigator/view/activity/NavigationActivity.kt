@@ -100,7 +100,7 @@ class NavigationActivity : AppCompatActivity() {
         savedInstanceState?.let {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
-            if (peerLocation != null) {  moveCameraToPeerLocation() }
+            if (peerLocation != null) { moveCameraToPeerLocation() }
         }
 
         (application as NavigatorApplication).component.inject(this)
