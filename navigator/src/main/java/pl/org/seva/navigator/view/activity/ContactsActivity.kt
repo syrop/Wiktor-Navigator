@@ -32,6 +32,7 @@ import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
+import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
@@ -45,6 +46,8 @@ class ContactsActivity : AppCompatActivity() {
     lateinit var contactsStore: ContactsStore
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
+    @Inject
+    lateinit var login: Login
 
     private val contactsRecyclerView by lazy { findViewById<RecyclerView>(R.id.contacts) }
     private val contactAdapter = ContactAdapter()
@@ -84,7 +87,7 @@ class ContactsActivity : AppCompatActivity() {
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)
 
-        if (contact.email!! != NavigatorApplication.email) {
+        if (contact.email!! != login.email) {
             intent.putExtra(NavigationActivity.CONTACT, contact)
         }
         setResult(Activity.RESULT_OK, intent)

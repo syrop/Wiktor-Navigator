@@ -32,7 +32,7 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
-import pl.org.seva.navigator.model.Contact
+import pl.org.seva.navigator.model.Login
 
 class NavigatorApplication : Application() {
 
@@ -50,6 +50,8 @@ class NavigatorApplication : Application() {
     lateinit var friendshipSource: FriendshipSource
     @Inject
     lateinit var friendshipListener: FriendshipListener
+    @Inject
+    lateinit var login: Login
 
     lateinit var component: NavigatorComponent
 
@@ -65,7 +67,7 @@ class NavigatorApplication : Application() {
         contactsStore.addAll(sqliteReader.friends)
         myLocationSource.initGoogleApiClient(this)
         friendshipListener.init(this)
-        if (isLoggedIn) {
+        if (login.isLoggedIn) {
             setFriendshipListeners()
         }
     }
@@ -98,25 +100,15 @@ class NavigatorApplication : Application() {
         friendshipSource.clearFriendshipListeners()
     }
 
-    companion object {
-
-        var isLoggedIn: Boolean = false
-        var email: String? = null
-        var displayName: String? = null
-
-        val loggedInContact: Contact
-            get() = Contact(email!!, displayName!!)
-
-        private fun setCurrentUser(user: FirebaseUser?) {
-            if (user != null) {
-                isLoggedIn = true
-                email = user.email
-                displayName = user.displayName
-            } else {
-                isLoggedIn = false
-                email = null
-                displayName = null
-            }
+    private fun setCurrentUser(user: FirebaseUser?) {
+        if (user != null) {
+            login.isLoggedIn = true
+            login.email = user.email
+            login.displayName = user.displayName
+        } else {
+            login.isLoggedIn = false
+            login.email = null
+            login.displayName = null
         }
     }
 }

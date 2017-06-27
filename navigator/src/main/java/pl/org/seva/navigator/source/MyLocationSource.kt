@@ -33,7 +33,7 @@ import javax.inject.Singleton
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.NavigatorApplication
+import pl.org.seva.navigator.model.Login
 
 @Singleton
 class MyLocationSource @Inject
@@ -44,6 +44,8 @@ internal constructor() :
 
     @Inject
     lateinit var activityRecognitionSource: ActivityRecognitionSource
+    @Inject
+    lateinit var login: Login
 
     private var googleApiClient: GoogleApiClient? = null
     private var locationRequest: LocationRequest? = null
@@ -58,7 +60,7 @@ internal constructor() :
     init {
 
         locationObservable = locationSubject
-                .filter { NavigatorApplication.isLoggedIn }
+                .filter { login.isLoggedIn }
                 .timestamp()
                 .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
                 .doOnNext { lastSentLocationTime = it.time() }

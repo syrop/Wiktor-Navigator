@@ -18,17 +18,10 @@
 package pl.org.seva.navigator
 
 import android.app.*
-import android.arch.lifecycle.LifecycleService
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.os.IBinder
 import com.google.android.gms.maps.model.LatLng
-import pl.org.seva.navigator.NavigatorApplication
-import pl.org.seva.navigator.R
+import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
-import pl.org.seva.navigator.source.ActivityRecognitionSource
-import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import javax.inject.Inject
 
@@ -40,6 +33,8 @@ class NavigatorService : android.arch.lifecycle.LifecycleService() {
     lateinit var myLocationSource : pl.org.seva.navigator.source.MyLocationSource
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
+    @Inject
+    lateinit var login: Login
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
 
@@ -75,7 +70,7 @@ class NavigatorService : android.arch.lifecycle.LifecycleService() {
     }
 
     fun onLocationReceived(latLng: LatLng) {
-        firebaseWriter.writeMyLocation(NavigatorApplication.email!!, latLng)
+        firebaseWriter.writeMyLocation(login.email!!, latLng)
     }
 
     private fun createOngoingNotification(): android.app.Notification {

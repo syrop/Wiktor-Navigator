@@ -24,10 +24,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.NavigatorApplication
 
 @Singleton
 class ContactsStore @Inject constructor() {
+
+    @Inject
+    lateinit var login: Login
 
     private val contacts: MutableList<Contact>
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()
@@ -37,7 +39,7 @@ class ContactsStore @Inject constructor() {
     }
 
     private val me: Contact
-        get() = Contact(NavigatorApplication.email!!, NavigatorApplication.displayName!!)
+        get() = login.loggedInContact
 
     operator fun contains(contact: Contact): Boolean {
         return me == contact || contacts.contains(contact)

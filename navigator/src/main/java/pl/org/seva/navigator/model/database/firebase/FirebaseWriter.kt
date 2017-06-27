@@ -24,7 +24,6 @@ import com.google.firebase.database.DatabaseReference
 import javax.inject.Inject
 import javax.inject.Singleton
 
-import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 
 @Singleton
@@ -49,26 +48,36 @@ internal constructor() : FirebaseBase() {
 
     fun requestFriendship(contact: Contact) {
         val reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_REQUESTED)
-        writeContact(reference, NavigatorApplication.loggedInContact)
+        writeContact(reference, login.loggedInContact)
     }
 
     fun acceptFriendship(contact: Contact) {
         val reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_ACCEPTED)
-        writeContact(reference, NavigatorApplication.loggedInContact)
+        writeContact(reference, login.loggedInContact)
         addFriendship(contact)
     }
 
     fun addFriendship(contact: Contact) {
-        val reference = email2Reference(NavigatorApplication.loggedInContact.email!!)
+        val reference = email2Reference(login.email!!)
                 .child(FirebaseBase.Companion.FRIENDS)
+        deleteMeFromContact(contact, FirebaseBase.Companion.FRIENDSHIP_DELETED)
         writeContact(reference, contact)
     }
 
-    fun deleteFriendship(contact: Contact) {
-        var reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_DELETED)
-        writeContact(reference, NavigatorApplication.loggedInContact)
-        reference = email2Reference(NavigatorApplication.loggedInContact.email!!)
-                .child(FirebaseBase.Companion.FRIENDS)
+    private fun deleteMeFromContact(contact: Contact, tag: String) {
+        val reference = email2Reference(contact.email!!).child(tag)
+        reference.child(FirebaseBase.Companion.to64(login.email!!))
+                .removeValue()
+    }
+
+    private fun deleteContactFromMe(contact: Contact, tag: String) {
+        val reference = email2Reference(login.email!!).child(tag)
         reference.child(FirebaseBase.Companion.to64(contact.email!!)).removeValue()
+    }
+
+    fun deleteFriendship(contact: Contact) {
+        val reference = email2Reference(contact.email!!).child(FirebaseBase.Companion.FRIENDSHIP_DELETED)
+        writeContact(reference, login.loggedInContact)
+        deleteContactFromMe(contact, FirebaseBase.Companion.FRIENDS)
     }
 }

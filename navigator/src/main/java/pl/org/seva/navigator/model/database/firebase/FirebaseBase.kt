@@ -25,14 +25,18 @@ import com.google.firebase.database.FirebaseDatabase
 
 import java.util.Locale
 
-import pl.org.seva.navigator.NavigatorApplication
+import pl.org.seva.navigator.model.Login
+import javax.inject.Inject
 
-open class FirebaseBase {
+open class FirebaseBase protected constructor() {
+
+    @Inject
+    lateinit var login: Login
 
     val database = FirebaseDatabase.getInstance()!!
 
     fun currentUserReference(): DatabaseReference {
-        return email2Reference(NavigatorApplication.email!!)
+        return email2Reference(login.email!!)
     }
 
     fun email2Reference(email: String): DatabaseReference {

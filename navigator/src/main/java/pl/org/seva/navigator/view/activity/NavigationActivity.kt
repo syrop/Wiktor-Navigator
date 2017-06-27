@@ -56,6 +56,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
+import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource
@@ -72,6 +73,8 @@ class NavigationActivity : AppCompatActivity() {
     lateinit var permissionsUtils: PermissionsUtils
     @Inject
     lateinit var myLocationSource: MyLocationSource
+    @Inject
+    lateinit var login: Login
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -147,7 +150,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun onFabClicked() {
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
-        } else if (NavigatorApplication.isLoggedIn) {
+        } else if (login.isLoggedIn) {
             startActivityForResult(Intent(this, ContactsActivity::class.java), CONTACTS_ACTIVITY_ID)
         } else {
             showLoginSnackbar()
@@ -206,8 +209,8 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.action_help).isVisible =
-                !isLocationPermissionGranted || !NavigatorApplication.isLoggedIn
-        menu.findItem(R.id.action_logout).isVisible = NavigatorApplication.isLoggedIn
+                !isLocationPermissionGranted || !login.isLoggedIn
+        menu.findItem(R.id.action_logout).isVisible = login.isLoggedIn
         return true
     }
 
@@ -220,7 +223,7 @@ class NavigationActivity : AppCompatActivity() {
             R.id.action_help -> {
                 if (!isLocationPermissionGranted) {
                     showLocationPermissionHelp()
-                } else if (!NavigatorApplication.isLoggedIn) {
+                } else if (!login.isLoggedIn) {
                     showLoginHelp()
                 }
                 return true
@@ -299,7 +302,7 @@ class NavigationActivity : AppCompatActivity() {
         invalidateOptionsMenu()
         map?.isMyLocationEnabled = true
         myLocationSource.onLocationGranted(applicationContext)
-        if (!NavigatorApplication.isLoggedIn) {
+        if (!login.isLoggedIn) {
             showLoginSnackbar()
         }
     }
@@ -363,7 +366,7 @@ class NavigationActivity : AppCompatActivity() {
         checkLocationPermission(
                 onGranted = {
                     snackbar?.dismiss()
-                    if (!NavigatorApplication.isLoggedIn) {
+                    if (!login.isLoggedIn) {
                         showLoginSnackbar()
                     }},
                 onDenied = {})
