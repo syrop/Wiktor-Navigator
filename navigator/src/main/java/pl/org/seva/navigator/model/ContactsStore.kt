@@ -38,12 +38,7 @@ class ContactsStore @Inject constructor() {
         contacts = ArrayList<Contact>()
     }
 
-    private val me: Contact
-        get() = login.loggedInContact
-
-    operator fun contains(contact: Contact): Boolean {
-        return me == contact || contacts.contains(contact)
-    }
+    operator fun contains(contact: Contact) = contacts.contains(contact)
 
     fun add(contact: Contact) {
         if (contacts.contains(contact)) {
@@ -66,13 +61,9 @@ class ContactsStore @Inject constructor() {
 
     fun clear() = contacts.clear()
 
-    operator fun get(position: Int): Contact {
-        return if (position == 0) me else contacts[position - 1]
-    }
+    operator fun get(position: Int) = contacts[position]
 
-    fun size(): Int {
-        return contacts.size + 1
-    }
+    fun size() = contacts.size
 
     fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {
         contactsUpdatedSubject
