@@ -25,8 +25,8 @@ import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 import pl.org.seva.navigator.model.database.sqlite.DbHelper
-import pl.org.seva.navigator.model.database.sqlite.SqliteReader
-import pl.org.seva.navigator.model.database.sqlite.SqliteWriter
+import pl.org.seva.navigator.model.database.sqlite.SqlReader
+import pl.org.seva.navigator.model.database.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.model.ContactsStore
@@ -39,9 +39,9 @@ class NavigatorApplication : Application() {
     @Inject
     lateinit var activityRecognitionSource: ActivityRecognitionSource
     @Inject
-    lateinit var sqliteWriter: SqliteWriter
+    lateinit var sqlWriter: SqlWriter
     @Inject
-    lateinit var sqliteReader: SqliteReader
+    lateinit var sqlReader: SqlReader
     @Inject
     lateinit var contactsStore: ContactsStore
     @Inject
@@ -62,9 +62,9 @@ class NavigatorApplication : Application() {
         setCurrentUser(FirebaseAuth.getInstance().currentUser)
         activityRecognitionSource.initGoogleApiClient(this)
         val helper = DbHelper(this)
-        sqliteWriter.setHelper(helper)
-        sqliteReader.setHelper(helper)
-        contactsStore.addAll(sqliteReader.friends)
+        sqlWriter.setHelper(helper)
+        sqlReader.setHelper(helper)
+        contactsStore.addAll(sqlReader.friends)
         myLocationSource.initGoogleApiClient(this)
         friendshipListener.init(this)
         if (login.isLoggedIn) {

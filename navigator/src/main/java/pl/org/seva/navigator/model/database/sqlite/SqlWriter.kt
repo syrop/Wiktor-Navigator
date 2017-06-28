@@ -26,7 +26,7 @@ import javax.inject.Singleton
 import pl.org.seva.navigator.model.Contact
 
 @Singleton
-class SqliteWriter @Inject
+class SqlWriter @Inject
 internal constructor() {
 
     private lateinit var helper: DbHelper
@@ -38,8 +38,8 @@ internal constructor() {
     fun addFriend(contact: Contact) {
         val db = helper.writableDatabase
         val cv = ContentValues()
-        cv.put(DbHelper.NAME_COLUMN_NAME, contact.name!!)
         cv.put(DbHelper.EMAIL_COLUMN_NAME, contact.email!!)
+        cv.put(DbHelper.NAME_COLUMN_NAME, contact.name!!)
         db.insertWithOnConflict(
                 DbHelper.FRIENDS_TABLE_NAME,
                 null,

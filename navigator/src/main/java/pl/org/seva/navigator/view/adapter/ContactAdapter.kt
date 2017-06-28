@@ -37,7 +37,6 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     lateinit var contactsStore: ContactsStore
 
     private val clickSubject = PublishSubject.create<Contact>()
-    private val swipeSubject = PublishSubject.create<Contact>()
 
     internal open fun getContact(position: Int): Contact {
         return contactsStore[position]
@@ -63,10 +62,6 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     fun addClickListener(contactClickListener: (contact : Contact) -> Unit) {
         clickSubject.subscribe { contactClickListener(it) }
-    }
-
-    fun addSwipeListener(swipeListener: (contact : Contact) -> Unit) {
-        swipeSubject.subscribe { swipeListener(it) }
     }
 
     override fun getItemCount(): Int {

@@ -34,7 +34,7 @@ import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
-import pl.org.seva.navigator.model.database.sqlite.SqliteWriter
+import pl.org.seva.navigator.model.database.sqlite.SqlWriter
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder
 
 @Singleton
@@ -44,7 +44,7 @@ internal constructor() {
     @Inject
     lateinit var contactsStore: ContactsStore
     @Inject
-    lateinit var sqliteWriter: SqliteWriter
+    lateinit var sqlWriter: SqlWriter
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
     lateinit var acceptedReceiver: BroadcastReceiver
@@ -92,13 +92,13 @@ internal constructor() {
 
     fun onPeerAcceptedFriendship(contact: Contact) {
         contactsStore.add(contact)
-        sqliteWriter.addFriend(contact)
+        sqlWriter.addFriend(contact)
         firebaseWriter.addFriendship(contact)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
         contactsStore.delete(contact)
-        sqliteWriter.deleteFriend(contact)
+        sqlWriter.deleteFriend(contact)
     }
 
     private inner class FriendshipAcceptedBroadcastReceiver : BroadcastReceiver() {
@@ -115,7 +115,7 @@ internal constructor() {
                 return
             }
             contactsStore.add(contact)
-            sqliteWriter.addFriend(contact)
+            sqlWriter.addFriend(contact)
             firebaseWriter.acceptFriendship(contact)
 
         }

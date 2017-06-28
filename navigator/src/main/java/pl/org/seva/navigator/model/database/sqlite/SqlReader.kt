@@ -25,7 +25,7 @@ import javax.inject.Singleton
 import pl.org.seva.navigator.model.Contact
 
 @Singleton
-class SqliteReader @Inject internal constructor() {
+class SqlReader @Inject internal constructor() {
 
     private var helper: DbHelper? = null
 
@@ -37,14 +37,14 @@ class SqliteReader @Inject internal constructor() {
         get() {
             val result = ArrayList<Contact>()
             val db = helper!!.readableDatabase
-            val projection = arrayOf(DbHelper.NAME_COLUMN_NAME, DbHelper.EMAIL_COLUMN_NAME)
+            val projection = arrayOf(DbHelper.EMAIL_COLUMN_NAME, DbHelper.NAME_COLUMN_NAME)
             val cursor = db.query(
                     DbHelper.FRIENDS_TABLE_NAME,
                     projection,
                     null, null, null, null, null)
 
             while (cursor.moveToNext()) {
-                val contact = Contact(cursor.getString(0), cursor.getString(1))
+                val contact = Contact(email = cursor.getString(0), name = cursor.getString(1))
                 result.add(contact)
             }
             cursor.close()
