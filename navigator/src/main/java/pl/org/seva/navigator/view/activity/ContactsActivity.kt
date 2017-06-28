@@ -20,6 +20,7 @@ package pl.org.seva.navigator.view.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -54,6 +55,7 @@ class ContactsActivity : AppCompatActivity() {
     private val contactAdapter = ContactAdapter()
     private val component by lazy { (application as NavigatorApplication).component }
     private val fab by lazy { findViewById<View>(R.id.fab) }
+    private var snackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,10 +102,17 @@ class ContactsActivity : AppCompatActivity() {
         deleteFriend(contact)
     }
 
+    private fun undelete(contact: Contact) {
+        firebaseWriter.addFriendship(contact)
+        contactsStore.add(contact)
+        contactAdapter.notifyDataSetChanged()
+    }
+
     private fun deleteFriend(contact: Contact) {
         firebaseWriter.deleteFriendship(contact)
         contactsStore.delete(contact)
         contactAdapter.notifyDataSetChanged()
+        showUndeleteSnackbar(contact)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -118,5 +127,14 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun onContactsUpdated() {
         contactAdapter.notifyDataSetChanged()
+    }
+
+    private fun showUndeleteSnackbar(contact: Contact) {
+        snackbar = Snackbar.make(
+                contactsRecyclerView,
+                R.string.deleted_contact,
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.undelete) { undelete(contact) }
+        snackbar!!.show()
     }
 }

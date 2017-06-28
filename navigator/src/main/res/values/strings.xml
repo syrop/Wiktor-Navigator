@@ -14,6 +14,8 @@
 
     <!-- Contacts activity -->
     <string name="contacts_activity_label">Contacts</string>
+    <string name="deleted_contact">Contact deleted</string>
+    <string name="undelete">Undelete</string>
 
     <!-- Navigation activity. -->
     <string name="navigation_activity_label">Navigation</string>
