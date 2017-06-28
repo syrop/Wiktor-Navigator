@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.view.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     lateinit var contactsStore: ContactsStore
 
     private val clickSubject = PublishSubject.create<Contact>()
-    private val longClickSubject = PublishSubject.create<Contact>()
+    private val swipeSubject = PublishSubject.create<Contact>()
 
     internal open fun getContact(position: Int): Contact {
         return contactsStore[position]
@@ -54,27 +55,18 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
         holder.name.text = contact.name!!
         holder.email.text = contact.email!!
         holder.view.setOnClickListener { onItemClick(position) }
-        holder.view.setOnLongClickListener { onItemLongClick(position) }
     }
 
     private fun onItemClick(position: Int) {
         clickSubject.onNext(getContact(position))
     }
 
-    private fun onItemLongClick(position: Int): Boolean {
-        if (position == 0) {
-            return false
-        }
-        longClickSubject.onNext(getContact(position))
-        return true
-    }
-
     fun addClickListener(contactClickListener: (contact : Contact) -> Unit) {
         clickSubject.subscribe { contactClickListener(it) }
     }
 
-    fun addLongClickListener(contactLongClickListener: (contact : Contact) -> Unit) {
-        longClickSubject.subscribe { contactLongClickListener.invoke(it) }
+    fun addSwipeListener(swipeListener: (contact : Contact) -> Unit) {
+        swipeSubject.subscribe { swipeListener(it) }
     }
 
     override fun getItemCount(): Int {

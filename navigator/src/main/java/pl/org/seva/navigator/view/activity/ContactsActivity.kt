@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.MenuItem
 import android.view.View
 
@@ -34,9 +35,9 @@ import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
+import pl.org.seva.navigator.presenter.ContactTouchHelperCallback
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
-import pl.org.seva.navigator.view.builder.dialog.FriendshipDeleteDialogBuilder
 
 class ContactsActivity : AppCompatActivity() {
 
@@ -76,12 +77,12 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun initContactsRecyclerView() {
         contactsRecyclerView.setHasFixedSize(true)
-        val lm = LinearLayoutManager(this)
-        contactsRecyclerView.layoutManager = lm
+        contactsRecyclerView.layoutManager = LinearLayoutManager(this)
         component.inject(contactAdapter)
         contactAdapter.addClickListener { onContactClicked(it) }
-        contactAdapter.addLongClickListener { onContactLongClicked(it) }
         contactsRecyclerView.adapter = contactAdapter
+        ItemTouchHelper(ContactTouchHelperCallback { onContactSwiped(it) } )
+                .attachToRecyclerView(contactsRecyclerView)
     }
 
     private fun onContactClicked(contact: Contact) {
@@ -94,15 +95,12 @@ class ContactsActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onContactLongClicked(contact: Contact) {
-        FriendshipDeleteDialogBuilder(this)
-                .setContact(contact)
-                .setOnConfirmedAction { onDeleteFriendConfirmed(contact) }
-                .build()
-                .show()
+    private fun onContactSwiped(position: Int) {
+        val contact = contactsStore[position]
+        deleteFriend(contact)
     }
 
-    private fun onDeleteFriendConfirmed(contact: Contact) {
+    private fun deleteFriend(contact: Contact) {
         firebaseWriter.deleteFriendship(contact)
         contactsStore.delete(contact)
         contactAdapter.notifyDataSetChanged()
