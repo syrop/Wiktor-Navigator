@@ -21,14 +21,14 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 
 class ContactTouchHelperCallback (val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
-    override fun getMovementFlags(p0: RecyclerView?, p1: RecyclerView.ViewHolder?) =
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) =
             makeMovementFlags(0, ItemTouchHelper.START or ItemTouchHelper.END)
 
-    override fun onMove(p0: RecyclerView?, p1: RecyclerView.ViewHolder?,
-                        p2: RecyclerView.ViewHolder?) = false
+    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder) = false
 
-    override fun onSwiped(p0: RecyclerView.ViewHolder?, p1: Int) {
-        onItemSwiped(p1)
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        onItemSwiped(viewHolder.adapterPosition)
     }
 
     override fun isLongPressDragEnabled() = false
