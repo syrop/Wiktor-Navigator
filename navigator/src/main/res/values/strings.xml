@@ -14,8 +14,9 @@
 
     <!-- Contacts activity -->
     <string name="contacts_activity_label">Contacts</string>
-    <string name="deleted_contact">Contact deleted</string>
-    <string name="undelete">Undelete</string>
+    <string name="contacts_deleted_contact">Contact deleted</string>
+    <string name="contacts_undelete">Undelete</string>
+    <string name="contacts_please_press_plus">Please press + to search for contacts.</string>
 
     <!-- Navigation activity. -->
     <string name="navigation_activity_label">Navigation</string>
@@ -23,7 +24,7 @@
     <string name="snackbar_retry">Retry</string>
     <string name="snackbar_login">Log in</string>
     <string name="snackbar_please_log_in">Please log in</string>
-    <string name="following_name">Following [name]</string>
+    <string name="navigation_following_name">Following [name]</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>

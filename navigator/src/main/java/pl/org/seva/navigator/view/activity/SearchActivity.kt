@@ -58,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
     @Inject
     lateinit var contactsStore: ContactsStore
 
-    private val promptLabel by lazy { findViewById<TextView>(R.id.promptLabel) }
+    private val promptLabel by lazy { findViewById<TextView>(R.id.prompt) }
     private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
 
     private var progress: ProgressDialog? = null

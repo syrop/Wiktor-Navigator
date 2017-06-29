@@ -19,14 +19,19 @@ package pl.org.seva.navigator.view.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 
 import javax.inject.Inject
 
@@ -36,6 +41,7 @@ import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.database.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.ContactTouchHelperCallback
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
@@ -50,11 +56,14 @@ class ContactsActivity : AppCompatActivity() {
     lateinit var firebaseWriter: FirebaseWriter
     @Inject
     lateinit var login: Login
+    @Inject
+    lateinit var sqlWriter: SqlWriter
 
-    private val contactsRecyclerView by lazy { findViewById<RecyclerView>(R.id.contacts) }
-    private val contactAdapter = ContactAdapter()
+    private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
+    private val adapter = ContactAdapter()
     private val component by lazy { (application as NavigatorApplication).component }
     private val fab by lazy { findViewById<View>(R.id.fab) }
+    private val prompt by lazy { findViewById<TextView>(R.id.prompt)}
     private var snackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,8 +78,19 @@ class ContactsActivity : AppCompatActivity() {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
         }
-
+        setPromptLabelText()
         initContactsRecyclerView()
+        promptOrRecyclerView()
+    }
+
+    private fun promptOrRecyclerView() {
+        if (contactsStore.size() > 0) {
+            contacts.visibility = View.VISIBLE
+            prompt.visibility = View.GONE
+        } else {
+            contacts.visibility = View.GONE
+            prompt.visibility = View.VISIBLE
+        }
     }
 
     private fun onFabClicked() {
@@ -78,13 +98,13 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun initContactsRecyclerView() {
-        contactsRecyclerView.setHasFixedSize(true)
-        contactsRecyclerView.layoutManager = LinearLayoutManager(this)
-        component.inject(contactAdapter)
-        contactAdapter.addClickListener { onContactClicked(it) }
-        contactsRecyclerView.adapter = contactAdapter
+        contacts.setHasFixedSize(true)
+        contacts.layoutManager = LinearLayoutManager(this)
+        component.inject(adapter)
+        adapter.addClickListener { onContactClicked(it) }
+        contacts.adapter = adapter
         ItemTouchHelper(ContactTouchHelperCallback { onContactSwiped(it) } )
-                .attachToRecyclerView(contactsRecyclerView)
+                .attachToRecyclerView(contacts)
     }
 
     private fun onContactClicked(contact: Contact) {
@@ -100,19 +120,36 @@ class ContactsActivity : AppCompatActivity() {
     private fun onContactSwiped(position: Int) {
         val contact = contactsStore[position]
         deleteFriend(contact)
+        promptOrRecyclerView()
     }
 
-    private fun undelete(contact: Contact) {
-        firebaseWriter.addFriendship(contact)
-        contactsStore.add(contact)
-        contactAdapter.notifyDataSetChanged()
+    private fun onUndeleteClicked(contact: Contact) {
+        undeleteFriend(contact)
+        promptOrRecyclerView()
     }
 
     private fun deleteFriend(contact: Contact) {
         firebaseWriter.deleteFriendship(contact)
         contactsStore.delete(contact)
-        contactAdapter.notifyDataSetChanged()
+        sqlWriter.deleteFriend(contact)
+        adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
+    }
+
+    private fun undeleteFriend(contact: Contact) {
+        firebaseWriter.addFriendship(contact)
+        contactsStore.add(contact)
+        sqlWriter.addFriend(contact)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun setPromptLabelText() {
+        val str = getString(R.string.contacts_please_press_plus)
+        val idPlus = str.indexOf('+')
+        val boldSpan = StyleSpan(Typeface.BOLD)
+        val ssBuilder = SpannableStringBuilder(str)
+        ssBuilder.setSpan(boldSpan, idPlus, idPlus + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        prompt.text = ssBuilder
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -126,15 +163,15 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun onContactsUpdated() {
-        contactAdapter.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     private fun showUndeleteSnackbar(contact: Contact) {
         snackbar = Snackbar.make(
-                contactsRecyclerView,
-                R.string.deleted_contact,
+                contacts,
+                R.string.contacts_deleted_contact,
                 Snackbar.LENGTH_LONG)
-                .setAction(R.string.undelete) { undelete(contact) }
+                .setAction(R.string.contacts_undelete) { onUndeleteClicked(contact) }
         snackbar!!.show()
     }
 }

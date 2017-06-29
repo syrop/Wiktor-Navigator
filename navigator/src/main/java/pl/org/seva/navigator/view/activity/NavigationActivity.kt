@@ -138,7 +138,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun contactNameCharSequence() : CharSequence {
-        val str = getString(R.string.following_name)
+        val str = getString(R.string.navigation_following_name)
         val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name!!.length
         val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name!!))
