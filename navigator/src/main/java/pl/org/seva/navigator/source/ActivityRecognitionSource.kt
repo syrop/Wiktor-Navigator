@@ -30,7 +30,6 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
-import io.reactivex.disposables.CompositeDisposable
 
 import java.lang.ref.WeakReference
 
