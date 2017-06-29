@@ -8,6 +8,7 @@
     <string name="action_logout">Logout</string>
     <string name="action_search">Search</string>
     <string name="action_help">Help</string>
+    <string name="action_delete_user">Delete your user</string>
 
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
@@ -31,6 +32,11 @@
     <string name="login_loading">Loading…</string>
     <string name="login_please_log_in">Please log in.</string>
     <string name="contacts_please_log_in">Please log in.</string>
+
+    <!-- Delete user activity. -->
+    <string name="delete_user_activity_label">Delete your profile</string>
+    <string name="delete_user_cancel">Cancel</string>
+    <string name="delete_user_ok">Ok</string>
 
     <!-- Search activity. -->
     <string name="search_activity_label">Add a new user</string>

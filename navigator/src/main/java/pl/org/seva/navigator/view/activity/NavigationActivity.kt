@@ -57,6 +57,8 @@ import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.database.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource
@@ -75,6 +77,10 @@ class NavigationActivity : AppCompatActivity() {
     lateinit var myLocationSource: MyLocationSource
     @Inject
     lateinit var login: Login
+    @Inject
+    lateinit var sqlWriter: SqlWriter
+    @Inject
+    lateinit var firebaseWriter: FirebaseWriter
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -111,7 +117,7 @@ class NavigationActivity : AppCompatActivity() {
 
         contact = intent.getParcelableExtra<Contact>(CONTACT)
         contact?.let {
-            contactsStore.addContactsUpdatedListener(it.email!!, { stopWatchingContact() })
+            contactsStore.addContactsUpdatedListener(it.email!!, { stopWatchingPeer() })
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
@@ -134,7 +140,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun onHudSwiped() {
         hud.animate().alpha(0.0f).withEndAction { hud.visibility = View.GONE }
         hud.setOnTouchListener(null)
-        stopWatchingContact()
+        stopWatchingPeer()
     }
 
     private fun contactNameCharSequence() : CharSequence {
@@ -151,19 +157,27 @@ class NavigationActivity : AppCompatActivity() {
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
         } else if (login.isLoggedIn) {
-            startActivityForResult(Intent(this, ContactsActivity::class.java), CONTACTS_ACTIVITY_ID)
+            startActivityForResult(Intent(this, ContactsActivity::class.java), CONTACTS_ACTIVITY_REQUEST_ID)
         } else {
             showLoginSnackbar()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CONTACTS_ACTIVITY_ID && resultCode == Activity.RESULT_OK) {
-            contact = data?.getParcelableExtra(CONTACT)
-            updateFollowingHud()
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            CONTACTS_ACTIVITY_REQUEST_ID -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    contact = data?.getParcelableExtra(CONTACT)
+                    updateFollowingHud()
+                }
+            }
+            DELETE_USER_REQUEST_ID -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    deleteUser()
+                }
+            }
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun moveCameraToPeerLocation() {
@@ -211,6 +225,7 @@ class NavigationActivity : AppCompatActivity() {
         menu.findItem(R.id.action_help).isVisible =
                 !isLocationPermissionGranted || !login.isLoggedIn
         menu.findItem(R.id.action_logout).isVisible = login.isLoggedIn
+        menu.findItem(R.id.action_delete_user).isVisible = login.isLoggedIn
         return true
     }
 
@@ -218,6 +233,10 @@ class NavigationActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_logout -> {
                 logout()
+                return true
+            }
+            R.id.action_delete_user -> {
+                onDeleteUserClicked()
                 return true
             }
             R.id.action_help -> {
@@ -344,9 +363,22 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        stopWatchingContact()
+        stopWatchingPeer()
         startActivity(Intent(this, LoginActivity::class.java)
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
+    }
+
+    private fun deleteUser() {
+        stopWatchingPeer()
+        contactsStore.clear()
+        sqlWriter.deleteAllFriends()
+        firebaseWriter.deleteMe()
+        logout()
+    }
+
+    private fun onDeleteUserClicked() {
+        val intent = Intent(this, DeleteUserActivity::class.java)
+        startActivityForResult(intent, DELETE_USER_REQUEST_ID)
     }
 
     private fun onCameraIdle() {
@@ -405,7 +437,7 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
-    private fun stopWatchingContact() {
+    private fun stopWatchingPeer() {
         contact = null
         peerLocationSource.clearPeerLocationListeners()
         clearMap()
@@ -427,7 +459,10 @@ class NavigationActivity : AppCompatActivity() {
 
     companion object {
 
-        val CONTACT_NAME_PLACEHOLDER = "[name]"
+        private val CONTACT_NAME_PLACEHOLDER = "[name]"
+
+        private val DELETE_USER_REQUEST_ID = 0
+        private val CONTACTS_ACTIVITY_REQUEST_ID = 1
 
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f
@@ -448,7 +483,5 @@ class NavigationActivity : AppCompatActivity() {
 
         private val ZOOM_PROPERTY_NAME = "navigation_map_zoom"
         private val DEFAULT_ZOOM = 7.5f
-
-        private val CONTACTS_ACTIVITY_ID = 1
     }
 }

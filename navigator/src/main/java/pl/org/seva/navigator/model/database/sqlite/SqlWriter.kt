@@ -55,4 +55,9 @@ internal constructor() {
         db.delete(DbHelper.FRIENDS_TABLE_NAME, query, args)
         db.close()
     }
+
+    fun deleteAllFriends() {
+        val db = helper.writableDatabase
+        db.delete(DbHelper.FRIENDS_TABLE_NAME, null, null)
+    }
 }

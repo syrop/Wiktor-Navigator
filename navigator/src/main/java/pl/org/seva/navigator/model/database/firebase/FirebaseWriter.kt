@@ -80,4 +80,9 @@ internal constructor() : FirebaseBase() {
         writeContact(reference, login.loggedInContact)
         deleteContactFromMe(contact, FirebaseBase.Companion.FRIENDS)
     }
+
+    fun deleteMe() {
+        val reference = email2Reference(login.email!!)
+        reference.removeValue()
+    }
 }
