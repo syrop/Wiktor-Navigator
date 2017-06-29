@@ -8,7 +8,7 @@
     <string name="action_logout">Logout</string>
     <string name="action_search">Search</string>
     <string name="action_help">Help</string>
-    <string name="action_delete_user">Delete your user</string>
+    <string name="action_delete_user">Delete your profile</string>
 
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
@@ -35,8 +35,9 @@
 
     <!-- Delete user activity. -->
     <string name="delete_user_activity_label">Delete your profile</string>
+    <string name="delete_description">When you delete your profile, it is going to be deleted both from the server and the device immediately, along with your friends list and your last location.\n\nYour details may still be present in contact lists of your friends. It is recommended that you unfriend them before deleting your profile here.\n\nWhen you log back in, your profile will be created again, but all data it previously contained will be lost.</string>
     <string name="delete_user_cancel">Cancel</string>
-    <string name="delete_user_ok">Ok</string>
+    <string name="delete_user_ok">OK</string>
 
     <!-- Search activity. -->
     <string name="search_activity_label">Add a new user</string>
