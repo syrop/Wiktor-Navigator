@@ -117,7 +117,6 @@ internal constructor() {
             contactsStore.add(contact)
             sqlWriter.addFriend(contact)
             firebaseWriter.acceptFriendship(contact)
-
         }
     }
 
