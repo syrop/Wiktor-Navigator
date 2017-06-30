@@ -53,11 +53,11 @@ internal constructor() : FirebaseBase() {
 
     private fun readData(reference: DatabaseReference): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
-        val `val` = RxValueEventListener(resultSubject)
+        val value = RxValueEventListener(resultSubject)
 
         return resultSubject
-                .doOnSubscribe { reference.addValueEventListener(`val`) }
-                .doOnDispose { reference.removeEventListener(`val`) }
+                .doOnSubscribe { reference.addValueEventListener(value) }
+                .doOnDispose { reference.removeEventListener(value) }
     }
 
     private fun childListener(reference: DatabaseReference): Observable<DataSnapshot> {
@@ -79,6 +79,7 @@ internal constructor() : FirebaseBase() {
 
     fun peerLocationListener(email: String): Observable<LatLng> {
         return readData(email2Reference(email).child(FirebaseBase.Companion.LAT_LNG))
+                .filter { it.value != null }
                 .map<Any> { it.value }
                 .map { it as String }
                 .map<LatLng> { FirebaseBase.string2LatLng(it) }

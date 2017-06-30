@@ -27,9 +27,6 @@ internal class RxValueEventListener(private val valueEventSubject: PublishSubjec
         ValueEventListener {
 
     override fun onDataChange(dataSnapshot: DataSnapshot?) {
-        if (dataSnapshot == null) {
-            return
-        }
         valueEventSubject.onNext(dataSnapshot)
     }
 
