@@ -85,9 +85,11 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun promptOrRecyclerView() {
         if (contactsStore.size() > 0) {
+            println("wiktor recycler view")
             contacts.visibility = View.VISIBLE
             prompt.visibility = View.GONE
         } else {
+            println("wiktor prompt")
             contacts.visibility = View.GONE
             prompt.visibility = View.VISIBLE
         }
@@ -138,6 +140,7 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun undeleteFriend(contact: Contact) {
         firebaseWriter.addFriendship(contact)
+        firebaseWriter.acceptFriendship(contact)
         contactsStore.add(contact)
         sqlWriter.addFriend(contact)
         adapter.notifyDataSetChanged()
@@ -164,6 +167,7 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun onContactsUpdated() {
         adapter.notifyDataSetChanged()
+        promptOrRecyclerView()
     }
 
     private fun showUndeleteSnackbar(contact: Contact) {
