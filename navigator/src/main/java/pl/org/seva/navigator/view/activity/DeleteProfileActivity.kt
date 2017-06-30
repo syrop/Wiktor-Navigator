@@ -23,7 +23,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.org.seva.navigator.R
 
-class DeleteUserActivity : AppCompatActivity() {
+class DeleteProfileActivity : AppCompatActivity() {
 
     private val cancel by lazy { findViewById<View>(R.id.cancel)}
     private val ok by lazy { findViewById<View>(R.id.ok) }

@@ -37,7 +37,7 @@
             android:label="@string/app_name" />
 
         <activity
-            android:name=".view.activity.DeleteUserActivity"
+            android:name=".view.activity.DeleteProfileActivity"
             android:label="@string/delete_user_activity_label" />
 
         <activity

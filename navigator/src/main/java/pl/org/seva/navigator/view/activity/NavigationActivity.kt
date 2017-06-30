@@ -377,7 +377,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun onDeleteUserClicked() {
-        val intent = Intent(this, DeleteUserActivity::class.java)
+        val intent = Intent(this, DeleteProfileActivity::class.java)
         startActivityForResult(intent, DELETE_USER_REQUEST_ID)
     }
 
