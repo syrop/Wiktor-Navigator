@@ -26,7 +26,10 @@ import io.reactivex.subjects.PublishSubject
 internal class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) :
         ValueEventListener {
 
-    override fun onDataChange(dataSnapshot: DataSnapshot) {
+    override fun onDataChange(dataSnapshot: DataSnapshot?) {
+        if (dataSnapshot == null) {
+            return
+        }
         valueEventSubject.onNext(dataSnapshot)
     }
 
