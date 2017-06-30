@@ -85,11 +85,9 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun promptOrRecyclerView() {
         if (contactsStore.size() > 0) {
-            println("wiktor recycler view")
             contacts.visibility = View.VISIBLE
             prompt.visibility = View.GONE
         } else {
-            println("wiktor prompt")
             contacts.visibility = View.GONE
             prompt.visibility = View.VISIBLE
         }
