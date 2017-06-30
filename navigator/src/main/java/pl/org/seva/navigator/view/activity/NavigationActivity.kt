@@ -154,6 +154,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun onFabClicked() {
+        stopWatchingPeer()
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
         } else if (login.isLoggedIn) {
