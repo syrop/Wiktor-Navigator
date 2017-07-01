@@ -64,7 +64,7 @@ internal constructor() :
                 .timestamp()
                 .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
                 .doOnNext { lastSentLocationTime = it.time() }
-                .map<LatLng> { it.value() }
+                .map { it.value() }
     }
 
     fun onLocationGranted(applicationContext: Context) {

@@ -39,7 +39,7 @@ internal constructor() : FirebaseBase() {
                 .concatMapIterable<DataSnapshot> { it.children }
                 .concatWith(childListener(reference))
                 .doOnNext { if (delete) reference.child(it.key).removeValue() }
-                .map<Contact>({ snapshot2Contact(it) })
+                .map({ snapshot2Contact(it) })
     }
 
     private fun readDataOnce(reference: DatabaseReference): Observable<DataSnapshot> {
@@ -80,9 +80,9 @@ internal constructor() : FirebaseBase() {
     fun peerLocationListener(email: String): Observable<LatLng> {
         return readData(email2Reference(email).child(FirebaseBase.Companion.LAT_LNG))
                 .filter { it.value != null }
-                .map<Any> { it.value }
+                .map { it.value!! }
                 .map { it as String }
-                .map<LatLng> { FirebaseBase.string2LatLng(it) }
+                .map { FirebaseBase.string2LatLng(it) }
     }
 
     fun friendshipRequestedListener(): Observable<Contact> {
@@ -102,11 +102,11 @@ internal constructor() : FirebaseBase() {
         return readDataOnce(reference)
                 .concatMapIterable { it.children }
                 .filter { it.exists() }
-                .map<Contact> { snapshot2Contact(it) }
+                .map { snapshot2Contact(it) }
     }
 
     fun readContactOnceForEmail(email: String): Observable<Contact> {
         return readDataOnce(email2Reference(email))
-                .map<Contact> { snapshot2Contact(it) }
+                .map { snapshot2Contact(it) }
     }
 }
