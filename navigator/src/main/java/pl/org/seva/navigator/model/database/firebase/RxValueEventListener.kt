@@ -27,7 +27,9 @@ internal class RxValueEventListener(private val valueEventSubject: PublishSubjec
         ValueEventListener {
 
     override fun onDataChange(dataSnapshot: DataSnapshot?) {
-        valueEventSubject.onNext(dataSnapshot)
+        if (dataSnapshot != null) {
+            valueEventSubject.onNext(dataSnapshot)
+        }
     }
 
     override fun onCancelled(databaseError: DatabaseError) {
