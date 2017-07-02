@@ -54,7 +54,7 @@ class NavigatorApplication : Application() {
     @Inject
     lateinit var login: Login
 
-    private lateinit var component: NavigatorComponent
+    lateinit var component: NavigatorComponent
     private var isServiceRunning = false
 
     override fun onCreate() {
