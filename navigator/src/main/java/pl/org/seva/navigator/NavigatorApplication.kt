@@ -18,6 +18,7 @@
 package pl.org.seva.navigator
 
 import android.app.Application
+import android.content.Intent
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -53,7 +54,8 @@ class NavigatorApplication : Application() {
     @Inject
     lateinit var login: Login
 
-    lateinit var component: NavigatorComponent
+    private lateinit var component: NavigatorComponent
+    private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
@@ -69,6 +71,7 @@ class NavigatorApplication : Application() {
         friendshipListener.init(this)
         if (login.isLoggedIn) {
             setFriendshipListeners()
+            startService()
         }
     }
 
@@ -80,9 +83,11 @@ class NavigatorApplication : Application() {
         login.setCurrentUser(user)
         setFriendshipListeners()
         restoreFriendsFromServer()
+        startService()
     }
 
     fun logout() {
+        stopService()
         clearFriendshipListeners()
         contactsStore.clear()
         login.setCurrentUser(null)
@@ -98,5 +103,21 @@ class NavigatorApplication : Application() {
 
     private fun clearFriendshipListeners() {
         friendshipSource.clearFriendshipListeners()
+    }
+
+    fun startService() {
+        if (isServiceRunning) {
+            return
+        }
+        startService(Intent(baseContext, NavigatorApplication::class.java))
+        isServiceRunning = true
+    }
+
+    fun stopService() {
+        if (!isServiceRunning) {
+            return
+        }
+        stopService(Intent(baseContext, NavigatorApplication::class.java))
+        isServiceRunning = false
     }
 }
