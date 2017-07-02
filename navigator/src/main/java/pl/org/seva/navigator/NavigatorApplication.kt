@@ -54,12 +54,11 @@ class NavigatorApplication : Application() {
     @Inject
     lateinit var login: Login
 
-    private lateinit var component: NavigatorComponent
+    val component: NavigatorComponent = createComponent()
     private var isServiceRunning = false
 
     override fun onCreate() {
         super.onCreate()
-        component = createComponent()
         component.inject(this)
         login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         activityRecognitionSource.initGoogleApiClient(this)
