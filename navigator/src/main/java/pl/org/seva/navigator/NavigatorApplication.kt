@@ -59,7 +59,7 @@ class NavigatorApplication : Application() {
         super.onCreate()
         component = createComponent()
         component.inject(this)
-        setCurrentUser(FirebaseAuth.getInstance().currentUser)
+        login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         activityRecognitionSource.initGoogleApiClient(this)
         val helper = DbHelper(this)
         sqlWriter.setHelper(helper)
@@ -77,7 +77,7 @@ class NavigatorApplication : Application() {
     }
 
     fun login(user: FirebaseUser) {
-        setCurrentUser(user)
+        login.setCurrentUser(user)
         setFriendshipListeners()
         restoreFriendsFromServer()
     }
@@ -85,7 +85,7 @@ class NavigatorApplication : Application() {
     fun logout() {
         clearFriendshipListeners()
         contactsStore.clear()
-        setCurrentUser(null)
+        login.setCurrentUser(null)
     }
 
     private fun setFriendshipListeners() {
@@ -98,17 +98,5 @@ class NavigatorApplication : Application() {
 
     private fun clearFriendshipListeners() {
         friendshipSource.clearFriendshipListeners()
-    }
-
-    private fun setCurrentUser(user: FirebaseUser?) {
-        if (user != null) {
-            login.isLoggedIn = true
-            login.email = user.email
-            login.displayName = user.displayName
-        } else {
-            login.isLoggedIn = false
-            login.email = null
-            login.displayName = null
-        }
     }
 }

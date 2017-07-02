@@ -17,6 +17,7 @@
 
 package pl.org.seva.navigator.model
 
+import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,4 +29,16 @@ class Login @Inject constructor() {
 
     val loggedInContact: Contact
         get() = Contact(email!!, displayName!!)
+
+    fun setCurrentUser(user: FirebaseUser?) {
+        if (user != null) {
+            isLoggedIn = true
+            email = user.email
+            displayName = user.displayName
+        } else {
+            isLoggedIn = false
+            email = null
+            displayName = null
+        }
+    }
 }

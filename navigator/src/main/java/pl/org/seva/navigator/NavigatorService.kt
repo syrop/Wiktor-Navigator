@@ -18,6 +18,7 @@
 package pl.org.seva.navigator
 
 import android.app.*
+import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import com.google.android.gms.maps.model.LatLng
 import pl.org.seva.navigator.model.Login
@@ -25,7 +26,7 @@ import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import javax.inject.Inject
 
-class NavigatorService : android.arch.lifecycle.LifecycleService() {
+class NavigatorService : LifecycleService() {
 
     @javax.inject.Inject
     lateinit var activityRecognitionSource : pl.org.seva.navigator.source.ActivityRecognitionSource
@@ -40,8 +41,8 @@ class NavigatorService : android.arch.lifecycle.LifecycleService() {
 
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        (application as pl.org.seva.navigator.NavigatorApplication).component.inject(this)
-        startForeground(pl.org.seva.navigator.NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
+        (application as NavigatorApplication).component.inject(this)
+        startForeground(NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addActivityRecognitionListeners()
         addMyLocationListener()
 
