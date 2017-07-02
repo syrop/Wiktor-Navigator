@@ -57,7 +57,7 @@ class NavigatorService : LifecycleService() {
     }
 
     private fun addMyLocationListener() {
-        myLocationSource.addLocationListener { onLocationReceived(it) }
+        myLocationSource.addLocationListener(lifecycle) { onLocationReceived(it) }
     }
 
     private fun onDeviceStationary() {

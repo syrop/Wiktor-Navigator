@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.source
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.location.Location
 import android.os.Bundle
@@ -38,6 +39,7 @@ import pl.org.seva.navigator.model.Login
 @Singleton
 class MyLocationSource @Inject
 internal constructor() :
+        LiveSource(),
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
@@ -80,8 +82,8 @@ internal constructor() :
         connectGoogleApiClient()
     }
 
-    fun addLocationListener(myLocationListener: (LatLng) -> Unit) {
-        locationObservable.subscribe{ myLocationListener(it) }
+    fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) {
+        lifecycle.observe { locationObservable.subscribe(myLocationListener) }
     }
 
     fun connectGoogleApiClient() {
