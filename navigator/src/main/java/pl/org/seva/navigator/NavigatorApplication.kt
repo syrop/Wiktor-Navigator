@@ -109,7 +109,7 @@ class NavigatorApplication : Application() {
         if (isServiceRunning) {
             return
         }
-        startService(Intent(baseContext, NavigatorApplication::class.java))
+        startService(Intent(baseContext, NavigatorService::class.java))
         isServiceRunning = true
     }
 
@@ -117,7 +117,7 @@ class NavigatorApplication : Application() {
         if (!isServiceRunning) {
             return
         }
-        stopService(Intent(baseContext, NavigatorApplication::class.java))
+        stopService(Intent(baseContext, NavigatorService::class.java))
         isServiceRunning = false
     }
 }
