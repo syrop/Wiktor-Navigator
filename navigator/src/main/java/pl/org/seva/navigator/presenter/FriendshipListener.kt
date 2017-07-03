@@ -111,12 +111,12 @@ internal constructor() {
             context.unregisterReceiver(this)
             context.unregisterReceiver(rejectedReceiver)
             val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
+            firebaseWriter.acceptFriendship(contact)
             if (contactsStore.contains(contact)) {
                 return
             }
             contactsStore.add(contact)
             sqlWriter.addFriend(contact)
-            firebaseWriter.acceptFriendship(contact)
         }
     }
 
