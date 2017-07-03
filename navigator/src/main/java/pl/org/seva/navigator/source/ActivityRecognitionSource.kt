@@ -100,12 +100,9 @@ internal constructor() : LiveSource(), GoogleApiClient.ConnectionCallbacks,
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
     }
 
-    fun addActivityRecognitionListener(
-            lifecycle: Lifecycle,
-            stationaryListener: () -> Unit,
-            movingListener: () -> Unit) {
-        lifecycle.observe { stationarySubject.subscribe { stationaryListener() } }
-        lifecycle.observe { movingSubject.subscribe { movingListener() } }
+    fun addActivityRecognitionListener(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
+        lifecycle.observe { stationarySubject.subscribe { onStationary() } }
+        lifecycle.observe { movingSubject.subscribe { onMoving() } }
     }
 
     private fun onDeviceStationary() {

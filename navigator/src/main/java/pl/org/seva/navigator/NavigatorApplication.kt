@@ -32,7 +32,6 @@ import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.source.FriendshipSource
-import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.model.Login
 
 class NavigatorApplication : Application() {
@@ -45,8 +44,6 @@ class NavigatorApplication : Application() {
     lateinit var sqlReader: SqlReader
     @Inject
     lateinit var contactsStore: ContactsStore
-    @Inject
-    lateinit var myLocationSource: MyLocationSource
     @Inject
     lateinit var friendshipSource: FriendshipSource
     @Inject
@@ -67,7 +64,6 @@ class NavigatorApplication : Application() {
         sqlWriter.setHelper(helper)
         sqlReader.setHelper(helper)
         contactsStore.addAll(sqlReader.friends)
-        myLocationSource.initGoogleApiClient(this)
         friendshipListener.init(this)
         if (login.isLoggedIn) {
             setFriendshipListeners()

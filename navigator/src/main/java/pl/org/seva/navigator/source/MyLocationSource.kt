@@ -19,6 +19,7 @@ package pl.org.seva.navigator.source
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import android.location.Location
 import android.os.Bundle
@@ -56,8 +57,8 @@ internal constructor() :
     private val locationObservable: Observable<LatLng>
 
     private var location: Location? = null
-    var paused: Boolean = false
     private var lastSentLocationTime: Long = 0
+    private lateinit  var lifecycle: Lifecycle
 
     init {
 
@@ -86,19 +87,25 @@ internal constructor() :
         lifecycle.observe { locationObservable.subscribe(myLocationListener) }
     }
 
+    private fun addActivityRecognitionListeners() {
+        activityRecognitionSource.addActivityRecognitionListener(lifecycle,
+                onStationary = { removeRequest() },
+                onMoving = { request() })
+    }
+
     fun connectGoogleApiClient() {
         googleApiClient!!.connect()
     }
 
-    fun initGoogleApiClient(context: Context): MyLocationSource {
+    fun init(service: LifecycleService) {
+        lifecycle = service.lifecycle
         googleApiClient?:let {
-            googleApiClient = GoogleApiClient.Builder(context)
+            googleApiClient = GoogleApiClient.Builder(service)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build()
         }
-        return this
     }
 
     override fun onLocationChanged(location: Location) {
@@ -123,13 +130,13 @@ internal constructor() :
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_FREQUENCY)
                 .setSmallestDisplacement(MIN_DISTANCE)
-
         request()
+        addActivityRecognitionListeners()
     }
 
     @SuppressLint("MissingPermission")
     fun request() {
-        if (paused || googleApiClient == null || locationRequest == null) {
+        if (googleApiClient == null || locationRequest == null) {
             return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)

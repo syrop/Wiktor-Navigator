@@ -43,31 +43,16 @@ class NavigatorService : LifecycleService() {
         super.onStartCommand(intent, flags, startId)
         (application as NavigatorApplication).component.inject(this)
         startForeground(NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
-        addActivityRecognitionListeners()
+        myLocationSource.init(this)
         addMyLocationListener()
 
         return android.app.Service.START_STICKY
     }
 
-    private fun addActivityRecognitionListeners() {
-        activityRecognitionSource.addActivityRecognitionListener(
-                lifecycle,
-                stationaryListener = { onDeviceStationary() },
-                movingListener = { onDeviceMoving() })
-    }
+
 
     private fun addMyLocationListener() {
         myLocationSource.addLocationListener(lifecycle) { onLocationReceived(it) }
-    }
-
-    private fun onDeviceStationary() {
-        myLocationSource.paused = true
-        myLocationSource.removeRequest()
-    }
-
-    private fun onDeviceMoving() {
-        myLocationSource.paused = false
-        myLocationSource.request()
     }
 
     fun onLocationReceived(latLng: LatLng) {
