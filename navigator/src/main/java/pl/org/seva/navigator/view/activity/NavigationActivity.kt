@@ -126,11 +126,12 @@ class NavigationActivity : AppCompatActivity() {
         }
         mapContainerId = mapContainer.id
         fab.setOnClickListener { onFabClicked() }
-        updateFollowingHud()
+        updateHud()
         checkLocationPermission()
     }
 
-    private fun updateFollowingHud() {
+    private fun updateHud() {
+        hud.alpha = 1.0f
         if (contact == null) {
             hud.visibility = View.GONE
             hud.setOnTouchListener(null)
@@ -174,8 +175,8 @@ class NavigationActivity : AppCompatActivity() {
             CONTACTS_ACTIVITY_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
                     contact = data?.getParcelableExtra(CONTACT)
-                    updateFollowingHud()
                 }
+                updateHud()
             }
             DELETE_USER_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
