@@ -97,8 +97,8 @@ class NavigationActivity : AppCompatActivity() {
     private var peerLocation: LatLng? = null
 
     private var animateCamera = true
-    private var moveCameraToPeerLocation = true
     private var zoom = 0.0f
+    private var mapTarget = LatLng(0.0, 0.0)
     private var mapContainerId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +110,7 @@ class NavigationActivity : AppCompatActivity() {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
             if (peerLocation != null) { moveCameraToPeerLocation() }
+            mapTarget = savedInstanceState.getParcelable(SAVED_CAMERA_POSITION)
         }
 
         (application as NavigatorApplication).component.inject(this)
@@ -188,12 +189,11 @@ class NavigationActivity : AppCompatActivity() {
         } else {
             map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
-        moveCameraToPeerLocation = false
         animateCamera = false
     }
 
     @SuppressLint("MissingPermission")
-    private fun onMapReady(googleMap: GoogleMap) {
+    private fun onGoogleMapReady(googleMap: GoogleMap) {
         map = googleMap
         map!!.setOnCameraIdleListener { onCameraIdle() }
         checkLocationPermission(
@@ -202,6 +202,8 @@ class NavigationActivity : AppCompatActivity() {
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email!!, { onPeerLocationReceived(it) })
         }
+        val cameraPosition = CameraPosition.Builder().target(mapTarget).zoom(zoom).build()
+        map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 
     private fun checkLocationPermission(
@@ -383,10 +385,10 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun onCameraIdle() {
-        if (!moveCameraToPeerLocation) {
-            zoom = map!!.cameraPosition.zoom
-        }
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
+        zoom = map!!.cameraPosition.zoom
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
+        mapTarget = map!!.cameraPosition.target
     }
 
     override fun onPause() {
@@ -413,13 +415,15 @@ class NavigationActivity : AppCompatActivity() {
         mapFragment?:let {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
+            mapFragment!!.getMapAsync( { onGoogleMapReady(it) })
         }
-        mapFragment!!.getMapAsync( { onMapReady(it) })
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         deleteMapFragment()
         outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
+        outState.putParcelable(SAVED_CAMERA_POSITION, mapTarget)
         super.onSaveInstanceState(outState)
     }
 
@@ -433,9 +437,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun onPeerLocationReceived(latLng: LatLng) {
         peerLocation = latLng
         putPeerMarkerOnMap()
-        if (moveCameraToPeerLocation) {
-            moveCameraToPeerLocation()
-        }
+        moveCameraToPeerLocation()
     }
 
     private fun stopWatchingPeer() {
@@ -481,6 +483,7 @@ class NavigationActivity : AppCompatActivity() {
         private val MAP_FRAGMENT_TAG = "map"
 
         private val SAVED_PEER_LOCATION = "saved_peer_location"
+        private val SAVED_CAMERA_POSITION = "saved_camera_position"
 
         private val ZOOM_PROPERTY_NAME = "navigation_map_zoom"
         private val DEFAULT_ZOOM = 7.5f
