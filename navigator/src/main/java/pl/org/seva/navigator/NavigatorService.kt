@@ -42,8 +42,8 @@ class NavigatorService : LifecycleService() {
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         (application as NavigatorApplication).component.inject(this)
-        startForeground(NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
         myLocationSource.init(this)
+        startForeground(NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addMyLocationListener()
 
         return android.app.Service.START_STICKY

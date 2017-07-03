@@ -323,7 +323,6 @@ class NavigationActivity : AppCompatActivity() {
         permissionDisposable.dispose()
         invalidateOptionsMenu()
         map?.isMyLocationEnabled = true
-        myLocationSource.onLocationGranted(applicationContext)
         if (!login.isLoggedIn) {
             showLoginSnackbar()
         }

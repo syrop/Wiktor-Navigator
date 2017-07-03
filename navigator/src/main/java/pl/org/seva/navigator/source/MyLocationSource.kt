@@ -61,26 +61,12 @@ internal constructor() :
     private lateinit  var lifecycle: Lifecycle
 
     init {
-
         locationObservable = locationSubject
                 .filter { login.isLoggedIn }
                 .timestamp()
                 .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
                 .doOnNext { lastSentLocationTime = it.time() }
                 .map { it.value() }
-    }
-
-    fun onLocationGranted(applicationContext: Context) {
-        if (googleApiClient != null) {
-            return
-        }
-        googleApiClient = GoogleApiClient.Builder(applicationContext)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build()
-
-        connectGoogleApiClient()
     }
 
     fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) {
@@ -106,6 +92,8 @@ internal constructor() :
                     .addApi(LocationServices.API)
                     .build()
         }
+
+        connectGoogleApiClient()
     }
 
     override fun onLocationChanged(location: Location) {
