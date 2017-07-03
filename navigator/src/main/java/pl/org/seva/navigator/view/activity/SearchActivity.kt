@@ -45,6 +45,7 @@ import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.database.firebase.FirebaseReader
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.Contact
+import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 
@@ -57,6 +58,8 @@ class SearchActivity : AppCompatActivity() {
     lateinit var firebaseReader: FirebaseReader
     @Inject
     lateinit var contactsStore: ContactsStore
+    @Inject
+    lateinit var login: Login
 
     private val promptLabel by lazy { findViewById<TextView>(R.id.prompt) }
     private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
@@ -181,14 +184,18 @@ class SearchActivity : AppCompatActivity() {
     private fun onContactClicked(contact: Contact) {
         if (contactsStore.contains(contact)) {
             finish()
-            return
         }
-        FriendshipAddDialogBuilder(this)
-                .setContact(contact)
-                .setYesAction { contactApprovedAndFinish(contact) }
-                .setNoAction { finish() }
-                .build()
-                .show()
+        else if (contact.email == login.email){
+            Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
+        }
+        else {
+            FriendshipAddDialogBuilder(this)
+                    .setContact(contact)
+                    .setYesAction { contactApprovedAndFinish(contact) }
+                    .setNoAction { finish() }
+                    .build()
+                    .show()
+        }
     }
 
     private fun contactApprovedAndFinish(contact: Contact) {
