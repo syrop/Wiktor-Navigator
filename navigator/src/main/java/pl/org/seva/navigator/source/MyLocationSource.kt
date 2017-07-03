@@ -20,7 +20,6 @@ package pl.org.seva.navigator.source
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleService
-import android.content.Context
 import android.location.Location
 import android.os.Bundle
 
