@@ -485,6 +485,6 @@ class NavigationActivity : AppCompatActivity() {
         private val SAVED_CAMERA_POSITION = "saved_camera_position"
 
         private val ZOOM_PROPERTY_NAME = "navigation_map_zoom"
-        private val DEFAULT_ZOOM = 7.5f
+        private val DEFAULT_ZOOM = 0.0f
     }
 }
