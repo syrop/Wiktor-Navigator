@@ -49,8 +49,6 @@ class NavigatorService : LifecycleService() {
         return android.app.Service.START_STICKY
     }
 
-
-
     private fun addMyLocationListener() {
         myLocationSource.addLocationListener(lifecycle) { onLocationReceived(it) }
     }

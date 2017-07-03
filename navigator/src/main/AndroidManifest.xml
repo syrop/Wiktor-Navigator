@@ -20,7 +20,8 @@
 
         <activity
             android:name=".view.activity.NavigationActivity"
-            android:label="@string/app_name_short" >
+            android:label="@string/app_name_short"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

@@ -39,6 +39,7 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import android.widget.TextView
+import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -81,6 +82,9 @@ class NavigationActivity : AppCompatActivity() {
     lateinit var sqlWriter: SqlWriter
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
+
+    /** Used when counting a double click.  */
+    private var clickTime: Long = 0
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -459,6 +463,16 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MS) {
+            (application as NavigatorApplication).stopService()
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT).show()
+            clickTime = System.currentTimeMillis()
+        }
+    }
+
     companion object {
 
         private val CONTACT_NAME_PLACEHOLDER = "[name]"
@@ -486,5 +500,8 @@ class NavigationActivity : AppCompatActivity() {
 
         private val ZOOM_PROPERTY_NAME = "navigation_map_zoom"
         private val DEFAULT_ZOOM = 0.0f
+
+        /** Number of milliseconds that will be taken for a double click.  */
+        private val DOUBLE_CLICK_MS: Long = 5000
     }
 }
