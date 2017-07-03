@@ -48,7 +48,7 @@
     <string name="search_searching">Searching…</string>
     <string name="adding_friend_title">Adding a user</string>
     <string name="search_waiting_for_party">Waiting for your party to respond.</string>
-    <string name="search_cannot_add_yourself">Cannot add yourself as a friend</string>
+    <string name="search_cannot_add_yourself">Cannot add yourself.</string>
 
 
     <!-- Dialogs and notifications. -->
