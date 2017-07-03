@@ -23,9 +23,7 @@ import android.os.Parcelable
 class Contact() : Comparable<Contact>, Parcelable {
 
     var email: String? = null
-        get() = field!!
     var name: String? = null
-        get() = field!!
 
     val isEmpty: Boolean
         get() = email == null || name == null
