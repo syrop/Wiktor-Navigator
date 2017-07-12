@@ -47,8 +47,6 @@ internal constructor() {
     lateinit var sqlWriter: SqlWriter
     @Inject
     lateinit var firebaseWriter: FirebaseWriter
-    lateinit var acceptedReceiver: BroadcastReceiver
-    lateinit var rejectedReceiver: BroadcastReceiver
 
     lateinit var weakContext: WeakReference<Context>
 
@@ -58,22 +56,22 @@ internal constructor() {
 
     fun onPeerRequestedFriendship(contact: Contact) {
         val context = weakContext.get() ?: return
-        acceptedReceiver = FriendshipAcceptedBroadcastReceiver()
-        rejectedReceiver = FriendshipRejectedBroadcastReceiver()
-        context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_ACCEPTED_INTENT))
-        context.registerReceiver(rejectedReceiver, IntentFilter(FRIENDSHIP_REJECTED_INTENT))
+        val acceptedReceiver = FriendshipRequestedBroadcastReceiver()
+        context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
-        val friendshipAccepted = Intent(FRIENDSHIP_ACCEPTED_INTENT)
+        val friendshipAccepted = Intent(FRIENDSHIP_REQUESTED_INTENT)
                 .putExtra(CONTACT_EXTRA, contact)
                 .putExtra(NOTIFICATION_ID, notificationId)
+                .putExtra(ACTION, ParcelableInt(ACCEPTED_ACTION))
         val yesPi = PendingIntent.getBroadcast(
                 context,
                 0,
                 friendshipAccepted,
                 PendingIntent.FLAG_UPDATE_CURRENT)
-        val friendshipRejected = Intent(FRIENDSHIP_REJECTED_INTENT)
+        val friendshipRejected = Intent(FRIENDSHIP_REQUESTED_INTENT)
                 .putExtra(CONTACT_EXTRA, contact)
                 .putExtra(NOTIFICATION_ID, notificationId)
+                .putExtra(ACTION, ParcelableInt(REJECTED_ACTION))
         val noPi = PendingIntent.getBroadcast(
                 context,
                 0,
@@ -101,26 +99,16 @@ internal constructor() {
         sqlWriter.deleteFriend(contact)
     }
 
-    private inner class FriendshipAcceptedBroadcastReceiver : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
-                    as NotificationManager
-            notificationManager.cancel(notificationId)
-            context.unregisterReceiver(this)
-            context.unregisterReceiver(rejectedReceiver)
-            val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
-            firebaseWriter.acceptFriendship(contact)
-            if (contactsStore.contains(contact)) {
-                return
-            }
-            contactsStore.add(contact)
-            sqlWriter.addFriend(contact)
+    private fun acceptFriend(contact: Contact) {
+        firebaseWriter.acceptFriendship(contact)
+        if (contactsStore.contains(contact)) {
+            return
         }
+        contactsStore.add(contact)
+        sqlWriter.addFriend(contact)
     }
 
-    private inner class FriendshipRejectedBroadcastReceiver : BroadcastReceiver() {
+    private inner class FriendshipRequestedBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
@@ -128,15 +116,21 @@ internal constructor() {
                     as NotificationManager
             notificationManager.cancel(notificationId)
             context.unregisterReceiver(this)
-            context.unregisterReceiver(acceptedReceiver)
+            val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
+            val action = intent.getParcelableExtra<ParcelableInt>(ACTION).value
+            if (action == ACCEPTED_ACTION) {
+                acceptFriend(contact)
+            }
         }
     }
 
     companion object {
 
-        private val FRIENDSHIP_ACCEPTED_INTENT = "friendship_accepted_intent"
-        private val FRIENDSHIP_REJECTED_INTENT = "friendship_rejected_intent"
+        private val FRIENDSHIP_REQUESTED_INTENT = "friendship_requested_intent"
         private val NOTIFICATION_ID = "notification_id"
+        private val ACTION = "action"
         private val CONTACT_EXTRA = "contact_extra"
+        private val ACCEPTED_ACTION = 0
+        private val REJECTED_ACTION = 1
     }
 }
