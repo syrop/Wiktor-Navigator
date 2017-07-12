@@ -71,14 +71,14 @@ internal constructor() : FirebaseBase() {
         if (!snapshot.exists()) {
             return resultContact
         }
-        resultContact.email = FirebaseBase.Companion.from64(snapshot.key)
-        resultContact.name = snapshot.child(FirebaseBase.Companion.DISPLAY_NAME).value as String
+        resultContact.email = from64(snapshot.key)
+        resultContact.name = snapshot.child(DISPLAY_NAME).value as String
 
         return resultContact
     }
 
     fun peerLocationListener(email: String): Observable<LatLng> {
-        return readData(email2Reference(email).child(FirebaseBase.Companion.LAT_LNG))
+        return readData(email2Reference(email).child(LAT_LNG))
                 .filter { it.value != null }
                 .map { it.value!! }
                 .map { it as String }
@@ -86,19 +86,19 @@ internal constructor() : FirebaseBase() {
     }
 
     fun friendshipRequestedListener(): Observable<Contact> {
-        return createContactObservable(FirebaseBase.Companion.FRIENDSHIP_REQUESTED, true)
+        return createContactObservable(FRIENDSHIP_REQUESTED, true)
     }
 
     fun friendshipAcceptedListener(): Observable<Contact> {
-        return createContactObservable(FirebaseBase.Companion.FRIENDSHIP_ACCEPTED, true)
+        return createContactObservable(FRIENDSHIP_ACCEPTED, true)
     }
 
     fun friendshipDeletedListener(): Observable<Contact> {
-        return createContactObservable(FirebaseBase.Companion.FRIENDSHIP_DELETED, true)
+        return createContactObservable(FRIENDSHIP_DELETED, true)
     }
 
     fun readFriendsOnce(): Observable<Contact> {
-        val reference = currentUserReference().child(FirebaseBase.Companion.FRIENDS)
+        val reference = currentUserReference().child(FRIENDS)
         return readDataOnce(reference)
                 .concatMapIterable { it.children }
                 .filter { it.exists() }

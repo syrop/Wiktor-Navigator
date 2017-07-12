@@ -33,13 +33,13 @@ open class FirebaseBase protected constructor() {
     @Inject
     lateinit var login: Login
 
-    val database = FirebaseDatabase.getInstance()!!
+    protected val database = FirebaseDatabase.getInstance()!!
 
-    fun currentUserReference(): DatabaseReference {
+    protected fun currentUserReference(): DatabaseReference {
         return email2Reference(login.email!!)
     }
 
-    fun email2Reference(email: String): DatabaseReference {
+    protected fun email2Reference(email: String): DatabaseReference {
         val referencePath = USER_ROOT + "/" + to64(email)
         return database.getReference(referencePath)
     }
