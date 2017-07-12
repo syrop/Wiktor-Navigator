@@ -24,13 +24,9 @@ import android.database.sqlite.SQLiteOpenHelper
 class DbHelper(context: Context) :
         SQLiteOpenHelper(context, DbHelper.DATABASE_NAME, null, DbHelper.DATABASE_VERSION) {
 
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(CREATION_STATEMENT)
-    }
+    override fun onCreate(db: SQLiteDatabase) = db.execSQL(CREATION_STATEMENT)
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     companion object {
 
@@ -42,10 +38,9 @@ class DbHelper(context: Context) :
         val DATABASE_NAME = "Friends.db"
 
         val CREATION_STATEMENT =
-                "create table if not exists " + FRIENDS_TABLE_NAME +
-                        " (id integer primary key autoincrement, " +
-                        EMAIL_COLUMN_NAME + " text, " +
-                        NAME_COLUMN_NAME + " text, " +
-                        "constraint unique_name unique (" + EMAIL_COLUMN_NAME + "))"
+                "create table if not exists $FRIENDS_TABLE_NAME (id integer primary key autoincrement, " +
+                        "$EMAIL_COLUMN_NAME text, " +
+                        "$NAME_COLUMN_NAME text, " +
+                        "constraint unique_name unique ($EMAIL_COLUMN_NAME))"
     }
 }
