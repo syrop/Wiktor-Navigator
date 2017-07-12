@@ -44,13 +44,13 @@ internal constructor() {
                 DbHelper.FRIENDS_TABLE_NAME,
                 null,
                 cv,
-                SQLiteDatabase.CONFLICT_ROLLBACK)
+                SQLiteDatabase.CONFLICT_IGNORE)
         db.close()
     }
 
     fun deleteFriend(contact: Contact) {
         val db = helper.writableDatabase
-        val query = DbHelper.EMAIL_COLUMN_NAME + " = ?"
+        val query = "${DbHelper.EMAIL_COLUMN_NAME} = ?"
         val args = arrayOf(contact.email!!)
         db.delete(DbHelper.FRIENDS_TABLE_NAME, query, args)
         db.close()
