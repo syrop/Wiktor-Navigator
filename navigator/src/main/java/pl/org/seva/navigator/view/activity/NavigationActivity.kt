@@ -389,6 +389,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun onCameraIdle() {
+        // TODO: Write camera coordinates
         zoom = map!!.cameraPosition.zoom
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putFloat(ZOOM_PROPERTY_NAME, zoom).apply()

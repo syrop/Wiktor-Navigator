@@ -46,6 +46,7 @@ internal constructor() : FirebaseBase() {
     }
 
     fun requestFriendship(contact: Contact) {
+        // TODO: Don't write stuff if already in the database
         val reference = email2Reference(contact.email!!).child(FRIENDSHIP_REQUESTED)
         writeContact(reference, login.loggedInContact)
     }

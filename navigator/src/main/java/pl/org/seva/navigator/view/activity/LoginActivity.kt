@@ -108,7 +108,6 @@ class LoginActivity :
     private fun logout() {
         finishWhenStateChanges()
         logoutWhenReady = true
-        // Firebase sign out
         firebaseAuth.signOut()
         (application as NavigatorApplication).logout()
         googleApiClient.connect()
@@ -189,9 +188,9 @@ class LoginActivity :
     }
 
     private fun signInFailed(ex: Exception?) {
+        // TODO: Add reaction to login failed
         Log.w(TAG, "signInWithCredential", ex)
-        Toast.makeText(this@LoginActivity, R.string.login_authentication_failed, Toast.LENGTH_SHORT)
-                .show()
+        Toast.makeText(this, R.string.login_authentication_failed, Toast.LENGTH_SHORT).show()
     }
 
     private fun showProgressDialog() {
