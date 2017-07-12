@@ -35,18 +35,11 @@ internal constructor() : FirebaseBase() {
         writeContact(database.getReference(USER_ROOT), contact)
     }
 
-    private fun writeContact(reference: DatabaseReference, contact: Contact) {
-        val email64 = to64(contact.email!!)
-        val localReference = reference.child(email64)
-        localReference.child(DISPLAY_NAME).setValue(contact.name!!)
-    }
-
     fun writeMyLocation(email: String, latLng: LatLng) {
         email2Reference(email).child(LAT_LNG).setValue(latLng2String(latLng))
     }
 
     fun requestFriendship(contact: Contact) {
-        // TODO: Don't write stuff if already in the database
         val reference = email2Reference(contact.email!!).child(FRIENDSHIP_REQUESTED)
         writeContact(reference, login.loggedInContact)
     }
@@ -63,6 +56,18 @@ internal constructor() : FirebaseBase() {
         writeContact(reference, contact)
     }
 
+    fun deleteFriendship(contact: Contact) {
+        val reference = email2Reference(contact.email!!).child(FRIENDSHIP_DELETED)
+        writeContact(reference, login.loggedInContact)
+        deleteContactFromMe(contact, FRIENDS)
+    }
+
+    private fun writeContact(reference: DatabaseReference, contact: Contact) {
+        val contactEmail = to64(contact.email!!)
+        val localReference = reference.child(contactEmail)
+        localReference.child(DISPLAY_NAME).setValue(contact.name!!)
+    }
+
     private fun deleteMeFromContact(contact: Contact, tag: String) {
         val reference = email2Reference(contact.email!!).child(tag)
         reference.child(to64(login.email!!)).removeValue()
@@ -71,12 +76,6 @@ internal constructor() : FirebaseBase() {
     private fun deleteContactFromMe(contact: Contact, tag: String) {
         val reference = email2Reference(login.email!!).child(tag)
         reference.child(to64(contact.email!!)).removeValue()
-    }
-
-    fun deleteFriendship(contact: Contact) {
-        val reference = email2Reference(contact.email!!).child(FRIENDSHIP_DELETED)
-        writeContact(reference, login.loggedInContact)
-        deleteContactFromMe(contact, FRIENDS)
     }
 
     fun deleteMe() {
