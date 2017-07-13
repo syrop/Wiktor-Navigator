@@ -102,19 +102,21 @@ class NavigationActivity : AppCompatActivity() {
 
     private var animateCamera = true
     private var zoom = 0.0f
-    private var mapTarget = LatLng(0.0, 0.0)
+    private lateinit var target: LatLng
     private var mapContainerId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        zoom = PreferenceManager.getDefaultSharedPreferences(this)
-                .getFloat(ZOOM_PROPERTY_NAME, DEFAULT_ZOOM)
+        val properties = PreferenceManager.getDefaultSharedPreferences(this)
+        zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
+        target = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
+                properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
+
         supportActionBar?.title = getString(R.string.navigation_activity_label)
         savedInstanceState?.let {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
             if (peerLocation != null) { moveCameraToPeerLocation() }
-            mapTarget = savedInstanceState.getParcelable(SAVED_CAMERA_POSITION)
         }
 
         (application as NavigatorApplication).component.inject(this)
@@ -178,9 +180,9 @@ class NavigationActivity : AppCompatActivity() {
                 }
                 updateHud()
             }
-            DELETE_USER_REQUEST_ID -> {
+            DELETE_PROFILE_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    deleteUser()
+                    deleteProfile()
                 }
             }
         }
@@ -207,7 +209,7 @@ class NavigationActivity : AppCompatActivity() {
         contact?.let {
             peerLocationSource.addPeerLocationListener(it.email!!, { onPeerLocationReceived(it) })
         }
-        val cameraPosition = CameraPosition.Builder().target(mapTarget).zoom(zoom).build()
+        val cameraPosition = CameraPosition.Builder().target(target).zoom(zoom).build()
         map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 
@@ -230,8 +232,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_help).isVisible =
-                !isLocationPermissionGranted || !login.isLoggedIn
+        menu.findItem(R.id.action_help).isVisible = !isLocationPermissionGranted || !login.isLoggedIn
         menu.findItem(R.id.action_logout).isVisible = login.isLoggedIn
         menu.findItem(R.id.action_delete_user).isVisible = login.isLoggedIn
         return true
@@ -244,7 +245,7 @@ class NavigationActivity : AppCompatActivity() {
                 return true
             }
             R.id.action_delete_user -> {
-                onDeleteUserClicked()
+                onDeleteProfileClicked()
                 return true
             }
             R.id.action_help -> {
@@ -375,7 +376,7 @@ class NavigationActivity : AppCompatActivity() {
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
     }
 
-    private fun deleteUser() {
+    private fun deleteProfile() {
         stopWatchingPeer()
         contactsStore.clear()
         sqlWriter.deleteAllFriends()
@@ -383,17 +384,20 @@ class NavigationActivity : AppCompatActivity() {
         logout()
     }
 
-    private fun onDeleteUserClicked() {
+    private fun onDeleteProfileClicked() {
         val intent = Intent(this, DeleteProfileActivity::class.java)
-        startActivityForResult(intent, DELETE_USER_REQUEST_ID)
+        startActivityForResult(intent, DELETE_PROFILE_REQUEST_ID)
     }
 
     private fun onCameraIdle() {
-        // TODO: Write camera coordinates
-        zoom = map!!.cameraPosition.zoom
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putFloat(ZOOM_PROPERTY_NAME, zoom).apply()
-        mapTarget = map!!.cameraPosition.target
+        val cameraPosition = map!!.cameraPosition
+        zoom = cameraPosition.zoom
+        val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
+        editor.putFloat(ZOOM_PROPERTY, zoom)
+        target = cameraPosition.target
+        editor.putFloat(LATITUDE_PROPERTY, target.latitude.toFloat())
+        editor.putFloat(LONGITUDE_PROPERTY, target.longitude.toFloat())
+        editor.apply()
     }
 
     override fun onPause() {
@@ -428,7 +432,6 @@ class NavigationActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         deleteMapFragment()
         outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
-        outState.putParcelable(SAVED_CAMERA_POSITION, mapTarget)
         super.onSaveInstanceState(outState)
     }
 
@@ -479,7 +482,7 @@ class NavigationActivity : AppCompatActivity() {
 
         private val CONTACT_NAME_PLACEHOLDER = "[name]"
 
-        private val DELETE_USER_REQUEST_ID = 0
+        private val DELETE_PROFILE_REQUEST_ID = 0
         private val CONTACTS_ACTIVITY_REQUEST_ID = 1
 
         /** Calculated from #00bfa5, or A700 Teal. */
@@ -498,12 +501,13 @@ class NavigationActivity : AppCompatActivity() {
         private val MAP_FRAGMENT_TAG = "map"
 
         private val SAVED_PEER_LOCATION = "saved_peer_location"
-        private val SAVED_CAMERA_POSITION = "saved_camera_position"
 
-        private val ZOOM_PROPERTY_NAME = "navigation_map_zoom"
+        private val ZOOM_PROPERTY = "navigation_map_zoom"
+        private val LATITUDE_PROPERTY = "navigation_map_latitude"
+        private val LONGITUDE_PROPERTY = "navigation_map_longitude"
         private val DEFAULT_ZOOM = 0.0f
 
-        /** Number of milliseconds that will be taken for a double click.  */
+        /** Length of time that will be taken for a double click.  */
         private val DOUBLE_CLICK_MS: Long = 5000
     }
 }
