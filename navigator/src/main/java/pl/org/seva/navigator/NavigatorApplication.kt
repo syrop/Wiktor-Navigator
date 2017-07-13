@@ -66,7 +66,7 @@ class NavigatorApplication : Application() {
         contactsStore.addAll(sqlReader.friends)
         friendshipListener.init(this)
         if (login.isLoggedIn) {
-            setFriendshipListeners()
+            addFriendshipListeners()
             startService()
         }
     }
@@ -77,27 +77,27 @@ class NavigatorApplication : Application() {
 
     fun login(user: FirebaseUser) {
         login.setCurrentUser(user)
-        setFriendshipListeners()
-        restoreFriendsFromServer()
+        addFriendshipListeners()
+        downloadFriendsFromCloud()
         startService()
     }
 
     fun logout() {
         stopService()
-        clearFriendshipListeners()
+        removeFriendshipListeners()
         contactsStore.clear()
         login.setCurrentUser(null)
     }
 
-    private fun setFriendshipListeners() {
+    private fun addFriendshipListeners() {
         friendshipSource.addFriendshipListener(friendshipListener)
     }
 
-    private fun restoreFriendsFromServer() {
-        friendshipSource.downloadFriendsFromServer { contactsStore.add(it) }
+    private fun downloadFriendsFromCloud() {
+        friendshipSource.downloadFriendsFromCloud { contactsStore.add(it) }
     }
 
-    private fun clearFriendshipListeners() {
+    private fun removeFriendshipListeners() {
         friendshipSource.clearFriendshipListeners()
     }
 

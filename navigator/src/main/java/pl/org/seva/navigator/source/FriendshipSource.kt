@@ -46,7 +46,7 @@ class FriendshipSource @Inject internal constructor() {
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
     }
 
-    fun downloadFriendsFromServer(listener: (Contact) -> Unit) {
+    fun downloadFriendsFromCloud(listener: (Contact) -> Unit) {
         firebaseReader.readFriendsOnce().subscribe { listener(it) }
     }
 
