@@ -157,7 +157,7 @@ class LoginActivity :
                 val account = result.signInAccount!!
                 firebaseAuthWithGoogle(account)
             } else {
-                onUserLoggedOut()
+                signInFailed()
             }
         }
     }
@@ -172,9 +172,7 @@ class LoginActivity :
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(
-                        this
-                ) {
+                .addOnCompleteListener(this) {
                     Log.d(TAG, "signInWithCredential:onComplete:" + it.isSuccessful)
                     hideProgressDialog()
 
@@ -182,15 +180,14 @@ class LoginActivity :
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
                     if (!it.isSuccessful) {
-                        signInFailed(it.exception)
+                        signInFailed()
                     }
                 }
     }
 
-    private fun signInFailed(ex: Exception?) {
-        // TODO: Add reaction to login failed
-        Log.w(TAG, "signInWithCredential", ex)
+    private fun signInFailed() {
         Toast.makeText(this, R.string.login_authentication_failed, Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     private fun showProgressDialog() {
