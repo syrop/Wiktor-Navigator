@@ -53,10 +53,7 @@ class Contact() : Comparable<Contact>, Parcelable {
         dest.writeString(name)
     }
 
-    private constructor(parcel: Parcel) : this() {
-        email = parcel.readString()
-        name = parcel.readString()
-    }
+    private constructor(parcel: Parcel): this(parcel.readString(), parcel.readString())
 
     companion object {
         @Suppress("unused")
