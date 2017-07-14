@@ -42,7 +42,7 @@ import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.database.sqlite.SqlWriter
-import pl.org.seva.navigator.presenter.ContactTouchHelperCallback
+import pl.org.seva.navigator.presenter.ContactTouchListener
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
 
@@ -103,8 +103,7 @@ class ContactsActivity : AppCompatActivity() {
         component.inject(adapter)
         adapter.addClickListener { onContactClicked(it) }
         contacts.adapter = adapter
-        ItemTouchHelper(ContactTouchHelperCallback { onContactSwiped(it) } )
-                .attachToRecyclerView(contacts)
+        ItemTouchHelper(ContactTouchListener { onContactSwiped(it) } ).attachToRecyclerView(contacts)
     }
 
     private fun onContactClicked(contact: Contact) {

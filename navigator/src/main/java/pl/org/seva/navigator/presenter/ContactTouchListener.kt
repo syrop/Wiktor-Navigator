@@ -20,7 +20,7 @@ package pl.org.seva.navigator.presenter
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 
-class ContactTouchHelperCallback (val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
+class ContactTouchListener(val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) =
             makeMovementFlags(0, ItemTouchHelper.START or ItemTouchHelper.END)
 
