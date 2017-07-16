@@ -38,7 +38,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
-import android.widget.TextView
 import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -49,6 +48,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.reactivex.disposables.Disposables
+import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
 
 import javax.inject.Inject
@@ -92,9 +92,6 @@ class NavigationActivity : AppCompatActivity() {
     private var permissionDisposable = Disposables.empty()
     private var isLocationPermissionGranted = false
 
-    private val fab by lazy { findViewById<View>(R.id.fab) }
-    private val mapContainer by lazy { findViewById<View>(R.id.map_container) }
-    private val hud by lazy { findViewById<TextView>(R.id.hud) }
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
@@ -126,7 +123,7 @@ class NavigationActivity : AppCompatActivity() {
         contact?.let {
             contactsStore.addContactsUpdatedListener(it.email!!, { stopWatchingPeer() })
         }
-        mapContainerId = mapContainer.id
+        mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         updateHud()
         checkLocationPermission()
@@ -341,7 +338,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun showLocationPermissionSnackbar() {
         snackbar = Snackbar.make(
-                mapContainer,
+                map_container,
                 R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry) { requestLocationPermission() }
@@ -350,7 +347,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun showLoginSnackbar() {
         snackbar = Snackbar.make(
-                mapContainer,
+                map_container,
                 R.string.snackbar_please_log_in,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_login) { login() }

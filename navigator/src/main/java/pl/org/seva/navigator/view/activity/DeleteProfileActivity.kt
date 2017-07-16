@@ -20,13 +20,10 @@ package pl.org.seva.navigator.view.activity
 import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
+import kotlinx.android.synthetic.main.activity_delete_user.*
 import pl.org.seva.navigator.R
 
 class DeleteProfileActivity : AppCompatActivity() {
-
-    private val cancel by lazy { findViewById<View>(R.id.cancel)}
-    private val ok by lazy { findViewById<View>(R.id.ok) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
