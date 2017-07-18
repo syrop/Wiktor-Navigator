@@ -24,14 +24,13 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_contacts.*
 
 import javax.inject.Inject
 
@@ -59,11 +58,8 @@ class ContactsActivity : AppCompatActivity() {
     @Inject
     lateinit var sqlWriter: SqlWriter
 
-    private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
     private val adapter = ContactAdapter()
     private val component by lazy { (application as NavigatorApplication).component }
-    private val fab by lazy { findViewById<View>(R.id.fab) }
-    private val prompt by lazy { findViewById<TextView>(R.id.prompt)}
     private var snackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

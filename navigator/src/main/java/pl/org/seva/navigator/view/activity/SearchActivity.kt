@@ -26,7 +26,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Spannable
 import android.text.SpannableString
@@ -34,8 +33,8 @@ import android.text.style.ImageSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_search.*
 
 import javax.inject.Inject
 
@@ -60,9 +59,6 @@ class SearchActivity : AppCompatActivity() {
     lateinit var contactsStore: ContactsStore
     @Inject
     lateinit var login: Login
-
-    private val promptLabel by lazy { findViewById<TextView>(R.id.prompt) }
-    private val contacts by lazy { findViewById<RecyclerView>(R.id.contacts) }
 
     private var progress: ProgressDialog? = null
 
@@ -96,7 +92,7 @@ class SearchActivity : AppCompatActivity() {
                     idPlaceholder + IMAGE_PLACEHOLDER_LENGTH,
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         }
-        promptLabel.text = ss
+        prompt.text = ss
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -125,20 +121,20 @@ class SearchActivity : AppCompatActivity() {
 
     private fun onSearchViewClosed(): Boolean {
         if (contacts.visibility != View.VISIBLE) {
-            promptLabel.visibility = View.VISIBLE
+            prompt.visibility = View.VISIBLE
         }
         setPromptLabelText(R.string.search_press_to_begin)
         return false
     }
 
     private fun onSearchClicked() {
-        promptLabel.visibility = View.GONE
+        prompt.visibility = View.GONE
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> {
-                promptLabel.visibility = View.GONE
+                prompt.visibility = View.GONE
                 contacts.visibility = View.GONE
                 onSearchRequested()
                 return true
@@ -162,12 +158,12 @@ class SearchActivity : AppCompatActivity() {
     private fun onContactReceived(contact: Contact) {
         progress!!.cancel()
         if (contact.isEmpty) {
-            promptLabel.visibility = View.VISIBLE
+            prompt.visibility = View.VISIBLE
             contacts.visibility = View.GONE
             setPromptLabelText(R.string.search_no_user_found)
             return
         }
-        promptLabel.visibility = View.GONE
+        prompt.visibility = View.GONE
         contacts.visibility = View.VISIBLE
         initRecyclerView(contact)
     }
