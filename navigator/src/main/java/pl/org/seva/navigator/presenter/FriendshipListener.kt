@@ -31,10 +31,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FirebaseWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
-import pl.org.seva.navigator.model.database.sqlite.SqlWriter
+import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder
 
 @Singleton

@@ -58,8 +58,8 @@ import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
-import pl.org.seva.navigator.model.database.sqlite.SqlWriter
+import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.PermissionsUtils
 import pl.org.seva.navigator.source.MyLocationSource

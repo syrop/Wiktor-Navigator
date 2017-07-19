@@ -22,7 +22,7 @@ import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import com.google.android.gms.maps.model.LatLng
 import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FirebaseWriter
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import javax.inject.Inject
 

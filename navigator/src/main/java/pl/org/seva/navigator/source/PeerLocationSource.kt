@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.model.database.firebase.FirebaseReader
+import pl.org.seva.navigator.model.firebase.FirebaseReader
 
 class PeerLocationSource @Inject internal constructor() {
 

@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.database.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FirebaseWriter
 
 @Suppress("DEPRECATION")
 class LoginActivity :

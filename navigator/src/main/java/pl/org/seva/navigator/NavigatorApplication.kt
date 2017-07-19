@@ -25,9 +25,9 @@ import com.google.firebase.auth.FirebaseUser
 
 import javax.inject.Inject
 
-import pl.org.seva.navigator.model.database.sqlite.DbHelper
-import pl.org.seva.navigator.model.database.sqlite.SqlReader
-import pl.org.seva.navigator.model.database.sqlite.SqlWriter
+import pl.org.seva.navigator.model.sqlite.DbHelper
+import pl.org.seva.navigator.model.sqlite.SqlReader
+import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.model.ContactsStore

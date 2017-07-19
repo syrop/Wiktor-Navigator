@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model.database.sqlite
+package pl.org.seva.navigator.model.sqlite
 
 import java.util.ArrayList
 
