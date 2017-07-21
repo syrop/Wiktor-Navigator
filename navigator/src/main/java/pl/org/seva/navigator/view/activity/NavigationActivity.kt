@@ -502,7 +502,7 @@ class NavigationActivity : AppCompatActivity() {
         private val ZOOM_PROPERTY = "navigation_map_zoom"
         private val LATITUDE_PROPERTY = "navigation_map_latitude"
         private val LONGITUDE_PROPERTY = "navigation_map_longitude"
-        private val DEFAULT_ZOOM = 0.0f
+        private val DEFAULT_ZOOM = 7.5f
 
         /** Length of time that will be taken for a double click.  */
         private val DOUBLE_CLICK_MS: Long = 5000
