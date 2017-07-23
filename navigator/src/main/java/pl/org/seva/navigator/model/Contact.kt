@@ -44,7 +44,9 @@ class Contact() : Comparable<Contact>, Parcelable {
     override fun equals(other: Any?) =
         !(other == null || other !is Contact) && email == other.email
 
-    override fun hashCode() = email!!.hashCode()
+    override fun toString() = name ?: ""
+
+    override fun hashCode() = email?.hashCode() ?: "".hashCode()
 
     override fun describeContents() = 0
 
