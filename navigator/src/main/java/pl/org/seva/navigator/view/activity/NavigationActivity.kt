@@ -89,6 +89,10 @@ class NavigationActivity : AppCompatActivity() {
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
     private var contact: Contact? = null
+        set(value) {
+            field = value
+            storeContact()
+        }
     private var permissionDisposable = Disposables.empty()
     private var isLocationPermissionGranted = false
 
@@ -112,6 +116,26 @@ class NavigationActivity : AppCompatActivity() {
         animateCamera = false
     }
 
+    private fun storeContact() {
+        val name = contact?.name ?: ""
+        val email = contact?.email ?: ""
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putString(CONTACT_NAME_PROPERTY, name)
+                .putString(CONTACT_EMAIL_PROPERTY, email).apply()
+    }
+
+    private fun readContact() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val name = preferences.getString(CONTACT_NAME_PROPERTY, "")
+        val email = preferences.getString(CONTACT_EMAIL_PROPERTY, "")
+        if (name.isNotEmpty() && email.isNotEmpty()) {
+            val contact = Contact()
+            contact.name = name
+            contact.email = email
+            this.contact = contact
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
@@ -128,7 +152,7 @@ class NavigationActivity : AppCompatActivity() {
         (application as NavigatorApplication).component.inject(this)
         setContentView(R.layout.activity_navigation)
 
-        contact = intent.getParcelableExtra<Contact>(CONTACT)
+        readContact()
         contact?.let {
             contactsStore.addContactsUpdatedListener(it.email!!, { stopWatchingPeer() })
         }
@@ -182,7 +206,7 @@ class NavigationActivity : AppCompatActivity() {
         when (requestCode) {
             CONTACTS_ACTIVITY_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    contact = data?.getParcelableExtra(CONTACT)
+                    contact = data?.getParcelableExtra(CONTACT_IN_INTENT)
                 }
                 updateHud()
             }
@@ -491,7 +515,7 @@ class NavigationActivity : AppCompatActivity() {
         private val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
         private val HELP_LOGIN_EN = "help_login_en.html"
 
-        val CONTACT = "contact"
+        val CONTACT_IN_INTENT = "contact"
 
         private val MAP_FRAGMENT_TAG = "map"
 
@@ -500,6 +524,8 @@ class NavigationActivity : AppCompatActivity() {
         private val ZOOM_PROPERTY = "navigation_map_zoom"
         private val LATITUDE_PROPERTY = "navigation_map_latitude"
         private val LONGITUDE_PROPERTY = "navigation_map_longitude"
+        private val CONTACT_NAME_PROPERTY = "navigation_map_followed_name"
+        private val CONTACT_EMAIL_PROPERTY = "navigation_map_followed_email"
         private val DEFAULT_ZOOM = 7.5f
 
         /** Length of time that will be taken for a double click.  */
