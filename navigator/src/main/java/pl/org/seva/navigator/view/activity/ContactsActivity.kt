@@ -58,17 +58,19 @@ class ContactsActivity : AppCompatActivity() {
     @Inject
     lateinit var sqlWriter: SqlWriter
 
-    private val adapter = ContactAdapter()
-    private val component by lazy { (application as NavigatorApplication).component }
     private var snackbar: Snackbar? = null
+
+    private val adapter = ContactAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val component = (application as NavigatorApplication).component
         component.inject(this)
+        component.inject(adapter)
         setContentView(R.layout.activity_contacts)
         fab.setOnClickListener { onFabClicked() }
 
-        contactsStore.addContactsUpdatedListener { onContactsUpdated() }
+        contactsStore.addContactsUpdatedListener { onContactsUpdatedInStore() }
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -96,7 +98,6 @@ class ContactsActivity : AppCompatActivity() {
     private fun initContactsRecyclerView() {
         contacts.setHasFixedSize(true)
         contacts.layoutManager = LinearLayoutManager(this)
-        component.inject(adapter)
         adapter.addClickListener { onContactClicked(it) }
         contacts.adapter = adapter
         ItemTouchHelper(ContactTouchListener { onContactSwiped(it) } ).attachToRecyclerView(contacts)
@@ -158,7 +159,7 @@ class ContactsActivity : AppCompatActivity() {
         }
     }
 
-    private fun onContactsUpdated() {
+    private fun onContactsUpdatedInStore() {
         adapter.notifyDataSetChanged()
         promptOrRecyclerView()
     }
