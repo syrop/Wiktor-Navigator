@@ -23,20 +23,20 @@ import javax.inject.Inject
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.model.firebase.FbReader
 
-class PeerLocationSource @Inject internal constructor() {
+class PeerLocationSource @Inject constructor() {
 
     @Inject
-    lateinit var firebaseReader: FbReader
+    lateinit var fbReader: FbReader
 
-    private val compositeDisposable = CompositeDisposable()
+    private val cd = CompositeDisposable()
 
     fun addPeerLocationListener(email: String, peerLocationListener: (latLng : LatLng) -> Unit) {
-        compositeDisposable.add(firebaseReader
+        cd.add(fbReader
                 .peerLocationListener(email)
                 .subscribe { peerLocationListener(it) })
     }
 
     fun clearPeerLocationListeners() {
-        compositeDisposable.clear()
+        cd.clear()
     }
 }

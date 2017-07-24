@@ -50,9 +50,9 @@ class ContactsActivity : AppCompatActivity() {
     @Inject
     lateinit var myLocationSource: MyLocationSource
     @Inject
-    lateinit var contactsStore: ContactsStore
+    lateinit var store: ContactsStore
     @Inject
-    lateinit var firebaseWriter: FbWriter
+    lateinit var fbWriter: FbWriter
     @Inject
     lateinit var login: Login
     @Inject
@@ -70,7 +70,7 @@ class ContactsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_contacts)
         fab.setOnClickListener { onFabClicked() }
 
-        contactsStore.addContactsUpdatedListener { onContactsUpdatedInStore() }
+        store.addContactsUpdatedListener { onContactsUpdatedInStore() }
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -82,7 +82,7 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun promptOrRecyclerView() {
-        if (contactsStore.size() > 0) {
+        if (store.size() > 0) {
             contacts.visibility = View.VISIBLE
             prompt.visibility = View.GONE
         } else {
@@ -114,7 +114,7 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun onContactSwiped(position: Int) {
-        val contact = contactsStore[position]
+        val contact = store[position]
         deleteFriend(contact)
         promptOrRecyclerView()
     }
@@ -125,17 +125,17 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun deleteFriend(contact: Contact) {
-        firebaseWriter.deleteFriendship(contact)
-        contactsStore.delete(contact)
+        fbWriter.deleteFriendship(contact)
+        store.delete(contact)
         sqlWriter.deleteFriend(contact)
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
     }
 
     private fun undeleteFriend(contact: Contact) {
-        firebaseWriter.addFriendship(contact)
-        firebaseWriter.acceptFriendship(contact)
-        contactsStore.add(contact)
+        fbWriter.addFriendship(contact)
+        fbWriter.acceptFriendship(contact)
+        store.add(contact)
         sqlWriter.addFriend(contact)
         adapter.notifyDataSetChanged()
     }

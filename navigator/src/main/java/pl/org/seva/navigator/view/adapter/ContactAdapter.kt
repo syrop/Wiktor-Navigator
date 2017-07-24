@@ -18,7 +18,6 @@
 package pl.org.seva.navigator.view.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,12 +33,12 @@ import pl.org.seva.navigator.model.Contact
 open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     @Inject
-    lateinit var contactsStore: ContactsStore
+    lateinit var store: ContactsStore
 
     private val clickSubject = PublishSubject.create<Contact>()
 
     internal open fun getContact(position: Int): Contact {
-        return contactsStore[position]
+        return store[position]
     }
 
     override fun onCreateViewHolder(
@@ -65,7 +64,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return contactsStore.size()
+        return store.size()
     }
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {

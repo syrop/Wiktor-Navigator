@@ -42,11 +42,11 @@ class FriendshipListener @Inject
 internal constructor() {
 
     @Inject
-    lateinit var contactsStore: ContactsStore
+    lateinit var store: ContactsStore
     @Inject
     lateinit var sqlWriter: SqlWriter
     @Inject
-    lateinit var firebaseWriter: FbWriter
+    lateinit var fbWriter: FbWriter
 
     lateinit var weakContext: WeakReference<Context>
 
@@ -89,22 +89,22 @@ internal constructor() {
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
-        contactsStore.add(contact)
+        store.add(contact)
         sqlWriter.addFriend(contact)
-        firebaseWriter.addFriendship(contact)
+        fbWriter.addFriendship(contact)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
-        contactsStore.delete(contact)
+        store.delete(contact)
         sqlWriter.deleteFriend(contact)
     }
 
     private fun acceptFriend(contact: Contact) {
-        firebaseWriter.acceptFriendship(contact)
-        if (contactsStore.contains(contact)) {
+        fbWriter.acceptFriendship(contact)
+        if (store.contains(contact)) {
             return
         }
-        contactsStore.add(contact)
+        store.add(contact)
         sqlWriter.addFriend(contact)
     }
 

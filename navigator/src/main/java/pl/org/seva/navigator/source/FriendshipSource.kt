@@ -29,28 +29,28 @@ import pl.org.seva.navigator.presenter.FriendshipListener
 class FriendshipSource @Inject internal constructor() {
 
     @Inject
-    lateinit var firebaseReader: FbReader
+    lateinit var fbReader: FbReader
 
-    private val compositeDisposable = CompositeDisposable()
+    private val cd = CompositeDisposable()
 
     fun addFriendshipListener(friendshipListener: FriendshipListener) {
-        compositeDisposable.addAll(
-                firebaseReader
+        cd.addAll(
+                fbReader
                         .friendshipRequestedListener()
                         .subscribe{ friendshipListener.onPeerRequestedFriendship(it) },
-                firebaseReader
+                fbReader
                         .friendshipAcceptedListener()
                         .subscribe { friendshipListener.onPeerAcceptedFriendship(it) },
-                firebaseReader
+                fbReader
                         .friendshipDeletedListener()
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
     }
 
     fun downloadFriendsFromCloud(listener: (Contact) -> Unit) {
-        firebaseReader.readFriendsOnce().subscribe { listener(it) }
+        fbReader.readFriendsOnce().subscribe { listener(it) }
     }
 
     fun clearFriendshipListeners() {
-        compositeDisposable.clear()
+        cd.clear()
     }
 }

@@ -52,11 +52,11 @@ import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 class SearchActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var firebaseWriter: FbWriter
+    lateinit var fbWriter: FbWriter
     @Inject
-    lateinit var firebaseReader: FbReader
+    lateinit var fbReader: FbReader
     @Inject
-    lateinit var contactsStore: ContactsStore
+    lateinit var store: ContactsStore
     @Inject
     lateinit var login: Login
 
@@ -150,7 +150,7 @@ class SearchActivity : AppCompatActivity() {
     private fun search(query: String) {
         val localQuery = query.toLowerCase()
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching))
-        firebaseReader
+        fbReader
                 .readContactOnceForEmail(localQuery)
                 .subscribe { onContactReceived(it) }
     }
@@ -178,7 +178,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onContactClicked(contact: Contact) {
-        if (contactsStore.contains(contact)) {
+        if (store.contains(contact)) {
             finish()
         }
         else if (contact.email == login.email){
@@ -196,7 +196,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun contactApprovedAndFinish(contact: Contact) {
         Toast.makeText(this, R.string.search_waiting_for_party, Toast.LENGTH_SHORT).show()
-        firebaseWriter.requestFriendship(contact)
+        fbWriter.requestFriendship(contact)
         finish()
     }
 

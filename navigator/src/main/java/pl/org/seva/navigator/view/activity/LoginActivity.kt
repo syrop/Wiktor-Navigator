@@ -48,7 +48,7 @@ class LoginActivity :
         GoogleApiClient.ConnectionCallbacks {
 
     @Inject
-    lateinit var firebaseWriter: FbWriter
+    lateinit var fbWriter: FbWriter
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var authStateListener: (firebaseAuth : FirebaseAuth) -> Unit
@@ -115,7 +115,7 @@ class LoginActivity :
     }
 
     private fun onUserLoggedIn(user: FirebaseUser) {
-        firebaseWriter.login(user)
+        fbWriter.login(user)
         (application as NavigatorApplication).login(user)
         if (performedAction) {
             finish()

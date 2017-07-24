@@ -38,7 +38,7 @@ internal constructor() {
             permissions: Array<PermissionRequest>) : Disposable {
         val permissionsToRequest = ArrayList<String>()
         val composite = CompositeDisposable()
-        permissions.forEach { permission->
+        permissions.forEach { permission ->
             permissionsToRequest.add(permission.permission)
             composite.addAll(
                     permissionGrantedSubject
