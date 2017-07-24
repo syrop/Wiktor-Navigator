@@ -28,7 +28,7 @@ import java.util.Locale
 import pl.org.seva.navigator.model.Login
 import javax.inject.Inject
 
-open class FbBase protected constructor() {
+open class Fb protected constructor() {
 
     @Inject
     lateinit var login: Login

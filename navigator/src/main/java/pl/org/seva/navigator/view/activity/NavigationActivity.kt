@@ -128,9 +128,7 @@ class NavigationActivity : AppCompatActivity() {
         val name = preferences.getString(CONTACT_NAME_PROPERTY, "")
         val email = preferences.getString(CONTACT_EMAIL_PROPERTY, "")
         if (name.isNotEmpty() && email.isNotEmpty()) {
-            val contact = Contact()
-            contact.name = name
-            contact.email = email
+            val contact = Contact(email = email, name = name)
             if (store.contains(contact)) {
                 this.contact = contact
             }

@@ -28,7 +28,7 @@ import pl.org.seva.navigator.model.Contact
 
 @Singleton
 class FbWriter @Inject
-internal constructor() : FbBase() {
+internal constructor() : Fb() {
 
     fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)

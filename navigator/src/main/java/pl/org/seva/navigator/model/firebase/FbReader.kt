@@ -31,16 +31,7 @@ import pl.org.seva.navigator.model.Contact
 
 @Singleton
 class FbReader @Inject
-internal constructor() : FbBase() {
-
-    private fun createContactObservable(tag: String, delete: Boolean): Observable<Contact> {
-        val reference = currentUserReference().child(tag)
-        return readDataOnce(reference)
-                .concatMapIterable<DataSnapshot> { it.children }
-                .concatWith(childListener(reference))
-                .doOnNext { if (delete) reference.child(it.key).removeValue() }
-                .map({ snapshot2Contact(it) })
-    }
+internal constructor() : Fb() {
 
     private fun readDataOnce(reference: DatabaseReference): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
@@ -54,35 +45,20 @@ internal constructor() : FbBase() {
     private fun readData(reference: DatabaseReference): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
         val value = RxValueEventListener(resultSubject)
-
         return resultSubject
                 .doOnSubscribe { reference.addValueEventListener(value) }
                 .doOnDispose { reference.removeEventListener(value) }
     }
 
-    private fun childListener(reference: DatabaseReference): Observable<DataSnapshot> {
-        val result = ReplaySubject.create<DataSnapshot>()
-        reference.addChildEventListener(RxChildEventListener(result))
-        return result.hide()
-    }
-
-    private fun snapshot2Contact(snapshot: DataSnapshot): Contact {
-        val resultContact = Contact()
-        if (!snapshot.exists()) {
-            return resultContact
-        }
-        resultContact.email = from64(snapshot.key)
-        resultContact.name = snapshot.child(DISPLAY_NAME).value as String
-
-        return resultContact
-    }
+    private fun DataSnapshot.toContact() =
+            if (exists()) Contact(from64(key), child(DISPLAY_NAME).value as String) else Contact()
 
     fun peerLocationListener(email: String): Observable<LatLng> {
         return readData(email2Reference(email).child(LAT_LNG))
                 .filter { it.value != null }
                 .map { it.value!! }
                 .map { it as String }
-                .map { FbBase.string2LatLng(it) }
+                .map { Fb.string2LatLng(it) }
     }
 
     fun friendshipRequestedListener(): Observable<Contact> {
@@ -97,16 +73,32 @@ internal constructor() : FbBase() {
         return createContactObservable(FRIENDSHIP_DELETED, true)
     }
 
+    private fun createContactObservable(tag: String, deleteOnRead: Boolean): Observable<Contact> {
+        val reference = currentUserReference().child(tag)
+        return readDataOnce(reference)
+                .concatMapIterable<DataSnapshot> { it.children }
+                .concatWith(childListener(reference))
+                .doOnNext { if (deleteOnRead) reference.child(it.key).removeValue() }
+                .map { it.toContact() }
+    }
+
+    private fun childListener(reference: DatabaseReference): Observable<DataSnapshot> {
+        val result = ReplaySubject.create<DataSnapshot>()
+        reference.addChildEventListener(RxChildEventListener(result))
+        return result.hide()
+    }
+
+
     fun readFriendsOnce(): Observable<Contact> {
         val reference = currentUserReference().child(FRIENDS)
         return readDataOnce(reference)
                 .concatMapIterable { it.children }
                 .filter { it.exists() }
-                .map { snapshot2Contact(it) }
+                .map { it.toContact() }
     }
 
     fun readContactOnceForEmail(email: String): Observable<Contact> {
         return readDataOnce(email2Reference(email))
-                .map { snapshot2Contact(it) }
+                .map { it.toContact() }
     }
 }

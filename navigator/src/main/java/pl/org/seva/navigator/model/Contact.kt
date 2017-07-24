@@ -20,18 +20,9 @@ package pl.org.seva.navigator.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class Contact() : Comparable<Contact>, Parcelable {
+data class Contact(val email: String? = null, val name: String? = null) : Comparable<Contact>, Parcelable {
 
-    var email: String? = null
-    var name: String? = null
-
-    val isEmpty: Boolean
-        get() = email == null || name == null
-
-    constructor(email: String, name: String): this() {
-        this.email = email
-        this.name = name
-    }
+    val isEmpty = email == null || name == null
 
     override fun compareTo(other: Contact): Int {
         var result = name!!.compareTo(other.name!!)
