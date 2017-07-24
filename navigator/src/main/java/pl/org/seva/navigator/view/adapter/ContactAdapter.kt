@@ -63,9 +63,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
         clickSubject.subscribe { contactClickListener(it) }
     }
 
-    override fun getItemCount(): Int {
-        return store.size()
-    }
+    override fun getItemCount() = store.size()
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById<TextView>(R.id.name)

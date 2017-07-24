@@ -21,11 +21,7 @@ import pl.org.seva.navigator.model.Contact
 
 class SingleContactAdapter(private val contact: Contact) : ContactAdapter() {
 
-    override fun getContact(position: Int): Contact {
-        return contact
-    }
+    override fun getContact(position: Int) = contact
 
-    override fun getItemCount(): Int {
-        return 1
-    }
+    override fun getItemCount() = 1
 }
