@@ -71,7 +71,7 @@ class NavigationActivity : AppCompatActivity() {
     @Inject
     lateinit var peerLocationSource: PeerLocationSource
     @Inject
-    lateinit var contactsStore: ContactsStore
+    lateinit var store: ContactsStore
     @Inject
     lateinit var permissionsUtils: PermissionsUtils
     @Inject
@@ -81,10 +81,9 @@ class NavigationActivity : AppCompatActivity() {
     @Inject
     lateinit var sqlWriter: SqlWriter
     @Inject
-    lateinit var firebaseWriter: FirebaseWriter
+    lateinit var fbWriter: FirebaseWriter
 
-    /** Used when counting a double click.  */
-    private var clickTime: Long = 0
+    private var firstClickTime = 0L
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -132,7 +131,9 @@ class NavigationActivity : AppCompatActivity() {
             val contact = Contact()
             contact.name = name
             contact.email = email
-            this.contact = contact
+            if (store.contains(contact)) {
+                this.contact = contact
+            }
         }
     }
 
@@ -154,7 +155,7 @@ class NavigationActivity : AppCompatActivity() {
 
         readContact()
         contact?.let {
-            contactsStore.addContactsUpdatedListener(it.email!!, { stopWatchingPeer() })
+            store.addContactsUpdatedListener(it.email!!, { stopWatchingPeer() })
         }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
@@ -397,9 +398,9 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun deleteProfile() {
         stopWatchingPeer()
-        contactsStore.clear()
+        store.clear()
         sqlWriter.deleteAllFriends()
-        firebaseWriter.deleteMe()
+        fbWriter.deleteMe()
         logout()
     }
 
@@ -488,12 +489,12 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (System.currentTimeMillis() - clickTime < DOUBLE_CLICK_MS) {
+        if (System.currentTimeMillis() - firstClickTime < DOUBLE_CLICK_MS) {
             (application as NavigatorApplication).stopService()
             super.onBackPressed()
         } else {
             Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT).show()
-            clickTime = System.currentTimeMillis()
+            firstClickTime = System.currentTimeMillis()
         }
     }
 
