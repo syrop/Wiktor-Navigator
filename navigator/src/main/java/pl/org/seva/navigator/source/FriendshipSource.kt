@@ -22,14 +22,14 @@ import javax.inject.Singleton
 
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.firebase.FirebaseReader
+import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.presenter.FriendshipListener
 
 @Singleton
 class FriendshipSource @Inject internal constructor() {
 
     @Inject
-    lateinit var firebaseReader: FirebaseReader
+    lateinit var firebaseReader: FbReader
 
     private val compositeDisposable = CompositeDisposable()
 

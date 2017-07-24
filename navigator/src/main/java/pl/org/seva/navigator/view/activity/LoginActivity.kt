@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FbWriter
 
 @Suppress("DEPRECATION")
 class LoginActivity :
@@ -48,7 +48,7 @@ class LoginActivity :
         GoogleApiClient.ConnectionCallbacks {
 
     @Inject
-    lateinit var firebaseWriter: FirebaseWriter
+    lateinit var firebaseWriter: FbWriter
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var authStateListener: (firebaseAuth : FirebaseAuth) -> Unit

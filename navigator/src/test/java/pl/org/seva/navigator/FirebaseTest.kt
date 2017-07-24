@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 
 import org.junit.Test
 
-import pl.org.seva.navigator.model.firebase.FirebaseBase
+import pl.org.seva.navigator.model.firebase.FbBase
 
 import org.junit.Assert.assertEquals
 
@@ -31,13 +31,13 @@ class FirebaseTest {
     fun latLng2String() {
         val lat = java.lang.Double.parseDouble(LAT)
         val lon = java.lang.Double.parseDouble(LON)
-        val str = FirebaseBase.latLng2String(LatLng(lat, lon))
+        val str = FbBase.latLng2String(LatLng(lat, lon))
         assertEquals(LAT + ";" + LON, str)
     }
 
     @Test
     fun string2LatLng() {
-        val latLng = FirebaseBase.string2LatLng(LAT + ";" + LON)
+        val latLng = FbBase.string2LatLng(LAT + ";" + LON)
         assertEquals(LAT, java.lang.Double.toString(latLng.latitude))
         assertEquals(LON, java.lang.Double.toString(latLng.longitude))
     }

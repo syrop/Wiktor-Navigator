@@ -22,7 +22,7 @@ import android.arch.lifecycle.LifecycleService
 import android.content.Context
 import com.google.android.gms.maps.model.LatLng
 import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class NavigatorService : LifecycleService() {
     @javax.inject.Inject
     lateinit var myLocationSource : pl.org.seva.navigator.source.MyLocationSource
     @Inject
-    lateinit var firebaseWriter: FirebaseWriter
+    lateinit var firebaseWriter: FbWriter
     @Inject
     lateinit var login: Login
 

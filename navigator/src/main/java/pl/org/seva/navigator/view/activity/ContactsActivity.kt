@@ -39,7 +39,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.ContactTouchListener
 import pl.org.seva.navigator.source.MyLocationSource
@@ -52,7 +52,7 @@ class ContactsActivity : AppCompatActivity() {
     @Inject
     lateinit var contactsStore: ContactsStore
     @Inject
-    lateinit var firebaseWriter: FirebaseWriter
+    lateinit var firebaseWriter: FbWriter
     @Inject
     lateinit var login: Login
     @Inject

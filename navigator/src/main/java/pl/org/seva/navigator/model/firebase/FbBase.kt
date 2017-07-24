@@ -28,12 +28,12 @@ import java.util.Locale
 import pl.org.seva.navigator.model.Login
 import javax.inject.Inject
 
-open class FirebaseBase protected constructor() {
+open class FbBase protected constructor() {
 
     @Inject
     lateinit var login: Login
 
-    protected val database = FirebaseDatabase.getInstance()!!
+    protected val db = FirebaseDatabase.getInstance()!!
 
     protected fun currentUserReference(): DatabaseReference {
         return email2Reference(login.email!!)
@@ -41,7 +41,7 @@ open class FirebaseBase protected constructor() {
 
     protected fun email2Reference(email: String): DatabaseReference {
         val referencePath = USER_ROOT + "/" + to64(email)
-        return database.getReference(referencePath)
+        return db.getReference(referencePath)
     }
 
     companion object {

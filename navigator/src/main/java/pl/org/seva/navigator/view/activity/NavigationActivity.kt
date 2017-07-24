@@ -58,7 +58,7 @@ import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.PermissionsUtils
@@ -81,7 +81,7 @@ class NavigationActivity : AppCompatActivity() {
     @Inject
     lateinit var sqlWriter: SqlWriter
     @Inject
-    lateinit var fbWriter: FirebaseWriter
+    lateinit var fbWriter: FbWriter
 
     private var firstClickTime = 0L
 

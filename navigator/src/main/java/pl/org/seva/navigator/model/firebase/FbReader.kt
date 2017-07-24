@@ -30,8 +30,8 @@ import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.model.Contact
 
 @Singleton
-class FirebaseReader @Inject
-internal constructor() : FirebaseBase() {
+class FbReader @Inject
+internal constructor() : FbBase() {
 
     private fun createContactObservable(tag: String, delete: Boolean): Observable<Contact> {
         val reference = currentUserReference().child(tag)
@@ -82,7 +82,7 @@ internal constructor() : FirebaseBase() {
                 .filter { it.value != null }
                 .map { it.value!! }
                 .map { it as String }
-                .map { FirebaseBase.string2LatLng(it) }
+                .map { FbBase.string2LatLng(it) }
     }
 
     fun friendshipRequestedListener(): Observable<Contact> {

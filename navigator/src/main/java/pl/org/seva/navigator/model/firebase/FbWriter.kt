@@ -27,12 +27,12 @@ import javax.inject.Singleton
 import pl.org.seva.navigator.model.Contact
 
 @Singleton
-class FirebaseWriter @Inject
-internal constructor() : FirebaseBase() {
+class FbWriter @Inject
+internal constructor() : FbBase() {
 
     fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)
-        writeContact(database.getReference(USER_ROOT), contact)
+        writeContact(db.getReference(USER_ROOT), contact)
     }
 
     fun writeMyLocation(email: String, latLng: LatLng) {

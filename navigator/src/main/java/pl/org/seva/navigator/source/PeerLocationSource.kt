@@ -21,12 +21,12 @@ import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.model.firebase.FirebaseReader
+import pl.org.seva.navigator.model.firebase.FbReader
 
 class PeerLocationSource @Inject internal constructor() {
 
     @Inject
-    lateinit var firebaseReader: FirebaseReader
+    lateinit var firebaseReader: FbReader
 
     private val compositeDisposable = CompositeDisposable()
 

@@ -31,7 +31,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.model.sqlite.SqlWriter
@@ -46,7 +46,7 @@ internal constructor() {
     @Inject
     lateinit var sqlWriter: SqlWriter
     @Inject
-    lateinit var firebaseWriter: FirebaseWriter
+    lateinit var firebaseWriter: FbWriter
 
     lateinit var weakContext: WeakReference<Context>
 

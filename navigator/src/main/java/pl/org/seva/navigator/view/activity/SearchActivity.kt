@@ -41,8 +41,8 @@ import javax.inject.Inject
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.firebase.FirebaseReader
-import pl.org.seva.navigator.model.firebase.FirebaseWriter
+import pl.org.seva.navigator.model.firebase.FbReader
+import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter
@@ -52,9 +52,9 @@ import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 class SearchActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var firebaseWriter: FirebaseWriter
+    lateinit var firebaseWriter: FbWriter
     @Inject
-    lateinit var firebaseReader: FirebaseReader
+    lateinit var firebaseReader: FbReader
     @Inject
     lateinit var contactsStore: ContactsStore
     @Inject
