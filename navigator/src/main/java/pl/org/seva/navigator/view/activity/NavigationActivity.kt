@@ -219,8 +219,8 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun onGoogleMapReady(googleMap: GoogleMap) {
-        map = googleMap
+    private fun GoogleMap.onReady() {
+        map = this
         map!!.setOnCameraIdleListener { onCameraIdle() }
         checkLocationPermission(
                 onGranted = { map?.isMyLocationEnabled = true },
@@ -442,7 +442,7 @@ class NavigationActivity : AppCompatActivity() {
         mapFragment?:let {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
-            mapFragment!!.getMapAsync( { onGoogleMapReady(it) })
+            mapFragment!!.getMapAsync { it.onReady() }
         }
 
     }

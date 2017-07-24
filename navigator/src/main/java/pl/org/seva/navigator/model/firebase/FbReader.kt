@@ -33,6 +33,52 @@ import pl.org.seva.navigator.model.Contact
 class FbReader @Inject
 internal constructor() : Fb() {
 
+    fun peerLocationListener(email: String): Observable<LatLng> {
+        return email2Reference(email).child(LAT_LNG).read()
+                .filter { it.value != null }
+                .map { it.value!! }
+                .map { it as String }
+                .map { Fb.string2LatLng(it) }
+    }
+
+    fun friendshipRequestedListener(): Observable<Contact> {
+        return FRIENDSHIP_REQUESTED.createContactObservable()
+    }
+
+    fun friendshipAcceptedListener(): Observable<Contact> {
+        return FRIENDSHIP_ACCEPTED.createContactObservable()
+    }
+
+    fun friendshipDeletedListener(): Observable<Contact> {
+        return FRIENDSHIP_DELETED.createContactObservable()
+    }
+
+    fun readFriendsOnce(): Observable<Contact> {
+        val reference = currentUserReference().child(FRIENDS)
+        return reference.readOnce()
+                .concatMapIterable { it.children }
+                .filter { it.exists() }
+                .map { it.toContact() }
+    }
+
+    fun readContactOnceForEmail(email: String): Observable<Contact> =
+            email2Reference(email).readOnce().map { it.toContact() }
+
+    private fun String.createContactObservable(): Observable<Contact> {
+        val reference = currentUserReference().child(this)
+        return reference.readOnce()
+                .concatMapIterable<DataSnapshot> { it.children }
+                .concatWith(reference.childListener())
+                .doOnNext { reference.child(it.key).removeValue() }
+                .map { it.toContact() }
+    }
+
+    private fun DatabaseReference.childListener(): Observable<DataSnapshot> {
+        val result = ReplaySubject.create<DataSnapshot>()
+        addChildEventListener(RxChildEventListener(result))
+        return result.hide()
+    }
+
     private fun DatabaseReference.readOnce(): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
         return resultSubject
@@ -50,51 +96,4 @@ internal constructor() : Fb() {
 
     private fun DataSnapshot.toContact() =
             if (exists()) Contact(from64(key), child(DISPLAY_NAME).value as String) else Contact()
-
-    fun peerLocationListener(email: String): Observable<LatLng> {
-        return email2Reference(email).child(LAT_LNG).read()
-                .filter { it.value != null }
-                .map { it.value!! }
-                .map { it as String }
-                .map { Fb.string2LatLng(it) }
-    }
-
-    fun friendshipRequestedListener(): Observable<Contact> {
-        return createContactObservable(FRIENDSHIP_REQUESTED, true)
-    }
-
-    fun friendshipAcceptedListener(): Observable<Contact> {
-        return createContactObservable(FRIENDSHIP_ACCEPTED, true)
-    }
-
-    fun friendshipDeletedListener(): Observable<Contact> {
-        return createContactObservable(FRIENDSHIP_DELETED, true)
-    }
-
-    private fun createContactObservable(tag: String, deleteOnRead: Boolean): Observable<Contact> {
-        val reference = currentUserReference().child(tag)
-        return reference.readOnce()
-                .concatMapIterable<DataSnapshot> { it.children }
-                .concatWith(reference.childListener())
-                .doOnNext { if (deleteOnRead) reference.child(it.key).removeValue() }
-                .map { it.toContact() }
-    }
-
-    private fun DatabaseReference.childListener(): Observable<DataSnapshot> {
-        val result = ReplaySubject.create<DataSnapshot>()
-        addChildEventListener(RxChildEventListener(result))
-        return result.hide()
-    }
-
-
-    fun readFriendsOnce(): Observable<Contact> {
-        val reference = currentUserReference().child(FRIENDS)
-        return reference.readOnce()
-                .concatMapIterable { it.children }
-                .filter { it.exists() }
-                .map { it.toContact() }
-    }
-
-    fun readContactOnceForEmail(email: String): Observable<Contact> =
-        email2Reference(email).readOnce().map { it.toContact() }
 }
