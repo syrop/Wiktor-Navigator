@@ -6,12 +6,12 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.1'
     defaultConfig {
-        applicationId "pl.org.seva.navigator"
+        applicationId 'pl.org.seva.navigator'
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 22
-        versionName "2.1.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName '2.1.1'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
     }
 
