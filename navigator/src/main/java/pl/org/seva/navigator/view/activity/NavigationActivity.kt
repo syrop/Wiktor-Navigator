@@ -444,7 +444,6 @@ class NavigationActivity : AppCompatActivity() {
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
             mapFragment!!.getMapAsync { it.onReady() }
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
