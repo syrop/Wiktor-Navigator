@@ -54,7 +54,7 @@ class NavigatorService : LifecycleService() {
     }
 
     fun onLocationReceived(latLng: LatLng) {
-        firebaseWriter.writeMyLocation(login.email!!, latLng)
+        firebaseWriter.writeLocation(login.email!!, latLng)
     }
 
     private fun createOngoingNotification(): android.app.Notification {

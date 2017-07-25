@@ -35,7 +35,7 @@ internal constructor() : Fb() {
         contact.write(db.getReference(USER_ROOT))
     }
 
-    fun writeMyLocation(email: String, latLng: LatLng) {
+    fun writeLocation(email: String, latLng: LatLng) {
         email.toReference().child(LAT_LNG).setValue(latLng.toFbString())
     }
 
