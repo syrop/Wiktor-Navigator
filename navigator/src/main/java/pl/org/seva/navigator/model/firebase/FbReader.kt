@@ -34,11 +34,11 @@ class FbReader @Inject
 internal constructor() : Fb() {
 
     fun peerLocationListener(email: String): Observable<LatLng> {
-        return email2Reference(email).child(LAT_LNG).read()
+        return email.toReference().child(LAT_LNG).read()
                 .filter { it.value != null }
                 .map { it.value!! }
                 .map { it as String }
-                .map { Fb.string2LatLng(it) }
+                .map { it.toLatLng() }
     }
 
     fun friendshipRequestedListener(): Observable<Contact> {
@@ -62,7 +62,7 @@ internal constructor() : Fb() {
     }
 
     fun readContactOnceForEmail(email: String): Observable<Contact> =
-            email2Reference(email).readOnce().map { it.toContact() }
+            email.toReference().readOnce().map { it.toContact() }
 
     private fun String.createContactObservable(): Observable<Contact> {
         val reference = currentUserReference().child(this)
@@ -95,5 +95,5 @@ internal constructor() : Fb() {
     }
 
     private fun DataSnapshot.toContact() =
-            if (exists()) Contact(from64(key), child(DISPLAY_NAME).value as String) else Contact()
+            if (exists()) Contact(key.from64(), child(DISPLAY_NAME).value as String) else Contact()
 }

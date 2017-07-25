@@ -35,17 +35,25 @@ open class Fb protected constructor() {
 
     protected val db = FirebaseDatabase.getInstance()!!
 
-    protected fun currentUserReference(): DatabaseReference {
-        return email2Reference(login.email!!)
-    }
+    protected fun currentUserReference() = login.email!!.toReference()
 
-    protected fun email2Reference(email: String): DatabaseReference {
-        val referencePath = USER_ROOT + "/" + to64(email)
-        return db.getReference(referencePath)
+    protected fun String.toReference(): DatabaseReference = db.getReference(USER_ROOT + "/" + to64())
+
+    fun String.to64() = Base64.encodeToString(toByteArray(), Base64.NO_WRAP)!!
+
+    fun String.from64() = String(Base64.decode(toByteArray(), Base64.NO_WRAP))
+
+    fun LatLng.toFbString() = String.format(Locale.US, "%.3f", latitude) + ";" +
+            String.format(Locale.US, "%.3f", longitude)
+
+    fun String.toLatLng() : LatLng {
+        val semicolon = indexOf(';')
+        val lat = java.lang.Double.parseDouble(substring(0, semicolon))
+        val lon = java.lang.Double.parseDouble(substring(semicolon + 1))
+        return LatLng(lat, lon)
     }
 
     companion object {
-
         val USER_ROOT = "user"
         val DISPLAY_NAME = "display_name"
         val LAT_LNG = "lat_lng"
@@ -53,19 +61,5 @@ open class Fb protected constructor() {
         val FRIENDSHIP_ACCEPTED = "friendship_accepted"
         val FRIENDSHIP_DELETED = "friendship_deleted"
         val FRIENDS = "friends"
-
-        fun to64(str: String) : String = Base64.encodeToString(str.toByteArray(), Base64.NO_WRAP)
-
-        fun from64(str: String) = String(Base64.decode(str.toByteArray(), Base64.NO_WRAP))
-
-        fun latLng2String(latLng: LatLng) = String.format(Locale.US, "%.3f", latLng.latitude) + ";" +
-                    String.format(Locale.US, "%.3f", latLng.longitude)
-
-        fun string2LatLng(str: String): LatLng {
-            val semicolon = str.indexOf(';')
-            val lat = java.lang.Double.parseDouble(str.substring(0, semicolon))
-            val lon = java.lang.Double.parseDouble(str.substring(semicolon + 1))
-            return LatLng(lat, lon)
-        }
     }
 }

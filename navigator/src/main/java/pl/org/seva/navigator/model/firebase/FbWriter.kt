@@ -32,54 +32,48 @@ internal constructor() : Fb() {
 
     fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)
-        writeContact(db.getReference(USER_ROOT), contact)
+        contact.write(db.getReference(USER_ROOT))
     }
 
     fun writeMyLocation(email: String, latLng: LatLng) {
-        email2Reference(email).child(LAT_LNG).setValue(latLng2String(latLng))
+        email.toReference().child(LAT_LNG).setValue(latLng.toFbString())
     }
 
     fun requestFriendship(contact: Contact) {
-        val reference = email2Reference(contact.email!!).child(FRIENDSHIP_REQUESTED)
-        writeContact(reference, login.loggedInContact)
+        contact.email!!.toReference().child(FRIENDSHIP_REQUESTED).write(login.loggedInContact)
     }
 
     fun acceptFriendship(contact: Contact) {
-        val reference = email2Reference(contact.email!!).child(FRIENDSHIP_ACCEPTED)
-        writeContact(reference, login.loggedInContact)
+        contact.email!!.toReference().child(FRIENDSHIP_ACCEPTED).write(login.loggedInContact)
         addFriendship(contact)
     }
 
     fun addFriendship(contact: Contact) {
-        val reference = email2Reference(login.email!!).child(FRIENDS)
-        deleteMeFromContact(contact, FRIENDSHIP_DELETED)
-        writeContact(reference, contact)
+        login.email!!.toReference().child(FRIENDS).write(contact)
+        contact.deleteMeFromTag(FRIENDSHIP_DELETED)
     }
 
     fun deleteFriendship(contact: Contact) {
-        val reference = email2Reference(contact.email!!).child(FRIENDSHIP_DELETED)
-        writeContact(reference, login.loggedInContact)
-        deleteContactFromMe(contact, FRIENDS)
-    }
-
-    private fun writeContact(reference: DatabaseReference, contact: Contact) {
-        val contactEmail = to64(contact.email!!)
-        val localReference = reference.child(contactEmail)
-        localReference.child(DISPLAY_NAME).setValue(contact.name!!)
-    }
-
-    private fun deleteMeFromContact(contact: Contact, tag: String) {
-        val reference = email2Reference(contact.email!!).child(tag)
-        reference.child(to64(login.email!!)).removeValue()
-    }
-
-    private fun deleteContactFromMe(contact: Contact, tag: String) {
-        val reference = email2Reference(login.email!!).child(tag)
-        reference.child(to64(contact.email!!)).removeValue()
+        contact.email!!.toReference().child(FRIENDSHIP_DELETED).write(login.loggedInContact)
+        contact.deleteFromMyFriends()
     }
 
     fun deleteMe() {
-        val reference = email2Reference(login.email!!)
-        reference.removeValue()
+        login.email!!.toReference().removeValue()
     }
+
+    private fun Contact.write(reference: DatabaseReference) =
+        reference.write(this)
+
+    private fun DatabaseReference.write(contact: Contact) {
+        val contactEmail = contact.email!!.to64()
+        val localReference = this.child(contactEmail)
+        localReference.child(DISPLAY_NAME).setValue(contact.name!!)
+    }
+
+    private fun Contact.deleteMeFromTag(tag: String) =
+        email!!.toReference().child(tag).child(login.email!!.to64()).removeValue()
+
+    private fun Contact.deleteFromMyFriends() =
+        login.email!!.toReference().child(FRIENDS).child(email!!.to64()).removeValue()
 }
