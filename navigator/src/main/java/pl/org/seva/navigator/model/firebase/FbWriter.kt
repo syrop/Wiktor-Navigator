@@ -62,13 +62,11 @@ internal constructor() : Fb() {
         login.email!!.toReference().removeValue()
     }
 
-    private fun Contact.write(reference: DatabaseReference) =
-        reference.write(this)
+    private fun Contact.write(reference: DatabaseReference) = reference.write(this)
 
     private fun DatabaseReference.write(contact: Contact) {
         val contactEmail = contact.email!!.to64()
-        val localReference = this.child(contactEmail)
-        localReference.child(DISPLAY_NAME).setValue(contact.name!!)
+        child(contactEmail).child(DISPLAY_NAME).setValue(contact.name!!)
     }
 
     private fun Contact.deleteMeFromTag(tag: String) =
