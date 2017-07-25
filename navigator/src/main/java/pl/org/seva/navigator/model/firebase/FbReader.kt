@@ -34,7 +34,7 @@ class FbReader @Inject
 internal constructor() : Fb() {
 
     fun peerLocationListener(email: String): Observable<LatLng> {
-        return email.toReference().child(LAT_LNG).read()
+        return email.toReference().child(LAT_LNG).listen()
                 .filter { it.value != null }
                 .map { it.value!! }
                 .map { it as String }
@@ -42,31 +42,31 @@ internal constructor() : Fb() {
     }
 
     fun friendshipRequestedListener(): Observable<Contact> {
-        return FRIENDSHIP_REQUESTED.createContactObservable()
+        return FRIENDSHIP_REQUESTED.contactListener()
     }
 
     fun friendshipAcceptedListener(): Observable<Contact> {
-        return FRIENDSHIP_ACCEPTED.createContactObservable()
+        return FRIENDSHIP_ACCEPTED.contactListener()
     }
 
     fun friendshipDeletedListener(): Observable<Contact> {
-        return FRIENDSHIP_DELETED.createContactObservable()
+        return FRIENDSHIP_DELETED.contactListener()
     }
 
-    fun readFriendsOnce(): Observable<Contact> {
+    fun readFriends(): Observable<Contact> {
         val reference = currentUserReference().child(FRIENDS)
-        return reference.readOnce()
+        return reference.read()
                 .concatMapIterable { it.children }
                 .filter { it.exists() }
                 .map { it.toContact() }
     }
 
-    fun readContactOnceForEmail(email: String): Observable<Contact> =
-            email.toReference().readOnce().map { it.toContact() }
+    fun seekContact(email: String): Observable<Contact> =
+            email.toReference().read().map { it.toContact() }
 
-    private fun String.createContactObservable(): Observable<Contact> {
+    private fun String.contactListener(): Observable<Contact> {
         val reference = currentUserReference().child(this)
-        return reference.readOnce()
+        return reference.read()
                 .concatMapIterable<DataSnapshot> { it.children }
                 .concatWith(reference.childListener())
                 .doOnNext { reference.child(it.key).removeValue() }
@@ -79,14 +79,14 @@ internal constructor() : Fb() {
         return result.hide()
     }
 
-    private fun DatabaseReference.readOnce(): Observable<DataSnapshot> {
+    private fun DatabaseReference.read(): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
         return resultSubject
                 .doOnSubscribe { addListenerForSingleValueEvent(RxValueEventListener(resultSubject)) }
-                .take(1)
+                .take(READ_ONCE)
     }
 
-    private fun DatabaseReference.read(): Observable<DataSnapshot> {
+    private fun DatabaseReference.listen(): Observable<DataSnapshot> {
         val resultSubject = PublishSubject.create<DataSnapshot>()
         val value = RxValueEventListener(resultSubject)
         return resultSubject
@@ -96,4 +96,8 @@ internal constructor() : Fb() {
 
     private fun DataSnapshot.toContact() =
             if (exists()) Contact(key.from64(), child(DISPLAY_NAME).value as String) else Contact()
+
+    companion object {
+        val READ_ONCE = 1L
+    }
 }

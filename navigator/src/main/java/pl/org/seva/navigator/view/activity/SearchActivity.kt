@@ -151,7 +151,7 @@ class SearchActivity : AppCompatActivity() {
         val localQuery = query.toLowerCase()
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching))
         fbReader
-                .readContactOnceForEmail(localQuery)
+                .seekContact(localQuery)
                 .subscribe { onContactReceived(it) }
     }
 

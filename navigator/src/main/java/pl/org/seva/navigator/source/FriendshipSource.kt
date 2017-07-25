@@ -47,7 +47,7 @@ class FriendshipSource @Inject internal constructor() {
     }
 
     fun downloadFriendsFromCloud(listener: (Contact) -> Unit) {
-        fbReader.readFriendsOnce().subscribe { listener(it) }
+        fbReader.readFriends().subscribe { listener(it) }
     }
 
     fun clearFriendshipListeners() {
