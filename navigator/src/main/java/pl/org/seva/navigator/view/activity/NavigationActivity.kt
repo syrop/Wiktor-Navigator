@@ -61,7 +61,7 @@ import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.OnSwipeListener
-import pl.org.seva.navigator.presenter.PermissionsUtils
+import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 import java.io.IOException
@@ -71,11 +71,11 @@ class NavigationActivity : AppCompatActivity() {
     @Inject
     lateinit var peerLocationSource: PeerLocationSource
     @Inject
+    lateinit var myLocationSource: MyLocationSource
+    @Inject
     lateinit var store: ContactsStore
     @Inject
-    lateinit var permissionsUtils: PermissionsUtils
-    @Inject
-    lateinit var myLocationSource: MyLocationSource
+    lateinit var permissions: Permissions
     @Inject
     lateinit var login: Login
     @Inject
@@ -328,10 +328,10 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun requestLocationPermission() {
-        permissionDisposable = permissionsUtils.request(
+        permissionDisposable = permissions.request(
                 this,
-                PermissionsUtils.LOCATION_PERMISSION_REQUEST_ID,
-                arrayOf(PermissionsUtils.PermissionRequest(
+                Permissions.LOCATION_PERMISSION_REQUEST_ID,
+                arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         onGranted = { onLocationPermissionGranted() },
                         onDenied = { onLocationPermissionDenied() })))
@@ -379,7 +379,7 @@ class NavigationActivity : AppCompatActivity() {
             requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) {
-        permissionsUtils.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun login() {

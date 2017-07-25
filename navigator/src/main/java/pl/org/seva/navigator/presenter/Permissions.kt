@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PermissionsUtils @Inject
+class Permissions @Inject
 internal constructor() {
     private val permissionGrantedSubject = PublishSubject.create<PermissionResult>()
     private val permissionDeniedSubject = PublishSubject.create<PermissionResult>()
