@@ -54,9 +54,7 @@ internal constructor() {
 
     fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
         if (grantResults.isEmpty()) {
-            for (permission in permissions) {
-                onPermissionDenied(requestCode, permission)
-            }
+            permissions.forEach { onPermissionDenied(requestCode, it) }
         }
         else repeat (permissions.size) {
             if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
