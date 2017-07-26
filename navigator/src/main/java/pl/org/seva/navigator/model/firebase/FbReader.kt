@@ -61,8 +61,11 @@ internal constructor() : Fb() {
                 .map { it.toContact() }
     }
 
-    fun seekContact(email: String): Observable<Contact> =
-            email.toReference().read().map { it.toContact() }
+    fun seekContact(email: String): Observable<Contact> = email.toReference() read { it.toContact() }
+
+    private infix fun DatabaseReference.read(f :  (DataSnapshot) -> Contact): Observable<Contact> {
+        return this.read().map(f)
+    }
 
     private fun String.contactListener(): Observable<Contact> {
         val reference = currentUserReference().child(this)
