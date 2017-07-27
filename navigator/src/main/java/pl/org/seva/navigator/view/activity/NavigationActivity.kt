@@ -83,7 +83,7 @@ class NavigationActivity : AppCompatActivity() {
     @Inject
     lateinit var fbWriter: FbWriter
 
-    private var firstClickTime = 0L
+    private var backClickTime = 0L
 
     private var mapFragment: MapFragment? = null
     private var map: GoogleMap? = null
@@ -104,6 +104,8 @@ class NavigationActivity : AppCompatActivity() {
     private var zoom = 0.0f
     private lateinit var lastCameraPosition: LatLng
     private var mapContainerId: Int = 0
+
+    private var exitApplicationToast: Toast? = null
 
     fun LatLng.moveCamera() {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
@@ -486,12 +488,15 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (System.currentTimeMillis() - firstClickTime < DOUBLE_CLICK_MS) {
+        if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
             (application as NavigatorApplication).stopService()
+            exitApplicationToast?.cancel()
             super.onBackPressed()
         } else {
-            Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT).show()
-            firstClickTime = System.currentTimeMillis()
+            exitApplicationToast?.cancel()
+            exitApplicationToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
+            exitApplicationToast!!.show()
+            backClickTime = System.currentTimeMillis()
         }
     }
 
