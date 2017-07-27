@@ -62,21 +62,17 @@ class OnSwipeListener(
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             var result = false
-            try {
-                val dX = e2.x - e1.x
-                val dY = e2.y - e1.y
-                if (Math.abs(dX) > Math.abs(dY)) {
-                    if (Math.abs(dX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (dX > 0) {
-                            onRight?.invoke()
-                        } else {
-                            onLeft?.invoke()
-                        }
-                        result = true
+            val dX = e2.x - e1.x
+            val dY = e2.y - e1.y
+            if (Math.abs(dX) > Math.abs(dY)) {
+                if (Math.abs(dX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (dX > 0) {
+                        onRight?.invoke()
+                    } else {
+                        onLeft?.invoke()
                     }
+                    result = true
                 }
-            } catch (ex: Exception) {
-                ex.printStackTrace()
             }
 
             return result

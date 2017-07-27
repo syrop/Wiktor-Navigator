@@ -298,14 +298,10 @@ class NavigationActivity : AppCompatActivity() {
         val web = dialog!!.findViewById<WebView>(R.id.web)
         web.settings.defaultTextEncodingName = UTF_8
 
-        try {
-            val content = IOUtils.toString(assets.open(file), UTF_8)
-                    .replace(APP_VERSION_PLACEHOLDER, versionName)
-                    .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
-            web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-        }
+        val content = IOUtils.toString(assets.open(file), UTF_8)
+                .replace(APP_VERSION_PLACEHOLDER, versionName)
+                .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
+        web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
 
         dialog!!.findViewById<View>(R.id.action_button).setOnClickListener { action() }
         dialog!!.show()
