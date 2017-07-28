@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("DEPRECATION")
+
 package pl.org.seva.navigator.view.builder.notification
 
 import android.app.Notification
