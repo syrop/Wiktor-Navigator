@@ -148,10 +148,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(query: String) {
-        val localQuery = query.toLowerCase()
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching))
         fbReader
-                .seekContact(localQuery)
+                .findContact(query.toLowerCase())
                 .subscribe { onContactReceived(it) }
     }
 
@@ -201,7 +200,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     companion object {
-
         private val IMAGE_PLACEHOLDER = "[image]"
         private val IMAGE_PLACEHOLDER_LENGTH = IMAGE_PLACEHOLDER.length
     }

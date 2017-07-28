@@ -61,10 +61,10 @@ internal constructor() : Fb() {
                 .map { it.toContact() }
     }
 
-    fun seekContact(email: String): Observable<Contact> = email.toReference() read { it.toContact() }
+    fun findContact(email: String): Observable<Contact> = email.toReference().readContact()
 
-    private infix fun DatabaseReference.read(f :  (DataSnapshot) -> Contact): Observable<Contact> {
-        return this.read().map(f)
+    private fun DatabaseReference.readContact(): Observable<Contact> {
+        return read().map { it.toContact() }
     }
 
     private fun String.contactListener(): Observable<Contact> {
