@@ -64,7 +64,6 @@ import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
-import java.io.IOException
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -170,9 +169,8 @@ class NavigationActivity : AppCompatActivity() {
             hud.setOnTouchListener(null)
         } else {
             hud.visibility = View.VISIBLE
-            hud.text = contactNameCharSequence()
-            hud.setOnTouchListener(
-                    OnSwipeListener(this, onLeft = { onHudSwiped() } , onRight = { onHudSwiped() } ))
+            hud.text = contactNameSpannable()
+            hud.setOnTouchListener(OnSwipeListener(this) { onHudSwiped() })
         }
     }
 
@@ -182,7 +180,7 @@ class NavigationActivity : AppCompatActivity() {
         stopWatchingPeer()
     }
 
-    private fun contactNameCharSequence() : CharSequence {
+    private fun contactNameSpannable() : CharSequence {
         val str = getString(R.string.navigation_following_name)
         val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name!!.length

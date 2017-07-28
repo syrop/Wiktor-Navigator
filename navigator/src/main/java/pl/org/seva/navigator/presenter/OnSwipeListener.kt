@@ -28,8 +28,7 @@ import android.view.View.OnTouchListener
 
 class OnSwipeListener(
         ctx: Context,
-        val onLeft: (() -> Unit)? = null,
-        val onRight: (() -> Unit)? = null) : OnTouchListener {
+        val onSwiped: (() -> Unit)) : OnTouchListener {
 
     private val gestureDetector: GestureDetector
     private var x = -1
@@ -66,11 +65,7 @@ class OnSwipeListener(
             val dY = e2.y - e1.y
             if (Math.abs(dX) > Math.abs(dY)) {
                 if (Math.abs(dX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (dX > 0) {
-                        onRight?.invoke()
-                    } else {
-                        onLeft?.invoke()
-                    }
+                    onSwiped.invoke()
                     result = true
                 }
             }
