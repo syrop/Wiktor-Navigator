@@ -18,102 +18,56 @@
 package pl.org.seva.navigator
 
 import android.app.Application
-import android.content.Intent
-
-import com.google.firebase.auth.FirebaseAuth
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.conf.global
+import com.github.salomonbrys.kodein.instance
+import com.github.salomonbrys.kodein.singleton
 import com.google.firebase.auth.FirebaseUser
-
-import javax.inject.Inject
-
-import pl.org.seva.navigator.model.sqlite.DbHelper
+import pl.org.seva.navigator.model.ContactsStore
+import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.model.firebase.FbReader
+import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.sqlite.SqlReader
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
+import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.ActivityRecognitionSource
-import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.source.FriendshipSource
-import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.source.MyLocationSource
+import pl.org.seva.navigator.source.PeerLocationSource
 
-class NavigatorApplication : Application() {
+class NavigatorApplication: Application(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var activityRecognitionSource: ActivityRecognitionSource
-    @Inject
-    lateinit var sqlWriter: SqlWriter
-    @Inject
-    lateinit var sqlReader: SqlReader
-    @Inject
-    lateinit var contactsStore: ContactsStore
-    @Inject
-    lateinit var friendshipSource: FriendshipSource
-    @Inject
-    lateinit var friendshipListener: FriendshipListener
-    @Inject
-    lateinit var login: Login
+    private val bootstrap: Bootstrap get() = instance()
 
-    lateinit var component: NavigatorComponent
-    private var isServiceRunning = false
+    private val navigatorModule = Kodein.Module {
+        bind<Bootstrap>() with singleton { Bootstrap(this@NavigatorApplication) }
+        bind<FbReader>() with singleton { FbReader() }
+        bind<ContactsStore>() with singleton { ContactsStore() }
+        bind<Login>() with singleton { Login() }
+        bind<FbWriter>() with singleton { FbWriter() }
+        bind<SqlReader>() with singleton { SqlReader() }
+        bind<SqlWriter>() with singleton { SqlWriter() }
+        bind<FriendshipListener>() with singleton { FriendshipListener() }
+        bind<Permissions>() with singleton { Permissions() }
+        bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
+        bind<FriendshipSource>() with singleton { FriendshipSource() }
+        bind<PeerLocationSource>() with singleton { PeerLocationSource() }
+        bind<MyLocationSource>() with singleton { MyLocationSource() }
+    }
+
+    init {
+        Kodein.global.addImport(navigatorModule)
+    }
 
     override fun onCreate() {
         super.onCreate()
-        component = createComponent()
-        component.inject(this)
-        login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
-        activityRecognitionSource.initGoogleApiClient(this)
-        val helper = DbHelper(this)
-        sqlWriter.setHelper(helper)
-        sqlReader.setHelper(helper)
-        contactsStore.addAll(sqlReader.friends)
-        friendshipListener.init(this)
-        if (login.isLoggedIn) {
-            addFriendshipListeners()
-            startService()
-        }
+        bootstrap.boot()
     }
 
-    private fun createComponent(): NavigatorComponent {
-        return DaggerNavigatorComponent.create()
-    }
-
-    fun login(user: FirebaseUser) {
-        login.setCurrentUser(user)
-        addFriendshipListeners()
-        downloadFriendsFromCloud()
-        startService()
-    }
-
-    fun logout() {
-        stopService()
-        removeFriendshipListeners()
-        contactsStore.clear()
-        login.setCurrentUser(null)
-    }
-
-    private fun addFriendshipListeners() {
-        friendshipSource.addFriendshipListener(friendshipListener)
-    }
-
-    private fun downloadFriendsFromCloud() {
-        friendshipSource.downloadFriendsFromCloud { contactsStore.add(it) }
-    }
-
-    private fun removeFriendshipListeners() {
-        friendshipSource.clearFriendshipListeners()
-    }
-
-    fun startService() {
-        if (isServiceRunning) {
-            return
-        }
-        startService(Intent(baseContext, NavigatorService::class.java))
-        isServiceRunning = true
-    }
-
-    fun stopService() {
-        if (!isServiceRunning) {
-            return
-        }
-        stopService(Intent(baseContext, NavigatorService::class.java))
-        isServiceRunning = false
-    }
+    fun login(user: FirebaseUser) = bootstrap.login(user)
+    fun logout() = bootstrap.logout()
+    fun stopService() = bootstrap.stopService()
 }

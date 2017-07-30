@@ -19,13 +19,9 @@ package pl.org.seva.navigator.model.sqlite
 
 import java.util.ArrayList
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import pl.org.seva.navigator.model.Contact
 
-@Singleton
-class SqlReader @Inject internal constructor() {
+class SqlReader {
 
     private var helper: DbHelper? = null
 

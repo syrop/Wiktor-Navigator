@@ -21,14 +21,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import pl.org.seva.navigator.model.Contact
 
-@Singleton
-class FbWriter @Inject
-internal constructor() : Fb() {
+class FbWriter: Fb() {
 
     fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)

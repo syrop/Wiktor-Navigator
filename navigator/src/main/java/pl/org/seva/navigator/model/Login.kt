@@ -18,11 +18,8 @@
 package pl.org.seva.navigator.model
 
 import com.google.firebase.auth.FirebaseUser
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class Login @Inject constructor() {
+class Login {
     var isLoggedIn: Boolean = false
     var email: String? = null
     var displayName: String? = null

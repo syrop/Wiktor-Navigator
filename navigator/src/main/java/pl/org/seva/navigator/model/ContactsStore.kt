@@ -17,19 +17,16 @@
 
 package pl.org.seva.navigator.model
 
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import java.util.ArrayList
 import java.util.Collections
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.subjects.PublishSubject
 
-@Singleton
-class ContactsStore @Inject constructor() {
+class ContactsStore: KodeinGlobalAware {
 
-    @Inject
-    lateinit var login: Login
+    val login: Login = instance()
 
     private val contacts: MutableList<Contact>
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()

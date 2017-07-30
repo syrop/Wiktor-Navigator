@@ -23,12 +23,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import java.lang.ref.WeakReference
 import java.util.Random
-
-import javax.inject.Inject
-import javax.inject.Singleton
 
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.firebase.FbWriter
@@ -37,16 +36,11 @@ import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder
 
-@Singleton
-class FriendshipListener @Inject
-internal constructor() {
+class FriendshipListener: KodeinGlobalAware {
 
-    @Inject
-    lateinit var store: ContactsStore
-    @Inject
-    lateinit var sqlWriter: SqlWriter
-    @Inject
-    lateinit var fbWriter: FbWriter
+    private val store: ContactsStore = instance()
+    private val sqlWriter: SqlWriter = instance()
+    private val fbWriter: FbWriter = instance()
 
     lateinit var weakContext: WeakReference<Context>
 

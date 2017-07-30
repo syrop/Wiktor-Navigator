@@ -20,14 +20,9 @@ package pl.org.seva.navigator.model.sqlite
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import pl.org.seva.navigator.model.Contact
 
-@Singleton
-class SqlWriter @Inject
-internal constructor() {
+class SqlWriter {
 
     private lateinit var helper: DbHelper
 

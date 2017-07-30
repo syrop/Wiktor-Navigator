@@ -22,6 +22,8 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleService
 import android.location.Location
 import android.os.Bundle
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -29,25 +31,16 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.model.Login
 
-@Singleton
-class MyLocationSource @Inject
-internal constructor() :
-        LiveSource(),
-        GoogleApiClient.ConnectionCallbacks,
+class MyLocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+        com.google.android.gms.location.LocationListener, KodeinGlobalAware {
 
-    @Inject
-    lateinit var activityRecognitionSource: ActivityRecognitionSource
-    @Inject
-    lateinit var login: Login
+    private val activityRecognitionSource: ActivityRecognitionSource = instance()
+    private val login: Login = instance()
 
     private var googleApiClient: GoogleApiClient? = null
     private var locationRequest: LocationRequest? = null

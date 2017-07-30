@@ -22,18 +22,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
-import javax.inject.Inject
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Contact
 
-open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
+open class ContactAdapter: RecyclerView.Adapter<ContactAdapter.ViewHolder>(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var store: ContactsStore
+    private val store: ContactsStore = instance()
 
     private val clickSubject = PublishSubject.create<Contact>()
 

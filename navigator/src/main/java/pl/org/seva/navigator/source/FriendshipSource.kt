@@ -17,19 +17,16 @@
 
 package pl.org.seva.navigator.source
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.presenter.FriendshipListener
 
-@Singleton
-class FriendshipSource @Inject internal constructor() {
+class FriendshipSource: KodeinGlobalAware {
 
-    @Inject
-    lateinit var fbReader: FbReader
+    private val fbReader: FbReader = instance()
 
     private val cd = CompositeDisposable()
 

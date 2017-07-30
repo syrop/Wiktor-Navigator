@@ -18,20 +18,19 @@
 package pl.org.seva.navigator.model.firebase
 
 import android.util.Base64
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 import java.util.Locale
 
 import pl.org.seva.navigator.model.Login
-import javax.inject.Inject
 
-open class Fb protected constructor() {
+open class Fb: KodeinGlobalAware {
 
-    @Inject
-    lateinit var login: Login
+    protected val login: Login = instance()
 
     protected val db = FirebaseDatabase.getInstance()!!
 

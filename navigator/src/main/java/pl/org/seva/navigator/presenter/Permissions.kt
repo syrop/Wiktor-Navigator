@@ -23,12 +23,8 @@ import android.support.v4.app.ActivityCompat
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class Permissions @Inject
-internal constructor() {
+class Permissions {
     private val permissionGrantedSubject = PublishSubject.create<PermissionResult>()
     private val permissionDeniedSubject = PublishSubject.create<PermissionResult>()
 

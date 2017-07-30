@@ -39,6 +39,8 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import android.widget.Toast
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -51,8 +53,6 @@ import io.reactivex.disposables.Disposables
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
 
-import javax.inject.Inject
-
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.Contact
@@ -62,25 +62,16 @@ import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.Permissions
-import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 
-class NavigationActivity : AppCompatActivity() {
+class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var peerLocationSource: PeerLocationSource
-    @Inject
-    lateinit var myLocationSource: MyLocationSource
-    @Inject
-    lateinit var store: ContactsStore
-    @Inject
-    lateinit var permissions: Permissions
-    @Inject
-    lateinit var login: Login
-    @Inject
-    lateinit var sqlWriter: SqlWriter
-    @Inject
-    lateinit var fbWriter: FbWriter
+    private val peerLocationSource: PeerLocationSource = instance()
+    private val store: ContactsStore = instance()
+    private val permissions: Permissions = instance()
+    private val login: Login = instance()
+    private val sqlWriter: SqlWriter = instance()
+    private val fbWriter: FbWriter = instance()
 
     private var backClickTime = 0L
 
@@ -149,7 +140,6 @@ class NavigationActivity : AppCompatActivity() {
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
         }
 
-        (application as NavigatorApplication).component.inject(this)
         setContentView(R.layout.activity_navigation)
 
         readContact()

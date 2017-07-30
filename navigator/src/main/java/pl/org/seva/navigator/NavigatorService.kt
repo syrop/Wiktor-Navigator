@@ -20,28 +20,24 @@ package pl.org.seva.navigator
 import android.app.*
 import android.arch.lifecycle.LifecycleService
 import android.content.Context
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
+import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
-import javax.inject.Inject
 
-class NavigatorService : LifecycleService() {
+class NavigatorService: LifecycleService(), KodeinGlobalAware {
 
-    @javax.inject.Inject
-    lateinit var activityRecognitionSource : pl.org.seva.navigator.source.ActivityRecognitionSource
-    @javax.inject.Inject
-    lateinit var myLocationSource : pl.org.seva.navigator.source.MyLocationSource
-    @Inject
-    lateinit var firebaseWriter: FbWriter
-    @Inject
-    lateinit var login: Login
+    private val myLocationSource: MyLocationSource = instance()
+    private val firebaseWriter: FbWriter = instance()
+    private val login: Login = instance()
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
 
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        (application as NavigatorApplication).component.inject(this)
         myLocationSource.init(this)
         startForeground(NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addMyLocationListener()

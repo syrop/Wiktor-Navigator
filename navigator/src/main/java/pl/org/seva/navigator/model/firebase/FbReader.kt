@@ -21,17 +21,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 
-import javax.inject.Inject
-import javax.inject.Singleton
-
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.model.Contact
 
-@Singleton
-class FbReader @Inject
-internal constructor() : Fb() {
+class FbReader : Fb() {
 
     fun peerLocationListener(email: String): Observable<LatLng> {
         return email.toReference().child(LAT_LNG).listen()

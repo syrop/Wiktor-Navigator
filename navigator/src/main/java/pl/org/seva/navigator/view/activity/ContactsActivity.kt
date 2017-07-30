@@ -30,11 +30,10 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_contacts.*
 
-import javax.inject.Inject
-
-import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
@@ -42,21 +41,14 @@ import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.ContactTouchListener
-import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.adapter.ContactAdapter
 
-class ContactsActivity : AppCompatActivity() {
+class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var myLocationSource: MyLocationSource
-    @Inject
-    lateinit var store: ContactsStore
-    @Inject
-    lateinit var fbWriter: FbWriter
-    @Inject
-    lateinit var login: Login
-    @Inject
-    lateinit var sqlWriter: SqlWriter
+    private val store: ContactsStore = instance()
+    private val fbWriter: FbWriter = instance()
+    private val login: Login = instance()
+    private val sqlWriter: SqlWriter = instance()
 
     private var snackbar: Snackbar? = null
 
@@ -64,9 +56,6 @@ class ContactsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val component = (application as NavigatorApplication).component
-        component.inject(this)
-        component.inject(adapter)
         setContentView(R.layout.activity_contacts)
         fab.setOnClickListener { onFabClicked() }
 

@@ -34,12 +34,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_search.*
 
-import javax.inject.Inject
-
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.model.firebase.FbWriter
@@ -49,22 +48,17 @@ import pl.org.seva.navigator.view.adapter.SingleContactAdapter
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 
 @Suppress("DEPRECATION")
-class SearchActivity : AppCompatActivity() {
+class SearchActivity: AppCompatActivity(), KodeinGlobalAware {
 
-    @Inject
-    lateinit var fbWriter: FbWriter
-    @Inject
-    lateinit var fbReader: FbReader
-    @Inject
-    lateinit var store: ContactsStore
-    @Inject
-    lateinit var login: Login
+    private val fbWriter: FbWriter = instance()
+    private val fbReader: FbReader = instance()
+    private val store: ContactsStore = instance()
+    private val login: Login = instance()
 
     private var progress: ProgressDialog? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as NavigatorApplication).component.inject(this)
 
         setContentView(R.layout.activity_search)
 

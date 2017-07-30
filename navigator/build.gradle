@@ -15,10 +15,6 @@ android {
         vectorDrawables.useSupportLibrary true
     }
 
-    kapt {
-        generateStubs = true
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -52,10 +48,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.0.4'
     implementation 'com.google.firebase:firebase-database:11.0.4'
     implementation 'com.google.firebase:firebase-crash:11.0.4'
-    implementation 'com.google.dagger:dagger:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    kapt 'com.google.dagger:dagger-compiler:2.11'
-    androidTestAnnotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    implementation 'com.github.salomonbrys.kodein:kodein:4.1.0'
+    implementation 'com.github.salomonbrys.kodein:kodein-android:4.1.0'
+    implementation 'com.github.salomonbrys.kodein:kodein-conf:4.1.0'
     implementation 'commons-io:commons-io:2.5'
     androidTestImplementation 'org.mockito:mockito-android:2.6.2'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {

@@ -17,16 +17,16 @@
 
 package pl.org.seva.navigator.source
 
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
-import javax.inject.Inject
 
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.model.firebase.FbReader
 
-class PeerLocationSource @Inject constructor() {
+class PeerLocationSource: KodeinGlobalAware {
 
-    @Inject
-    lateinit var fbReader: FbReader
+    private val fbReader: FbReader = instance()
 
     private val cd = CompositeDisposable()
 
