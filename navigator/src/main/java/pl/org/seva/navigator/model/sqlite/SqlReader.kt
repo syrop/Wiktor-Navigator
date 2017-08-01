@@ -23,7 +23,7 @@ import pl.org.seva.navigator.model.Contact
 
 class SqlReader {
 
-    private var helper: DbHelper? = null
+    private lateinit var helper: DbHelper
 
     fun setHelper(helper: DbHelper) {
         this.helper = helper
@@ -32,7 +32,7 @@ class SqlReader {
     val friends: List<Contact>
         get() {
             val result = ArrayList<Contact>()
-            val db = helper!!.readableDatabase
+            val db = helper.readableDatabase
             val projection = arrayOf(DbHelper.EMAIL_COLUMN_NAME, DbHelper.NAME_COLUMN_NAME)
             val cursor = db.query(
                     DbHelper.FRIENDS_TABLE_NAME,
