@@ -49,8 +49,8 @@ open class ContactAdapter: RecyclerView.Adapter<ContactAdapter.ViewHolder>(), Ko
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = getContact(position)
-        holder.name.text = contact.name!!
-        holder.email.text = contact.email!!
+        holder.name.text = contact.name
+        holder.email.text = contact.email
         holder.view.setOnClickListener { onItemClick(position) }
     }
 

@@ -174,7 +174,7 @@ class SearchActivity: AppCompatActivity(), KodeinGlobalAware {
         if (store.contains(contact)) {
             finish()
         }
-        else if (contact.email == login.email){
+        else if (contact.email == login.email) {
             Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
         }
         else {

@@ -33,8 +33,8 @@ class SqlWriter {
     fun addFriend(contact: Contact) {
         val db = helper.writableDatabase
         val cv = ContentValues()
-        cv.put(DbHelper.EMAIL_COLUMN_NAME, contact.email!!)
-        cv.put(DbHelper.NAME_COLUMN_NAME, contact.name!!)
+        cv.put(DbHelper.EMAIL_COLUMN_NAME, contact.email)
+        cv.put(DbHelper.NAME_COLUMN_NAME, contact.name)
         db.insertWithOnConflict(
                 DbHelper.FRIENDS_TABLE_NAME,
                 null,
@@ -46,7 +46,7 @@ class SqlWriter {
     fun deleteFriend(contact: Contact) {
         val db = helper.writableDatabase
         val query = "${DbHelper.EMAIL_COLUMN_NAME} = ?"
-        val args = arrayOf(contact.email!!)
+        val args = arrayOf(contact.email)
         db.delete(DbHelper.FRIENDS_TABLE_NAME, query, args)
         db.close()
     }

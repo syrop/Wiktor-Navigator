@@ -50,8 +50,8 @@ class PeerRequestedFriendshipNotificationBuilder(private val context: Context) {
     fun build(): Notification {
         val message = context.resources
                 .getString(R.string.friendship_confirmation)
-                .replace(NAME_TAG, contact!!.name!!)
-                .replace(EMAIL_TAG, contact!!.email!!)
+                .replace(NAME_TAG, contact!!.name)
+                .replace(EMAIL_TAG, contact!!.email)
 
         // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
         val bigTextStyle = android.support.v4.app.NotificationCompat.BigTextStyle()

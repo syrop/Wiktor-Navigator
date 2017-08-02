@@ -144,7 +144,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
 
         readContact()
         contact?.let {
-            store.addContactsUpdatedListener(it.email!!, { stopWatchingPeer() })
+            store.addContactsUpdatedListener(it.email, { stopWatchingPeer() })
         }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
@@ -173,8 +173,8 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private fun contactNameSpannable() : CharSequence {
         val str = getString(R.string.navigation_following_name)
         val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
-        val idEndName = idName + contact!!.name!!.length
-        val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name!!))
+        val idEndName = idName + contact!!.name.length
+        val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name))
         val boldSpan = StyleSpan(Typeface.BOLD)
         ssBuilder.setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         return ssBuilder
@@ -216,7 +216,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 onGranted = { map?.isMyLocationEnabled = true },
                 onDenied = {})
         contact?.let {
-            peerLocationSource.addPeerLocationListener(it.email!!, { onPeerLocationReceived(it) })
+            peerLocationSource.addPeerLocationListener(it.email, { onPeerLocationReceived(it) })
         }
         peerLocation?.moveCamera() ?: lastCameraPosition.moveCamera()
     }
@@ -466,7 +466,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
             clearMap()
             it.addMarker(MarkerOptions()
                     .position(peerLocation!!)
-                    .title(contact!!.name!!))
+                    .title(contact!!.name))
                     .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }

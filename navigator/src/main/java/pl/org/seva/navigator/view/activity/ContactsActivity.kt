@@ -95,7 +95,7 @@ class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)
 
-        if (contact.email!! != login.email) {
+        if (contact.email != login.email) {
             intent.putExtra(NavigationActivity.CONTACT_IN_INTENT, contact)
         }
         setResult(Activity.RESULT_OK, intent)

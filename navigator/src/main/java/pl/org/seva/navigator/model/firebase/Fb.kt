@@ -42,16 +42,6 @@ open class Fb: KodeinGlobalAware {
 
     fun String.from64() = String(Base64.decode(toByteArray(), Base64.NO_WRAP))
 
-    fun LatLng.toFbString() = String.format(Locale.US, "%.3f", latitude) + ";" +
-            String.format(Locale.US, "%.3f", longitude)
-
-    fun String.toLatLng() : LatLng {
-        val semicolon = indexOf(';')
-        val lat = java.lang.Double.parseDouble(substring(0, semicolon))
-        val lon = java.lang.Double.parseDouble(substring(semicolon + 1))
-        return LatLng(lat, lon)
-    }
-
     companion object {
         val USER_ROOT = "user"
         val DISPLAY_NAME = "display_name"
@@ -60,5 +50,15 @@ open class Fb: KodeinGlobalAware {
         val FRIENDSHIP_ACCEPTED = "friendship_accepted"
         val FRIENDSHIP_DELETED = "friendship_deleted"
         val FRIENDS = "friends"
+
+        fun LatLng.toFbString() = String.format(Locale.US, "%.3f", latitude) + ";" +
+                String.format(Locale.US, "%.3f", longitude)
+
+        fun String.toLatLng(): LatLng {
+            val semicolon = indexOf(';')
+            val lat = java.lang.Double.parseDouble(substring(0, semicolon))
+            val lon = java.lang.Double.parseDouble(substring(semicolon + 1))
+            return LatLng(lat, lon)
+        }
     }
 }
