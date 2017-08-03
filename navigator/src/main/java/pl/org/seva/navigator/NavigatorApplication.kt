@@ -19,48 +19,18 @@ package pl.org.seva.navigator
 
 import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FbReader
-import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.model.sqlite.SqlWriter
-import pl.org.seva.navigator.presenter.FriendshipListener
-import pl.org.seva.navigator.presenter.Permissions
-import pl.org.seva.navigator.source.ActivityRecognitionSource
-import pl.org.seva.navigator.source.FriendshipSource
-import pl.org.seva.navigator.source.MyLocationSource
-import pl.org.seva.navigator.source.PeerLocationSource
 
 class NavigatorApplication: Application(), KodeinGlobalAware {
 
-    private val bootstrap: Bootstrap get() = instance()
-
-    private val navigatorModule = Kodein.Module {
-        bind<Bootstrap>() with singleton { Bootstrap(this@NavigatorApplication) }
-        bind<FbReader>() with singleton { FbReader() }
-        bind<ContactsStore>() with singleton { ContactsStore() }
-        bind<Login>() with singleton { Login() }
-        bind<FbWriter>() with singleton { FbWriter() }
-        bind<SqlWriter>() with singleton { SqlWriter() }
-        bind<FriendshipListener>() with singleton { FriendshipListener() }
-        bind<Permissions>() with singleton { Permissions() }
-        bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
-        bind<FriendshipSource>() with singleton { FriendshipSource() }
-        bind<PeerLocationSource>() with singleton { PeerLocationSource() }
-        bind<MyLocationSource>() with singleton { MyLocationSource() }
-        bind<ContactsDatabase>() with singleton { ContactsDatabase() }
-    }
-
     init {
-        Kodein.global.addImport(navigatorModule)
+        Kodein.global.addImport(NavigatorModuleBuilder(this).build())
     }
+
+    private val bootstrap: Bootstrap get() = instance()
 
     override fun onCreate() {
         super.onCreate()
