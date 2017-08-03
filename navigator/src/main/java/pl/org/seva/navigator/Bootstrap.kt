@@ -18,9 +18,11 @@
 package pl.org.seva.navigator
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
+import com.github.salomonbrys.kodein.with
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.model.ContactsStore
@@ -29,6 +31,7 @@ import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
+import pl.org.seva.navigator.view.builder.notification.NotificationChannelBuilder
 
 class Bootstrap(val application: Application): KodeinGlobalAware {
 
@@ -44,11 +47,11 @@ class Bootstrap(val application: Application): KodeinGlobalAware {
         val contactsDao = instance<ContactsDatabase>().contactDao
         contactsStore.addAll(contactsDao.getAll())
         friendshipListener.init(application)
-
         if (login.isLoggedIn) {
             addFriendshipListeners()
             startService()
         }
+        with<Context>(application).instance<NotificationChannelBuilder>().createChannels()
     }
 
     fun login(user: FirebaseUser) {

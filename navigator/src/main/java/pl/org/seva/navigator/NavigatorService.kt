@@ -19,7 +19,7 @@ package pl.org.seva.navigator
 
 import android.app.*
 import android.arch.lifecycle.LifecycleService
-import android.content.Context
+import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
@@ -27,6 +27,7 @@ import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
+import pl.org.seva.navigator.view.builder.notification.NotificationChannelBuilder
 
 class NavigatorService: LifecycleService(), KodeinGlobalAware {
 
@@ -69,25 +70,13 @@ class NavigatorService: LifecycleService(), KodeinGlobalAware {
                 .build()
     }
 
-    private fun createNotificationBuilder() : android.app.Notification.Builder {
-        return if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+    private fun createNotificationBuilder(): Notification.Builder {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             @Suppress("DEPRECATION")
-            (android.app.Notification.Builder(this))
+            (Notification.Builder(this))
         }
         else {
-            val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            // The id of the channel.
-            val id = "my_channel_01"
-            // The user-visible name of the channel.
-            val name = getString(R.string.channel_name)
-            // The user-visible description of the channel.
-            val description = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val mChannel = NotificationChannel(id, name, importance)
-            // Configure the notification channel.
-            mChannel.description = description
-            mNotificationManager.createNotificationChannel(mChannel)
-            Notification.Builder(this, id)
+            Notification.Builder(this, NotificationChannelBuilder.ONGOING_NOTIFICATION_CHANNEL_NAME)
         }
     }
 

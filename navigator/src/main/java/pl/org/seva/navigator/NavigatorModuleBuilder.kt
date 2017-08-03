@@ -18,8 +18,10 @@
 package pl.org.seva.navigator
 
 import android.app.Application
+import android.content.Context
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.factory
 import com.github.salomonbrys.kodein.singleton
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
@@ -32,6 +34,7 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
+import pl.org.seva.navigator.view.builder.notification.NotificationChannelBuilder
 
 class NavigatorModuleBuilder(val application: Application) {
 
@@ -48,5 +51,6 @@ class NavigatorModuleBuilder(val application: Application) {
         bind<PeerLocationSource>() with singleton { PeerLocationSource() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
+        bind<NotificationChannelBuilder>() with factory { ctx: Context -> NotificationChannelBuilder(ctx) }
     }
 }

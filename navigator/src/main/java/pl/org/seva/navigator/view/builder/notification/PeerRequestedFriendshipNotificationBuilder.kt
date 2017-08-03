@@ -22,7 +22,7 @@ package pl.org.seva.navigator.view.builder.notification
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
-import android.support.v7.app.NotificationCompat
+import android.os.Build
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
@@ -54,12 +54,12 @@ class PeerRequestedFriendshipNotificationBuilder(private val context: Context) {
                 .replace(EMAIL_TAG, contact!!.email)
 
         // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
-        val bigTextStyle = android.support.v4.app.NotificationCompat.BigTextStyle()
+        val bigTextStyle = Notification.BigTextStyle()
         bigTextStyle.setBigContentTitle(context.getString(R.string.app_name))
         bigTextStyle.bigText(message)
 
         // http://stackoverflow.com/questions/11883534/how-to-dismiss-notification-after-action-has-been-clicked#11884313
-        return NotificationCompat.Builder(context)
+        return createNotificationBuilder(context)
                 .setStyle(bigTextStyle)
                 .setContentText(context.getText(R.string.friendship_requested_notification_short))
                 .setSmallIcon(R.drawable.ic_navigation_white_24dp)
@@ -69,8 +69,17 @@ class PeerRequestedFriendshipNotificationBuilder(private val context: Context) {
                 .build()
     }
 
-    companion object {
+    private fun createNotificationBuilder(context: Context): Notification.Builder {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            @Suppress("DEPRECATION")
+            Notification.Builder(context)
+        }
+        else {
+            Notification.Builder(context, NotificationChannelBuilder.QUESTION_CHANNEL_NAME)
+        }
+    }
 
+    companion object {
         private val NAME_TAG = "[name]"
         private val EMAIL_TAG = "[email]"
     }

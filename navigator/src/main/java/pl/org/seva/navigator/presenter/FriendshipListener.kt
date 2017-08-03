@@ -77,7 +77,6 @@ class FriendshipListener: KodeinGlobalAware {
                 .setNoPendingIntent(noPi)
                 .setYesPendingIntent(yesPi)
                 .build()
-
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId.value, notification)
     }

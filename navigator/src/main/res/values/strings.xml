@@ -1,17 +1,21 @@
 <resources>
     <string name="app_name">Victor Navigator</string>
     <string name="app_name_short">V. Navigator</string>
-    <string name="channel_name">Ongoing</string>
-    <string name="channel_description">Services running in the foreground</string>
 
+    <!-- Menu. -->
     <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
     <string name="action_search">Search</string>
     <string name="action_help">Help</string>
     <string name="action_delete_user">Delete your profile</string>
-
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
+
+    <!-- Channels. -->
+    <string name="question_channel_name">Question</string>
+    <string name="question_channel_description">Friends requests</string>
+    <string name="ongoing_channel_name">Ongoing</string>
+    <string name="ongoing_channel_description">Services running in the foreground</string>
 
     <!-- Contacts activity -->
     <string name="contacts_activity_label">Contacts</string>
@@ -49,7 +53,6 @@
     <string name="adding_friend_title">Adding a user</string>
     <string name="search_waiting_for_party">Waiting for your party to respond.</string>
     <string name="search_cannot_add_yourself">Cannot add yourself.</string>
-
 
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Do you want to add user [name]?</string>
