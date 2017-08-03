@@ -101,7 +101,7 @@ class FriendshipListener: KodeinGlobalAware {
         contactDao.insert(contact)
     }
 
-    private inner class FriendshipRequestedBroadcastReceiver : BroadcastReceiver() {
+    private inner class FriendshipRequestedBroadcastReceiver: BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
