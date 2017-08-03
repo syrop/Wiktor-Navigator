@@ -23,6 +23,7 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseUser
+import pl.org.seva.navigator.model.room.ContactsDatabase
 
 class NavigatorApplication: Application(), KodeinGlobalAware {
 
@@ -34,6 +35,7 @@ class NavigatorApplication: Application(), KodeinGlobalAware {
 
     override fun onCreate() {
         super.onCreate()
+        instance<ContactsDatabase>().initWithContext(this)
         bootstrap.boot()
     }
 

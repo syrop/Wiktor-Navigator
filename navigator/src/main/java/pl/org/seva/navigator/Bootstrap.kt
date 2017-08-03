@@ -41,9 +41,7 @@ class Bootstrap(val application: Application): KodeinGlobalAware {
     fun boot() {
         login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         instance<ActivityRecognitionSource>().initGoogleApiClient(application)
-        val contactsDatabase = instance<ContactsDatabase>()
-        contactsDatabase.initWithContext(application)
-        val contactsDao = contactsDatabase.contactDao
+        val contactsDao = instance<ContactsDatabase>().contactDao
         contactsStore.addAll(contactsDao.getAll())
         friendshipListener.init(application)
 
