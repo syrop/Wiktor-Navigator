@@ -54,10 +54,10 @@ class NavigatorService: LifecycleService(), KodeinGlobalAware {
         firebaseWriter.writeLocation(login.email!!, latLng)
     }
 
-    private fun createOngoingNotification(): android.app.Notification {
+    private fun createOngoingNotification(): Notification {
         val mainActivityIntent = android.content.Intent(this, NavigationActivity::class.java)
 
-        val pi = android.app.PendingIntent.getActivity(
+        val pi = PendingIntent.getActivity(
                 this,
                 System.currentTimeMillis().toInt(),
                 mainActivityIntent,
