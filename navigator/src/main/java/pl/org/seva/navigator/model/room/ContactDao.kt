@@ -33,6 +33,12 @@ interface ContactDao {
     @Insert
     fun insertAll(vararg contacts: Contact)
 
+    @Insert
+    fun insert(contact: Contact)
+
     @Delete
-    fun delete(user: Contact)
+    fun delete(contact: Contact)
+
+    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
+    fun deleteAll()
 }

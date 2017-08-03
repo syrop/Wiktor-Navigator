@@ -26,8 +26,6 @@ import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.model.sqlite.DbHelper
-import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
@@ -43,8 +41,6 @@ class Bootstrap(val application: Application): KodeinGlobalAware {
     fun boot() {
         login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         instance<ActivityRecognitionSource>().initGoogleApiClient(application)
-        val helper = DbHelper(application)
-        instance<SqlWriter>().setHelper(helper)
         val contactsDatabase = instance<ContactsDatabase>()
         contactsDatabase.initWithContext(application)
         val contactsDao = contactsDatabase.contactDao

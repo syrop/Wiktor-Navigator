@@ -33,13 +33,13 @@ import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
-import pl.org.seva.navigator.model.sqlite.SqlWriter
+import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder
 
 class FriendshipListener: KodeinGlobalAware {
 
     private val store: ContactsStore = instance()
-    private val sqlWriter: SqlWriter = instance()
+    private val contactDao = instance<ContactsDatabase>().contactDao
     private val fbWriter: FbWriter = instance()
 
     lateinit var weakContext: WeakReference<Context>
@@ -84,13 +84,13 @@ class FriendshipListener: KodeinGlobalAware {
 
     fun onPeerAcceptedFriendship(contact: Contact) {
         store.add(contact)
-        sqlWriter.addFriend(contact)
+        contactDao.insert(contact)
         fbWriter.addFriendship(contact)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
         store.delete(contact)
-        sqlWriter.deleteFriend(contact)
+        contactDao.delete(contact)
     }
 
     private fun acceptFriend(contact: Contact) {
@@ -99,7 +99,7 @@ class FriendshipListener: KodeinGlobalAware {
             return
         }
         store.add(contact)
-        sqlWriter.addFriend(contact)
+        contactDao.insert(contact)
     }
 
     private inner class FriendshipRequestedBroadcastReceiver : BroadcastReceiver() {

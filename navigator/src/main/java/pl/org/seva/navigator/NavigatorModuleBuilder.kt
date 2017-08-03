@@ -26,7 +26,6 @@ import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.ActivityRecognitionSource
@@ -42,7 +41,6 @@ class NavigatorModuleBuilder(val application: Application) {
         bind<ContactsStore>() with singleton { ContactsStore() }
         bind<Login>() with singleton { Login() }
         bind<FbWriter>() with singleton { FbWriter() }
-        bind<SqlWriter>() with singleton { SqlWriter() }
         bind<FriendshipListener>() with singleton { FriendshipListener() }
         bind<Permissions>() with singleton { Permissions() }
         bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }

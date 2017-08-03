@@ -39,7 +39,7 @@ import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.sqlite.SqlWriter
+import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.presenter.ContactTouchListener
 import pl.org.seva.navigator.view.adapter.ContactAdapter
 
@@ -48,7 +48,7 @@ class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
     private val store: ContactsStore = instance()
     private val fbWriter: FbWriter = instance()
     private val login: Login = instance()
-    private val sqlWriter: SqlWriter = instance()
+    private val contactDao = instance<ContactsDatabase>().contactDao
 
     private var snackbar: Snackbar? = null
 
@@ -116,7 +116,7 @@ class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
     private fun deleteFriend(contact: Contact) {
         fbWriter.deleteFriendship(contact)
         store.delete(contact)
-        sqlWriter.deleteFriend(contact)
+        contactDao.delete(contact)
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
     }
@@ -125,7 +125,7 @@ class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
         fbWriter.addFriendship(contact)
         fbWriter.acceptFriendship(contact)
         store.add(contact)
-        sqlWriter.addFriend(contact)
+        contactDao.insert(contact)
         adapter.notifyDataSetChanged()
     }
 

@@ -59,7 +59,7 @@ import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.sqlite.SqlWriter
+import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.PeerLocationSource
@@ -70,7 +70,6 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private val store: ContactsStore = instance()
     private val permissions: Permissions = instance()
     private val login: Login = instance()
-    private val sqlWriter: SqlWriter = instance()
     private val fbWriter: FbWriter = instance()
 
     private var backClickTime = 0L
@@ -383,7 +382,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private fun deleteProfile() {
         stopWatchingPeer()
         store.clear()
-        sqlWriter.deleteAllFriends()
+        instance<ContactsDatabase>().contactDao.deleteAll()
         fbWriter.deleteMe()
         logout()
     }
