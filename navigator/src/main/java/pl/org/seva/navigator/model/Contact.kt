@@ -17,10 +17,15 @@
 
 package pl.org.seva.navigator.model
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
+import pl.org.seva.navigator.model.room.ContactsDatabase
 
-data class Contact(val email: String = "", val name: String = "") : Comparable<Contact>, Parcelable {
+@Entity(tableName = ContactsDatabase.TABLE_NAME)
+data class Contact(
+        @PrimaryKey val email: String = "", val name: String = ""): Comparable<Contact>, Parcelable {
 
     val isEmpty = email.isEmpty()
 

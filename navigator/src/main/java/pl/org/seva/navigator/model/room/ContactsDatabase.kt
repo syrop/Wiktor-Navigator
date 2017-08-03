@@ -28,6 +28,8 @@ class ContactsDatabase {
         db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME).build()
     }
 
+    val contactDao get() = db.contactDao()
+
     companion object {
         const val DATABASE_VERSION = 1
         val DATABASE_NAME = "Friends.db"

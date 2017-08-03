@@ -25,8 +25,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.model.sqlite.DbHelper
-import pl.org.seva.navigator.model.sqlite.SqlReader
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
@@ -34,9 +34,6 @@ import pl.org.seva.navigator.source.FriendshipSource
 
 class Bootstrap(val application: Application): KodeinGlobalAware {
 
-    private val activityRecognitionSource: ActivityRecognitionSource = instance()
-    private val sqlWriter: SqlWriter = instance()
-    private val sqlReader: SqlReader = instance()
     private val contactsStore: ContactsStore = instance()
     private val friendshipSource: FriendshipSource = instance()
     private val friendshipListener: FriendshipListener = instance()
@@ -45,12 +42,15 @@ class Bootstrap(val application: Application): KodeinGlobalAware {
 
     fun boot() {
         login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
-        activityRecognitionSource.initGoogleApiClient(application)
+        instance<ActivityRecognitionSource>().initGoogleApiClient(application)
         val helper = DbHelper(application)
-        sqlWriter.setHelper(helper)
-        sqlReader.setHelper(helper)
-        contactsStore.addAll(sqlReader.friends)
+        instance<SqlWriter>().setHelper(helper)
+        val contactsDatabase = instance<ContactsDatabase>()
+        contactsDatabase.initWithContext(application)
+        val contactsDao = contactsDatabase.contactDao
+        contactsStore.addAll(contactsDao.getAll())
         friendshipListener.init(application)
+
         if (login.isLoggedIn) {
             addFriendshipListeners()
             startService()

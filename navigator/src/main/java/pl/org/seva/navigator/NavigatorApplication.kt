@@ -29,7 +29,7 @@ import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.sqlite.SqlReader
+import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.model.sqlite.SqlWriter
 import pl.org.seva.navigator.presenter.FriendshipListener
 import pl.org.seva.navigator.presenter.Permissions
@@ -48,7 +48,6 @@ class NavigatorApplication: Application(), KodeinGlobalAware {
         bind<ContactsStore>() with singleton { ContactsStore() }
         bind<Login>() with singleton { Login() }
         bind<FbWriter>() with singleton { FbWriter() }
-        bind<SqlReader>() with singleton { SqlReader() }
         bind<SqlWriter>() with singleton { SqlWriter() }
         bind<FriendshipListener>() with singleton { FriendshipListener() }
         bind<Permissions>() with singleton { Permissions() }
@@ -56,6 +55,7 @@ class NavigatorApplication: Application(), KodeinGlobalAware {
         bind<FriendshipSource>() with singleton { FriendshipSource() }
         bind<PeerLocationSource>() with singleton { PeerLocationSource() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
+        bind<ContactsDatabase>() with singleton { ContactsDatabase() }
     }
 
     init {
