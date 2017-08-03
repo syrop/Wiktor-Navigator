@@ -515,6 +515,6 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         private val DEFAULT_ZOOM = 7.5f
 
         /** Length of time that will be taken for a double click.  */
-        private val DOUBLE_CLICK_MS: Long = 5000
+        private val DOUBLE_CLICK_MS: Long = 500
     }
 }
