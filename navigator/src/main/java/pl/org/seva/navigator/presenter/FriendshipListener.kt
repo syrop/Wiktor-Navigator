@@ -61,7 +61,7 @@ class FriendshipListener: KodeinGlobalAware {
                 context,
                 0,
                 friendshipAccepted,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_ONE_SHOT)
         val friendshipRejected = Intent(FRIENDSHIP_REQUESTED_INTENT)
                 .putExtra(CONTACT_EXTRA, contact)
                 .putExtra(NOTIFICATION_ID, notificationId)
@@ -70,7 +70,7 @@ class FriendshipListener: KodeinGlobalAware {
                 context,
                 0,
                 friendshipRejected,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_ONE_SHOT)
 
         val notification = PeerRequestedFriendshipNotificationBuilder(context)
                 .setContact(contact)
