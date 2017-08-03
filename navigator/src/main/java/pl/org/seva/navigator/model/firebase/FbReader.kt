@@ -26,7 +26,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.model.Contact
 
-class FbReader : Fb() {
+class FbReader: Fb() {
 
     fun peerLocationListener(email: String): Observable<LatLng> {
         return email.toReference().child(LAT_LNG).listen()

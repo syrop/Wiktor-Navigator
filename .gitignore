@@ -6,3 +6,4 @@
 app/libs/
 *.apk
 navigator/release/
+navigator/schemas/

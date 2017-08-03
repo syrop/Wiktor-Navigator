@@ -25,13 +25,17 @@ class ContactsDatabase {
     lateinit var db: ContactsDatabaseAbstract
 
     fun initWithContext(context: Context) {
-        db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME).build()
+        db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME)
+                .addMigrations(SqlToRoomMigration())
+                .allowMainThreadQueries()
+                .build()
     }
 
     val contactDao get() = db.contactDao()
 
     companion object {
-        const val DATABASE_VERSION = 1
+        const val SQL_DATABASE_VERSION = 1
+        const val ROOM_DATABASE_VERSION = 2
         val DATABASE_NAME = "Friends.db"
         const val TABLE_NAME = "friends"
     }

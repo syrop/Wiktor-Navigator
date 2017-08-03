@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.model
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
@@ -25,8 +26,9 @@ import pl.org.seva.navigator.model.room.ContactsDatabase
 
 @Entity(tableName = ContactsDatabase.TABLE_NAME)
 data class Contact(
-        @PrimaryKey val email: String = "", val name: String = ""): Comparable<Contact>, Parcelable {
+        @PrimaryKey var email: String = "", var name: String = ""): Comparable<Contact>, Parcelable {
 
+    @Ignore
     val isEmpty = email.isEmpty()
 
     override fun compareTo(other: Contact): Int {

@@ -35,6 +35,7 @@ import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 
 class NavigatorModuleBuilder(val application: Application) {
+
     fun build() = Kodein.Module {
         bind<Bootstrap>() with singleton { Bootstrap(application) }
         bind<FbReader>() with singleton { FbReader() }
