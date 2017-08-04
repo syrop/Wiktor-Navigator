@@ -23,8 +23,7 @@ import com.google.firebase.database.ValueEventListener
 
 import io.reactivex.subjects.PublishSubject
 
-internal class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>):
-        ValueEventListener {
+class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>): ValueEventListener {
 
     override fun onDataChange(dataSnapshot: DataSnapshot?) {
         if (dataSnapshot != null) {
