@@ -33,7 +33,7 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.view.builder.notification.NotificationChannelBuilder
 
-class Bootstrap(val application: Application): KodeinGlobalAware {
+class Bootstrap(private val application: Application): KodeinGlobalAware {
 
     private val contactsStore: ContactsStore = instance()
     private val friendshipSource: FriendshipSource = instance()
@@ -44,8 +44,9 @@ class Bootstrap(val application: Application): KodeinGlobalAware {
     fun boot() {
         login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         instance<ActivityRecognitionSource>().initGoogleApiClient(application)
-        val contactsDao = instance<ContactsDatabase>().contactDao
-        contactsStore.addAll(contactsDao.getAll())
+        with(instance<ContactsDatabase>().contactDao) {
+            contactsStore.addAll(getAll())
+        }
         friendshipListener.init(application)
         if (login.isLoggedIn) {
             addFriendshipListeners()
@@ -80,7 +81,7 @@ class Bootstrap(val application: Application): KodeinGlobalAware {
         friendshipSource.clearFriendshipListeners()
     }
 
-    fun startService() {
+    private fun startService() {
         if (isServiceRunning) {
             return
         }
