@@ -20,7 +20,7 @@ package pl.org.seva.navigator.model.room
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 
-class SqlToRoomMigration: Migration(ContactsDatabase.SQL_DATABASE_VERSION, ContactsDatabase.ROOM_DATABASE_VERSION) {
+class LiteToRoomMigration : Migration(ContactsDatabase.SQL_DATABASE_VERSION, ContactsDatabase.ROOM_DATABASE_VERSION) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(RENAME_STATEMENT)
         database.execSQL(CREATION_STATEMENT)

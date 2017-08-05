@@ -26,7 +26,7 @@ class ContactsDatabase {
 
     fun initWithContext(context: Context) {
         db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME)
-                .addMigrations(SqlToRoomMigration())
+                .addMigrations(LiteToRoomMigration())
                 .allowMainThreadQueries()
                 .build()
     }
