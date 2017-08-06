@@ -44,7 +44,7 @@ class FriendshipListener: KodeinGlobalAware {
     lateinit var weakContext: WeakReference<Context>
 
     fun init(context: Context) {
-        this.weakContext = WeakReference(context)
+        weakContext = WeakReference(context)
     }
 
     fun onPeerRequestedFriendship(contact: Contact) {
