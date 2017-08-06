@@ -34,7 +34,7 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
-import pl.org.seva.navigator.view.builder.notification.NotificationChannelBuilder
+import pl.org.seva.navigator.view.builder.notification.Channels
 
 class NavigatorModuleBuilder(val application: Application) {
 
@@ -51,6 +51,6 @@ class NavigatorModuleBuilder(val application: Application) {
         bind<PeerLocationSource>() with singleton { PeerLocationSource() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
-        bind<NotificationChannelBuilder>() with factory { ctx: Context -> NotificationChannelBuilder(ctx) }
+        bind<Channels>() with factory { ctx: Context -> Channels(ctx) }
     }
 }

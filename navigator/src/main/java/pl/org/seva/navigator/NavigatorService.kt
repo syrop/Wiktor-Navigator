@@ -27,7 +27,7 @@ import pl.org.seva.navigator.model.Login
 import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
-import pl.org.seva.navigator.view.builder.notification.NotificationChannelBuilder
+import pl.org.seva.navigator.view.builder.notification.Channels
 
 class NavigatorService: LifecycleService(), KodeinGlobalAware {
 
@@ -76,7 +76,7 @@ class NavigatorService: LifecycleService(), KodeinGlobalAware {
             (Notification.Builder(this))
         }
         else {
-            Notification.Builder(this, NotificationChannelBuilder.ONGOING_NOTIFICATION_CHANNEL_NAME)
+            Notification.Builder(this, Channels.ONGOING_NOTIFICATION_CHANNEL_NAME)
         }
     }
 

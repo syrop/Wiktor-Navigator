@@ -22,36 +22,34 @@ package pl.org.seva.navigator.view.builder.notification
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
+import pl.org.seva.navigator.model.ParcelableInt
+import pl.org.seva.navigator.presenter.FriendshipListener
 
-class PeerRequestedFriendshipNotificationBuilder(private val context: Context) {
-    private var yesPi: PendingIntent? = null
-    private var noPi: PendingIntent? = null
-    private var contact: Contact? = null
+fun friendshipRequestedQuestion(context: Context, f: PeerRequestedFriendship.() -> Unit) =
+        PeerRequestedFriendship(context).apply { f() }.build()
 
-    fun setYesPendingIntent(yesPi: PendingIntent): PeerRequestedFriendshipNotificationBuilder {
-        this.yesPi = yesPi
-        return this
-    }
+class PeerRequestedFriendship(private val context: Context) {
+    private lateinit var contact: Contact
+    private lateinit var notificationId: ParcelableInt
 
-    fun setContact(contact: Contact): PeerRequestedFriendshipNotificationBuilder {
+    fun contact(contact: Contact) {
         this.contact = contact
-        return this
     }
 
-    fun setNoPendingIntent(noPi: PendingIntent): PeerRequestedFriendshipNotificationBuilder {
-        this.noPi = noPi
-        return this
+    fun notificationId(notificationId: ParcelableInt)  {
+        this.notificationId = notificationId
     }
 
     fun build(): Notification {
         val message = context.resources
                 .getString(R.string.friendship_confirmation)
-                .replace(NAME_TAG, contact!!.name)
-                .replace(EMAIL_TAG, contact!!.email)
+                .replace(NAME_TAG, contact.name)
+                .replace(EMAIL_TAG, contact.email)
 
         // http://stackoverflow.com/questions/6357450/android-multiline-notifications-notifications-with-longer-text#22964072
         val bigTextStyle = Notification.BigTextStyle()
@@ -64,9 +62,27 @@ class PeerRequestedFriendshipNotificationBuilder(private val context: Context) {
                 .setContentText(context.getText(R.string.friendship_requested_notification_short))
                 .setSmallIcon(R.drawable.ic_navigation_white_24dp)
                 .setAutoCancel(false)
-                .addAction(R.drawable.ic_close_black_24dp, context.getString(android.R.string.no), noPi)
-                .addAction(R.drawable.ic_check_black_24dp, context.getString(android.R.string.yes), yesPi)
+                .addAction(
+                        R.drawable.ic_close_black_24dp,
+                        context.getString(android.R.string.no),
+                        FriendshipListener.REJECTED_ACTION.pi())
+                .addAction(
+                        R.drawable.ic_check_black_24dp,
+                        context.getString(android.R.string.yes),
+                        FriendshipListener.ACCEPTED_ACTION.pi())
                 .build()
+    }
+
+    private fun Int.pi(): PendingIntent {
+        val intent = Intent(FriendshipListener.FRIENDSHIP_REQUESTED_INTENT)
+                .putExtra(FriendshipListener.CONTACT_EXTRA, contact)
+                .putExtra(FriendshipListener.NOTIFICATION_ID, notificationId)
+                .putExtra(FriendshipListener.ACTION, ParcelableInt(this))
+        return PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT)
     }
 
     private fun createNotificationBuilder(context: Context): Notification.Builder {
@@ -75,7 +91,7 @@ class PeerRequestedFriendshipNotificationBuilder(private val context: Context) {
             Notification.Builder(context)
         }
         else {
-            Notification.Builder(context, NotificationChannelBuilder.QUESTION_CHANNEL_NAME)
+            Notification.Builder(context, Channels.QUESTION_CHANNEL_NAME)
         }
     }
 

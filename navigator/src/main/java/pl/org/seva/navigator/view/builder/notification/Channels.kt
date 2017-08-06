@@ -24,9 +24,9 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import pl.org.seva.navigator.R
 
-class NotificationChannelBuilder(private val context: Context) {
+class Channels(private val context: Context) {
 
-    fun createChannels() {
+    fun create() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createOngoingChannel(nm)

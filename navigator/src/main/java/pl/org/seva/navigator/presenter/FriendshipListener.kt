@@ -18,7 +18,6 @@
 package pl.org.seva.navigator.presenter
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -34,7 +33,7 @@ import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.view.builder.notification.PeerRequestedFriendshipNotificationBuilder
+import pl.org.seva.navigator.view.builder.notification.friendshipRequestedQuestion
 
 class FriendshipListener: KodeinGlobalAware {
 
@@ -53,32 +52,12 @@ class FriendshipListener: KodeinGlobalAware {
         val acceptedReceiver = FriendshipRequestedBroadcastReceiver()
         context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
-        val friendshipAccepted = Intent(FRIENDSHIP_REQUESTED_INTENT)
-                .putExtra(CONTACT_EXTRA, contact)
-                .putExtra(NOTIFICATION_ID, notificationId)
-                .putExtra(ACTION, ParcelableInt(ACCEPTED_ACTION))
-        val yesPi = PendingIntent.getBroadcast(
-                context,
-                0,
-                friendshipAccepted,
-                PendingIntent.FLAG_ONE_SHOT)
-        val friendshipRejected = Intent(FRIENDSHIP_REQUESTED_INTENT)
-                .putExtra(CONTACT_EXTRA, contact)
-                .putExtra(NOTIFICATION_ID, notificationId)
-                .putExtra(ACTION, ParcelableInt(REJECTED_ACTION))
-        val noPi = PendingIntent.getBroadcast(
-                context,
-                0,
-                friendshipRejected,
-                PendingIntent.FLAG_ONE_SHOT)
-
-        val notification = PeerRequestedFriendshipNotificationBuilder(context)
-                .setContact(contact)
-                .setNoPendingIntent(noPi)
-                .setYesPendingIntent(yesPi)
-                .build()
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId.value, notification)
+        val notification = friendshipRequestedQuestion(context) {
+            contact(contact)
+            notificationId(notificationId)
+        }
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nm.notify(notificationId.value, notification)
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
@@ -119,11 +98,11 @@ class FriendshipListener: KodeinGlobalAware {
 
     companion object {
 
-        private val FRIENDSHIP_REQUESTED_INTENT = "friendship_requested_intent"
-        private val NOTIFICATION_ID = "notification_id"
-        private val ACTION = "action"
-        private val CONTACT_EXTRA = "contact_extra"
-        private val ACCEPTED_ACTION = 0
-        private val REJECTED_ACTION = 1
+        val FRIENDSHIP_REQUESTED_INTENT = "friendship_requested_intent"
+        val NOTIFICATION_ID = "notification_id"
+        val ACTION = "action"
+        val CONTACT_EXTRA = "contact_extra"
+        val ACCEPTED_ACTION = 0
+        val REJECTED_ACTION = 1
     }
 }
