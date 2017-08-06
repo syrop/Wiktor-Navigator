@@ -33,7 +33,7 @@ import pl.org.seva.navigator.model.firebase.FbWriter
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.view.builder.notification.friendshipRequestedQuestion
+import pl.org.seva.navigator.view.builder.notification.friendshipRequestedNotification
 
 class FriendshipListener: KodeinGlobalAware {
 
@@ -52,12 +52,11 @@ class FriendshipListener: KodeinGlobalAware {
         val acceptedReceiver = FriendshipRequestedBroadcastReceiver()
         context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
-        val notification = friendshipRequestedQuestion(context) {
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nm.notify(notificationId.value, friendshipRequestedNotification(context) {
             contact(contact)
             notificationId(notificationId)
-        }
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(notificationId.value, notification)
+        })
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
