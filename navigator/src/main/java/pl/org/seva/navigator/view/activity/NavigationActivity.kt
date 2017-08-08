@@ -99,6 +99,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private var moveCamera: () -> Unit = this::moveCameraToPeerOrLast
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("wiktor on create")
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
         zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
@@ -109,12 +110,12 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         if (savedInstanceState != null) {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
-            moveCamera = this::moveCameraToLast
         }
 
         readContact()
-        contact?.let {
+        contact?.also {
             store.addContactsUpdatedListener(it.email, this::stopWatchingPeer)
+            peerLocationSource.addPeerLocationListener(it.email, this::onPeerLocationReceived)
         }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
@@ -123,6 +124,11 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
     override fun onPause() {
         super.onPause()
+        moveCamera = this::moveCameraToLast
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         peerLocationSource.clearPeerLocationListeners()
     }
 
@@ -233,10 +239,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                     onGranted = { isMyLocationEnabled = true },
                     onDenied = {})
         }
-
-        contact?.also {
-            peerLocationSource.addPeerLocationListener(it.email, this::onPeerLocationReceived)
-        }
+        peerLocation?.putPeerMarker()
         moveCamera()
         moveCamera = this::moveCameraToPeerOrLast
     }
@@ -451,8 +454,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onPeerLocationReceived(latLng: LatLng) {
-        peerLocation = latLng
-        putPeerMarkerOnMap()
+        peerLocation = latLng.apply { putPeerMarker() }
         moveCamera()
     }
 
@@ -466,11 +468,11 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         map!!.clear()
     }
 
-    private fun putPeerMarkerOnMap() {
-        map?.let {
+    private fun LatLng.putPeerMarker() {
+        map?.also {
             clearMap()
             it.addMarker(MarkerOptions()
-                    .position(peerLocation!!)
+                    .position(this)
                     .title(contact!!.name))
                     .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
