@@ -79,7 +79,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private var contact: Contact? = null
         set(value) {
             field = value
-            storeContact()
+            persistFollowedContact()
         }
     private var permissionDisposable = Disposables.empty()
     private var isLocationPermissionGranted = false
@@ -96,7 +96,50 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
 
     private var exitApplicationToast: Toast? = null
 
-    fun LatLng.moveCamera() {
+    private var moveCameraOnMapReady: () -> Unit = this::moveCameraToPeerOrLastPosition
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val properties = PreferenceManager.getDefaultSharedPreferences(this)
+        zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
+        setContentView(R.layout.activity_navigation)
+        lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
+                properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
+        supportActionBar?.title = getString(R.string.navigation_activity_label)
+        if (savedInstanceState != null) {
+            animateCamera = false
+            peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
+            moveCameraOnMapReady = this::moveCameraToLastPosition
+        }
+
+        readContact()
+        contact?.let {
+            store.addContactsUpdatedListener(it.email, { stopWatchingPeer() })
+        }
+        mapContainerId = map_container.id
+        fab.setOnClickListener { onFabClicked() }
+        updateHud()
+        checkLocationPermission()
+    }
+    override fun onPause() {
+        super.onPause()
+        peerLocationSource.clearPeerLocationListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkLocationPermission(
+                onGranted = {
+                    snackbar?.dismiss()
+                    if (!login.isLoggedIn) {
+                        showLoginSnackbar()
+                    }},
+                onDenied = {})
+        invalidateOptionsMenu()
+        prepareMapFragment()
+    }
+
+    private fun LatLng.moveCamera() {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
         if (animateCamera) {
             map!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
@@ -106,7 +149,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         animateCamera = false
     }
 
-    private fun storeContact() {
+    private fun persistFollowedContact() {
         val name = contact?.name ?: ""
         val email = contact?.email ?: ""
         PreferenceManager.getDefaultSharedPreferences(this).edit()
@@ -124,31 +167,6 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 this.contact = contact
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val properties = PreferenceManager.getDefaultSharedPreferences(this)
-        zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
-        lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
-                properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
-
-        supportActionBar?.title = getString(R.string.navigation_activity_label)
-        savedInstanceState?.let {
-            animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
-        }
-
-        setContentView(R.layout.activity_navigation)
-
-        readContact()
-        contact?.let {
-            store.addContactsUpdatedListener(it.email, { stopWatchingPeer() })
-        }
-        mapContainerId = map_container.id
-        fab.setOnClickListener { onFabClicked() }
-        updateHud()
-        checkLocationPermission()
     }
 
     private fun updateHud() {
@@ -215,9 +233,18 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 onGranted = { map?.isMyLocationEnabled = true },
                 onDenied = {})
         contact?.let {
-            peerLocationSource.addPeerLocationListener(it.email, { onPeerLocationReceived(it) })
+            println()
+            peerLocationSource.addPeerLocationListener(it.email) { onPeerLocationReceived(it) }
         }
-        peerLocation?.moveCamera() ?: lastCameraPosition.moveCamera()
+        moveCameraOnMapReady()
+    }
+
+    private fun moveCameraToPeerOrLastPosition() {
+        peerLocation?.moveCamera() ?: moveCameraToLastPosition()
+    }
+
+    private fun moveCameraToLastPosition() {
+        lastCameraPosition.moveCamera()
     }
 
     private fun checkLocationPermission(
@@ -403,28 +430,10 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         editor.apply()
     }
 
-    override fun onPause() {
-        super.onPause()
-        peerLocationSource.clearPeerLocationListeners()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        checkLocationPermission(
-                onGranted = {
-                    snackbar?.dismiss()
-                    if (!login.isLoggedIn) {
-                        showLoginSnackbar()
-                    }},
-                onDenied = {})
-        invalidateOptionsMenu()
-        prepareMapFragment()
-    }
-
     private fun prepareMapFragment() {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment?
-        mapFragment?:let {
+        if (mapFragment == null) {
             mapFragment = MapFragment()
             fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
             mapFragment!!.getMapAsync { it.onReady() }
