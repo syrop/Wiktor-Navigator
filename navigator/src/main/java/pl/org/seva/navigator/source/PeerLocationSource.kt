@@ -30,7 +30,7 @@ class PeerLocationSource: KodeinGlobalAware {
 
     private val cd = CompositeDisposable()
 
-    fun addPeerLocationListener(email: String, peerLocationListener: (latLng : LatLng) -> Unit) {
+    fun addPeerLocationListener(email: String, peerLocationListener: (latLng: LatLng) -> Unit) {
         cd.add(fbReader
                 .peerLocationListener(email)
                 .subscribe { peerLocationListener(it) })

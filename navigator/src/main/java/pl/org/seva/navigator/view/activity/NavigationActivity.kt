@@ -114,7 +114,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
 
         readContact()
         contact?.let {
-            store.addContactsUpdatedListener(it.email, { stopWatchingPeer() })
+            store.addContactsUpdatedListener(it.email, this::stopWatchingPeer)
         }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
@@ -177,7 +177,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         } else {
             hud.visibility = View.VISIBLE
             hud.text = contactNameSpannable()
-            hud.setOnTouchListener(OnSwipeListener(this) { onHudSwiped() })
+            hud.setOnTouchListener(OnSwipeListener(this, this::onHudSwiped))
         }
     }
 
@@ -187,7 +187,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         stopWatchingPeer()
     }
 
-    private fun contactNameSpannable() : CharSequence {
+    private fun contactNameSpannable(): CharSequence {
         val str = getString(R.string.navigation_following_name)
         val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name.length
@@ -234,7 +234,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 onDenied = {})
         contact?.let {
             println()
-            peerLocationSource.addPeerLocationListener(it.email) { onPeerLocationReceived(it) }
+            peerLocationSource.addPeerLocationListener(it.email, this@NavigationActivity::onPeerLocationReceived)
         }
         moveCameraOnMapReady()
     }
@@ -248,8 +248,8 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun checkLocationPermission(
-            onGranted : (() -> Unit)? = { onLocationPermissionGranted() },
-            onDenied : (() -> Unit)? = { requestLocationPermission() } ) {
+            onGranted: (() -> Unit)? = this::onLocationPermissionGranted ,
+            onDenied: (() -> Unit)? = this::requestLocationPermission) {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -306,7 +306,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         }
     }
 
-    private fun showHelp(layout : Int, file: String, action: () -> Unit) {
+    private fun showHelp(layout: Int, file: String, action: () -> Unit) {
         dialog = Dialog(this)
         dialog!!.setContentView(layout)
         val web = dialog!!.findViewById<WebView>(R.id.web)
