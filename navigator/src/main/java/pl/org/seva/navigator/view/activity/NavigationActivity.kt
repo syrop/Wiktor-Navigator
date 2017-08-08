@@ -322,13 +322,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     private val versionName: String
-        get() {
-            try {
-                return packageManager.getPackageInfo(packageName, 0).versionName
-            } catch (ex: PackageManager.NameNotFoundException) {
-                return ""
-            }
-        }
+        get() = packageManager.getPackageInfo(packageName, 0).versionName
 
     private fun onSettingsClicked() {
         dialog?.dismiss()
