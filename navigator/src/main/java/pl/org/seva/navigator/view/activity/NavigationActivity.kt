@@ -226,15 +226,16 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     @SuppressLint("MissingPermission")
-    private fun GoogleMap.onReady() {
-        map = this
-        map!!.setOnCameraIdleListener { onCameraIdle() }
-        checkLocationPermission(
-                onGranted = { map?.isMyLocationEnabled = true },
-                onDenied = {})
-        contact?.let {
-            println()
-            peerLocationSource.addPeerLocationListener(it.email, this@NavigationActivity::onPeerLocationReceived)
+    private fun onReady(map: GoogleMap) {
+        this.map = map.apply {
+            setOnCameraIdleListener { onCameraIdle() }
+            checkLocationPermission(
+                    onGranted = { isMyLocationEnabled = true },
+                    onDenied = {})
+        }
+
+        contact?.also {
+            peerLocationSource.addPeerLocationListener(it.email, this::onPeerLocationReceived)
         }
         moveCameraOnMapReady()
     }
@@ -368,7 +369,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 map_container,
                 R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.snackbar_retry) { requestLocationPermission() }
+                .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
         snackbar!!.show()
     }
 
@@ -428,9 +429,10 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         val fm = fragmentManager
         mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment?
         if (mapFragment == null) {
-            mapFragment = MapFragment()
-            fm.beginTransaction().add(mapContainerId, mapFragment, MAP_FRAGMENT_TAG).commit()
-            mapFragment!!.getMapAsync { it.onReady() }
+            mapFragment = MapFragment().also {
+                fm.beginTransaction().add(mapContainerId, it, MAP_FRAGMENT_TAG).commit()
+                it.getMapAsync(this::onReady)
+            }
         }
     }
 
@@ -441,8 +443,8 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun deleteMapFragment() {
-        mapFragment?.let {
-            fragmentManager.beginTransaction().remove(it).commitAllowingStateLoss()
+        mapFragment?.apply {
+            fragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
             mapFragment = null
         }
     }
