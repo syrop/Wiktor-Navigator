@@ -96,7 +96,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
 
     private var exitApplicationToast: Toast? = null
 
-    private var moveCameraOnMapReady: () -> Unit = this::moveCameraToPeerOrLastPosition
+    private var moveCamera: () -> Unit = this::moveCameraToPeerOrLast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +109,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         if (savedInstanceState != null) {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
-            moveCameraOnMapReady = this::moveCameraToLastPosition
+            moveCamera = this::moveCameraToLast
         }
 
         readContact()
@@ -237,14 +237,15 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         contact?.also {
             peerLocationSource.addPeerLocationListener(it.email, this::onPeerLocationReceived)
         }
-        moveCameraOnMapReady()
+        moveCamera()
+        moveCamera = this::moveCameraToPeerOrLast
     }
 
-    private fun moveCameraToPeerOrLastPosition() {
-        peerLocation?.moveCamera() ?: moveCameraToLastPosition()
+    private fun moveCameraToPeerOrLast() {
+        (peerLocation?:lastCameraPosition).moveCamera()
     }
 
-    private fun moveCameraToLastPosition() {
+    private fun moveCameraToLast() {
         lastCameraPosition.moveCamera()
     }
 
@@ -452,7 +453,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private fun onPeerLocationReceived(latLng: LatLng) {
         peerLocation = latLng
         putPeerMarkerOnMap()
-        latLng.moveCamera()
+        moveCamera()
     }
 
     private fun stopWatchingPeer() {
