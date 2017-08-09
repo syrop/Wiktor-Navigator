@@ -28,7 +28,7 @@ import pl.org.seva.navigator.model.room.ContactsDatabase
 class NavigatorApplication: Application(), KodeinGlobalAware {
 
     init {
-        Kodein.global.addImport(KodeinModuleBuilder(this).build())
+        Kodein.global.addImport(module { application = this@NavigatorApplication })
     }
 
     private val bootstrap: Bootstrap get() = instance()
