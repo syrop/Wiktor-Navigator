@@ -36,7 +36,7 @@ import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 import pl.org.seva.navigator.view.builder.notification.Channels
 
-class NavigatorModuleBuilder(val application: Application) {
+class KodeinModuleBuilder(private val application: Application) {
 
     fun build() = Kodein.Module {
         bind<Bootstrap>() with singleton { Bootstrap(application) }
