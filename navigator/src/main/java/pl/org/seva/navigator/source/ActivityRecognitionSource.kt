@@ -31,8 +31,6 @@ import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
 
-import java.lang.ref.WeakReference
-
 import io.reactivex.subjects.PublishSubject
 
 open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCallbacks,
@@ -40,14 +38,14 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
 
     private var initialized: Boolean = false
     private var googleApiClient: GoogleApiClient? = null
-    private var weakContext: WeakReference<Context>? = null
+    private lateinit var context: Context
     private var activityRecognitionReceiver : BroadcastReceiver? = null
 
     fun initGoogleApiClient(context: Context) {
         if (initialized) {
             return
         }
-        weakContext = WeakReference(context)
+        this.context = context
         googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(context)
                     .addApi(ActivityRecognition.API)
@@ -61,7 +59,6 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
     }
 
     override fun onConnected(bundle: Bundle?) {
-        val context = weakContext!!.get() ?: return
         registerReceiver()
         val intent = Intent(ACTIVITY_RECOGNITION_INTENT)
 
@@ -81,13 +78,11 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
     }
 
     private fun registerReceiver() {
-        val context = weakContext!!.get() ?: return
         activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
         context.registerReceiver(activityRecognitionReceiver, IntentFilter(ACTIVITY_RECOGNITION_INTENT))
     }
 
     private fun unregisterReceiver() {
-        val context = weakContext!!.get() ?: return
         activityRecognitionReceiver?: return
         context.unregisterReceiver(activityRecognitionReceiver)
     }

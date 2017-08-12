@@ -25,7 +25,6 @@ import android.content.IntentFilter
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 
-import java.lang.ref.WeakReference
 import java.util.Random
 
 import pl.org.seva.navigator.model.ContactsStore
@@ -41,14 +40,13 @@ class FriendshipListener: KodeinGlobalAware {
     private val contactDao = instance<ContactsDatabase>().contactDao
     private val fbWriter: FbWriter = instance()
 
-    private lateinit var weakContext: WeakReference<Context>
+    private lateinit var context: Context
 
     fun init(context: Context) {
-        weakContext = WeakReference(context)
+        this.context = context
     }
 
     fun onPeerRequestedFriendship(contact: Contact) {
-        val context = weakContext.get() ?: return
         val acceptedReceiver = FriendshipRequestedBroadcastReceiver()
         context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
