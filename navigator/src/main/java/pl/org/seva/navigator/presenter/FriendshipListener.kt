@@ -41,7 +41,7 @@ class FriendshipListener: KodeinGlobalAware {
     private val contactDao = instance<ContactsDatabase>().contactDao
     private val fbWriter: FbWriter = instance()
 
-    lateinit var weakContext: WeakReference<Context>
+    private lateinit var weakContext: WeakReference<Context>
 
     fun init(context: Context) {
         weakContext = WeakReference(context)
