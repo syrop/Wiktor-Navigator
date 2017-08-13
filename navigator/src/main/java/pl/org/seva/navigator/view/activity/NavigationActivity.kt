@@ -110,17 +110,19 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
         }
-
-        readContact()
-        contact?.also {
-            store.addContactsUpdatedListener(it.email, this::stopWatchingPeer)
-            peerLocationSource.addPeerLocationListener(it.email, this::onPeerLocationReceived)
-        }
+        readContactFromProperties()
+        contact?.listen()
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         updateHud()
         checkLocationPermission()
     }
+
+    fun Contact.listen() {
+        store.addContactsUpdatedListener(email, this@NavigationActivity::stopWatchingPeer)
+        peerLocationSource.addPeerLocationListener(email, this@NavigationActivity::onPeerLocationReceived)
+    }
+
     override fun onPause() {
         super.onPause()
         moveCamera = this::moveCameraToLast
@@ -162,7 +164,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 .putString(CONTACT_EMAIL_PROPERTY, email).apply()
     }
 
-    private fun readContact() {
+    private fun readContactFromProperties() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val name = preferences.getString(CONTACT_NAME_PROPERTY, "")
         val email = preferences.getString(CONTACT_EMAIL_PROPERTY, "")
@@ -218,6 +220,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
             CONTACTS_ACTIVITY_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
                     contact = data?.getParcelableExtra(CONTACT_IN_INTENT)
+                    contact?.listen()
                 }
                 updateHud()
             }
