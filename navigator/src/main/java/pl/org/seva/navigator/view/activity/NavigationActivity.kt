@@ -99,7 +99,6 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private var moveCamera: () -> Unit = this::moveCameraToPeerOrLast
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        println("wiktor on create")
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
         zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
@@ -253,15 +252,15 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun checkLocationPermission(
-            onGranted: (() -> Unit)? = this::onLocationPermissionGranted ,
-            onDenied: (() -> Unit)? = this::requestLocationPermission) {
+            onGranted: () -> Unit = this::onLocationPermissionGranted ,
+            onDenied: () -> Unit = this::requestLocationPermission) {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             isLocationPermissionGranted = true
-            onGranted?.invoke()
+            onGranted.invoke()
         } else {
-            onDenied?.invoke()
+            onDenied.invoke()
         }
     }
 
@@ -299,19 +298,14 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showLocationPermissionHelp() {
-        showHelp(R.layout.dialog_help_location_permission, HELP_LOCATION_PERMISSION_EN) {
-            onSettingsClicked()
-        }
-    }
+    private fun showLocationPermissionHelp() = help(
+            R.layout.dialog_help_location_permission,
+            HELP_LOCATION_PERMISSION_EN,
+            action = this::onSettingsClicked)
 
-    private fun showLoginHelp() {
-        showHelp(R.layout.dialog_help_login, HELP_LOGIN_EN) {
-            login()
-        }
-    }
+    private fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = this::login)
 
-    private fun showHelp(layout: Int, file: String, action: () -> Unit) {
+    private fun help(layout: Int, file: String, action: () -> Unit) {
         dialog = Dialog(this)
         dialog!!.setContentView(layout)
         val web = dialog!!.findViewById<WebView>(R.id.web)
@@ -344,8 +338,8 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        onGranted = { onLocationPermissionGranted() },
-                        onDenied = { onLocationPermissionDenied() })))
+                        onGranted = this::onLocationPermissionGranted,
+                        onDenied = this::onLocationPermissionDenied)))
     }
 
     override fun onStop() {
