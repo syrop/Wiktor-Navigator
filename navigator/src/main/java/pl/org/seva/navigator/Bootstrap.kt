@@ -74,7 +74,11 @@ class Bootstrap(private val application: Application): KodeinGlobalAware {
     }
 
     private fun downloadFriendsFromCloud() {
-        friendshipSource.downloadFriendsFromCloud { contactsStore.add(it) }
+        val contactDao = instance<ContactsDatabase>().contactDao
+        friendshipSource.downloadFriendsFromCloud {
+            contactsStore.add(it)
+            contactDao.insert(it)
+        }
     }
 
     private fun removeFriendshipListeners() {

@@ -79,7 +79,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     private var contact: Contact? = null
         set(value) {
             field = value
-            persistFollowedContact()
+            value.persist()
         }
     private var permissionDisposable = Disposables.empty()
     private var isLocationPermissionGranted = false
@@ -118,7 +118,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         checkLocationPermission()
     }
 
-    fun Contact.listen() {
+    private fun Contact.listen() {
         store.addContactsUpdatedListener(email, this@NavigationActivity::stopWatchingPeer)
         peerLocationSource.addPeerLocationListener(email, this@NavigationActivity::onPeerLocationReceived)
     }
@@ -156,10 +156,10 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         animateCamera = false
     }
 
-    private fun persistFollowedContact() {
-        val name = contact?.name ?: ""
-        val email = contact?.email ?: ""
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
+    private fun Contact?.persist() {
+        val name = this?.name ?: ""
+        val email = this?.email ?: ""
+        PreferenceManager.getDefaultSharedPreferences(this@NavigationActivity).edit()
                 .putString(CONTACT_NAME_PROPERTY, name)
                 .putString(CONTACT_EMAIL_PROPERTY, email).apply()
     }
@@ -209,7 +209,9 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
         } else if (login.isLoggedIn) {
-            startActivityForResult(Intent(this, ContactsActivity::class.java), CONTACTS_ACTIVITY_REQUEST_ID)
+            startActivityForResult(
+                    Intent(this, ContactsActivity::class.java),
+                    CONTACTS_ACTIVITY_REQUEST_ID)
         } else {
             showLoginSnackbar()
         }

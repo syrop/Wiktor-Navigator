@@ -32,7 +32,7 @@ class ContactsStore: KodeinGlobalAware {
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()
 
     init {
-        contacts = ArrayList<Contact>()
+        contacts = ArrayList()
     }
 
     operator fun contains(contact: Contact) = contacts.contains(contact)
@@ -68,7 +68,6 @@ class ContactsStore: KodeinGlobalAware {
                 .subscribe { contactsUpdatedListener() }
     }
 
-    fun addContactsUpdatedListener(contactsUpdatedListener: () -> Unit) {
-        addContactsUpdatedListener(null, contactsUpdatedListener)
-    }
+    fun addContactsUpdatedListener(contactsUpdatedListener: () -> Unit) =
+            addContactsUpdatedListener(null, contactsUpdatedListener)
 }

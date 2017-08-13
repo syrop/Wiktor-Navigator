@@ -31,9 +31,6 @@ interface ContactDao {
     fun getAll(): List<Contact>
 
     @Insert
-    fun insertAll(vararg contacts: Contact)
-
-    @Insert
     fun insert(contact: Contact)
 
     @Delete
