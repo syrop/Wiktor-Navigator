@@ -73,9 +73,7 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
                 pendingIntent)
     }
 
-    override fun onConnectionSuspended(i: Int) {
-        unregisterReceiver()
-    }
+    override fun onConnectionSuspended(i: Int) = unregisterReceiver()
 
     private fun registerReceiver() {
         activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
@@ -87,29 +85,24 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
         context.unregisterReceiver(activityRecognitionReceiver)
     }
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-    }
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
 
     fun addActivityRecognitionListener(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
         lifecycle.observe { stationarySubject.subscribe { onStationary() } }
         lifecycle.observe { movingSubject.subscribe { onMoving() } }
     }
 
-    private fun onDeviceStationary() {
-        stationarySubject.onNext(0)
-    }
+    private fun onDeviceStationary() = stationarySubject.onNext(0)
 
-    private fun onDeviceMoving() {
-        movingSubject.onNext(0)
-    }
+    private fun onDeviceMoving() = movingSubject.onNext(0)
 
-    private inner class ActivityRecognitionReceiver : BroadcastReceiver() {
+    private inner class ActivityRecognitionReceiver: BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
                 if (result.mostProbableActivity.type == DetectedActivity.STILL &&
-                        result.getActivityConfidence(DetectedActivity.STILL) >= STATIONARY_CONFIDENCE_THRESHOLD) {
+                        result.getActivityConfidence(DetectedActivity.STILL) >= STATIONARY_CONF_THRESHOLD) {
                     onDeviceStationary()
                 } else {
                     onDeviceMoving()
@@ -122,7 +115,7 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
 
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
-        private val STATIONARY_CONFIDENCE_THRESHOLD = 65
+        private val STATIONARY_CONF_THRESHOLD = 65
 
         private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
