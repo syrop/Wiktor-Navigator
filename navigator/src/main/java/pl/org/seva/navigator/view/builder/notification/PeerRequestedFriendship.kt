@@ -30,7 +30,7 @@ import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.presenter.FriendshipListener
 
-fun friendshipRequestedNotification(context: Context, f: PeerRequestedFriendship.() -> Unit) =
+inline fun friendshipRequestedNotification(context: Context, f: PeerRequestedFriendship.() -> Unit) =
         PeerRequestedFriendship(context).apply { f() }.build()
 
 class PeerRequestedFriendship(private val context: Context) {

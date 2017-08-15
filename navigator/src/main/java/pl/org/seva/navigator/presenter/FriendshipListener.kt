@@ -50,11 +50,7 @@ class FriendshipListener: KodeinGlobalAware {
         val acceptedReceiver = FriendshipRequestedBroadcastReceiver()
         context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(notificationId.value, friendshipRequestedNotification(context) {
-            this.contact = contact
-            this.notificationId = notificationId
-        })
+        nm().friendshipRequested(contact, notificationId)
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
@@ -77,13 +73,20 @@ class FriendshipListener: KodeinGlobalAware {
         contactDao.insert(contact)
     }
 
+    private fun nm() = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) {
+        notify(notificationId.value, friendshipRequestedNotification(context) {
+            this.contact = contact
+            this.notificationId = notificationId
+        })
+    }
+
     private inner class FriendshipRequestedBroadcastReceiver: BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
-                    as NotificationManager
-            notificationManager.cancel(notificationId)
+            nm().cancel(notificationId)
             context.unregisterReceiver(this)
             val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
             val action = intent.getParcelableExtra<ParcelableInt>(ACTION).value
