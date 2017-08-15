@@ -52,8 +52,8 @@ class FriendshipListener: KodeinGlobalAware {
         val notificationId = ParcelableInt(Random().nextInt())
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.notify(notificationId.value, friendshipRequestedNotification(context) {
-            contact(contact)
-            notificationId(notificationId)
+            this.contact = contact
+            this.notificationId = notificationId
         })
     }
 

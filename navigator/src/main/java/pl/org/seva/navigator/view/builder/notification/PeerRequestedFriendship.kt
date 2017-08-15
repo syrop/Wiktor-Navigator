@@ -34,16 +34,8 @@ fun friendshipRequestedNotification(context: Context, f: PeerRequestedFriendship
         PeerRequestedFriendship(context).apply { f() }.build()
 
 class PeerRequestedFriendship(private val context: Context) {
-    private lateinit var contact: Contact
-    private lateinit var notificationId: ParcelableInt
-
-    fun contact(contact: Contact) {
-        this.contact = contact
-    }
-
-    fun notificationId(notificationId: ParcelableInt)  {
-        this.notificationId = notificationId
-    }
+    lateinit var contact: Contact
+    lateinit var notificationId: ParcelableInt
 
     fun build(): Notification {
         val message = context.resources
