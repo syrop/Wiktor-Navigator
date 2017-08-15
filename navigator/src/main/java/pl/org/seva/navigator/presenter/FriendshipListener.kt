@@ -48,8 +48,7 @@ class FriendshipListener: KodeinGlobalAware {
     }
 
     fun onPeerRequestedFriendship(contact: Contact) {
-        val acceptedReceiver = FriendshipRequestedBroadcastReceiver()
-        context.registerReceiver(acceptedReceiver, IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
+        context.registerReceiver(FriendshipReceiver(), IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
         nm.friendshipRequested(contact, notificationId)
     }
@@ -77,15 +76,15 @@ class FriendshipListener: KodeinGlobalAware {
     private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) {
         notify(notificationId.value, friendshipRequestedNotification(context) {
             this.contact = contact
-            this.notificationId = notificationId
+            this.nid = notificationId
         })
     }
 
-    private inner class FriendshipRequestedBroadcastReceiver: BroadcastReceiver() {
+    private inner class FriendshipReceiver: BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-            val notificationId = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
-            nm.cancel(notificationId)
+            val nid = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
+            nm.cancel(nid)
             context.unregisterReceiver(this)
             val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
             val action = intent.getParcelableExtra<ParcelableInt>(ACTION).value
@@ -99,7 +98,7 @@ class FriendshipListener: KodeinGlobalAware {
 
         val FRIENDSHIP_REQUESTED_INTENT = "friendship_requested_intent"
         val NOTIFICATION_ID = "notification_id"
-        val ACTION = "action"
+        val ACTION = "friendship_action"
         val CONTACT_EXTRA = "contact_extra"
         val ACCEPTED_ACTION = 0
         val REJECTED_ACTION = 1

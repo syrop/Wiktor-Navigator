@@ -35,7 +35,7 @@ inline fun friendshipRequestedNotification(context: Context, f: PeerRequestedFri
 
 class PeerRequestedFriendship(private val context: Context) {
     lateinit var contact: Contact
-    lateinit var notificationId: ParcelableInt
+    lateinit var nid: ParcelableInt
 
     fun build(): Notification {
         val message = context.resources
@@ -68,13 +68,9 @@ class PeerRequestedFriendship(private val context: Context) {
     private fun Int.pi(): PendingIntent {
         val intent = Intent(FriendshipListener.FRIENDSHIP_REQUESTED_INTENT)
                 .putExtra(FriendshipListener.CONTACT_EXTRA, contact)
-                .putExtra(FriendshipListener.NOTIFICATION_ID, notificationId)
+                .putExtra(FriendshipListener.NOTIFICATION_ID, nid)
                 .putExtra(FriendshipListener.ACTION, ParcelableInt(this))
-        return PendingIntent.getBroadcast(
-                context,
-                0,
-                intent,
-                PendingIntent.FLAG_ONE_SHOT)
+        return PendingIntent.getBroadcast(context, this, intent, PI_FLAG)
     }
 
     private fun createNotificationBuilder(context: Context): Notification.Builder {
@@ -90,5 +86,6 @@ class PeerRequestedFriendship(private val context: Context) {
     companion object {
         private val NAME_TAG = "[name]"
         private val EMAIL_TAG = "[email]"
+        private val PI_FLAG = PendingIntent.FLAG_ONE_SHOT
     }
 }
