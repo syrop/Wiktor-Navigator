@@ -99,7 +99,7 @@ class SearchActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.search_overflow_menu, menu)
+        menuInflater.inflate(R.menu.search, menu)
 
         val searchMenuItem = menu.findItem(R.id.action_search)
         searchMenuItem.collapseActionView()

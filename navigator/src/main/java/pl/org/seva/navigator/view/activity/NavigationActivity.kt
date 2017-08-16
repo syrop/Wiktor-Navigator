@@ -270,7 +270,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.navigation_overflow_menu, menu)
+        menuInflater.inflate(R.menu.navigation, menu)
         return true
     }
 
