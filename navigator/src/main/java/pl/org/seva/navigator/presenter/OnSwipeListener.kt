@@ -26,9 +26,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 
-class OnSwipeListener(
-        ctx: Context,
-        val onSwiped: (() -> Unit)) : OnTouchListener {
+class OnSwipeListener(ctx: Context, val onSwiped: (() -> Unit)) : OnTouchListener {
 
     private val gestureDetector: GestureDetector
     private var x = -1

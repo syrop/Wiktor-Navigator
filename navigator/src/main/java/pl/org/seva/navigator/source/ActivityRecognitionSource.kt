@@ -33,7 +33,8 @@ import com.google.android.gms.location.DetectedActivity
 
 import io.reactivex.subjects.PublishSubject
 
-open class ActivityRecognitionSource : LiveSource(), GoogleApiClient.ConnectionCallbacks,
+open class ActivityRecognitionSource : LiveSource(),
+        GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized: Boolean = false

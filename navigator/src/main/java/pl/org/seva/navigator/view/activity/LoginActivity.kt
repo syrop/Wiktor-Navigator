@@ -42,8 +42,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.firebase.FbWriter
 
 @Suppress("DEPRECATION")
-class LoginActivity :
-        AppCompatActivity(),
+class LoginActivity : AppCompatActivity(),
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, KodeinGlobalAware {
 
