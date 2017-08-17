@@ -19,7 +19,7 @@
 
     <!-- Contacts activity -->
     <string name="contacts_activity_label">Kontakty</string>
-    <string name="contacts_deleted_contact">Skasowade kontakty</string>
+    <string name="contacts_deleted_contact">Skasowany kontakt</string>
     <string name="contacts_undelete">Odzyskaj</string>
     <string name="contacts_please_press_plus">Naciśnij + aby szukać kontaktów.</string>
 
@@ -45,12 +45,12 @@
     <string name="delete_user_ok">OK</string>
 
     <!-- Search activity. -->
-    <string name="search_activity_label">Dodanie nowego użytkownika</string>
+    <string name="search_activity_label">Nowy użytkownik</string>
     <string name="search_activity_hint">Szukaj według e-mail</string>
     <string name="search_press_to_begin">Naciśnij [image] aby szukać.</string>
     <string name="search_no_user_found">Nie znaleziono.</string>
     <string name="search_searching">Szukanie…</string>
-    <string name="adding_friend_title">Dodawanie użytkownika</string>
+    <string name="adding_friend_title">Dodanie użytkownika</string>
     <string name="search_waiting_for_party">Oczekiwanie na odpowiedź.</string>
     <string name="search_cannot_add_yourself">Nie możesz dodać siebie.</string>
 
