@@ -23,7 +23,7 @@ import com.google.firebase.database.DatabaseReference
 
 import pl.org.seva.navigator.model.Contact
 
-class FbWriter: Fb() {
+class FbWriter : Fb() {
 
     fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)

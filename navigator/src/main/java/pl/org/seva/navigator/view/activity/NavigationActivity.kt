@@ -64,7 +64,7 @@ import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.PeerLocationSource
 
-class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
+class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val peerLocationSource: PeerLocationSource = instance()
     private val store: ContactsStore = instance()

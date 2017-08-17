@@ -43,7 +43,7 @@ import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.presenter.ContactTouchListener
 import pl.org.seva.navigator.view.adapter.ContactAdapter
 
-class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
+class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val store: ContactsStore = instance()
     private val fbWriter: FbWriter = instance()

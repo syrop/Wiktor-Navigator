@@ -23,4 +23,4 @@ import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-class ParcelableInt(val value: Int): Parcelable
+class ParcelableInt(val value: Int) : Parcelable

@@ -29,7 +29,7 @@ import pl.org.seva.navigator.model.room.ContactsDatabase
 @Parcelize
 @Entity(tableName = ContactsDatabase.TABLE_NAME)
 data class Contact(
-        @PrimaryKey var email: String = "", var name: String = ""): Comparable<Contact>, Parcelable {
+        @PrimaryKey var email: String = "", var name: String = "") : Comparable<Contact>, Parcelable {
 
     @Ignore
     @Transient

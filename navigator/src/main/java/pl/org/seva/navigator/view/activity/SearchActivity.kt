@@ -48,7 +48,7 @@ import pl.org.seva.navigator.view.adapter.SingleContactAdapter
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 
 @Suppress("DEPRECATION")
-class SearchActivity: AppCompatActivity(), KodeinGlobalAware {
+class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()

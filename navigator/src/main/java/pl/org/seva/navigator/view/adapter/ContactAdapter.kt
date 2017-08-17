@@ -30,7 +30,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.ContactsStore
 import pl.org.seva.navigator.model.Contact
 
-open class ContactAdapter: RecyclerView.Adapter<ContactAdapter.ViewHolder>(), KodeinGlobalAware {
+open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>(), KodeinGlobalAware {
 
     private val store: ContactsStore = instance()
 

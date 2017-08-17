@@ -29,7 +29,7 @@ import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import pl.org.seva.navigator.view.builder.notification.Channels
 
-class NavigatorService: LifecycleService(), KodeinGlobalAware {
+class NavigatorService : LifecycleService(), KodeinGlobalAware {
 
     private val myLocationSource: MyLocationSource = instance()
     private val firebaseWriter: FbWriter = instance()

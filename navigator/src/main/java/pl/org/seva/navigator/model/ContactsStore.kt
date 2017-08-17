@@ -24,7 +24,7 @@ import java.util.Collections
 
 import io.reactivex.subjects.PublishSubject
 
-class ContactsStore: KodeinGlobalAware {
+class ContactsStore : KodeinGlobalAware {
 
     val login: Login = instance()
 

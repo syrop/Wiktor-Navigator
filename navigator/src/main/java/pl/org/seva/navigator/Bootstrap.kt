@@ -33,7 +33,7 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.view.builder.notification.Channels
 
-class Bootstrap(private val application: Application): KodeinGlobalAware {
+class Bootstrap(private val application: Application) : KodeinGlobalAware {
 
     private val contactsStore: ContactsStore = instance()
     private val friendshipSource: FriendshipSource = instance()

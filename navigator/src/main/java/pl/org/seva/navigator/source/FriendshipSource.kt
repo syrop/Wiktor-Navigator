@@ -25,7 +25,7 @@ import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.presenter.FriendshipListener
 
-class FriendshipSource: KodeinGlobalAware {
+class FriendshipSource : KodeinGlobalAware {
 
     private val fbReader: FbReader = instance()
 

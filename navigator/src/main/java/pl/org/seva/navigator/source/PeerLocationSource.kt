@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.model.firebase.FbReader
 
-class PeerLocationSource: KodeinGlobalAware {
+class PeerLocationSource : KodeinGlobalAware {
 
     private val fbReader: FbReader = instance()
 

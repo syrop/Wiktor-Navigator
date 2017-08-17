@@ -28,7 +28,7 @@ import java.util.Locale
 
 import pl.org.seva.navigator.model.Login
 
-open class Fb: KodeinGlobalAware {
+open class Fb : KodeinGlobalAware {
 
     protected val login: Login = instance()
 

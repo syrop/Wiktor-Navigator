@@ -25,7 +25,7 @@ import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.model.room.ContactsDatabase
 
-class NavigatorApplication: Application(), KodeinGlobalAware {
+class NavigatorApplication : Application(), KodeinGlobalAware {
 
     init {
         Kodein.global.addImport(module { application = this@NavigatorApplication })

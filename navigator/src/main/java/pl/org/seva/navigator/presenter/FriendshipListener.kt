@@ -34,7 +34,7 @@ import pl.org.seva.navigator.model.ParcelableInt
 import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.view.builder.notification.friendshipRequestedNotification
 
-class FriendshipListener: KodeinGlobalAware {
+class FriendshipListener : KodeinGlobalAware {
 
     private val store: ContactsStore = instance()
     private val contactDao = instance<ContactsDatabase>().contactDao

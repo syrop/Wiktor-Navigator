@@ -22,6 +22,6 @@ import android.arch.persistence.room.Database
 import pl.org.seva.navigator.model.Contact
 
 @Database(entities = [Contact::class], version = ContactsDatabase.ROOM_DATABASE_VERSION)
-abstract class ContactsDatabaseAbstract: RoomDatabase() {
+abstract class ContactsDatabaseAbstract : RoomDatabase() {
     abstract fun contactDao(): ContactDao
 }
