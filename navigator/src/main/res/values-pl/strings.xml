@@ -30,7 +30,7 @@
     <string name="snackbar_login">Zaloguj</string>
     <string name="snackbar_please_log_in">Zaloguj się</string>
     <string name="navigation_following_name">Obserwowanie [name]</string>
-    <string name="tap_back_second_time">Naciśnij Lewo drugi raz aby wyjść z aplikacji</string>
+    <string name="tap_back_second_time">Naciśnij Wstecz drugi raz aby wyjść z aplikacji</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Nieudane logowanie.</string>
@@ -45,7 +45,7 @@
     <string name="delete_user_ok">OK</string>
 
     <!-- Search activity. -->
-    <string name="search_activity_label">Nowy użytkownik</string>
+    <string name="search_activity_label">Nowy kontakt</string>
     <string name="search_activity_hint">Szukaj według e-mail</string>
     <string name="search_press_to_begin">Naciśnij [image] aby szukać.</string>
     <string name="search_no_user_found">Nie znaleziono.</string>

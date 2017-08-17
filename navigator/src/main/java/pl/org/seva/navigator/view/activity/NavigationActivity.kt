@@ -472,7 +472,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
             clearMap()
             it.addMarker(MarkerOptions()
                     .position(this)
-                    .title(contact!!.name))
+                    ?.title(contact!!.name))
                     .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }
@@ -522,6 +522,6 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         private val DEFAULT_ZOOM = 7.5f
 
         /** Length of time that will be taken for a double click.  */
-        private val DOUBLE_CLICK_MS: Long = 500
+        private val DOUBLE_CLICK_MS: Long = 1000
     }
 }
