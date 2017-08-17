@@ -61,19 +61,15 @@ class MyLocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks,
                 .map { it.value() }
     }
 
-    fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) {
-        lifecycle.observe { locationObservable.subscribe(myLocationListener) }
-    }
+    fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) =
+            lifecycle.observe { locationObservable.subscribe(myLocationListener) }
 
-    private fun addActivityRecognitionListeners() {
-        activityRecognitionSource.addActivityRecognitionListener(lifecycle,
-                onStationary = { removeRequest() },
-                onMoving = { request() })
-    }
+    private fun addActivityRecognitionListeners() =
+            activityRecognitionSource.addActivityRecognitionListener(lifecycle,
+                    onStationary = { removeRequest() },
+                    onMoving = { request() })
 
-    fun connectGoogleApiClient() {
-        googleApiClient!!.connect()
-    }
+    private fun connectGoogleApiClient() = googleApiClient!!.connect()
 
     fun init(service: LifecycleService) {
         lifecycle = service.lifecycle
@@ -115,21 +111,21 @@ class MyLocationSource: LiveSource(), GoogleApiClient.ConnectionCallbacks,
     }
 
     @SuppressLint("MissingPermission")
-    fun request() {
+    private fun request() {
         if (googleApiClient == null || locationRequest == null) {
             return
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
     }
 
-    fun removeRequest() {
-        googleApiClient?.let {
-            LocationServices.FusedLocationApi.removeLocationUpdates(it, this) }
+    private fun removeRequest() {
+        googleApiClient?.apply {
+            LocationServices.FusedLocationApi.removeLocationUpdates(this, this@MyLocationSource) }
     }
 
-    override fun onConnectionSuspended(i: Int) {}
+    override fun onConnectionSuspended(i: Int) = Unit
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
+    override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     companion object {
 

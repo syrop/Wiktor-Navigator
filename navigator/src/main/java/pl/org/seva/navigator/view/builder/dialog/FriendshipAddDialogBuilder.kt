@@ -44,15 +44,13 @@ class FriendshipAddDialogBuilder(private val context: Context) {
         return this
     }
 
-    fun build(): Dialog {
-        return AlertDialog.Builder(context)
-                .setCancelable(true)
-                .setTitle(R.string.adding_friend_title)
-                .setMessage(context.getString(R.string.add_friend_confirmation).replace(NAME_TAG, contact.name))
-                .setPositiveButton(android.R.string.yes) { _, _ -> yesAction() }
-                .setNegativeButton(android.R.string.no) { _, _ -> noAction() }
-                .create()
-    }
+    fun build(): Dialog = AlertDialog.Builder(context)
+            .setCancelable(true)
+            .setTitle(R.string.adding_friend_title)
+            .setMessage(context.getString(R.string.add_friend_confirmation).replace(NAME_TAG, contact.name))
+            .setPositiveButton(android.R.string.yes) { _, _ -> yesAction() }
+            .setNegativeButton(android.R.string.no) { _, _ -> noAction() }
+            .create()
 
     companion object {
         private val NAME_TAG = "[name]"

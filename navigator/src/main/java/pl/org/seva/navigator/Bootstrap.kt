@@ -69,21 +69,15 @@ class Bootstrap(private val application: Application): KodeinGlobalAware {
         login.setCurrentUser(null)
     }
 
-    private fun addFriendshipListeners() {
-        friendshipSource.addFriendshipListener(friendshipListener)
-    }
+    private fun addFriendshipListeners() = friendshipSource.addFriendshipListener(friendshipListener)
 
-    private fun downloadFriendsFromCloud() {
-        val contactDao = instance<ContactsDatabase>().contactDao
+    private fun downloadFriendsFromCloud() =
         friendshipSource.downloadFriendsFromCloud {
             contactsStore.add(it)
-            contactDao.insert(it)
+            instance<ContactsDatabase>().contactDao.insert(it)
         }
-    }
 
-    private fun removeFriendshipListeners() {
-        friendshipSource.clearFriendshipListeners()
-    }
+    private fun removeFriendshipListeners() = friendshipSource.clearFriendshipListeners()
 
     private fun startService() {
         if (isServiceRunning) {

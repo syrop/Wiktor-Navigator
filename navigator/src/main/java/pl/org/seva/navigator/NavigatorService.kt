@@ -46,13 +46,10 @@ class NavigatorService: LifecycleService(), KodeinGlobalAware {
         return android.app.Service.START_STICKY
     }
 
-    private fun addMyLocationListener() {
-        myLocationSource.addLocationListener(lifecycle) { onLocationReceived(it) }
-    }
+    private fun addMyLocationListener() =
+            myLocationSource.addLocationListener(lifecycle) { onLocationReceived(it) }
 
-    fun onLocationReceived(latLng: LatLng) {
-        firebaseWriter.writeLocation(login.email!!, latLng)
-    }
+    private fun onLocationReceived(latLng: LatLng) = firebaseWriter.writeLocation(login.email!!, latLng)
 
     private fun createOngoingNotification(): Notification {
         val mainActivityIntent = android.content.Intent(this, NavigationActivity::class.java)
@@ -70,15 +67,14 @@ class NavigatorService: LifecycleService(), KodeinGlobalAware {
                 .build()
     }
 
-    private fun createNotificationBuilder(): Notification.Builder {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            @Suppress("DEPRECATION")
-            (Notification.Builder(this))
-        }
-        else {
-            Notification.Builder(this, Channels.ONGOING_NOTIFICATION_CHANNEL_NAME)
-        }
-    }
+    private fun createNotificationBuilder(): Notification.Builder =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                @Suppress("DEPRECATION")
+                (Notification.Builder(this))
+            }
+            else {
+                Notification.Builder(this, Channels.ONGOING_NOTIFICATION_CHANNEL_NAME)
+            }
 
     companion object {
         private val ONGOING_NOTIFICATION_ID = 1

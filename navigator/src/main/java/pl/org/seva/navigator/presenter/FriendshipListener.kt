@@ -73,12 +73,11 @@ class FriendshipListener: KodeinGlobalAware {
         contactDao.insert(contact)
     }
 
-    private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) {
-        notify(notificationId.value, friendshipRequestedNotification(context) {
-            this.contact = contact
-            this.nid = notificationId
-        })
-    }
+    private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =
+            notify(notificationId.value, friendshipRequestedNotification(context) {
+                this.contact = contact
+                this.nid = notificationId
+            })
 
     private inner class FriendshipReceiver: BroadcastReceiver() {
 

@@ -36,7 +36,5 @@ class PeerLocationSource: KodeinGlobalAware {
                 .subscribe { peerLocationListener(it) })
     }
 
-    fun clearPeerLocationListeners() {
-        cd.clear()
-    }
+    fun clearPeerLocationListeners() = cd.clear()
 }

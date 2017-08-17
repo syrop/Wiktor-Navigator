@@ -55,9 +55,7 @@ class OnSwipeListener(
 
     private inner class GestureListener : SimpleOnGestureListener() {
 
-        override fun onDown(e: MotionEvent): Boolean {
-            return true
-        }
+        override fun onDown(e: MotionEvent) = true
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             var result = false

@@ -85,7 +85,7 @@ open class ActivityRecognitionSource: LiveSource(), GoogleApiClient.ConnectionCa
         context.unregisterReceiver(activityRecognitionReceiver)
     }
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
+    override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     fun addActivityRecognitionListener(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
         lifecycle.observe { stationarySubject.subscribe { onStationary() } }

@@ -3,7 +3,6 @@
     <string name="app_name_short">W. Nawigator</string>
 
     <!-- Menu. -->
-    <string name="action_login">Loguj</string>
     <string name="action_logout">Wyloguj</string>
     <string name="action_search">Szukaj</string>
     <string name="action_help">Pomoc</string>
@@ -35,8 +34,6 @@
     <!-- Login activity. -->
     <string name="login_authentication_failed">Nieudane logowanie.</string>
     <string name="login_loading">Ładowanie…</string>
-    <string name="login_please_log_in">Proszę się zalogować.</string>
-    <string name="contacts_please_log_in">Proszę się zalogować.</string>
 
     <!-- Delete user activity. -->
     <string name="delete_user_activity_label">Skasuj swój profil</string>

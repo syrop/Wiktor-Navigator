@@ -125,26 +125,23 @@ class SearchActivity: AppCompatActivity(), KodeinGlobalAware {
         prompt.visibility = View.GONE
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_search -> {
-                prompt.visibility = View.GONE
-                contacts.visibility = View.GONE
-                onSearchRequested()
-                return true
-            }
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_search -> {
+            prompt.visibility = View.GONE
+            contacts.visibility = View.GONE
+            onSearchRequested()
+            true
         }
+        android.R.id.home -> {
+            finish()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun search(query: String) {
         progress = ProgressDialog.show(this, null, getString(R.string.search_searching))
-        fbReader
-                .findContact(query.toLowerCase())
+        fbReader.findContact(query.toLowerCase())
                 .subscribe { onContactReceived(it) }
     }
 
@@ -170,21 +167,15 @@ class SearchActivity: AppCompatActivity(), KodeinGlobalAware {
         adapter.addClickListener { onContactClicked(it) }
     }
 
-    private fun onContactClicked(contact: Contact) {
-        if (store.contains(contact)) {
-            finish()
-        }
-        else if (contact.email == login.email) {
-            Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
-        }
-        else {
-            FriendshipAddDialogBuilder(this)
-                    .setContact(contact)
-                    .setYesAction { contactApprovedAndFinish(contact) }
-                    .setNoAction { finish() }
-                    .build()
-                    .show()
-        }
+    private fun onContactClicked(contact: Contact) = when {
+        store.contains(contact) -> finish()
+        contact.email == login.email -> Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
+        else -> FriendshipAddDialogBuilder(this)
+                .setContact(contact)
+                .setYesAction { contactApprovedAndFinish(contact) }
+                .setNoAction { finish() }
+                .build()
+                .show()
     }
 
     private fun contactApprovedAndFinish(contact: Contact) {

@@ -20,6 +20,7 @@ package pl.org.seva.navigator.source
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import pl.org.seva.navigator.model.Contact
 import pl.org.seva.navigator.model.firebase.FbReader
 import pl.org.seva.navigator.presenter.FriendshipListener
@@ -43,11 +44,8 @@ class FriendshipSource: KodeinGlobalAware {
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
     }
 
-    fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit) {
-        fbReader.readFriends().subscribe { onFriendFound(it) }
-    }
+    fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit): Disposable =
+            fbReader.readFriends().subscribe { onFriendFound(it) }
 
-    fun clearFriendshipListeners() {
-        cd.clear()
-    }
+    fun clearFriendshipListeners() = cd.clear()
 }

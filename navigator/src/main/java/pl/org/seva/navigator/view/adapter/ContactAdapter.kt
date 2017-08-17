@@ -36,16 +36,11 @@ open class ContactAdapter: RecyclerView.Adapter<ContactAdapter.ViewHolder>(), Ko
 
     private val clickSubject = PublishSubject.create<Contact>()
 
-    internal open fun getContact(position: Int): Contact {
-        return store[position]
-    }
+    internal open fun getContact(position: Int) = store[position]
 
-    override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int): ContactAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
-        return ViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            ViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_contact, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = getContact(position)
@@ -54,9 +49,7 @@ open class ContactAdapter: RecyclerView.Adapter<ContactAdapter.ViewHolder>(), Ko
         holder.view.setOnClickListener { onItemClick(position) }
     }
 
-    private fun onItemClick(position: Int) {
-        clickSubject.onNext(getContact(position))
-    }
+    private fun onItemClick(position: Int) = clickSubject.onNext(getContact(position))
 
     fun addClickListener(contactClickListener: (contact : Contact) -> Unit) {
         clickSubject.subscribe { contactClickListener(it) }
@@ -65,8 +58,8 @@ open class ContactAdapter: RecyclerView.Adapter<ContactAdapter.ViewHolder>(), Ko
     override fun getItemCount() = store.size()
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById<TextView>(R.id.name)
-        val email: TextView = view.findViewById<TextView>(R.id.email)
+        val name: TextView = view.findViewById(R.id.name)
+        val email: TextView = view.findViewById(R.id.email)
         val view: View = view.findViewById(R.id.card_view)
     }
 }

@@ -73,15 +73,14 @@ class PeerRequestedFriendship(private val context: Context) {
         return PendingIntent.getBroadcast(context, this, intent, PI_FLAG)
     }
 
-    private fun createNotificationBuilder(context: Context): Notification.Builder {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            @Suppress("DEPRECATION")
-            Notification.Builder(context)
-        }
-        else {
-            Notification.Builder(context, Channels.QUESTION_CHANNEL_NAME)
-        }
-    }
+    private fun createNotificationBuilder(context: Context): Notification.Builder =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                @Suppress("DEPRECATION")
+                Notification.Builder(context)
+            }
+            else {
+                Notification.Builder(context, Channels.QUESTION_CHANNEL_NAME)
+            }
 
     companion object {
         private val NAME_TAG = "[name]"

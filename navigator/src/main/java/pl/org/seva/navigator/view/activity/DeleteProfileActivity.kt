@@ -37,7 +37,5 @@ class DeleteProfileActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onCancelClicked() {
-        finish()
-    }
+    private fun onCancelClicked() = finish()
 }

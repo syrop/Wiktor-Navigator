@@ -47,7 +47,7 @@ class LoginActivity :
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, KodeinGlobalAware {
 
-    val fbWriter: FbWriter = instance()
+    private val fbWriter: FbWriter = instance()
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var authStateListener: (firebaseAuth : FirebaseAuth) -> Unit
 
@@ -213,7 +213,7 @@ class LoginActivity :
         }
     }
 
-    override fun onConnectionSuspended(i: Int) {}
+    override fun onConnectionSuspended(i: Int) = Unit
 
     companion object {
 

@@ -248,26 +248,20 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         moveCamera = this::moveCameraToPeerOrLast
     }
 
-    private fun moveCameraToPeerOrLast() {
-        (peerLocation?:lastCameraPosition).moveCamera()
-    }
+    private fun moveCameraToPeerOrLast() = (peerLocation?:lastCameraPosition).moveCamera()
 
-    private fun moveCameraToLast() {
-        lastCameraPosition.moveCamera()
-    }
+    private fun moveCameraToLast() = lastCameraPosition.moveCamera()
 
     private fun checkLocationPermission(
             onGranted: () -> Unit = this::onLocationPermissionGranted ,
-            onDenied: () -> Unit = this::requestLocationPermission) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            isLocationPermissionGranted = true
-            onGranted.invoke()
-        } else {
-            onDenied.invoke()
-        }
-    }
+            onDenied: () -> Unit = this::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                isLocationPermissionGranted = true
+                onGranted.invoke()
+            } else {
+                onDenied.invoke()
+            }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.navigation, menu)
@@ -388,9 +382,8 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
     override fun onRequestPermissionsResult(
             requestCode: Int,
             permissions: Array<String>,
-            grantResults: IntArray) {
-        this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
+            grantResults: IntArray) =
+            this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     private fun login() {
         dialog?.dismiss()
@@ -463,9 +456,7 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         clearMap()
     }
 
-    private fun clearMap() {
-        map!!.clear()
-    }
+    private fun clearMap() = map!!.clear()
 
     private fun LatLng.putPeerMarker() {
         map?.also {
@@ -477,17 +468,15 @@ class NavigationActivity: AppCompatActivity(), KodeinGlobalAware {
         }
     }
 
-    override fun onBackPressed() {
-        if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
-            (application as NavigatorApplication).stopService()
-            exitApplicationToast?.cancel()
-            super.onBackPressed()
-        } else {
-            exitApplicationToast?.cancel()
-            exitApplicationToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
-            exitApplicationToast!!.show()
-            backClickTime = System.currentTimeMillis()
-        }
+    override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
+        (application as NavigatorApplication).stopService()
+        exitApplicationToast?.cancel()
+        super.onBackPressed()
+    } else {
+        exitApplicationToast?.cancel()
+        exitApplicationToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
+        exitApplicationToast!!.show()
+        backClickTime = System.currentTimeMillis()
     }
 
     companion object {

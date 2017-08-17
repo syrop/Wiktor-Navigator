@@ -48,26 +48,23 @@ class Permissions {
         return composite
     }
 
-    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
-        if (grantResults.isEmpty()) {
-            permissions.forEach { onPermissionDenied(requestCode, it) }
-        }
-        else repeat (permissions.size) {
-            if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
-                onPermissionGranted(requestCode, permissions[it])
-            } else {
-                onPermissionDenied(requestCode, permissions[it])
+    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) =
+            if (grantResults.isEmpty()) {
+                permissions.forEach { onPermissionDenied(requestCode, it) }
             }
-        }
-    }
+            else repeat (permissions.size) {
+                if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionGranted(requestCode, permissions[it])
+                } else {
+                    onPermissionDenied(requestCode, permissions[it])
+                }
+            }
 
-    private fun onPermissionGranted(requestCode: Int, permission: String) {
-        permissionGrantedSubject.onNext(PermissionResult(requestCode, permission))
-    }
+    private fun onPermissionGranted(requestCode: Int, permission: String) =
+            permissionGrantedSubject.onNext(PermissionResult(requestCode, permission))
 
-    private fun onPermissionDenied(requestCode: Int, permission: String) {
-        permissionDeniedSubject.onNext(PermissionResult(requestCode, permission))
-    }
+    private fun onPermissionDenied(requestCode: Int, permission: String) =
+            permissionDeniedSubject.onNext(PermissionResult(requestCode, permission))
 
     companion object {
         val LOCATION_PERMISSION_REQUEST_ID = 0

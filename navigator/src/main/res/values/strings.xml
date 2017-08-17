@@ -3,7 +3,6 @@
     <string name="app_name_short">V. Navigator</string>
 
     <!-- Menu. -->
-    <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
     <string name="action_search">Search</string>
     <string name="action_help">Help</string>
@@ -35,8 +34,6 @@
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>
     <string name="login_loading">Loading…</string>
-    <string name="login_please_log_in">Please log in.</string>
-    <string name="contacts_please_log_in">Please log in.</string>
 
     <!-- Delete user activity. -->
     <string name="delete_user_activity_label">Delete your profile</string>

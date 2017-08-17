@@ -34,9 +34,8 @@ class FbWriter: Fb() {
         email.toReference().child(LAT_LNG).setValue(latLng.toFbString())
     }
 
-    fun requestFriendship(contact: Contact) {
-        contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(login.loggedInContact)
-    }
+    fun requestFriendship(contact: Contact) =
+            contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(login.loggedInContact)
 
     fun acceptFriendship(contact: Contact) {
         contact.email.toReference().child(FRIENDSHIP_ACCEPTED).write(login.loggedInContact)

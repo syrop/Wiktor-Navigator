@@ -25,13 +25,9 @@ import io.reactivex.subjects.PublishSubject
 
 class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>): ValueEventListener {
 
-    override fun onDataChange(dataSnapshot: DataSnapshot?) {
-        if (dataSnapshot != null) {
-            valueEventSubject.onNext(dataSnapshot)
-        }
-    }
+    override fun onDataChange(dataSnapshot: DataSnapshot?) =
+        dataSnapshot?.run { valueEventSubject.onNext(this) } ?: Unit
 
-    override fun onCancelled(databaseError: DatabaseError) {
-        valueEventSubject.onError(Exception(databaseError.message))
-    }
+    override fun onCancelled(databaseError: DatabaseError) =
+            valueEventSubject.onError(Exception(databaseError.message))
 }

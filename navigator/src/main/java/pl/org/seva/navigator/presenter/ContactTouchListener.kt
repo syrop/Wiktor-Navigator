@@ -20,16 +20,15 @@ package pl.org.seva.navigator.presenter
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 
-class ContactTouchListener(val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
+class ContactTouchListener(private val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) =
             makeMovementFlags(0, ItemTouchHelper.START or ItemTouchHelper.END)
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                         target: RecyclerView.ViewHolder) = false
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        onItemSwiped(viewHolder.adapterPosition)
-    }
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) =
+            onItemSwiped(viewHolder.adapterPosition)
 
     override fun isLongPressDragEnabled() = false
 }

@@ -3,7 +3,6 @@
 .idea/
 /local.properties
 /build
-app/libs/
 *.apk
 navigator/release/
 navigator/schemas/

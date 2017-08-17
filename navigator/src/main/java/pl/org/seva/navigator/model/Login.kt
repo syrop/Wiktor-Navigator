@@ -22,20 +22,18 @@ import com.google.firebase.auth.FirebaseUser
 class Login {
     var isLoggedIn: Boolean = false
     var email: String? = null
-    var displayName: String? = null
+    private var displayName: String? = null
 
     val loggedInContact: Contact
         get() = Contact(email!!, displayName!!)
 
-    fun setCurrentUser(user: FirebaseUser?) {
-        if (user != null) {
-            isLoggedIn = true
-            email = user.email
-            displayName = user.displayName
-        } else {
-            isLoggedIn = false
-            email = null
-            displayName = null
-        }
+    fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
+        isLoggedIn = true
+        email = user.email
+        displayName = user.displayName
+    } else {
+        isLoggedIn = false
+        email = null
+        displayName = null
     }
 }

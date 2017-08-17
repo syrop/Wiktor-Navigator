@@ -28,25 +28,17 @@ import pl.org.seva.navigator.model.Contact
 
 class FbReader: Fb() {
 
-    fun peerLocationListener(email: String): Observable<LatLng> {
-        return email.toReference().child(LAT_LNG).listen()
-                .filter { it.value != null }
-                .map { it.value!! }
-                .map { it as String }
-                .map { it.toLatLng() }
-    }
+    fun peerLocationListener(email: String): Observable<LatLng> = email.toReference().child(LAT_LNG).listen()
+            .filter { it.value != null }
+            .map { it.value!! }
+            .map { it as String }
+            .map { it.toLatLng() }
 
-    fun friendshipRequestedListener(): Observable<Contact> {
-        return FRIENDSHIP_REQUESTED.contactListener()
-    }
+    fun friendshipRequestedListener(): Observable<Contact> = FRIENDSHIP_REQUESTED.contactListener()
 
-    fun friendshipAcceptedListener(): Observable<Contact> {
-        return FRIENDSHIP_ACCEPTED.contactListener()
-    }
+    fun friendshipAcceptedListener(): Observable<Contact> = FRIENDSHIP_ACCEPTED.contactListener()
 
-    fun friendshipDeletedListener(): Observable<Contact> {
-        return FRIENDSHIP_DELETED.contactListener()
-    }
+    fun friendshipDeletedListener(): Observable<Contact> = FRIENDSHIP_DELETED.contactListener()
 
     fun readFriends(): Observable<Contact> {
         val reference = currentUserReference().child(FRIENDS)
@@ -58,9 +50,7 @@ class FbReader: Fb() {
 
     fun findContact(email: String): Observable<Contact> = email.toReference().readContact()
 
-    private fun DatabaseReference.readContact(): Observable<Contact> {
-        return read().map { it.toContact() }
-    }
+    private fun DatabaseReference.readContact(): Observable<Contact> = read().map { it.toContact() }
 
     private fun String.contactListener(): Observable<Contact> {
         val reference = currentUserReference().child(this)

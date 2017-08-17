@@ -70,19 +70,15 @@ class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
         promptOrRecyclerView()
     }
 
-    private fun promptOrRecyclerView() {
-        if (store.size() > 0) {
-            contacts.visibility = View.VISIBLE
-            prompt.visibility = View.GONE
-        } else {
-            contacts.visibility = View.GONE
-            prompt.visibility = View.VISIBLE
-        }
+    private fun promptOrRecyclerView() = if (store.size() > 0) {
+        contacts.visibility = View.VISIBLE
+        prompt.visibility = View.GONE
+    } else {
+        contacts.visibility = View.GONE
+        prompt.visibility = View.VISIBLE
     }
 
-    private fun onFabClicked() {
-        startActivity(Intent(this, SearchActivity::class.java))
-    }
+    private fun onFabClicked() = startActivity(Intent(this, SearchActivity::class.java))
 
     private fun initContactsRecyclerView() {
         contacts.setHasFixedSize(true)
@@ -138,14 +134,12 @@ class ContactsActivity: AppCompatActivity(), KodeinGlobalAware {
         prompt.text = ssBuilder
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        android.R.id.home -> {
+            finish()
+            true
         }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun onContactsUpdatedInStore() {
