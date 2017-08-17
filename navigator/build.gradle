@@ -51,13 +51,13 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.0.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
-    implementation 'com.google.android.gms:play-services-maps:11.0.4'
-    implementation 'com.google.android.gms:play-services-location:11.0.4'
-    implementation 'com.google.android.gms:play-services-auth:11.0.4'
-    implementation 'com.google.firebase:firebase-core:11.0.4'
-    implementation 'com.google.firebase:firebase-auth:11.0.4'
-    implementation 'com.google.firebase:firebase-database:11.0.4'
-    implementation 'com.google.firebase:firebase-crash:11.0.4'
+    implementation 'com.google.android.gms:play-services-maps:11.2.0'
+    implementation 'com.google.android.gms:play-services-location:11.2.0'
+    implementation 'com.google.android.gms:play-services-auth:11.2.0'
+    implementation 'com.google.firebase:firebase-core:11.2.0'
+    implementation 'com.google.firebase:firebase-auth:11.2.0'
+    implementation 'com.google.firebase:firebase-database:11.2.0'
+    implementation 'com.google.firebase:firebase-crash:11.2.0'
     implementation 'com.github.salomonbrys.kodein:kodein:4.1.0'
     implementation 'com.github.salomonbrys.kodein:kodein-android:4.1.0'
     implementation 'com.github.salomonbrys.kodein:kodein-conf:4.1.0'
@@ -68,12 +68,12 @@ dependencies {
     })
     testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    implementation "android.arch.lifecycle:extensions:1.0.0-alpha8"
-    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha8"
-    implementation "android.arch.persistence.room:runtime:1.0.0-alpha8"
-    kapt "android.arch.persistence.room:compiler:1.0.0-alpha8"
-    testImplementation "android.arch.persistence.room:testing:1.0.0-alpha8"
-    implementation "android.arch.persistence.room:rxjava2:1.0.0-alpha8"
+    implementation "android.arch.lifecycle:extensions:1.0.0-alpha9"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-beta2"
+    implementation "android.arch.persistence.room:runtime:1.0.0-beta2"
+    kapt "android.arch.persistence.room:compiler:1.0.0-alpha9"
+    testImplementation "android.arch.persistence.room:testing:1.0.0-alpha9"
+    implementation "android.arch.persistence.room:rxjava2:1.0.0-alpha9"
 }
 
 apply plugin: 'com.google.gms.google-services'
