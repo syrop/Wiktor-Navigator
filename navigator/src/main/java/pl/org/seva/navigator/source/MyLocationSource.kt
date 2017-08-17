@@ -36,10 +36,10 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.model.Login
 
 class MyLocationSource : LiveSource(),
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener,
-        KodeinGlobalAware {
+    GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener,
+    com.google.android.gms.location.LocationListener,
+    KodeinGlobalAware {
 
     private val activityRecognitionSource: ActivityRecognitionSource = instance()
     private val login: Login = instance()
