@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Victor Navigator</string>
+    <string name="app_name_short">V. Navigator</string>
+
+    <!-- Menu. -->
+    <string name="action_login">Loguj</string>
+    <string name="action_logout">Wyloguj</string>
+    <string name="action_search">Szukaj</string>
+    <string name="action_help">Pomoc</string>
+    <string name="action_delete_user">Skasuj swój profil</string>
+    <string name="dialog_settings_button">Ustawienia</string>
+    <string name="dialog_login_button">Login</string>
+
+    <!-- Channels. -->
+    <string name="question_channel_name">Pytanie</string>
+    <string name="question_channel_description">Zapytania przyjaciół</string>
+    <string name="ongoing_channel_name">Trwające</string>
+    <string name="ongoing_channel_description">Serwisy działające na wierzchu</string>
+
+    <!-- Contacts activity -->
+    <string name="contacts_activity_label">Kontakty</string>
+    <string name="contacts_deleted_contact">Skasowade kontakty</string>
+    <string name="contacts_undelete">Odzyskaj</string>
+    <string name="contacts_please_press_plus">Naciśnij + aby szukać kontaktów.</string>
+
+    <!-- Navigation activity. -->
+    <string name="navigation_activity_label">Nawigacja</string>
+    <string name="snackbar_permission_request_denied">Brak pozwolenia na lokalizację.</string>
+    <string name="snackbar_retry">Ponów</string>
+    <string name="snackbar_login">Zaloguj</string>
+    <string name="snackbar_please_log_in">Zaloguj się</string>
+    <string name="navigation_following_name">Obserwowanie [name]</string>
+    <string name="tap_back_second_time">Naciśnij Lewo drugi raz aby wyjść z aplikacji</string>
+
+    <!-- Login activity. -->
+    <string name="login_authentication_failed">Nieudane logowanie.</string>
+    <string name="login_loading">Ładowanie…</string>
+    <string name="login_please_log_in">Proszę się zalogować.</string>
+    <string name="contacts_please_log_in">Proszę się zalogować.</string>
+
+    <!-- Delete user activity. -->
+    <string name="delete_user_activity_label">Skasuj swój profil</string>
+    <string name="delete_description">Kiedy skasujesz swój profil, będzie natychmiast skasowany z serwera i z urządzenia, wraz z listą przyjaciół i twoją ostatnią lokalizacją.\n\nTwoje dane mogą wciąż być na liście kontaktów u twoich przyjaciół. Zaleca się usunięcie z listy wszystkich swoich przyjaciół przed skasowaniem swojego profilu.\n\nKiedy się znów lalogujesz. twój profil zostanie stworzony ponownie, ale dane, które poprzednio zawierał, nie będą odzyskane.</string>
+    <string name="delete_user_cancel">Anuluj</string>
+    <string name="delete_user_ok">OK</string>
+
+    <!-- Search activity. -->
+    <string name="search_activity_label">Dodanie nowego użytkownika</string>
+    <string name="search_activity_hint">Szukaj według e-mail</string>
+    <string name="search_press_to_begin">Naciśnij [image] aby szukać.</string>
+    <string name="search_no_user_found">Nie znaleziono.</string>
+    <string name="search_searching">Szukanie…</string>
+    <string name="adding_friend_title">Dodawanie użytkownika</string>
+    <string name="search_waiting_for_party">Oczekiwanie na odpowiedź.</string>
+    <string name="search_cannot_add_yourself">Nie możesz dodać siebie.</string>
+
+    <!-- Dialogs and notifications. -->
+    <string name="add_friend_confirmation">Czy chcesz dodać [name]?</string>
+    <string name="friendship_confirmation">[name] ([email]) chce ciebie dodać jako przyjaciela. Czy się zgadzasz?</string>
+    <string name="deleting_friend_title">Usuwanie przyjaciela</string>
+    <string name="delete_friend_confirmation">Czy chcesz usunąć przyjaźń z [name]?</string>
+    <string name="friendship_requested_notification_short">Prośba o przyjaźń…</string>
+</resources>
