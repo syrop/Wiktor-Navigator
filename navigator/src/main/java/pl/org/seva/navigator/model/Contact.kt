@@ -17,18 +17,22 @@
 
 package pl.org.seva.navigator.model
 
+import android.annotation.SuppressLint
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.model.room.ContactsDatabase
 
+@SuppressLint("ParcelCreator")
+@Parcelize
 @Entity(tableName = ContactsDatabase.TABLE_NAME)
 data class Contact(
         @PrimaryKey var email: String = "", var name: String = ""): Comparable<Contact>, Parcelable {
 
     @Ignore
+    @Transient
     val isEmpty = email.isEmpty()
 
     override fun compareTo(other: Contact): Int {
@@ -43,21 +47,4 @@ data class Contact(
         !(other == null || other !is Contact) && email == other.email
 
     override fun hashCode() = email.hashCode()
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(email)
-        dest.writeString(name)
-    }
-
-    private constructor(parcel: Parcel): this(parcel.readString(), parcel.readString())
-
-    companion object {
-        @Suppress("unused")
-        @JvmField val CREATOR = object : Parcelable.Creator<Contact> {
-            override fun createFromParcel(parcel: Parcel) = Contact(parcel)
-            override fun newArray(size: Int): Array<Contact?> = arrayOfNulls(size)
-        }
-    }
 }
