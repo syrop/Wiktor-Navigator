@@ -23,6 +23,7 @@ import android.arch.persistence.room.migration.Migration
 class LiteToRoomMigration: Migration(
         ContactsDatabase.SQL_DATABASE_VERSION,
         ContactsDatabase.ROOM_DATABASE_VERSION) {
+
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(RENAME_STATEMENT)
         database.execSQL(CREATION_STATEMENT)

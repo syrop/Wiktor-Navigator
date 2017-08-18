@@ -25,6 +25,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.Contact
 
 class FriendshipAddDialogBuilder(private val context: Context) {
+
     private lateinit var contact: Contact
     private lateinit var yesAction: () -> Unit
     private lateinit var noAction: () -> Unit

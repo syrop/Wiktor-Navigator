@@ -34,6 +34,7 @@ inline fun friendshipRequestedNotification(context: Context, f: PeerRequestedFri
         PeerRequestedFriendship(context).apply { f() }.build()
 
 class PeerRequestedFriendship(private val context: Context) {
+
     lateinit var contact: Contact
     lateinit var nid: ParcelableInt
 

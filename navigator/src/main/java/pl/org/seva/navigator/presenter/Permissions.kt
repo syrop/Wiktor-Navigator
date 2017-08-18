@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 class Permissions {
+
     private val permissionGrantedSubject = PublishSubject.create<PermissionResult>()
     private val permissionDeniedSubject = PublishSubject.create<PermissionResult>()
 

@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 
 class ContactTouchListener(private val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
+
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) =
             makeMovementFlags(0, ItemTouchHelper.START or ItemTouchHelper.END)
 

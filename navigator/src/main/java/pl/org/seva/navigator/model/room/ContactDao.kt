@@ -23,7 +23,6 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import pl.org.seva.navigator.model.Contact
 
-
 @Dao
 interface ContactDao {
 

@@ -20,6 +20,7 @@ package pl.org.seva.navigator.model
 import com.google.firebase.auth.FirebaseUser
 
 class Login {
+
     var isLoggedIn: Boolean = false
     var email: String? = null
     private var displayName: String? = null
