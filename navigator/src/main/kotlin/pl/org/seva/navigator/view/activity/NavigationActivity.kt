@@ -44,7 +44,7 @@ import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -63,6 +63,8 @@ import pl.org.seva.navigator.model.room.ContactsDatabase
 import pl.org.seva.navigator.presenter.OnSwipeListener
 import pl.org.seva.navigator.presenter.Permissions
 import pl.org.seva.navigator.source.PeerLocationSource
+import pl.org.seva.navigator.view.map.mapFragment
+import pl.org.seva.navigator.view.map.ready
 
 class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
@@ -74,7 +76,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var backClickTime = 0L
 
-    private var mapFragment: MapFragment? = null
+    private var mapFragment: SupportMapFragment? = null
     private var map: GoogleMap? = null
     private var contact: Contact? = null
         set(value) {
@@ -143,7 +145,13 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                     }},
                 onDenied = {})
         invalidateOptionsMenu()
-        prepareMapFragment()
+        mapFragment = mapFragment {
+            fm = supportFragmentManager
+            container = mapContainerId
+            tag = MAP_FRAGMENT_TAG
+        } ready {
+            onReady()
+        }
     }
 
     private fun LatLng.moveCamera() {
@@ -236,8 +244,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     @SuppressLint("MissingPermission")
-    private fun onReady(map: GoogleMap) {
-        this.map = map.apply {
+    private fun GoogleMap.onReady() {
+        this@NavigationActivity.map = this.apply {
             setOnCameraIdleListener { onCameraIdle() }
             checkLocationPermission(
                     onGranted = { isMyLocationEnabled = true },
@@ -245,7 +253,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
         peerLocation?.putPeerMarker()
         moveCamera()
-        moveCamera = this::moveCameraToPeerOrLast
+        moveCamera = this@NavigationActivity::moveCameraToPeerOrLast
     }
 
     private fun moveCameraToPeerOrLast() = (peerLocation?:lastCameraPosition).moveCamera()
@@ -419,17 +427,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         editor.putFloat(LATITUDE_PROPERTY, lastCameraPosition.latitude.toFloat())
         editor.putFloat(LONGITUDE_PROPERTY, lastCameraPosition.longitude.toFloat())
         editor.apply()
-    }
-
-    private fun prepareMapFragment() {
-        val fm = fragmentManager
-        mapFragment = fm.findFragmentByTag(MAP_FRAGMENT_TAG) as MapFragment?
-        if (mapFragment == null) {
-            mapFragment = MapFragment().also {
-                fm.beginTransaction().add(mapContainerId, it, MAP_FRAGMENT_TAG).commit()
-                it.getMapAsync(this::onReady)
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
