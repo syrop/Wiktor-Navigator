@@ -169,7 +169,8 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private fun onContactClicked(contact: Contact) = when {
         store.contains(contact) -> finish()
-        contact.email == login.email -> Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
+        contact.email == login.email ->
+            Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
         else -> FriendshipAddDialogBuilder(this)
                 .setContact(contact)
                 .setYesAction { contactApprovedAndFinish(contact) }
