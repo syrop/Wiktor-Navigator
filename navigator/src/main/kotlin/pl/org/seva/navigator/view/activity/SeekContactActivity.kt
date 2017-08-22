@@ -111,7 +111,6 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun MenuItem.prepareSearchView() {
-        collapseActionView()
         val searchView = actionView as SearchView
         searchView.setOnSearchClickListener { onSearchClicked() }
 
