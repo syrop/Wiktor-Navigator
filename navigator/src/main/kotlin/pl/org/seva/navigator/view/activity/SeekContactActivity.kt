@@ -57,6 +57,8 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var progress: ProgressDialog? = null
 
+    private val searchManager get() = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -110,14 +112,10 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
         return true
     }
 
-    private fun MenuItem.prepareSearchView() {
-        val searchView = actionView as SearchView
-        searchView.setOnSearchClickListener { onSearchClicked() }
-
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        searchView.setOnCloseListener { onSearchViewClosed() }
+    private fun MenuItem.prepareSearchView() = with (actionView as SearchView) {
+        setOnSearchClickListener { onSearchClicked() }
+        setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        setOnCloseListener { onSearchViewClosed() }
     }
 
     private fun onSearchViewClosed(): Boolean {
