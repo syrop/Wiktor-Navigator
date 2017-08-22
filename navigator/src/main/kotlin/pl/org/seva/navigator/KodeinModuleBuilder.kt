@@ -36,8 +36,7 @@ import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
 import pl.org.seva.navigator.view.builder.notification.Channels
 
-fun module(f: KodeinModuleBuilder.() -> Unit) =
-        KodeinModuleBuilder().apply { f() }.build()
+fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
 
 class KodeinModuleBuilder {
 

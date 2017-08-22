@@ -98,7 +98,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var exitApplicationToast: Toast? = null
 
-    private var moveCamera: () -> Unit = this::moveCameraToPeerOrLast
+    private var moveCamera: () -> Unit = this::moveCameraToPeerOrLastLocation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +142,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                     snackbar?.dismiss()
                     if (!login.isLoggedIn) {
                         showLoginSnackbar()
-                    }},
+                    }
+                },
                 onDenied = {})
         invalidateOptionsMenu()
         mapFragment = mapFragment {
@@ -253,14 +254,14 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
         peerLocation?.putPeerMarker()
         moveCamera()
-        moveCamera = this@NavigationActivity::moveCameraToPeerOrLast
+        moveCamera = this@NavigationActivity::moveCameraToPeerOrLastLocation
     }
 
-    private fun moveCameraToPeerOrLast() = (peerLocation?:lastCameraPosition).moveCamera()
+    private fun moveCameraToPeerOrLastLocation() = (peerLocation?:lastCameraPosition).moveCamera()
 
     private fun moveCameraToLast() = lastCameraPosition.moveCamera()
 
-    private fun checkLocationPermission(
+    inline private fun checkLocationPermission(
             onGranted: () -> Unit = this::onLocationPermissionGranted ,
             onDenied: () -> Unit = this::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
                     this,
@@ -283,26 +284,24 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_logout -> {
-                logout()
-                return true
-            }
-            R.id.action_delete_user -> {
-                onDeleteProfileClicked()
-                return true
-            }
-            R.id.action_help -> {
-                if (!isLocationPermissionGranted) {
-                    showLocationPermissionHelp()
-                } else if (!login.isLoggedIn) {
-                    showLoginHelp()
-                }
-                return true
-            }
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_logout -> {
+            logout()
+            true
         }
-        return super.onOptionsItemSelected(item)
+        R.id.action_delete_user -> {
+            onDeleteProfileClicked()
+            true
+        }
+        R.id.action_help -> {
+            if (!isLocationPermissionGranted) {
+                showLocationPermissionHelp()
+            } else if (!login.isLoggedIn) {
+                showLoginHelp()
+            }
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun showLocationPermissionHelp() = help(
