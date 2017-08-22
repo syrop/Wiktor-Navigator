@@ -106,14 +106,19 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
 
         val searchMenuItem = menu.findItem(R.id.action_search)
         searchMenuItem.collapseActionView()
-        val searchView = searchMenuItem.actionView as SearchView
+        searchMenuItem.prepareSearchView()
+        return true
+    }
+
+    private fun MenuItem.prepareSearchView() {
+        collapseActionView()
+        val searchView = actionView as SearchView
         searchView.setOnSearchClickListener { onSearchClicked() }
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
         searchView.setOnCloseListener { onSearchViewClosed() }
-        return true
     }
 
     private fun onSearchViewClosed(): Boolean {
