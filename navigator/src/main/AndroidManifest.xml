@@ -43,8 +43,8 @@
             android:label="@string/delete_user_activity_label" />
 
         <activity
-            android:name=".view.activity.SearchActivity"
-            android:label="@string/search_activity_label"
+            android:name=".view.activity.SeekContactActivity"
+            android:label="@string/seek_contact_activity_label"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

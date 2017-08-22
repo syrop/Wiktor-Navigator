@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="20sp"
-        tools:text="@string/search_no_user_found"
+        tools:text="@string/seek_contact_no_user_found"
         android:textAppearance="@style/TextAppearance.AppCompat" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/contacts"

@@ -78,7 +78,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
         prompt.visibility = View.VISIBLE
     }
 
-    private fun onFabClicked() = startActivity(Intent(this, SearchActivity::class.java))
+    private fun onFabClicked() = startActivity(Intent(this, SeekContactActivity::class.java))
 
     private fun initContactsRecyclerView() {
         contacts.setHasFixedSize(true)

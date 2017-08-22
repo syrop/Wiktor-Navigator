@@ -41,15 +41,15 @@
     <string name="delete_user_cancel">Cancel</string>
     <string name="delete_user_ok">OK</string>
 
-    <!-- Search activity. -->
-    <string name="search_activity_label">Add a new user</string>
-    <string name="search_activity_hint">Search by e-mail</string>
-    <string name="search_press_to_begin">Please press [image] to begin your search.</string>
-    <string name="search_no_user_found">No user is found.</string>
-    <string name="search_searching">Searching…</string>
-    <string name="adding_friend_title">Adding a user</string>
-    <string name="search_waiting_for_party">Waiting for your party to respond.</string>
-    <string name="search_cannot_add_yourself">Cannot add yourself.</string>
+    <!-- Seek contact activity. -->
+    <string name="seek_contact_activity_label">Add a new user</string>
+    <string name="seek_contact_activity_hint">Search by e-mail</string>
+    <string name="seek_contact_press_to_begin">Please press [image] to begin your search.</string>
+    <string name="seek_contact_no_user_found">No user is found.</string>
+    <string name="seek_contact_searching">Searching…</string>
+    <string name="seek_contact_adding_friend_title">Adding a user</string>
+    <string name="seek_contact_waiting_for_party">Waiting for your party to respond.</string>
+    <string name="seek_contact_cannot_add_yourself">Cannot add yourself.</string>
 
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Do you want to add user [name]?</string>

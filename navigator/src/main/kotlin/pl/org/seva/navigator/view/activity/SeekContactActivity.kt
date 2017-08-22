@@ -36,7 +36,7 @@ import android.view.View
 import android.widget.Toast
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
-import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.model.ContactsStore
@@ -48,7 +48,7 @@ import pl.org.seva.navigator.view.adapter.SingleContactAdapter
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 
 @Suppress("DEPRECATION")
-class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
+class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()
@@ -60,7 +60,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_search)
+        setContentView(R.layout.activity_seek_contact)
 
         if (Intent.ACTION_SEARCH == intent.action) {
             search(intent.getStringExtra(SearchManager.QUERY))
@@ -69,24 +69,27 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        setPromptLabelText(R.string.search_press_to_begin)
+        setPromptText(R.string.seek_contact_press_to_begin)
     }
 
-    private fun setPromptLabelText(id: Int) {
-        val str = getString(id)
-        val ss = SpannableString(str)
+    private fun setPromptText(id: Int) {
+        prompt.text = getString(id).insertImage()
+    }
+
+    private fun String.insertImage(): SpannableString {
+        val result = SpannableString(this)
         val d = resources.getDrawable(R.drawable.ic_search_black_24dp)
         d.setBounds(0, 0, d.intrinsicWidth, d.intrinsicHeight)
         val span = ImageSpan(d, ImageSpan.ALIGN_BASELINE)
-        val idPlaceholder = str.indexOf(IMAGE_PLACEHOLDER)
+        val idPlaceholder = indexOf(IMAGE_PLACEHOLDER)
         if (idPlaceholder >= 0) {
-            ss.setSpan(
+            result.setSpan(
                     span,
                     idPlaceholder,
                     idPlaceholder + IMAGE_PLACEHOLDER_LENGTH,
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         }
-        prompt.text = ss
+        return result
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -99,7 +102,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.search, menu)
+        menuInflater.inflate(R.menu.seek_contact, menu)
 
         val searchMenuItem = menu.findItem(R.id.action_search)
         searchMenuItem.collapseActionView()
@@ -117,7 +120,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
         if (contacts.visibility != View.VISIBLE) {
             prompt.visibility = View.VISIBLE
         }
-        setPromptLabelText(R.string.search_press_to_begin)
+        setPromptText(R.string.seek_contact_press_to_begin)
         return false
     }
 
@@ -140,7 +143,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun search(query: String) {
-        progress = ProgressDialog.show(this, null, getString(R.string.search_searching))
+        progress = ProgressDialog.show(this, null, getString(R.string.seek_contact_searching))
         fbReader.findContact(query.toLowerCase())
                 .subscribe { onContactReceived(it) }
     }
@@ -150,7 +153,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
         if (contact.isEmpty) {
             prompt.visibility = View.VISIBLE
             contacts.visibility = View.GONE
-            setPromptLabelText(R.string.search_no_user_found)
+            setPromptText(R.string.seek_contact_no_user_found)
             return
         }
         prompt.visibility = View.GONE
@@ -170,7 +173,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onContactClicked(contact: Contact) = when {
         store.contains(contact) -> finish()
         contact.email == login.email ->
-            Toast.makeText(this, R.string.search_cannot_add_yourself, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
         else -> FriendshipAddDialogBuilder(this)
                 .setContact(contact)
                 .setYesAction { contactApprovedAndFinish(contact) }
@@ -180,7 +183,7 @@ class SearchActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun contactApprovedAndFinish(contact: Contact) {
-        Toast.makeText(this, R.string.search_waiting_for_party, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.seek_contact_waiting_for_party, Toast.LENGTH_SHORT).show()
         fbWriter.requestFriendship(contact)
         finish()
     }
