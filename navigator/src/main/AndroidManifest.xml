@@ -50,7 +50,7 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable_contact"/>
         </activity>
 
         <service android:name=".NavigatorService"/>
