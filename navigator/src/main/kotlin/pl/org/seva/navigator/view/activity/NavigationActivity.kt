@@ -203,14 +203,13 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         stopWatchingPeer()
     }
 
-    private fun contactNameSpannable(): CharSequence {
-        val str = getString(R.string.navigation_following_name)
-        val idName = str.indexOf(CONTACT_NAME_PLACEHOLDER)
+    private fun contactNameSpannable(): CharSequence = getString(R.string.navigation_following_name).run {
+        val idName = indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name.length
-        val ssBuilder = SpannableStringBuilder(str.replace(CONTACT_NAME_PLACEHOLDER, contact!!.name))
         val boldSpan = StyleSpan(Typeface.BOLD)
-        ssBuilder.setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        return ssBuilder
+        SpannableStringBuilder(replace(CONTACT_NAME_PLACEHOLDER, contact!!.name)).apply {
+            setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        }
     }
 
     private fun onFabClicked() {
