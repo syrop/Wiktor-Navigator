@@ -38,6 +38,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
+import android.widget.TextView
 import android.widget.Toast
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
@@ -185,21 +186,21 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
     }
 
-    private fun updateHud() {
-        hud.alpha = 1.0f
+    private fun updateHud() = hud.run {
+        alpha = 1.0f
         if (contact == null) {
-            hud.visibility = View.GONE
-            hud.setOnTouchListener(null)
+            visibility = View.GONE
+            setOnTouchListener(null)
         } else {
-            hud.visibility = View.VISIBLE
-            hud.text = contactNameSpannable()
-            hud.setOnTouchListener(OnSwipeListener(this, this::onHudSwiped))
+            visibility = View.VISIBLE
+            text = contactNameSpannable()
+            setOnTouchListener(hudSwipeListener)
         }
     }
 
-    private fun onHudSwiped() {
-        hud.animate().alpha(0.0f).withEndAction { hud.visibility = View.GONE }
-        hud.setOnTouchListener(null)
+    private val TextView.hudSwipeListener get() = OnSwipeListener(this@NavigationActivity) {
+        animate().alpha(0.0f).withEndAction { visibility = View.GONE }
+        setOnTouchListener(null)
         stopWatchingPeer()
     }
 
