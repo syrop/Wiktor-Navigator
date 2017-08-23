@@ -193,7 +193,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             setOnTouchListener(null)
         } else {
             visibility = View.VISIBLE
-            text = contactNameSpannable()
+            text = contactNameSpannable
             setOnTouchListener(hudSwipeListener)
         }
     }
@@ -204,7 +204,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         stopWatchingPeer()
     }
 
-    private fun contactNameSpannable(): CharSequence = getString(R.string.navigation_following_name).run {
+    private val contactNameSpannable: CharSequence get() = getString(R.string.navigation_following_name).run {
         val idName = indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name.length
         val boldSpan = StyleSpan(Typeface.BOLD)
