@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter
+package pl.org.seva.navigator.listener
 
 import android.app.Activity
 import android.content.pm.PackageManager

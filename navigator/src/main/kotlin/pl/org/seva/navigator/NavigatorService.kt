@@ -23,8 +23,8 @@ import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
-import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FbWriter
+import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
 import pl.org.seva.navigator.view.builder.notification.Channels

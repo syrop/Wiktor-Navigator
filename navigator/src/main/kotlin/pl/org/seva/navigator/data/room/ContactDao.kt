@@ -15,26 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model
+package pl.org.seva.navigator.data.room
 
-import com.google.firebase.auth.FirebaseUser
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Query
+import android.arch.persistence.room.Delete
+import android.arch.persistence.room.Insert
+import pl.org.seva.navigator.data.Contact
 
-class Login {
+@Dao
+interface ContactDao {
 
-    var isLoggedIn: Boolean = false
-    var email: String? = null
-    private var displayName: String? = null
+    @Query("select * from ${ContactsDatabase.TABLE_NAME}")
+    fun getAll(): List<Contact>
 
-    val loggedInContact: Contact
-        get() = Contact(email!!, displayName!!)
+    @Insert
+    fun insert(contact: Contact)
 
-    fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        isLoggedIn = true
-        email = user.email
-        displayName = user.displayName
-    } else {
-        isLoggedIn = false
-        email = null
-        displayName = null
-    }
+    @Delete
+    fun delete(contact: Contact)
+
+    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
+    fun deleteAll()
 }

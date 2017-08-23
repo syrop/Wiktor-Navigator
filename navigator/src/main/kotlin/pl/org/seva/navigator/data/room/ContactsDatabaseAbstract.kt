@@ -15,19 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model.firebase
+package pl.org.seva.navigator.data.room
 
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.Database
+import pl.org.seva.navigator.data.Contact
 
-import io.reactivex.subjects.PublishSubject
+@Database(entities = [Contact::class], version = ContactsDatabase.ROOM_DATABASE_VERSION)
+abstract class ContactsDatabaseAbstract : RoomDatabase() {
 
-class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) : ValueEventListener {
-
-    override fun onDataChange(dataSnapshot: DataSnapshot?) =
-        dataSnapshot?.run { valueEventSubject.onNext(this) } ?: Unit
-
-    override fun onCancelled(databaseError: DatabaseError) =
-            valueEventSubject.onError(Exception(databaseError.message))
+    abstract fun contactDao(): ContactDao
 }

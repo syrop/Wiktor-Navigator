@@ -27,8 +27,8 @@ import com.github.salomonbrys.kodein.instance
 
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.Contact
+import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.data.Contact
 
 open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>(), KodeinGlobalAware {
 

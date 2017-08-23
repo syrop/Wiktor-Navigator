@@ -35,12 +35,12 @@ import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.presenter.ContactTouchListener
+import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.listener.ContactTouchListener
 import pl.org.seva.navigator.view.adapter.ContactAdapter
 
 class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.presenter
+package pl.org.seva.navigator.listener
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -27,11 +27,11 @@ import com.github.salomonbrys.kodein.instance
 
 import java.util.Random
 
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.ParcelableInt
-import pl.org.seva.navigator.model.room.ContactsDatabase
+import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.ParcelableInt
+import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.view.builder.notification.friendshipRequestedNotification
 
 class FriendshipListener : KodeinGlobalAware {

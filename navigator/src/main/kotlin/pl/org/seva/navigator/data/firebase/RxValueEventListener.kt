@@ -15,26 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model.room
+package pl.org.seva.navigator.data.firebase
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import pl.org.seva.navigator.model.Contact
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
-@Dao
-interface ContactDao {
+import io.reactivex.subjects.PublishSubject
 
-    @Query("select * from ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<Contact>
+class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) : ValueEventListener {
 
-    @Insert
-    fun insert(contact: Contact)
+    override fun onDataChange(dataSnapshot: DataSnapshot?) =
+        dataSnapshot?.run { valueEventSubject.onNext(this) } ?: Unit
 
-    @Delete
-    fun delete(contact: Contact)
-
-    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
-    fun deleteAll()
+    override fun onCancelled(databaseError: DatabaseError) =
+            valueEventSubject.onError(Exception(databaseError.message))
 }

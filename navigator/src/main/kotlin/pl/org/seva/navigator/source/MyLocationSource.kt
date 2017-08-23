@@ -33,7 +33,7 @@ import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.data.Login
 
 class MyLocationSource : LiveSource(),
         GoogleApiClient.ConnectionCallbacks,

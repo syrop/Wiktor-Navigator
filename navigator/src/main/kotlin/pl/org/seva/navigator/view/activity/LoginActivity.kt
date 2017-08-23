@@ -39,7 +39,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 import pl.org.seva.navigator.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.firebase.FbWriter
+import pl.org.seva.navigator.data.firebase.FbWriter
 
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity(),

@@ -56,16 +56,16 @@ import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.NavigatorApplication
-import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.presenter.OnSwipeListener
-import pl.org.seva.navigator.presenter.Permissions
+import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.listener.OnSwipeListener
+import pl.org.seva.navigator.listener.Permissions
 import pl.org.seva.navigator.source.PeerLocationSource
-import pl.org.seva.navigator.view.map.mapFragment
-import pl.org.seva.navigator.view.map.ready
+import pl.org.seva.navigator.view.googlemap.mapFragment
+import pl.org.seva.navigator.view.googlemap.ready
 
 class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 

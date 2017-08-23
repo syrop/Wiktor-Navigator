@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model.room
+package pl.org.seva.navigator.data.room
 
 import android.arch.persistence.room.Room
 import android.content.Context

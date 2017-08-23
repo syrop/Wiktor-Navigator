@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model.firebase
+package pl.org.seva.navigator.data.firebase
 
 import android.util.Base64
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 import java.util.Locale
 
-import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.data.Login
 
 open class Fb : KodeinGlobalAware {
 

@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model.firebase
+package pl.org.seva.navigator.data.firebase
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 
-import pl.org.seva.navigator.model.Contact
+import pl.org.seva.navigator.data.Contact
 
 class FbWriter : Fb() {
 

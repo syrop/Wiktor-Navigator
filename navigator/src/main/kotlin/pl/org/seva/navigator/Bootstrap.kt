@@ -25,10 +25,10 @@ import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.with
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.Login
-import pl.org.seva.navigator.model.room.ContactsDatabase
-import pl.org.seva.navigator.presenter.FriendshipListener
+import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.listener.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.view.builder.notification.Channels

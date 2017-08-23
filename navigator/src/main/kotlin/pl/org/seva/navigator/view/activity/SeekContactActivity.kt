@@ -39,11 +39,11 @@ import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.model.ContactsStore
-import pl.org.seva.navigator.model.firebase.FbReader
-import pl.org.seva.navigator.model.firebase.FbWriter
-import pl.org.seva.navigator.model.Contact
-import pl.org.seva.navigator.model.Login
+import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.data.firebase.FbReader
+import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
 

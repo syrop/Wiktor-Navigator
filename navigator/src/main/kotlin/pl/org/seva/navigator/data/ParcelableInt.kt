@@ -15,36 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.model
+package pl.org.seva.navigator.data
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import pl.org.seva.navigator.model.room.ContactsDatabase
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-@Entity(tableName = ContactsDatabase.TABLE_NAME)
-data class Contact(
-        @PrimaryKey var email: String = "", var name: String = "") : Comparable<Contact>, Parcelable {
-
-    @Ignore
-    @Transient
-    val isEmpty = email.isEmpty()
-
-    override fun compareTo(other: Contact): Int {
-        var result = name.compareTo(other.name)
-        if (result == 0) {
-            result = email.compareTo(other.email)
-        }
-        return result
-    }
-
-    override fun equals(other: Any?) =
-        !(other == null || other !is Contact) && email == other.email
-
-    override fun hashCode() = email.hashCode()
-}
+class ParcelableInt(val value: Int) : Parcelable
