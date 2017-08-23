@@ -24,6 +24,8 @@ import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.upkeep.Bootstrap
+import pl.org.seva.navigator.upkeep.module
 
 class NavigatorApplication : Application(), KodeinGlobalAware {
 
