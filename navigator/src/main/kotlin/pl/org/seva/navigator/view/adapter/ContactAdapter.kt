@@ -40,7 +40,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>(), K
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_contact, parent, false))
+                    .inflate(R.layout.row_contact, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = getContact(position)
