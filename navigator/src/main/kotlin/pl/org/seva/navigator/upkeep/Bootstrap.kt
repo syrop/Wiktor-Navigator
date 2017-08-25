@@ -80,7 +80,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
 
     private fun removeFriendshipListeners() = friendshipSource.clearFriendshipListeners()
 
-    private fun startService() {
+    fun startService() {
         if (isServiceRunning) {
             return
         }

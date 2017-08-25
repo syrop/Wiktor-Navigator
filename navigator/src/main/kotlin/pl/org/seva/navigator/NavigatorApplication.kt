@@ -44,4 +44,5 @@ class NavigatorApplication : Application(), KodeinGlobalAware {
     fun login(user: FirebaseUser) = bootstrap.login(user)
     fun logout() = bootstrap.logout()
     fun stopService() = bootstrap.stopService()
+    fun startService() = bootstrap.startService()
 }

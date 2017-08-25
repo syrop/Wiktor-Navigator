@@ -104,6 +104,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
+        (application as NavigatorApplication).startService()
         zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
         setContentView(R.layout.activity_navigation)
         lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
@@ -470,7 +471,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         super.onBackPressed()
     } else {
         exitApplicationToast?.cancel()
-        exitApplicationToast = Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
+        exitApplicationToast =
+                Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
         exitApplicationToast!!.show()
         backClickTime = System.currentTimeMillis()
     }
