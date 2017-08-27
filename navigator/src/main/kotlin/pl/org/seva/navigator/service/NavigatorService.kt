@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator
+package pl.org.seva.navigator.service
 
 import android.app.*
 import android.arch.lifecycle.LifecycleService
@@ -23,6 +23,7 @@ import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
+import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.source.MyLocationSource
@@ -40,7 +41,7 @@ class NavigatorService : LifecycleService(), KodeinGlobalAware {
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         myLocationSource.init(this)
-        startForeground(NavigatorService.Companion.ONGOING_NOTIFICATION_ID, createOngoingNotification())
+        startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addMyLocationListener()
 
         return android.app.Service.START_STICKY
@@ -60,8 +61,8 @@ class NavigatorService : LifecycleService(), KodeinGlobalAware {
                 mainActivityIntent,
                 0)
         return notificationBuilder
-                .setContentTitle(getString(pl.org.seva.navigator.R.string.app_name))
-                .setSmallIcon(pl.org.seva.navigator.R.drawable.ic_navigation_white_24dp)
+                .setContentTitle(getString(R.string.app_name))
+                .setSmallIcon(R.drawable.ic_navigation_white_24dp)
                 .setContentIntent(pi)
                 .setAutoCancel(false)
                 .build()

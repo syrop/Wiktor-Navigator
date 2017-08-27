@@ -37,7 +37,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
-import pl.org.seva.navigator.NavigatorApplication
+import pl.org.seva.navigator.application.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.firebase.FbWriter
 
