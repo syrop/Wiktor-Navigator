@@ -127,11 +127,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         peerLocationSource.addPeerLocationListener(email, this@NavigationActivity::onPeerLocationReceived)
     }
 
-    override fun onPause() {
-        super.onPause()
-        moveCamera = this::moveCameraToLast
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         peerLocationSource.clearPeerLocationListeners()
@@ -160,9 +155,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun LatLng.moveCamera() {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
         if (animateCamera) {
-            map!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            map?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         } else {
-            map!!.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
         animateCamera = false
     }
@@ -418,15 +413,22 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         startActivityForResult(intent, DELETE_PROFILE_REQUEST_ID)
     }
 
-    private fun onCameraIdle() {
-        val cameraPosition = map!!.cameraPosition
-        zoom = cameraPosition.zoom
-        val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
-        editor.putFloat(ZOOM_PROPERTY, zoom)
-        lastCameraPosition = cameraPosition.target
-        editor.putFloat(LATITUDE_PROPERTY, lastCameraPosition.latitude.toFloat())
-        editor.putFloat(LONGITUDE_PROPERTY, lastCameraPosition.longitude.toFloat())
-        editor.apply()
+    private fun onCameraIdle() = map!!.cameraPosition.let {
+            zoom = it.zoom
+            lastCameraPosition = it.target
+            if (lastCameraPosition != peerLocation) {
+                moveCamera = this::moveCameraToLast
+            }
+            storeCameraPositionAndZoom()
+        }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun storeCameraPositionAndZoom() =
+            with (PreferenceManager.getDefaultSharedPreferences(this).edit()) {
+        putFloat(ZOOM_PROPERTY, zoom)
+        putFloat(LATITUDE_PROPERTY, lastCameraPosition.latitude.toFloat())
+        putFloat(LONGITUDE_PROPERTY, lastCameraPosition.longitude.toFloat())
+        apply()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -443,7 +445,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onPeerLocationReceived(latLng: LatLng) {
-        peerLocation = latLng.apply { putPeerMarker() }
+        latLng.putPeerMarker()
+        peerLocation = latLng
         moveCamera()
     }
 
