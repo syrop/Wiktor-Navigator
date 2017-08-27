@@ -85,14 +85,16 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         if (isServiceRunning) {
             return
         }
-        with (Intent(application.baseContext, NavigatorService::class.java)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                application.startForegroundService(this)
-            } else {
-                application.startService(this)
-            }
-        }
+        startService(Intent(application.baseContext, NavigatorService::class.java))
         isServiceRunning = true
+    }
+
+    private fun startService(intent: Intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            application.startForegroundService(intent)
+        } else {
+            application.startService(intent)
+        }
     }
 
     fun stopService() {
