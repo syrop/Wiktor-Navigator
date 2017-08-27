@@ -416,14 +416,20 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onCameraIdle() = map!!.cameraPosition.let {
             zoom = it.zoom
             lastCameraPosition = it.target
-            if (lastCameraPosition != peerLocation) {
+            if (lastCameraPosition different peerLocation) {
                 moveCamera = this::moveCameraToLast
             }
-            storeCameraPositionAndZoom()
+            persistCameraPositionAndZoom()
         }
 
+    private infix fun LatLng.different(other: LatLng?): Boolean {
+        if (other == null) return true
+        return Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
+                Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
+    }
+
     @SuppressLint("CommitPrefEdits")
-    private fun storeCameraPositionAndZoom() =
+    private fun persistCameraPositionAndZoom() =
             with (PreferenceManager.getDefaultSharedPreferences(this).edit()) {
         putFloat(ZOOM_PROPERTY, zoom)
         putFloat(LATITUDE_PROPERTY, lastCameraPosition.latitude.toFloat())
@@ -513,5 +519,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
         /** Length of time that will be taken for a double click.  */
         private val DOUBLE_CLICK_MS: Long = 1000
+
+        private val FLOAT_TOLERANCE = 0.002f
     }
 }
