@@ -20,6 +20,7 @@ package pl.org.seva.navigator.upkeep
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.with
@@ -84,7 +85,13 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         if (isServiceRunning) {
             return
         }
-        application.startService(Intent(application.baseContext, NavigatorService::class.java))
+        with (Intent(application.baseContext, NavigatorService::class.java)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                application.startForegroundService(this)
+            } else {
+                application.startService(this)
+            }
+        }
         isServiceRunning = true
     }
 
