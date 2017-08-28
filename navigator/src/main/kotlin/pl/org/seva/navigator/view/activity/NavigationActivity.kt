@@ -64,6 +64,8 @@ import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.listener.OnSwipeListener
 import pl.org.seva.navigator.listener.Permissions
 import pl.org.seva.navigator.source.PeerLocationSource
+import pl.org.seva.navigator.view.activity.viewholder.NavigationViewHolder
+import pl.org.seva.navigator.view.activity.viewholder.navigationView
 import pl.org.seva.navigator.view.googlemap.mapFragment
 import pl.org.seva.navigator.view.googlemap.ready
 
@@ -101,6 +103,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var moveCamera: () -> Unit = this::moveCameraToPeerOrLastLocation
 
+    private lateinit var viewHolder: NavigationViewHolder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
@@ -114,16 +118,12 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
         }
         readContactFromProperties()
-        contact?.listen()
+        viewHolder = navigationView(this) {
+            contact = this@NavigationActivity.contact
+        }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
-        updateHud()
         checkLocationPermission()
-    }
-
-    private fun Contact.listen() {
-        store.addContactsUpdatedListener(email, this@NavigationActivity::stopWatchingPeer)
-        peerLocationSource.addPeerLocationListener(email, this@NavigationActivity::onPeerLocationReceived)
     }
 
     override fun onDestroy() {
@@ -181,35 +181,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
     }
 
-    private fun updateHud() = hud.run {
-        alpha = 1.0f
-        if (contact == null) {
-            visibility = View.GONE
-            setOnTouchListener(null)
-        } else {
-            visibility = View.VISIBLE
-            text = contactNameSpannable
-            setOnTouchListener(hudSwipeListener)
-        }
-    }
-
-    private val TextView.hudSwipeListener get() = OnSwipeListener(this@NavigationActivity) {
-        animate().alpha(0.0f).withEndAction { visibility = View.GONE }
-        setOnTouchListener(null)
-        stopWatchingPeer()
-    }
-
-    private val contactNameSpannable: CharSequence get() = getString(R.string.navigation_following_name).run {
-        val idName = indexOf(CONTACT_NAME_PLACEHOLDER)
-        val idEndName = idName + contact!!.name.length
-        val boldSpan = StyleSpan(Typeface.BOLD)
-        SpannableStringBuilder(replace(CONTACT_NAME_PLACEHOLDER, contact!!.name)).apply {
-            setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        }
-    }
-
     private fun onFabClicked() {
-        stopWatchingPeer()
+        viewHolder.stopWatchingPeer()
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
         } else if (login.isLoggedIn) {
@@ -225,10 +198,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         when (requestCode) {
             CONTACTS_ACTIVITY_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    contact = data?.getParcelableExtra(CONTACT_IN_INTENT)
-                    contact?.listen()
+                    viewHolder.contact = data?.getParcelableExtra(CONTACT_IN_INTENT)
                 }
-                updateHud()
+                viewHolder.updateHud()
             }
             DELETE_PROFILE_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -239,18 +211,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun GoogleMap.onReady() {
-        this@NavigationActivity.map = this.apply {
-            setOnCameraIdleListener { onCameraIdle() }
-            checkLocationPermission(
-                    onGranted = { isMyLocationEnabled = true },
-                    onDenied = {})
-        }
-        peerLocation?.putPeerMarker()
-        moveCamera()
-        moveCamera = this@NavigationActivity::moveCameraToPeerOrLastLocation
-    }
+
 
     private fun moveCameraToPeerOrLastLocation() = (peerLocation?:lastCameraPosition).moveCamera()
 
@@ -454,29 +415,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
     }
 
-    private fun onPeerLocationReceived(latLng: LatLng) {
-        latLng.putPeerMarker()
-        peerLocation = latLng
-        moveCamera()
-    }
 
-    private fun stopWatchingPeer() {
-        contact = null
-        peerLocationSource.clearPeerLocationListeners()
-        clearMap()
-    }
-
-    private fun clearMap() = map!!.clear()
-
-    private fun LatLng.putPeerMarker() {
-        map?.also {
-            clearMap()
-            it.addMarker(MarkerOptions()
-                    .position(this)
-                    ?.title(contact!!.name))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
-        }
-    }
 
     override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
         (application as NavigatorApplication).stopService()
@@ -491,8 +430,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     companion object {
-
-        private val CONTACT_NAME_PLACEHOLDER = "[name]"
 
         private val DELETE_PROFILE_REQUEST_ID = 0
         private val CONTACTS_ACTIVITY_REQUEST_ID = 1
