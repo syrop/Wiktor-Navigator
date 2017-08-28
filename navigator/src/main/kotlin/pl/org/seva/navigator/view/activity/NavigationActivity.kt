@@ -104,7 +104,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
-        (application as NavigatorApplication).startService()
         zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
         setContentView(R.layout.activity_navigation)
         lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
@@ -356,6 +355,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         map?.isMyLocationEnabled = true
         if (!login.isLoggedIn) {
             showLoginSnackbar()
+        } else {
+            (application as NavigatorApplication).startService()
         }
     }
 
