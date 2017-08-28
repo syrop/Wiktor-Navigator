@@ -15,14 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.room
+package pl.org.seva.navigator.view
 
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.Database
-import pl.org.seva.navigator.data.Contact
+import android.app.Application
+import android.graphics.Color
 
-@Database(entities = [Contact::class], version = ContactsDatabase.ADDED_COLOR_DATABASE_VERSION)
-abstract class ContactsDatabaseAbstract : RoomDatabase() {
+class ColorFactory(private val application: Application ) {
 
-    abstract fun contactDao(): ContactDao
+    private val colors by lazy {
+        application.run {
+            resources.getIdentifier(COLOR_ARRAY_NAME + COLOR_TYPE,"array", packageName).let {
+                resources.obtainTypedArray(it)
+            }
+        }
+    }
+
+    fun nextColor() = with(colors) {
+        val index = (Math.random() * length()).toInt()
+        getColor(index, Color.GRAY)
+    }
+
+    companion object {
+        val COLOR_ARRAY_NAME = "mdcolor_"
+        val COLOR_TYPE = "400"
+    }
 }

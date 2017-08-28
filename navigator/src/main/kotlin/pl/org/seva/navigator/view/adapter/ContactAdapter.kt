@@ -21,11 +21,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 
-import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Contact
@@ -51,6 +51,9 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
         holder.name.text = contact.name
         holder.email.text = contact.email
         holder.view.setOnClickListener { onItemClick(position) }
+        holder.iconText.text = contact.name.substring(0, 1)
+        holder.iconProfile.setImageResource(R.drawable.bg_circle)
+        holder.iconProfile.setColorFilter(contact.color)
     }
 
     private fun onItemClick(position: Int) = listener?.invoke(getContact(position))
@@ -60,7 +63,9 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.name)
         val email: TextView = view.findViewById(R.id.email)
-        val view: View = view.findViewById(R.id.card_view)
+        val view: View = view.findViewById(R.id.view)
+        val iconText: TextView = view.findViewById(R.id.icon_text)
+        val iconProfile: ImageView = view.findViewById(R.id.icon_profile)
     }
 
     companion object {

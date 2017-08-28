@@ -34,6 +34,7 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
+import pl.org.seva.navigator.view.ColorFactory
 import pl.org.seva.navigator.view.builder.notification.Channels
 
 fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
@@ -55,6 +56,7 @@ class KodeinModuleBuilder {
         bind<PeerLocationSource>() with singleton { PeerLocationSource() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
-        bind<Channels>() with factory { ctx: Context -> Channels(ctx) }
+        bind<Channels>() with singleton { Channels(application) }
+        bind<ColorFactory>() with singleton { ColorFactory(application) }
     }
 }

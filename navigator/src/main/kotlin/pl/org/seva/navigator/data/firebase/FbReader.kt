@@ -17,6 +17,7 @@
 
 package pl.org.seva.navigator.data.firebase
 
+import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
@@ -25,8 +26,11 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.view.ColorFactory
 
 class FbReader : Fb() {
+
+    private val cf: ColorFactory = instance()
 
     fun peerLocationListener(email: String): Observable<LatLng> = email.toReference().child(LAT_LNG).listen()
             .filter { it.value != null }
@@ -83,7 +87,9 @@ class FbReader : Fb() {
     }
 
     private fun DataSnapshot.toContact() =
-            if (exists()) Contact(key.from64(), child(DISPLAY_NAME).value as String) else Contact()
+            if (exists()) {
+                Contact(key.from64(), child(DISPLAY_NAME).value as String, cf.nextColor())
+            } else Contact()
 
     companion object {
         val READ_ONCE = 1L

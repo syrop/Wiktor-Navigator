@@ -42,6 +42,7 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.listener.ContactTouchListener
 import pl.org.seva.navigator.view.adapter.ContactAdapter
+import pl.org.seva.navigator.view.decoration.DividerItemDecoration
 
 class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 
@@ -84,6 +85,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
         contacts.setHasFixedSize(true)
         contacts.layoutManager = LinearLayoutManager(this)
         contacts.adapter = adapter
+        contacts.addItemDecoration(DividerItemDecoration(this))
         ItemTouchHelper(ContactTouchListener { onContactSwiped(it) } ).attachToRecyclerView(contacts)
     }
 

@@ -26,7 +26,7 @@ class ContactsDatabase {
 
     fun initWithContext(context: Context) {
         db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME)
-                .addMigrations(LiteToRoomMigration())
+                .addMigrations(LiteToRoomMigration(), AddedColorMigration())
                 .allowMainThreadQueries()
                 .build()
     }
@@ -34,8 +34,9 @@ class ContactsDatabase {
     val contactDao get() = db.contactDao()
 
     companion object {
-        const val SQL_DATABASE_VERSION = 1
+        const val SQL_LITE_DATABASE_VERSION = 1
         const val ROOM_DATABASE_VERSION = 2
+        const val ADDED_COLOR_DATABASE_VERSION = 3
         val DATABASE_NAME = "Friends.db"
         const val TABLE_NAME = "friends"
     }

@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.graphics.Color
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.data.room.ContactsDatabase
@@ -29,7 +30,9 @@ import pl.org.seva.navigator.data.room.ContactsDatabase
 @Parcelize
 @Entity(tableName = ContactsDatabase.TABLE_NAME)
 data class Contact(
-        @PrimaryKey var email: String = "", var name: String = "") : Comparable<Contact>, Parcelable {
+        @PrimaryKey var email: String = "",
+        var name: String = "",
+        var color: Int = Color.GRAY) : Comparable<Contact>, Parcelable {
 
     @Ignore
     @Transient

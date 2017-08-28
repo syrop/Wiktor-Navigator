@@ -19,15 +19,32 @@ package pl.org.seva.navigator.data.room
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
+import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase
+import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
+import com.github.salomonbrys.kodein.instance
+import pl.org.seva.navigator.view.ColorFactory
 
-class LiteToRoomMigration: Migration(
-        ContactsDatabase.SQL_LITE_DATABASE_VERSION,
-        ContactsDatabase.ROOM_DATABASE_VERSION) {
+class AddedColorMigration : Migration(
+        ContactsDatabase.ROOM_DATABASE_VERSION,
+        ContactsDatabase.ADDED_COLOR_DATABASE_VERSION),
+        KodeinGlobalAware {
+
+    private val cf: ColorFactory = instance()
 
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(RENAME_STATEMENT)
         database.execSQL(CREATION_STATEMENT)
-        database.execSQL(COPY_STATEMENT)
+        val cursor = database.query(SELECT_STATEMENT)
+        cursor.use {
+            while (it.moveToNext()) {
+                val cv = ContentValues()
+                cv.put("email", cursor.getString(0))
+                cv.put("name", cursor.getString(1))
+                cv.put("color", cf.nextColor())
+                database.insert("friends", SQLiteDatabase.CONFLICT_NONE, cv)
+            }
+        }
         database.execSQL(DROP_STATEMENT)
     }
 
@@ -35,10 +52,11 @@ class LiteToRoomMigration: Migration(
         private val RENAME_STATEMENT =
                 "alter table friends rename to friends_old"
         private val CREATION_STATEMENT =
-                "create table if not exists friends (email TEXT primary key not null, name TEXT not null)"
-        private val COPY_STATEMENT =
-                "insert into friends(email, name) select email, name from friends_old"
+                "create table if not exists friends (email TEXT primary key not null, name TEXT not null, color INTEGER not null)"
+        private val SELECT_STATEMENT =
+                "select * from friends_old"
         private val DROP_STATEMENT =
                 "drop table friends_old"
     }
+
 }

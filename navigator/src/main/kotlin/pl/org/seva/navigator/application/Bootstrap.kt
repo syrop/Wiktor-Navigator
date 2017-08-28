@@ -54,7 +54,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
             addFriendshipListeners()
             startService()
         }
-        with<Context>(application).instance<Channels>().create()
+        instance<Channels>().create()
     }
 
     fun login(user: FirebaseUser) {
