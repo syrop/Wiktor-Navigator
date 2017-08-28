@@ -372,6 +372,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
         snackbar!!.show()
+
+
+
     }
 
     private fun showLoginSnackbar() {
