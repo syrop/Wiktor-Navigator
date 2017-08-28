@@ -52,7 +52,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var snackbar: Snackbar? = null
 
-    private val adapter = ContactAdapter()
+    private val adapter = ContactAdapter { onContactClicked(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +83,6 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun initContactsRecyclerView() {
         contacts.setHasFixedSize(true)
         contacts.layoutManager = LinearLayoutManager(this)
-        adapter.addClickListener { onContactClicked(it) }
         contacts.adapter = adapter
         ItemTouchHelper(ContactTouchListener { onContactSwiped(it) } ).attachToRecyclerView(contacts)
     }

@@ -30,17 +30,21 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Contact
 
-open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>(), KodeinGlobalAware {
+typealias ContactListener = (contact: Contact) -> Unit
+
+open class ContactAdapter(private val listener: ContactListener? = null) :
+        RecyclerView.Adapter<ContactAdapter.ViewHolder>(),
+        KodeinGlobalAware {
 
     private val store: ContactsStore = instance()
 
-    private val clickSubject = PublishSubject.create<Contact>()
-
-    internal open fun getContact(position: Int) = store[position]
+    protected open fun getContact(position: Int) = store[position]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.row_contact, parent, false))
+            ViewHolder(parent.inflate())
+
+    private fun ViewGroup.inflate() =
+        LayoutInflater.from(context).inflate(LAYOUT , this, false)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = getContact(position)
@@ -49,11 +53,7 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>(), K
         holder.view.setOnClickListener { onItemClick(position) }
     }
 
-    private fun onItemClick(position: Int) = clickSubject.onNext(getContact(position))
-
-    fun addClickListener(contactClickListener: (contact : Contact) -> Unit) {
-        clickSubject.subscribe { contactClickListener(it) }
-    }
+    private fun onItemClick(position: Int) = listener?.invoke(getContact(position))
 
     override fun getItemCount() = store.size()
 
@@ -61,5 +61,9 @@ open class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>(), K
         val name: TextView = view.findViewById(R.id.name)
         val email: TextView = view.findViewById(R.id.email)
         val view: View = view.findViewById(R.id.card_view)
+    }
+
+    companion object {
+        private val LAYOUT = R.layout.row_contact
     }
 }

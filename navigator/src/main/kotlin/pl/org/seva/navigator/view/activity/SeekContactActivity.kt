@@ -167,9 +167,8 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
         contacts.setHasFixedSize(true)
         val lm = LinearLayoutManager(this)
         contacts.layoutManager = lm
-        val adapter = SingleContactAdapter(contact)
+        val adapter = SingleContactAdapter(contact) { onContactClicked(it) }
         contacts.adapter = adapter
-        adapter.addClickListener { onContactClicked(it) }
     }
 
     private fun onContactClicked(contact: Contact) = when {

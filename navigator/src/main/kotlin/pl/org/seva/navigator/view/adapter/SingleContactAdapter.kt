@@ -19,7 +19,9 @@ package pl.org.seva.navigator.view.adapter
 
 import pl.org.seva.navigator.data.Contact
 
-class SingleContactAdapter(private val contact: Contact) : ContactAdapter() {
+class SingleContactAdapter(
+        private val contact: Contact,
+        listener: ContactListener? = null) : ContactAdapter(listener) {
 
     override fun getContact(position: Int) = contact
 
