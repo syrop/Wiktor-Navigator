@@ -39,7 +39,6 @@ import pl.org.seva.navigator.data.Contact
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.listener.OnSwipeListener
 import pl.org.seva.navigator.source.PeerLocationSource
-import pl.org.seva.navigator.view.activity.NavigationActivity
 
 fun navigationView(ctx: Context, f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
         NavigationViewHolder(ctx).apply(f)
@@ -50,17 +49,16 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
     private val store: ContactsStore = instance()
 
     private var map: GoogleMap? = null
-    private var peerLocation: LatLng? = null
+    var peerLocation: LatLng? = null
 
     private var moveCamera: () -> Unit = this::moveCameraToPeerOrLastLocation
 
-    private lateinit var lastCameraPosition: LatLng
+    lateinit var lastCameraPosition: LatLng
 
-    private var animateCamera = true
-    private var zoom = 0.0f
+    var animateCamera = true
+    var zoom = 0.0f
 
     private lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
-
     private lateinit var persistCameraPositionAndZoom: () -> Unit
 
     private val TextView.hudSwipeListener get() = OnSwipeListener(ctx = context) {
@@ -80,7 +78,7 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
 
     lateinit var view: View
     var contact: Contact? = null
-        set(value: Contact?) {
+        set(value) {
             field = value
             field?.listen()
             updateHud()
@@ -125,6 +123,13 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
     private fun moveCameraToPeerOrLastLocation() = (peerLocation?:lastCameraPosition).moveCamera()
 
     private fun moveCameraToLast() = lastCameraPosition.moveCamera()
+
+    infix fun ready(map: GoogleMap) = map.onReady()
+
+    @SuppressLint("MissingPermission")
+    fun locationPermissionGranted() {
+        map?.isMyLocationEnabled = true
+    }
 
     @SuppressLint("MissingPermission")
     private fun GoogleMap.onReady() {
@@ -173,7 +178,4 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f
     }
-
-
-
 }

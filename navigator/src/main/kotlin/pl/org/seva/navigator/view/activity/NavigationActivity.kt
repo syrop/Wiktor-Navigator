@@ -23,7 +23,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -31,25 +30,16 @@ import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.StyleSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
-import android.widget.TextView
 import android.widget.Toast
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import io.reactivex.disposables.Disposables
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
@@ -61,7 +51,6 @@ import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.listener.OnSwipeListener
 import pl.org.seva.navigator.listener.Permissions
 import pl.org.seva.navigator.source.PeerLocationSource
 import pl.org.seva.navigator.view.activity.viewholder.NavigationViewHolder
@@ -92,34 +81,31 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-
-
-
-
     private var mapContainerId: Int = 0
 
     private var exitApplicationToast: Toast? = null
-
-
 
     private lateinit var viewHolder: NavigationViewHolder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val properties = PreferenceManager.getDefaultSharedPreferences(this)
-        zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
-        setContentView(R.layout.activity_navigation)
-        lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
-                properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
-        supportActionBar?.title = getString(R.string.navigation_activity_label)
-        if (savedInstanceState != null) {
-            animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
-        }
+
         readContactFromProperties()
         viewHolder = navigationView(this) {
+            zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
+            lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
+                    properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
             contact = this@NavigationActivity.contact
         }
+        setContentView(R.layout.activity_navigation)
+
+        supportActionBar?.title = getString(R.string.navigation_activity_label)
+        if (savedInstanceState != null) {
+            viewHolder.animateCamera = false
+            viewHolder.peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
+        }
+
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         checkLocationPermission()
@@ -146,11 +132,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             container = mapContainerId
             tag = MAP_FRAGMENT_TAG
         } ready {
-            onReady()
+            viewHolder ready this
         }
     }
-
-
 
     private fun Contact?.persist() {
         val name = this?.name ?: ""
@@ -201,10 +185,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
-
-
-
 
     inline private fun checkLocationPermission(
             onGranted: () -> Unit = this::onLocationPermissionGranted ,
@@ -302,7 +282,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onLocationPermissionGranted() {
         permissionDisposable.dispose()
         invalidateOptionsMenu()
-        map?.isMyLocationEnabled = true
+        viewHolder.locationPermissionGranted()
         if (!login.isLoggedIn) {
             showLoginSnackbar()
         } else {
@@ -322,9 +302,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
         snackbar!!.show()
-
-
-
     }
 
     private fun showLoginSnackbar() {
@@ -349,13 +326,13 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun logout() {
-        stopWatchingPeer()
+        viewHolder.stopWatchingPeer()
         startActivity(Intent(this, LoginActivity::class.java)
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
     }
 
     private fun deleteProfile() {
-        stopWatchingPeer()
+        viewHolder.stopWatchingPeer()
         store.clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
         fbWriter.deleteMe()
@@ -369,7 +346,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     override fun onSaveInstanceState(outState: Bundle) {
         deleteMapFragment()
-        outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
+        outState.putParcelable(SAVED_PEER_LOCATION, viewHolder.peerLocation)
         super.onSaveInstanceState(outState)
     }
 
@@ -379,8 +356,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             mapFragment = null
         }
     }
-
-
 
     override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
         (application as NavigatorApplication).stopService()
@@ -422,7 +397,5 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
         /** Length of time that will be taken for a double click.  */
         private val DOUBLE_CLICK_MS: Long = 1000
-
-
     }
 }
