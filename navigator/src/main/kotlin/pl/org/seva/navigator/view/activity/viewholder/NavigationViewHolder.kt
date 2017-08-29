@@ -58,8 +58,8 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
     var animateCamera = true
     var zoom = 0.0f
 
-    private lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
-    private lateinit var persistCameraPositionAndZoom: () -> Unit
+    lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
+    lateinit var persistCameraPositionAndZoom: () -> Unit
 
     private val TextView.hudSwipeListener get() = OnSwipeListener(ctx = context) {
         animate().alpha(0.0f).withEndAction { visibility = View.GONE }

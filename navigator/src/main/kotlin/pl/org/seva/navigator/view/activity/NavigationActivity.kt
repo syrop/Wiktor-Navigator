@@ -97,6 +97,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
                     properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
             contact = this@NavigationActivity.contact
+            checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
+            persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
         }
         setContentView(R.layout.activity_navigation)
 
@@ -186,8 +188,11 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    inline private fun ifLocationPermissionGranted(f: () -> Unit) =
+            checkLocationPermission(onGranted = f, onDenied = {})
+
     inline private fun checkLocationPermission(
-            onGranted: () -> Unit = this::onLocationPermissionGranted ,
+            onGranted: () -> Unit = this::onLocationPermissionGranted,
             onDenied: () -> Unit = this::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -343,6 +348,15 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         val intent = Intent(this, DeleteProfileActivity::class.java)
         startActivityForResult(intent, DELETE_PROFILE_REQUEST_ID)
     }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun persistCameraPositionAndZoom() =
+            with (PreferenceManager.getDefaultSharedPreferences(this).edit()) {
+                putFloat(ZOOM_PROPERTY, viewHolder.zoom)
+                putFloat(LATITUDE_PROPERTY, viewHolder.lastCameraPosition.latitude.toFloat())
+                putFloat(LONGITUDE_PROPERTY, viewHolder.lastCameraPosition.longitude.toFloat())
+                apply()
+            }
 
     override fun onSaveInstanceState(outState: Bundle) {
         deleteMapFragment()
