@@ -27,8 +27,10 @@ import android.view.View
 import android.widget.TextView
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
@@ -46,6 +48,20 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
 
     private val peerLocationSource: PeerLocationSource = instance()
     private val store: ContactsStore = instance()
+
+    private var map: GoogleMap? = null
+    private var peerLocation: LatLng? = null
+
+    private var moveCamera: () -> Unit = this::moveCameraToPeerOrLastLocation
+
+    private lateinit var lastCameraPosition: LatLng
+
+    private var animateCamera = true
+    private var zoom = 0.0f
+
+    private lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
+
+    private lateinit var persistCameraPositionAndZoom: () -> Unit
 
     private val TextView.hudSwipeListener get() = OnSwipeListener(ctx = context) {
         animate().alpha(0.0f).withEndAction { visibility = View.GONE }
@@ -96,17 +112,44 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
         moveCamera()
     }
 
+    private fun LatLng.moveCamera() {
+        val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
+        if (animateCamera) {
+            map?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        } else {
+            map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        }
+        animateCamera = false
+    }
+
+    private fun moveCameraToPeerOrLastLocation() = (peerLocation?:lastCameraPosition).moveCamera()
+
+    private fun moveCameraToLast() = lastCameraPosition.moveCamera()
+
     @SuppressLint("MissingPermission")
     private fun GoogleMap.onReady() {
         this@NavigationViewHolder.map = this.apply {
             setOnCameraIdleListener { onCameraIdle() }
-            checkLocationPermission(
-                    onGranted = { isMyLocationEnabled = true },
-                    onDenied = {})
+            checkLocationPermission { isMyLocationEnabled = true }
         }
         peerLocation?.putPeerMarker()
         moveCamera()
-        moveCamera = this@NavigationActivity::moveCameraToPeerOrLastLocation
+        moveCamera = this@NavigationViewHolder::moveCameraToPeerOrLastLocation
+    }
+
+    private fun onCameraIdle() = map!!.cameraPosition.let {
+        zoom = it.zoom
+        lastCameraPosition = it.target
+        if (lastCameraPosition different peerLocation) {
+            moveCamera = this::moveCameraToLast
+        }
+        persistCameraPositionAndZoom()
+    }
+
+    private infix fun LatLng.different(other: LatLng?): Boolean {
+        if (other == null) return true
+        return Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
+                Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
     }
 
     private fun LatLng.putPeerMarker() {
@@ -115,7 +158,7 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
             it.addMarker(MarkerOptions()
                     .position(this)
                     ?.title(contact!!.name))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(NavigationActivity.MARKER_HUE))
+                    .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }
 
@@ -126,6 +169,9 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
 
     companion object {
         private val CONTACT_NAME_PLACEHOLDER = "[name]"
+        private val FLOAT_TOLERANCE = 0.002f
+        /** Calculated from #00bfa5, or A700 Teal. */
+        private val MARKER_HUE = 34.0f
     }
 
 

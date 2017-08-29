@@ -80,7 +80,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private var backClickTime = 0L
 
     private var mapFragment: SupportMapFragment? = null
-    private var map: GoogleMap? = null
+
     private var contact: Contact? = null
         set(value) {
             field = value
@@ -92,16 +92,15 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-    private var peerLocation: LatLng? = null
 
-    private var animateCamera = true
-    private var zoom = 0.0f
-    private lateinit var lastCameraPosition: LatLng
+
+
+
     private var mapContainerId: Int = 0
 
     private var exitApplicationToast: Toast? = null
 
-    private var moveCamera: () -> Unit = this::moveCameraToPeerOrLastLocation
+
 
     private lateinit var viewHolder: NavigationViewHolder
 
@@ -151,15 +150,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         }
     }
 
-    private fun LatLng.moveCamera() {
-        val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
-        if (animateCamera) {
-            map?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        } else {
-            map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        }
-        animateCamera = false
-    }
+
 
     private fun Contact?.persist() {
         val name = this?.name ?: ""
@@ -213,9 +204,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
 
 
-    private fun moveCameraToPeerOrLastLocation() = (peerLocation?:lastCameraPosition).moveCamera()
 
-    private fun moveCameraToLast() = lastCameraPosition.moveCamera()
 
     inline private fun checkLocationPermission(
             onGranted: () -> Unit = this::onLocationPermissionGranted ,
@@ -378,30 +367,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         startActivityForResult(intent, DELETE_PROFILE_REQUEST_ID)
     }
 
-    private fun onCameraIdle() = map!!.cameraPosition.let {
-            zoom = it.zoom
-            lastCameraPosition = it.target
-            if (lastCameraPosition different peerLocation) {
-                moveCamera = this::moveCameraToLast
-            }
-            persistCameraPositionAndZoom()
-        }
-
-    private infix fun LatLng.different(other: LatLng?): Boolean {
-        if (other == null) return true
-        return Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
-                Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
-    }
-
-    @SuppressLint("CommitPrefEdits")
-    private fun persistCameraPositionAndZoom() =
-            with (PreferenceManager.getDefaultSharedPreferences(this).edit()) {
-        putFloat(ZOOM_PROPERTY, zoom)
-        putFloat(LATITUDE_PROPERTY, lastCameraPosition.latitude.toFloat())
-        putFloat(LONGITUDE_PROPERTY, lastCameraPosition.longitude.toFloat())
-        apply()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         deleteMapFragment()
         outState.putParcelable(SAVED_PEER_LOCATION, peerLocation)
@@ -434,9 +399,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         private val DELETE_PROFILE_REQUEST_ID = 0
         private val CONTACTS_ACTIVITY_REQUEST_ID = 1
 
-        /** Calculated from #00bfa5, or A700 Teal. */
-        private val MARKER_HUE = 34.0f
-
         private val UTF_8 = "UTF-8"
         private val ASSET_DIR = "file:///android_asset/"
         private val PLAIN_TEXT = "text/html"
@@ -461,6 +423,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         /** Length of time that will be taken for a double click.  */
         private val DOUBLE_CLICK_MS: Long = 1000
 
-        private val FLOAT_TOLERANCE = 0.002f
+
     }
 }
