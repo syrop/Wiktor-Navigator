@@ -89,28 +89,31 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val properties = PreferenceManager.getDefaultSharedPreferences(this)
 
         readContactFromProperties()
-        viewHolder = navigationView(this) {
-            zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
-            lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
-                    properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
-            contact = this@NavigationActivity.contact
-            checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
-            persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
-        }
+        viewHolder = navigationView(this) { init(savedInstanceState) }
         setContentView(R.layout.activity_navigation)
 
         supportActionBar?.title = getString(R.string.navigation_activity_label)
-        if (savedInstanceState != null) {
-            viewHolder.animateCamera = false
-            viewHolder.peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
-        }
 
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         checkLocationPermission()
+    }
+
+    private fun NavigationViewHolder.init(savedInstanceState: Bundle?) {
+        val properties = PreferenceManager.getDefaultSharedPreferences(this@NavigationActivity)
+        zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
+        lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
+                properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
+        contact = this@NavigationActivity.contact
+        checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
+        persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
+        if (savedInstanceState != null) {
+            animateCamera = false
+            peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
+        }
+        view = root
     }
 
     override fun onDestroy() {
