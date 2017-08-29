@@ -18,7 +18,6 @@
 package pl.org.seva.navigator.view.activity.viewholder
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Typeface
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -34,16 +33,15 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
-import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.Contact
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.listener.OnSwipeListener
 import pl.org.seva.navigator.source.PeerLocationSource
 
-fun navigationView(ctx: Context, f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
-        NavigationViewHolder(ctx).apply(f)
+fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
+        NavigationViewHolder().apply(f)
 
-class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
+class NavigationViewHolder: KodeinGlobalAware {
 
     private val peerLocationSource: PeerLocationSource = instance()
     private val store: ContactsStore = instance()
@@ -67,7 +65,7 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
         stopWatchingPeer()
     }
 
-    private val contactNameSpannable: CharSequence = ctx.getString(R.string.navigation_following_name).run {
+    private val contactNameSpannable: CharSequence get() = contactNameTemplate.run {
         val idName = indexOf(CONTACT_NAME_PLACEHOLDER)
         val idEndName = idName + contact!!.name.length
         val boldSpan = StyleSpan(Typeface.BOLD)
@@ -83,6 +81,7 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
             field?.listen()
             updateHud()
         }
+    lateinit var contactNameTemplate: String
 
     fun updateHud() = view.hud.run {
         alpha = 1.0f
@@ -173,7 +172,9 @@ class NavigationViewHolder(ctx: Context): KodeinGlobalAware {
     }
 
     companion object {
+
         private val CONTACT_NAME_PLACEHOLDER = "[name]"
+
         private val FLOAT_TOLERANCE = 0.002f
         /** Calculated from #00bfa5, or A700 Teal. */
         private val MARKER_HUE = 34.0f

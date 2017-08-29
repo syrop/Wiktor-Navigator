@@ -91,7 +91,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         super.onCreate(savedInstanceState)
 
         readContactFromProperties()
-        viewHolder = navigationView(this) { init(savedInstanceState) }
+        viewHolder = navigationView { init(savedInstanceState) }
         setContentView(R.layout.activity_navigation)
 
         supportActionBar?.title = getString(R.string.navigation_activity_label)
@@ -107,6 +107,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
                 properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
         contact = this@NavigationActivity.contact
+        contactNameTemplate = getString(R.string.navigation_following_name)
+
         checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
         persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
         if (savedInstanceState != null) {
