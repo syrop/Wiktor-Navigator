@@ -90,12 +90,10 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setContentView(R.layout.activity_navigation)
+        supportActionBar?.title = getString(R.string.navigation_activity_label)
         readContactFromProperties()
         viewHolder = navigationView { init(savedInstanceState) }
-        setContentView(R.layout.activity_navigation)
-
-        supportActionBar?.title = getString(R.string.navigation_activity_label)
-
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         checkLocationPermission()
