@@ -102,6 +102,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun NavigationViewHolder.init(savedInstanceState: Bundle?) {
+        view = root
         val properties = PreferenceManager.getDefaultSharedPreferences(this@NavigationActivity)
         zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
         lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
@@ -115,7 +116,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
         }
-        view = root
     }
 
     override fun onDestroy() {
