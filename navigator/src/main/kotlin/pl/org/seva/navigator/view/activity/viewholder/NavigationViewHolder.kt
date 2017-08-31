@@ -104,8 +104,8 @@ class NavigationViewHolder: KodeinGlobalAware {
     private fun clearMap() = map!!.clear()
 
     private fun onPeerLocationReceived(latLng: LatLng) {
-        latLng.putPeerMarker()
         peerLocation = latLng
+        latLng.putPeerMarker()
         moveCamera()
     }
 
@@ -161,7 +161,7 @@ class NavigationViewHolder: KodeinGlobalAware {
             clearMap()
             it.addMarker(MarkerOptions()
                     .position(this)
-                    ?.title(contact!!.name))
+                    .title(contact!!.name))
                     .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }

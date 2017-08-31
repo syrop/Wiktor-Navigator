@@ -73,7 +73,7 @@ class MyLocationSource : LiveSource(),
 
     private fun connectGoogleApiClient() = googleApiClient!!.connect()
 
-    fun init(service: LifecycleService) {
+    infix fun initWithService(service: LifecycleService) {
         lifecycle = service.lifecycle
         googleApiClient?:let {
             googleApiClient = GoogleApiClient.Builder(service)

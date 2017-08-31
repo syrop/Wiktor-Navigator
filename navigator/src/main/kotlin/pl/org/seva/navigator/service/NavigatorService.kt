@@ -22,9 +22,7 @@ import android.arch.lifecycle.LifecycleService
 import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
-import com.google.android.gms.maps.model.LatLng
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
@@ -33,14 +31,13 @@ import pl.org.seva.navigator.view.builder.notification.Channels
 class NavigatorService : LifecycleService(), KodeinGlobalAware {
 
     private val myLocationSource: MyLocationSource = instance()
-    private val firebaseWriter: FbWriter = instance()
-    private val login: Login = instance()
+    private val fbWriter: FbWriter = instance()
 
     private val notificationBuilder by lazy { createNotificationBuilder() }
 
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        myLocationSource.init(this)
+        myLocationSource initWithService this
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
         addMyLocationListener()
 
@@ -48,9 +45,7 @@ class NavigatorService : LifecycleService(), KodeinGlobalAware {
     }
 
     private fun addMyLocationListener() =
-            myLocationSource.addLocationListener(lifecycle) { onLocationReceived(it) }
-
-    private fun onLocationReceived(latLng: LatLng) = firebaseWriter.writeLocation(login.email!!, latLng)
+            myLocationSource.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
 
     private fun createOngoingNotification(): Notification {
         val mainActivityIntent = android.content.Intent(this, NavigationActivity::class.java)

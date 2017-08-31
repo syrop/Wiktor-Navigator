@@ -30,8 +30,8 @@ class FbWriter : Fb() {
         contact.write(db.getReference(USER_ROOT))
     }
 
-    fun writeLocation(email: String, latLng: LatLng) {
-        email.toReference().child(LAT_LNG).setValue(latLng.toFbString())
+    infix fun writeMyLocation(latLng: LatLng) {
+        login.email!!.toReference().child(LAT_LNG).setValue(latLng.toFbString())
     }
 
     fun requestFriendship(contact: Contact) =
