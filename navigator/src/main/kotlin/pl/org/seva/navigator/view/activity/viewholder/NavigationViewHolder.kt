@@ -58,11 +58,13 @@ class NavigationViewHolder: KodeinGlobalAware {
 
     lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
     lateinit var persistCameraPositionAndZoom: () -> Unit
+    lateinit var deletePersistedCContact: () -> Unit
 
     private val TextView.hudSwipeListener get() = OnSwipeListener(ctx = context) {
         animate().alpha(0.0f).withEndAction { visibility = View.GONE }
         setOnTouchListener(null)
         stopWatchingPeer()
+        deletePersistedCContact()
     }
 
     private val contactNameSpannable: CharSequence get() = contactNameTemplate.run {

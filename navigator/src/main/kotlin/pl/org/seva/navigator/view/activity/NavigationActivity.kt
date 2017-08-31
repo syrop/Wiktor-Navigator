@@ -70,11 +70,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var mapFragment: SupportMapFragment? = null
 
-    private var contact: Contact? = null
-        set(value) {
-            field = value
-            value.persist()
-        }
     private var permissionDisposable = Disposables.empty()
     private var isLocationPermissionGranted = false
 
@@ -89,7 +84,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_navigation)
         supportActionBar?.title = getString(R.string.navigation_activity_label)
         readContactFromProperties()
@@ -105,11 +99,12 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
         lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
                 properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
-        contact = this@NavigationActivity.contact
         contactNameTemplate = getString(R.string.navigation_following_name)
+        contact = readContactFromProperties()
 
         checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
         persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
+        deletePersistedCContact = { null.persist() }
         if (savedInstanceState != null) {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
@@ -149,16 +144,17 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                 .putString(CONTACT_EMAIL_PROPERTY, email).apply()
     }
 
-    private fun readContactFromProperties() {
+    private fun readContactFromProperties(): Contact? {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val name = preferences.getString(CONTACT_NAME_PROPERTY, "")
         val email = preferences.getString(CONTACT_EMAIL_PROPERTY, "")
         if (name.isNotEmpty() && email.isNotEmpty()) {
             val contact = Contact(email = email, name = name)
             if (store.contains(contact)) {
-                this.contact = contact
+                return contact
             }
         }
+        return null
     }
 
     private fun onFabClicked() {
@@ -178,7 +174,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         when (requestCode) {
             CONTACTS_ACTIVITY_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    viewHolder.contact = data?.getParcelableExtra(CONTACT_IN_INTENT)
+                    val contact: Contact? = data?.getParcelableExtra(CONTACT_IN_INTENT)
+                    contact.persist()
+                    viewHolder.contact = contact
                 }
                 viewHolder.updateHud()
             }
