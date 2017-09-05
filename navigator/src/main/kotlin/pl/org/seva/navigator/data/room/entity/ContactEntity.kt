@@ -15,26 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.room
+package pl.org.seva.navigator.data.room.entity
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import pl.org.seva.navigator.data.room.entity.ContactEntity
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.room.ContactsDatabase
 
-@Dao
-interface ContactDao {
+@Entity(tableName = ContactsDatabase.TABLE_NAME)
+class ContactEntity() {
+    @PrimaryKey
+    lateinit var email: String
+    lateinit var name: String
+    var color: Int = 0
 
-    @Query("select * from ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<ContactEntity>
+    constructor(contact: Contact): this() {
+        email = contact.email
+        name = contact.name
+        color = contact.color
+    }
 
-    @Insert
-    fun insert(contact: ContactEntity)
-
-    @Delete
-    fun delete(contact: ContactEntity)
-
-    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
-    fun deleteAll()
+    fun contactValue() = Contact(email, name, color)
 }

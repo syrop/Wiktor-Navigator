@@ -19,9 +19,9 @@ package pl.org.seva.navigator.data.room
 
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.Database
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.room.entity.ContactEntity
 
-@Database(entities = [Contact::class], version = ContactsDatabase.ADDED_COLOR_DATABASE_VERSION)
+@Database(entities = [ContactEntity::class], version = ContactsDatabase.ADDED_COLOR_DATABASE_VERSION)
 abstract class ContactsDatabaseAbstract : RoomDatabase() {
 
     abstract fun contactDao(): ContactDao

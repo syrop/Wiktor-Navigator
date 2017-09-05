@@ -32,6 +32,7 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.Contact
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.view.builder.notification.friendshipRequestedNotification
 
 class FriendshipListener : KodeinGlobalAware {
@@ -55,13 +56,13 @@ class FriendshipListener : KodeinGlobalAware {
 
     fun onPeerAcceptedFriendship(contact: Contact) {
         store.add(contact)
-        contactDao.insert(contact)
+        contactDao.insert(ContactEntity(contact))
         fbWriter.addFriendship(contact)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
         store.delete(contact)
-        contactDao.delete(contact)
+        contactDao.delete(ContactEntity(contact))
     }
 
     private fun acceptFriend(contact: Contact) {
@@ -70,7 +71,7 @@ class FriendshipListener : KodeinGlobalAware {
             return
         }
         store.add(contact)
-        contactDao.insert(contact)
+        contactDao.insert(ContactEntity(contact))
     }
 
     private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =

@@ -18,21 +18,17 @@
 package pl.org.seva.navigator.data
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
 import android.graphics.Color
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import pl.org.seva.navigator.data.room.ContactsDatabase
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-@Entity(tableName = ContactsDatabase.TABLE_NAME)
 data class Contact(
-        @PrimaryKey var email: String = "",
-        var name: String = "",
-        var color: Int = Color.GRAY) : Comparable<Contact>, Parcelable {
+        val email: String = "",
+        val name: String = "",
+        val color: Int = Color.GRAY) : Comparable<Contact>, Parcelable {
 
     @Ignore
     @Transient

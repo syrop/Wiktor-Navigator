@@ -40,6 +40,7 @@ import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.listener.ContactTouchListener
 import pl.org.seva.navigator.view.adapter.ContactAdapter
 import pl.org.seva.navigator.view.decoration.DividerItemDecoration
@@ -113,7 +114,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun deleteFriend(contact: Contact) {
         fbWriter.deleteFriendship(contact)
         store.delete(contact)
-        contactDao.delete(contact)
+        contactDao.delete(ContactEntity(contact))
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
     }
@@ -122,7 +123,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
         fbWriter.addFriendship(contact)
         fbWriter.acceptFriendship(contact)
         store.add(contact)
-        contactDao.insert(contact)
+        contactDao.insert(ContactEntity(contact))
         adapter.notifyDataSetChanged()
     }
 

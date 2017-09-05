@@ -30,6 +30,7 @@ import pl.org.seva.navigator.service.NavigatorService
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.listener.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
@@ -47,7 +48,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         instance<ActivityRecognitionSource>().initGoogleApiClient(application)
         with(instance<ContactsDatabase>().contactDao) {
-            contactsStore.addAll(getAll())
+            contactsStore.addAll(getAll().map { it.contactValue() })
         }
         friendshipListener.init(application)
         if (login.isLoggedIn) {
@@ -76,7 +77,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
     private fun downloadFriendsFromCloud() =
         friendshipSource.downloadFriendsFromCloud {
             contactsStore.add(it)
-            instance<ContactsDatabase>().contactDao.insert(it)
+            instance<ContactsDatabase>().contactDao.insert(ContactEntity(it))
         }
 
     private fun removeFriendshipListeners() = friendshipSource.clearFriendshipListeners()
