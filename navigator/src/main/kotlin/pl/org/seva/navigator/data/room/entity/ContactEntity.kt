@@ -19,6 +19,7 @@ package pl.org.seva.navigator.data.room.entity
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.graphics.Color
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.room.ContactsDatabase
 
@@ -27,7 +28,7 @@ class ContactEntity() {
     @PrimaryKey
     lateinit var email: String
     lateinit var name: String
-    var color: Int = 0
+    var color: Int = Color.GRAY
 
     constructor(contact: Contact): this() {
         email = contact.email
