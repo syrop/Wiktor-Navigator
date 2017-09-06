@@ -42,7 +42,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.view.adapter.SingleContactAdapter
 import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder

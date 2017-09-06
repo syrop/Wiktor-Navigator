@@ -29,7 +29,7 @@ import java.util.Random
 
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity

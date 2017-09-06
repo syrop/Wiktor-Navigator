@@ -23,6 +23,7 @@ import java.util.ArrayList
 import java.util.Collections
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.data.model.Contact
 
 class ContactsStore : KodeinGlobalAware {
 

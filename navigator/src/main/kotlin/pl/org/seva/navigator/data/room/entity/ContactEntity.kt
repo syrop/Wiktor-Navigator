@@ -19,7 +19,7 @@ package pl.org.seva.navigator.data.room.entity
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.room.ContactsDatabase
 
 @Entity(tableName = ContactsDatabase.TABLE_NAME)

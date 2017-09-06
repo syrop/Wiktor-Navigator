@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data
+package pl.org.seva.navigator.data.model
 
 import android.annotation.SuppressLint
 import android.arch.persistence.room.Ignore

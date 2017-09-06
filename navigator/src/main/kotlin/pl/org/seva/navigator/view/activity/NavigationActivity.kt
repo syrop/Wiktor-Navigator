@@ -46,7 +46,7 @@ import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.application.NavigatorApplication
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter

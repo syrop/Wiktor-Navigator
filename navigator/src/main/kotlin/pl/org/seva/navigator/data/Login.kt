@@ -18,6 +18,7 @@
 package pl.org.seva.navigator.data
 
 import com.google.firebase.auth.FirebaseUser
+import pl.org.seva.navigator.data.model.Contact
 
 class Login {
 

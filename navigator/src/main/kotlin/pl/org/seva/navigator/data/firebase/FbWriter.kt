@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 
 class FbWriter : Fb() {
 

@@ -35,7 +35,7 @@ import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter

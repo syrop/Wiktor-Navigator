@@ -26,7 +26,7 @@ import android.content.Intent
 import android.os.Build
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.listener.FriendshipListener
 

@@ -22,7 +22,7 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.Contact
+import pl.org.seva.navigator.data.model.Contact
 
 class FriendshipAddDialogBuilder(private val context: Context) {
 
