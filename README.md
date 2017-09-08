@@ -1,5 +1,5 @@
 # Wiktor-Navigator (Android)
-Like GPS-Texter, it shares your location with one other. This time it uses Firebase Realtime Database to save on SMS fees. Use your Gmail account to sign in.
+Like GPS-Texter, it shares your location with one other person. This time it uses Firebase Realtime Database to save on SMS fees. Use your Gmail account to sign in.
 
 ![Permissions](images/permission.png)
 
@@ -21,4 +21,4 @@ If you are logged in to the program and somebody wanted to add you to their frie
 
 When following a friend, their name will appear at the top of the screen. You can swipe this banner to stop following them. You can only follow one friend at a time.
 
-When your device is stationary, no data is sent to the internet to save data and battery power. You will still be receiving updates.
+When your device is stationary, no data is sent to the Internet to save data and battery power. You will still receive location updates from your friend.
