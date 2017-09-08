@@ -56,6 +56,7 @@ class Channels(private val context: Context) {
         val importance = NotificationManager.IMPORTANCE_LOW
         val channel = NotificationChannel(id, name, importance)
         channel.description = description
+        channel.setShowBadge(true)
         nm.createNotificationChannel(channel)
     }
 
