@@ -42,8 +42,8 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.listener.ContactTouchListener
-import pl.org.seva.navigator.view.adapter.ContactAdapter
-import pl.org.seva.navigator.view.decoration.DividerItemDecoration
+import pl.org.seva.navigator.view.recycler.adapter.ContactAdapter
+import pl.org.seva.navigator.view.recycler.decoration.DividerItemDecoration
 
 class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 

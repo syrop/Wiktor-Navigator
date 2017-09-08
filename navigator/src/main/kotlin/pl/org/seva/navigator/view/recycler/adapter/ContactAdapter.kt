@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.view.adapter
+package pl.org.seva.navigator.view.recycler.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

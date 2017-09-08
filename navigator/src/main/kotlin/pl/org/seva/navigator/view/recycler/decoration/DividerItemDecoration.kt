@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.view.decoration
+package pl.org.seva.navigator.view.recycler.decoration
 
 import android.content.Context
 import android.graphics.Canvas
