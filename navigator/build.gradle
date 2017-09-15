@@ -57,10 +57,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:26.0.2'
-    implementation 'com.android.support:design:26.0.2'
-    implementation 'com.android.support:cardview-v7:26.0.2'
-    implementation 'com.android.support:recyclerview-v7:26.0.2'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation 'com.google.android.gms:play-services-maps:11.2.2'
@@ -82,10 +82,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     implementation 'android.arch.lifecycle:extensions:1.0.0-alpha9'
     annotationProcessor 'android.arch.lifecycle:compiler:1.0.0-alpha9'
-    implementation 'android.arch.persistence.room:runtime:1.0.0-alpha9'
-    kapt 'android.arch.persistence.room:compiler:1.0.0-alpha9'
-    testImplementation 'android.arch.persistence.room:testing:1.0.0-alpha9'
-    implementation 'android.arch.persistence.room:rxjava2:1.0.0-alpha9'
+    implementation 'android.arch.persistence.room:runtime:1.0.0-alpha9-1'
+    kapt 'android.arch.persistence.room:compiler:1.0.0-alpha9-1'
+    testImplementation 'android.arch.persistence.room:testing:1.0.0-alpha9-1'
+    implementation 'android.arch.persistence.room:rxjava2:1.0.0-alpha9-1'
 }
 
 apply plugin: 'com.google.gms.google-services'
