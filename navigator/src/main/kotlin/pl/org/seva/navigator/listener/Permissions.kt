@@ -51,7 +51,7 @@ class Permissions {
         ActivityCompat.requestPermissions(activity, permissionsToRequest.toTypedArray(), requestCode)
     }
 
-    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         infix fun String.granted(requestCode: Int) =
                 grantedSubject.onNext(PermissionResult(requestCode, this))
 
@@ -71,8 +71,6 @@ class Permissions {
         grantedSubject.onComplete()
         deniedSubject.onComplete()
     }
-
-
 
     companion object {
         val LOCATION_PERMISSION_REQUEST_ID = 0
