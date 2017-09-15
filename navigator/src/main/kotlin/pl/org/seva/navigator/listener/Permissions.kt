@@ -17,63 +17,78 @@
 
 package pl.org.seva.navigator.listener
 
-import android.app.Activity
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 class Permissions {
 
-    private val permissionGrantedSubject = PublishSubject.create<PermissionResult>()
-    private val permissionDeniedSubject = PublishSubject.create<PermissionResult>()
+    private val grantedSubject = PublishSubject.create<PermissionResult>()
+    private val deniedSubject = PublishSubject.create<PermissionResult>()
+    private val composite = CompositeDisposable()
 
     fun request(
-            activity: Activity,
+            activity: AppCompatActivity,
             requestCode: Int,
-            permissions: Array<PermissionRequest>) : Disposable {
+            permissions: Array<PermissionRequest>) {
         val permissionsToRequest = ArrayList<String>()
-        val composite = CompositeDisposable()
         permissions.forEach { permission ->
             permissionsToRequest.add(permission.permission)
             composite.addAll(
-                    permissionGrantedSubject
+                    grantedSubject
                             .filter { it.requestCode == requestCode && it.permission == permission.permission }
                             .subscribe { permission.onGranted() },
-                    permissionDeniedSubject
+                    deniedSubject
                             .filter { it.requestCode == requestCode && it.permission == permission.permission }
                             .subscribe { permission.onDenied() })
         }
+        activity.lifecycle.addObserver(PermissionObserver())
         ActivityCompat.requestPermissions(activity, permissionsToRequest.toTypedArray(), requestCode)
-        return composite
     }
 
-    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) =
-            if (grantResults.isEmpty()) {
-                permissions.forEach { onPermissionDenied(requestCode, it) }
-            }
-            else repeat (permissions.size) {
-                if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
-                    onPermissionGranted(requestCode, permissions[it])
-                } else {
-                    onPermissionDenied(requestCode, permissions[it])
-                }
-            }
+    fun onRequestPermissionsResult(requestCode : Int, permissions: Array<String>, grantResults: IntArray) {
+        infix fun String.granted(requestCode: Int) =
+                grantedSubject.onNext(PermissionResult(requestCode, this))
 
-    private fun onPermissionGranted(requestCode: Int, permission: String) =
-            permissionGrantedSubject.onNext(PermissionResult(requestCode, permission))
+        infix fun String.denied(requestCode: Int) =
+                deniedSubject.onNext(PermissionResult(requestCode, this))
 
-    private fun onPermissionDenied(requestCode: Int, permission: String) =
-            permissionDeniedSubject.onNext(PermissionResult(requestCode, permission))
+        if (grantResults.isEmpty()) {
+            permissions.forEach { it denied requestCode }
+        } else repeat(permissions.size) {
+            if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
+                permissions[it] granted requestCode
+            } else {
+                permissions[it] denied requestCode
+            }
+        }
+
+        grantedSubject.onComplete()
+        deniedSubject.onComplete()
+    }
+
+
 
     companion object {
         val LOCATION_PERMISSION_REQUEST_ID = 0
     }
 
-    class PermissionResult(val requestCode: Int, val permission: String)
+    data class PermissionResult(val requestCode: Int, val permission: String)
+
     class PermissionRequest(
             val permission: String,
             val onGranted: () -> Unit = {},
             val onDenied: () -> Unit = {})
+
+    inner class PermissionObserver : LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        fun onStop() {
+            composite.dispose()
+        }
+    }
 }

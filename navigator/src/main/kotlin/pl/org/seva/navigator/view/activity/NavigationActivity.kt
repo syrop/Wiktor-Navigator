@@ -40,7 +40,6 @@ import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import io.reactivex.disposables.Disposables
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
 
@@ -70,7 +69,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private var mapFragment: SupportMapFragment? = null
 
-    private var permissionDisposable = Disposables.empty()
     private var isLocationPermissionGranted = false
 
     private var dialog: Dialog? = null
@@ -270,7 +268,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun requestLocationPermission() {
-        permissionDisposable = permissions.request(
+        permissions.request(
                 this,
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
@@ -279,14 +277,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                         onDenied = this::onLocationPermissionDenied)))
     }
 
-    override fun onStop() {
-        permissionDisposable.dispose()
-        super.onStop()
-    }
-
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        permissionDisposable.dispose()
         invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
         if (!login.isLoggedIn) {
@@ -297,7 +289,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onLocationPermissionDenied() {
-        permissionDisposable.dispose()
         showLocationPermissionSnackbar()
     }
 
