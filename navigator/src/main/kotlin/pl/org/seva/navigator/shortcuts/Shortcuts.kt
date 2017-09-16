@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.shortcut
+package pl.org.seva.navigator.shortcuts
 
 import android.content.Context
 import android.content.pm.ShortcutInfo
