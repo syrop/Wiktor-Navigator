@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.view.builder.notification
+package pl.org.seva.navigator.view.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

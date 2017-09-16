@@ -26,7 +26,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.view.activity.NavigationActivity
-import pl.org.seva.navigator.view.builder.notification.Channels
+import pl.org.seva.navigator.view.notification.Channels
 
 class NavigatorService : LifecycleService(), KodeinGlobalAware {
 

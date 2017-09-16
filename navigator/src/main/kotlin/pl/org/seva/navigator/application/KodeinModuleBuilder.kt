@@ -18,10 +18,8 @@
 package pl.org.seva.navigator.application
 
 import android.app.Application
-import android.content.Context
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.factory
 import com.github.salomonbrys.kodein.singleton
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
@@ -34,8 +32,8 @@ import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
 import pl.org.seva.navigator.source.PeerLocationSource
-import pl.org.seva.navigator.view.ColorFactory
-import pl.org.seva.navigator.view.builder.notification.Channels
+import pl.org.seva.navigator.view.color.ColorFactory
+import pl.org.seva.navigator.view.notification.Channels
 
 fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
 

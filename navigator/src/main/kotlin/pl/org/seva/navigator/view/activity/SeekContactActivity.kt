@@ -45,7 +45,7 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.view.recycler.adapter.SingleContactAdapter
-import pl.org.seva.navigator.view.builder.dialog.FriendshipAddDialogBuilder
+import pl.org.seva.navigator.view.dialog.FriendshipAddDialogBuilder
 
 @Suppress("DEPRECATION")
 class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {

@@ -47,6 +47,8 @@ class ContactsStore : KodeinGlobalAware {
         contactsUpdatedSubject.onNext(contact)
     }
 
+    fun snapshot() = ArrayList(contacts)
+
     fun addAll(contacts: Collection<Contact>) {
         this.contacts.addAll(contacts)
         Collections.sort(this.contacts)

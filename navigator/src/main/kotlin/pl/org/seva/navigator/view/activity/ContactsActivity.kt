@@ -57,6 +57,14 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
     private val adapter = ContactAdapter { onContactClicked(it) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        fun initContactsRecyclerView() {
+            contacts.setHasFixedSize(true)
+            contacts.layoutManager = LinearLayoutManager(this)
+            contacts.adapter = adapter
+            contacts.addItemDecoration(DividerItemDecoration(this))
+            ItemTouchHelper(ContactTouchListener { onContactSwiped(it) } ).attachToRecyclerView(contacts)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
         fab.setOnClickListener { onFabClicked() }
@@ -82,13 +90,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private fun onFabClicked() = startActivity(Intent(this, SeekContactActivity::class.java))
 
-    private fun initContactsRecyclerView() {
-        contacts.setHasFixedSize(true)
-        contacts.layoutManager = LinearLayoutManager(this)
-        contacts.adapter = adapter
-        contacts.addItemDecoration(DividerItemDecoration(this))
-        ItemTouchHelper(ContactTouchListener { onContactSwiped(it) } ).attachToRecyclerView(contacts)
-    }
+
 
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)

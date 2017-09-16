@@ -18,12 +18,10 @@
 package pl.org.seva.navigator.application
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.with
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.service.NavigatorService
@@ -34,7 +32,7 @@ import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.listener.FriendshipListener
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
-import pl.org.seva.navigator.view.builder.notification.Channels
+import pl.org.seva.navigator.view.notification.Channels
 
 class Bootstrap(private val application: Application) : KodeinGlobalAware {
 

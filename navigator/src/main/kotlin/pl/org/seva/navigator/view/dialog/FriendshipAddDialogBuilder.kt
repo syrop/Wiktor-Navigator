@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.view.builder.dialog
+package pl.org.seva.navigator.view.dialog
 
 import android.app.Dialog
 import android.content.Context

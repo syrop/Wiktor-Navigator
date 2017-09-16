@@ -17,7 +17,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package pl.org.seva.navigator.view.builder.notification
+package pl.org.seva.navigator.view.notification
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -39,6 +39,14 @@ class PeerRequestedFriendship(private val context: Context) {
     lateinit var nid: ParcelableInt
 
     fun build(): Notification {
+        fun Int.pi(): PendingIntent {
+            val intent = Intent(FriendshipListener.FRIENDSHIP_REQUESTED_INTENT)
+                    .putExtra(FriendshipListener.CONTACT_EXTRA, contact)
+                    .putExtra(FriendshipListener.NOTIFICATION_ID, nid)
+                    .putExtra(FriendshipListener.ACTION, ParcelableInt(this))
+            return PendingIntent.getBroadcast(context, this, intent, PI_FLAG)
+        }
+
         val message = context.resources
                 .getString(R.string.friendship_confirmation)
                 .replace(NAME_TAG, contact.name)
@@ -66,13 +74,7 @@ class PeerRequestedFriendship(private val context: Context) {
                 .build()
     }
 
-    private fun Int.pi(): PendingIntent {
-        val intent = Intent(FriendshipListener.FRIENDSHIP_REQUESTED_INTENT)
-                .putExtra(FriendshipListener.CONTACT_EXTRA, contact)
-                .putExtra(FriendshipListener.NOTIFICATION_ID, nid)
-                .putExtra(FriendshipListener.ACTION, ParcelableInt(this))
-        return PendingIntent.getBroadcast(context, this, intent, PI_FLAG)
-    }
+
 
     private fun createNotificationBuilder(context: Context): Notification.Builder =
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
