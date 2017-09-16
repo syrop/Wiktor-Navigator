@@ -5,7 +5,10 @@
     android:id="@+id/view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="4dp">
+    android:paddingEnd="?listPreferredItemPaddingRight"
+    android:paddingStart="?listPreferredItemPaddingLeft"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
