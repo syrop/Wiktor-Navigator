@@ -84,8 +84,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
         supportActionBar?.title = getString(R.string.navigation_activity_label)
-        readContactFromProperties()
-        viewHolder = navigationView { init(savedInstanceState) }
+        viewHolder = navigationView {
+            init(savedInstanceState) }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         checkLocationPermission()
@@ -98,7 +98,12 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
                 properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
         contactNameTemplate = getString(R.string.navigation_following_name)
-        contact = readContactFromProperties()
+        intent.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
+                contact = store[this]
+            }
+        if (contact == null) {
+            contact = readContactFromProperties()
+        }
 
         checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
         persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
@@ -172,7 +177,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         when (requestCode) {
             CONTACTS_ACTIVITY_REQUEST_ID -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val contact: Contact? = data?.getParcelableExtra(CONTACT_IN_INTENT)
+                    val contact: Contact? = data?.getParcelableExtra(CONTACT_EXTRA)
                     contact.persist()
                     viewHolder.contact = contact
                 }
@@ -389,7 +394,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         private val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
         private val HELP_LOGIN_EN = "help_login_en.html"
 
-        val CONTACT_IN_INTENT = "contact"
+        val CONTACT_EXTRA = "contact"
+        val CONTACT_EMAIL_EXTRA = "contact_email"
 
         private val MAP_FRAGMENT_TAG = "map"
 

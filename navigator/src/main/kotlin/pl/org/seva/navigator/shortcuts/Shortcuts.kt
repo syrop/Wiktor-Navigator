@@ -22,33 +22,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.net.Uri
 import android.os.Build
-import android.support.annotation.RequiresApi
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.view.activity.NavigationActivity
 
 @SuppressLint("NewApi")
 fun setDynamicShortcuts(context: Context) {
-    fun Contact.shortcut(): ShortcutInfo {
-        class FriendShortcutBuilder {
-            lateinit var label: String
-            lateinit var intent: Intent
-
-            @RequiresApi(Build.VERSION_CODES.N_MR1)
-            fun build(): ShortcutInfo = ShortcutInfo.Builder(context, System.currentTimeMillis().toString())
-                    .setShortLabel(label)
-                    .setIntent(intent)
-                    .build()
-        }
-
-        return FriendShortcutBuilder().apply {
-            label = name
-            intent = Intent(Intent.ACTION_VIEW)
-        }.build()
-    }
+    @Suppress("unused")
+    fun Contact.shortcut() = ShortcutInfo.Builder(context, System.currentTimeMillis().toString())
+                .setShortLabel(name)
+                .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, context, NavigationActivity::class.java)
+                        .putExtra(NavigationActivity.CONTACT_EMAIL_EXTRA, email))
+                .build()
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
         return
