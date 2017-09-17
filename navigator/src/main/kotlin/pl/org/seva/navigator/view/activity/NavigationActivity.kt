@@ -91,6 +91,15 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         checkLocationPermission()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
+            val contact = store[this]
+            viewHolder.contact = contact
+            contact.persist()
+        }
+    }
+
     private fun NavigationViewHolder.init(savedInstanceState: Bundle?) {
         view = root
         val properties = PreferenceManager.getDefaultSharedPreferences(this@NavigationActivity)
@@ -100,6 +109,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         contactNameTemplate = getString(R.string.navigation_following_name)
         intent.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
                 contact = store[this]
+                contact?.persist()
             }
         if (contact == null) {
             contact = readContactFromProperties()
