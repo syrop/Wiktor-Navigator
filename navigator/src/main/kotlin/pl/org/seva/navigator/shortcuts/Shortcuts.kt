@@ -22,11 +22,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
+import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.view.activity.NavigationActivity
@@ -38,6 +40,7 @@ fun setDynamicShortcuts(context: Context) {
                 .setShortLabel(name)
                 .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, context, NavigationActivity::class.java)
                         .putExtra(NavigationActivity.CONTACT_EMAIL_EXTRA, email))
+                .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
                 .build()
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
