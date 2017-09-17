@@ -34,7 +34,7 @@ import pl.org.seva.navigator.view.activity.NavigationActivity
 @SuppressLint("NewApi")
 fun setDynamicShortcuts(context: Context) {
     @Suppress("unused")
-    fun Contact.shortcut() = ShortcutInfo.Builder(context, System.currentTimeMillis().toString())
+    fun Contact.shortcut() = ShortcutInfo.Builder(context, System.nanoTime().toString())
                 .setShortLabel(name)
                 .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, context, NavigationActivity::class.java)
                         .putExtra(NavigationActivity.CONTACT_EMAIL_EXTRA, email))
