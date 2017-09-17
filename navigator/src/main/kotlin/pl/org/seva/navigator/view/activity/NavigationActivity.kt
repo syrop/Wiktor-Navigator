@@ -102,7 +102,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
         checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
         persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
-        deletePersistedCContact = { null.persist() }
+        deletePersistedContact = { null.persist() }
         if (savedInstanceState != null) {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
@@ -323,6 +323,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun logout() {
+        null.persist()
         viewHolder.stopWatchingPeer()
         startActivity(Intent(this, LoginActivity::class.java)
                 .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))

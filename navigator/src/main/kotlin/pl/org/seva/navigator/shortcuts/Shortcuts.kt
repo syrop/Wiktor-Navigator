@@ -17,8 +17,11 @@
 
 package pl.org.seva.navigator.shortcuts
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.github.salomonbrys.kodein.Kodein
@@ -27,31 +30,34 @@ import com.github.salomonbrys.kodein.instance
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.model.Contact
 
+@SuppressLint("NewApi")
 fun setDynamicShortcuts(context: Context) {
+    fun Contact.shortcut(): ShortcutInfo {
+        class FriendShortcutBuilder {
+            lateinit var label: String
+            lateinit var intent: Intent
+
+            @RequiresApi(Build.VERSION_CODES.N_MR1)
+            fun build(): ShortcutInfo = ShortcutInfo.Builder(context, System.currentTimeMillis().toString())
+                    .setShortLabel(label)
+                    .setIntent(intent)
+                    .build()
+        }
+
+        return FriendShortcutBuilder().apply {
+            label = name
+            intent = Intent(Intent.ACTION_VIEW)
+        }.build()
+    }
+
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
         return
     }
+    val cm = context.getSystemService(ShortcutManager::class.java)
     val shortcuts = Kodein.global.instance<ContactsStore>().snapshot()
             .asSequence()
-            .map { it.shortcut(context) }
+            .take(cm.maxShortcutCountPerActivity)
+            .map { it.shortcut() }
             .toList()
-}
-
-@RequiresApi(Build.VERSION_CODES.N_MR1)
-fun Contact.shortcut(context: Context) =
-        FriendShortcutBuilder(context).apply {
-            label = name
-        }.build()
-
-class FriendShortcutBuilder(private val context: Context) {
-    lateinit var label: String
-
-    @RequiresApi(Build.VERSION_CODES.N_MR1)
-    fun build(): ShortcutInfo = ShortcutInfo.Builder(context, ID)
-            .setShortLabel(label)
-            .build()
-
-    companion object {
-        val ID = "id1"
-    }
+    cm.dynamicShortcuts = shortcuts
 }

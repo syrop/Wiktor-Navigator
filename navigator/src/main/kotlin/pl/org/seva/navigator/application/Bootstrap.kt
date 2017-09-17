@@ -30,6 +30,7 @@ import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.listener.FriendshipListener
+import pl.org.seva.navigator.shortcuts.setDynamicShortcuts
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.view.notification.Channels
@@ -39,6 +40,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
     private val contactsStore: ContactsStore = instance()
     private val friendshipSource: FriendshipSource = instance()
     private val friendshipListener: FriendshipListener = instance()
+    private val contactDao = instance<ContactsDatabase>().contactDao
     private val login: Login = instance()
     private var isServiceRunning = false
 
@@ -57,6 +59,13 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
     }
 
     fun login(user: FirebaseUser) {
+        fun downloadFriendsFromCloud() =
+                friendshipSource.downloadFriendsFromCloud(
+                        onFriendFound = {
+                            contactsStore.add(it)
+                            contactDao.insert(ContactEntity(it))
+                        }, onCompleted = { setDynamicShortcuts(application) })
+
         login.setCurrentUser(user)
         addFriendshipListeners()
         downloadFriendsFromCloud()
@@ -66,17 +75,12 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
     fun logout() {
         stopService()
         removeFriendshipListeners()
+        contactDao.deleteAll()
         contactsStore.clear()
         login.setCurrentUser(null)
     }
 
     private fun addFriendshipListeners() = friendshipSource.addFriendshipListener(friendshipListener)
-
-    private fun downloadFriendsFromCloud() =
-        friendshipSource.downloadFriendsFromCloud {
-            contactsStore.add(it)
-            instance<ContactsDatabase>().contactDao.insert(ContactEntity(it))
-        }
 
     private fun removeFriendshipListeners() = friendshipSource.clearFriendshipListeners()
 

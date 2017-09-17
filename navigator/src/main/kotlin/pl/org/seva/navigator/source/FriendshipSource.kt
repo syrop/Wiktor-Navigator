@@ -44,8 +44,8 @@ class FriendshipSource : KodeinGlobalAware {
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
     }
 
-    fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit): Disposable =
-            fbReader.readFriends().subscribe { onFriendFound(it) }
+    fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Disposable =
+            fbReader.readFriends().doOnComplete(onCompleted).subscribe{ onFriendFound(it) }
 
     fun clearFriendshipListeners() = cd.clear()
 }
