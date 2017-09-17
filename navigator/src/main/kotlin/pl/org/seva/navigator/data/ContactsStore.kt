@@ -38,6 +38,8 @@ class ContactsStore : KodeinGlobalAware {
 
     operator fun contains(contact: Contact) = contacts.contains(contact)
 
+    fun snapshot() = ArrayList(contacts)
+
     fun add(contact: Contact) {
         if (contacts.contains(contact)) {
             return
@@ -47,7 +49,6 @@ class ContactsStore : KodeinGlobalAware {
         contactsUpdatedSubject.onNext(contact)
     }
 
-    fun snapshot() = ArrayList(contacts)
 
     fun addAll(contacts: Collection<Contact>) {
         this.contacts.addAll(contacts)

@@ -33,6 +33,7 @@ import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
+import pl.org.seva.navigator.shortcuts.setDynamicShortcuts
 import pl.org.seva.navigator.view.notification.friendshipRequestedNotification
 
 class FriendshipListener : KodeinGlobalAware {
@@ -58,11 +59,13 @@ class FriendshipListener : KodeinGlobalAware {
         store.add(contact)
         contactDao.insert(ContactEntity(contact))
         fbWriter.addFriendship(contact)
+        setDynamicShortcuts(context)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
         store.delete(contact)
         contactDao.delete(ContactEntity(contact))
+        setDynamicShortcuts(context)
     }
 
     private fun acceptFriend(contact: Contact) {
@@ -90,6 +93,7 @@ class FriendshipListener : KodeinGlobalAware {
             val action = intent.getParcelableExtra<ParcelableInt>(ACTION).value
             if (action == ACCEPTED_ACTION) {
                 acceptFriend(contact)
+                setDynamicShortcuts(context)
             }
         }
     }

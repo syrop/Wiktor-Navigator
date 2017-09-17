@@ -51,6 +51,7 @@ import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.listener.Permissions
+import pl.org.seva.navigator.shortcuts.setDynamicShortcuts
 import pl.org.seva.navigator.source.PeerLocationSource
 import pl.org.seva.navigator.view.activity.viewholder.NavigationViewHolder
 import pl.org.seva.navigator.view.activity.viewholder.navigationView
@@ -348,6 +349,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         viewHolder.stopWatchingPeer()
         store.clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
+        setDynamicShortcuts(this)
         fbWriter.deleteMe()
         logout()
     }

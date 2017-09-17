@@ -50,6 +50,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         with(instance<ContactsDatabase>().contactDao) {
             contactsStore.addAll(getAll().map { it.contactValue() })
         }
+        setDynamicShortcuts(application)
         friendshipListener.init(application)
         if (login.isLoggedIn) {
             addFriendshipListeners()
@@ -78,6 +79,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         contactDao.deleteAll()
         contactsStore.clear()
         login.setCurrentUser(null)
+        setDynamicShortcuts(application)
     }
 
     private fun addFriendshipListeners() = friendshipSource.addFriendshipListener(friendshipListener)

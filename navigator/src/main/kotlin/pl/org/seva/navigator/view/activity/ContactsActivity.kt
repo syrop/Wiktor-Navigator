@@ -42,6 +42,7 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.listener.ContactTouchListener
+import pl.org.seva.navigator.shortcuts.setDynamicShortcuts
 import pl.org.seva.navigator.view.recycler.adapter.ContactAdapter
 import pl.org.seva.navigator.view.recycler.decoration.DividerItemDecoration
 
@@ -119,6 +120,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
         contactDao.delete(ContactEntity(contact))
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
+        setDynamicShortcuts(this)
     }
 
     private fun undeleteFriend(contact: Contact) {
@@ -127,6 +129,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
         store.add(contact)
         contactDao.insert(ContactEntity(contact))
         adapter.notifyDataSetChanged()
+        setDynamicShortcuts(this)
     }
 
     private fun setPromptLabelText() {
