@@ -305,7 +305,6 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onLocationPermissionDenied() {
-        println("wiktor denied")
         showLocationPermissionSnackbar()
     }
 
