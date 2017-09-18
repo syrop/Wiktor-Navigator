@@ -34,6 +34,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
@@ -48,7 +49,7 @@ class LoginActivity : AppCompatActivity(),
 
     private val fbWriter: FbWriter = instance()
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var authStateListener: (firebaseAuth : FirebaseAuth) -> Unit
+    private lateinit var authStateListener: AuthStateListener
 
     private lateinit var googleApiClient: GoogleApiClient
 
@@ -72,8 +73,8 @@ class LoginActivity : AppCompatActivity(),
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        authStateListener = {
-            val user = it.currentUser
+        authStateListener = AuthStateListener { p0 ->
+            val user = p0.currentUser
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.uid)
                 onUserLoggedIn(user)
@@ -83,6 +84,7 @@ class LoginActivity : AppCompatActivity(),
             }
         }
 
+        firebaseAuth.addAuthStateListener(authStateListener)
 
         when (intent.getStringExtra(ACTION)) {
             LOGOUT -> {
@@ -119,20 +121,18 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun onUserLoggedOut() {
-        (application as NavigatorApplication).logout()
         if (performedAction) {
             finish()
         }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        firebaseAuth.addAuthStateListener(authStateListener)
-    }
-
     public override fun onStop() {
         super.onStop()
         hideProgressDialog()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         firebaseAuth.removeAuthStateListener(authStateListener)
     }
 
