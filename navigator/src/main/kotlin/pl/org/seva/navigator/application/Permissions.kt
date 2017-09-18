@@ -67,9 +67,6 @@ class Permissions {
                 permissions[it] onDenied requestCode
             }
         }
-
-        grantedSubject.onComplete()
-        deniedSubject.onComplete()
     }
 
     companion object {

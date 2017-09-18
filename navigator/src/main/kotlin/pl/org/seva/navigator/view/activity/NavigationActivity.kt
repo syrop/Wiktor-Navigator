@@ -305,6 +305,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onLocationPermissionDenied() {
+        println("wiktor denied")
         showLocationPermissionSnackbar()
     }
 
@@ -326,8 +327,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         snackbar!!.show()
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
+    override fun onRequestPermissionsResult(requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) =
             this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
