@@ -49,7 +49,6 @@ class ContactsStore : KodeinGlobalAware {
         contactsUpdatedSubject.onNext(contact)
     }
 
-
     fun addAll(contacts: Collection<Contact>) {
         this.contacts.addAll(contacts)
         Collections.sort(this.contacts)
@@ -64,7 +63,7 @@ class ContactsStore : KodeinGlobalAware {
 
     operator fun get(position: Int) = contacts[position]
 
-    operator fun get(email: String) = contacts.asSequence().first { it.email == email }
+    operator fun get(email: String) = contacts.first { it.email == email }
 
     fun size() = contacts.size
 
