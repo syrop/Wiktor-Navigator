@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.listener
+package pl.org.seva.navigator.application
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
@@ -52,24 +52,21 @@ class Permissions {
     }
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        infix fun String.granted(requestCode: Int) =
+        infix fun String.onGranted(requestCode: Int) =
                 grantedSubject.onNext(PermissionResult(requestCode, this))
 
-        infix fun String.denied(requestCode: Int) =
+        infix fun String.onDenied(requestCode: Int) =
                 deniedSubject.onNext(PermissionResult(requestCode, this))
 
         if (grantResults.isEmpty()) {
-            permissions.forEach { it denied requestCode }
+            permissions.forEach { it onDenied requestCode }
         } else repeat(permissions.size) {
             if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
-                permissions[it] granted requestCode
+                permissions[it] onGranted requestCode
             } else {
-                permissions[it] denied requestCode
+                permissions[it] onDenied requestCode
             }
         }
-
-        grantedSubject.onComplete()
-        deniedSubject.onComplete()
     }
 
     companion object {

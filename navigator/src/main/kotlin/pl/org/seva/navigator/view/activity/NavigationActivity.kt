@@ -50,7 +50,7 @@ import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.listener.Permissions
+import pl.org.seva.navigator.application.Permissions
 import pl.org.seva.navigator.shortcuts.setDynamicShortcuts
 import pl.org.seva.navigator.source.PeerLocationSource
 import pl.org.seva.navigator.view.activity.viewholder.NavigationViewHolder
@@ -326,8 +326,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         snackbar!!.show()
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
+    override fun onRequestPermissionsResult(requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) =
             this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults)

@@ -36,5 +36,5 @@ interface ContactDao {
     fun delete(contact: ContactEntity)
 
     @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
-    fun deleteAll()
+    fun deleteAll(): Int
 }

@@ -27,7 +27,7 @@ import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.listener.FriendshipListener
-import pl.org.seva.navigator.listener.Permissions
+import pl.org.seva.navigator.application.Permissions
 import pl.org.seva.navigator.source.ActivityRecognitionSource
 import pl.org.seva.navigator.source.FriendshipSource
 import pl.org.seva.navigator.source.MyLocationSource
