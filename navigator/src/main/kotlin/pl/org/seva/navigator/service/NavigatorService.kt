@@ -41,8 +41,6 @@ class NavigatorService : LifecycleService(), KodeinGlobalAware {
     private fun addMyLocationListener() =
             myLocationSource.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
 
-
-
     companion object {
         private val ONGOING_NOTIFICATION_ID = 1
     }
