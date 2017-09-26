@@ -24,16 +24,14 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.service.NavigatorService
+import pl.org.seva.navigator.application.service.NavigatorService
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
-import pl.org.seva.navigator.listener.FriendshipListener
-import pl.org.seva.navigator.shortcuts.setDynamicShortcuts
-import pl.org.seva.navigator.source.ActivityRecognitionSource
-import pl.org.seva.navigator.source.FriendshipSource
-import pl.org.seva.navigator.view.notification.Channels
+import pl.org.seva.navigator.friendship.FriendshipListener
+import pl.org.seva.navigator.friendship.FriendshipSource
+import pl.org.seva.navigator.ui.notification.Channels
 
 class Bootstrap(private val application: Application) : KodeinGlobalAware {
 

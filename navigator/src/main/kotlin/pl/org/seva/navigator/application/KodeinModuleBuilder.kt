@@ -26,14 +26,12 @@ import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.listener.FriendshipListener
-import pl.org.seva.navigator.application.Permissions
-import pl.org.seva.navigator.source.ActivityRecognitionSource
-import pl.org.seva.navigator.source.FriendshipSource
-import pl.org.seva.navigator.source.MyLocationSource
-import pl.org.seva.navigator.source.PeerLocationSource
-import pl.org.seva.navigator.view.color.ColorFactory
-import pl.org.seva.navigator.view.notification.Channels
+import pl.org.seva.navigator.friendship.FriendshipListener
+import pl.org.seva.navigator.friendship.FriendshipSource
+import pl.org.seva.navigator.location.MyLocationSource
+import pl.org.seva.navigator.location.PeerLocationSource
+import pl.org.seva.navigator.ui.color.ColorFactory
+import pl.org.seva.navigator.ui.notification.Channels
 
 fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
 
