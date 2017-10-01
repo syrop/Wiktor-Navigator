@@ -207,8 +207,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             checkLocationPermission(onGranted = f, onDenied = {})
 
     inline private fun checkLocationPermission(
-            onGranted: () -> Unit = this::onLocationPermissionGranted,
-            onDenied: () -> Unit = this::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
+            onGranted: () -> Unit = ::onLocationPermissionGranted,
+            onDenied: () -> Unit = ::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 isLocationPermissionGranted = true
@@ -252,9 +252,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun showLocationPermissionHelp() = help(
             R.layout.dialog_help_location_permission,
             HELP_LOCATION_PERMISSION_EN,
-            action = this::onSettingsClicked)
+            action = ::onSettingsClicked)
 
-    private fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = this::login)
+    private fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = ::login)
 
     private fun help(layout: Int, file: String, action: () -> Unit) {
         dialog = Dialog(this)
@@ -289,8 +289,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        onGranted = this::onLocationPermissionGranted,
-                        onDenied = this::onLocationPermissionDenied)))
+                        onGranted = ::onLocationPermissionGranted,
+                        onDenied = ::onLocationPermissionDenied)))
     }
 
     @SuppressLint("MissingPermission")

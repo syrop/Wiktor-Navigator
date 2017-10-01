@@ -49,7 +49,7 @@ class NavigationViewHolder: KodeinGlobalAware {
     private var map: GoogleMap? = null
     var peerLocation: LatLng? = null
 
-    private var moveCamera: () -> Unit = this::moveCameraToPeerOrLastLocation
+    private var moveCamera: () -> Unit = ::moveCameraToPeerOrLastLocation
 
     lateinit var lastCameraPosition: LatLng
 
@@ -148,7 +148,7 @@ class NavigationViewHolder: KodeinGlobalAware {
         zoom = it.zoom
         lastCameraPosition = it.target
         if (lastCameraPosition different peerLocation) {
-            moveCamera = this::moveCameraToLast
+            moveCamera = ::moveCameraToLast
         }
         persistCameraPositionAndZoom()
     }
