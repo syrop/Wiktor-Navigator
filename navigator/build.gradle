@@ -80,11 +80,10 @@ dependencies {
     })
     testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'android.arch.persistence.room:runtime:1.0.0-alpha9-1'
-    kapt 'android.arch.persistence.room:compiler:1.0.0-alpha9-1'
-    testImplementation 'android.arch.persistence.room:testing:1.0.0-alpha9-1'
-    implementation 'android.arch.persistence.room:rxjava2:1.0.0-alpha9-1'
-    implementation 'android.arch.lifecycle:extensions:1.0.0-alpha9-1'
+    implementation 'android.arch.persistence.room:runtime:1.0.0-beta1'
+    testImplementation 'android.arch.persistence.room:testing:1.0.0-beta1'
+    implementation 'android.arch.persistence.room:rxjava2:1.0.0-beta1'
+    implementation 'android.arch.lifecycle:extensions:1.0.0-beta1'
 }
 
 apply plugin: 'com.google.gms.google-services'
