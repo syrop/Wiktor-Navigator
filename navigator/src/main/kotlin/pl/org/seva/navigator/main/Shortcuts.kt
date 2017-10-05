@@ -25,9 +25,6 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.conf.global
-import com.github.salomonbrys.kodein.instance
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.model.Contact
@@ -47,7 +44,7 @@ fun setDynamicShortcuts(context: Context) {
         return
     }
     val cm = context.getSystemService(ShortcutManager::class.java)
-    val shortcuts = Kodein.global.instance<ContactsStore>().snapshot()
+    val shortcuts = instance<ContactsStore>().snapshot()
             .asSequence()
             .take(cm.maxShortcutCountPerActivity)
             .map { it.shortcut() }
