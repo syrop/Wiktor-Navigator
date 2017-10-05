@@ -42,7 +42,7 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.ui.interaction.ContactTouchListener
-import pl.org.seva.navigator.application.setDynamicShortcuts
+import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.recycler.adapter.ContactAdapter
 import pl.org.seva.navigator.ui.recycler.decoration.DividerItemDecoration
 

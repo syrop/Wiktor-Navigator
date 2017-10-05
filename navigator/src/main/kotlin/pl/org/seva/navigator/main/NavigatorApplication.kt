@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.application
+package pl.org.seva.navigator.main
 
 import android.app.Application
 import com.github.salomonbrys.kodein.Kodein

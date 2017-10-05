@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.application
+package pl.org.seva.navigator.main
 
 import android.app.Application
 import android.content.Intent
@@ -24,7 +24,7 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.application.service.NavigatorService
+import pl.org.seva.navigator.main.service.NavigatorService
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.room.ContactsDatabase

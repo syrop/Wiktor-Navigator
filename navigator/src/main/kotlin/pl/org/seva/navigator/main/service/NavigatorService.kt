@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.application.service
+package pl.org.seva.navigator.main.service
 
 import android.arch.lifecycle.LifecycleService
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware

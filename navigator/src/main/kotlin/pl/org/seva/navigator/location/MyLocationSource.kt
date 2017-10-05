@@ -33,8 +33,8 @@ import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.application.ActivityRecognitionSource
-import pl.org.seva.navigator.application.observe
+import pl.org.seva.navigator.main.ActivityRecognitionSource
+import pl.org.seva.navigator.main.observe
 import pl.org.seva.navigator.data.Login
 
 class MyLocationSource :

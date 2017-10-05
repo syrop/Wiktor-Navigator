@@ -44,14 +44,14 @@ import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.application.NavigatorApplication
+import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.application.Permissions
-import pl.org.seva.navigator.application.setDynamicShortcuts
+import pl.org.seva.navigator.main.Permissions
+import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.location.PeerLocationSource
 import pl.org.seva.navigator.ui.activity.viewholder.NavigationViewHolder
 import pl.org.seva.navigator.ui.activity.viewholder.navigationView

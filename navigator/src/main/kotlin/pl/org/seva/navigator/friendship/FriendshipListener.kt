@@ -33,7 +33,7 @@ import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
-import pl.org.seva.navigator.application.setDynamicShortcuts
+import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.notification.friendshipRequestedNotification
 
 class FriendshipListener : KodeinGlobalAware {
