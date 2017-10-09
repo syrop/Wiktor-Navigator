@@ -87,7 +87,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
             init(savedInstanceState)
         }
         mapContainerId = map_container.id
-        fab.setOnClickListener { onFabClicked() }
+        fab.setOnClickListener { onAddContactClicked() }
         checkLocationPermission()
     }
 
@@ -170,7 +170,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         return null
     }
 
-    private fun onFabClicked() {
+    private fun onAddContactClicked() {
         viewHolder.stopWatchingPeer()
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
