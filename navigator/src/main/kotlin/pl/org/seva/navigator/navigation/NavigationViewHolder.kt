@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.activity.viewholder
+package pl.org.seva.navigator.navigation
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
@@ -35,8 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ContactsStore
-import pl.org.seva.navigator.ui.interaction.OnSwipeListener
-import pl.org.seva.navigator.location.PeerLocationSource
+import pl.org.seva.navigator.ui.OnSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
         NavigationViewHolder().apply(f)

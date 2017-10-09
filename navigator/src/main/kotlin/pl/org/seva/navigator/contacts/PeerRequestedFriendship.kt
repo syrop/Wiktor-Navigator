@@ -17,7 +17,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package pl.org.seva.navigator.ui.notification
+package pl.org.seva.navigator.contacts
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -27,7 +27,7 @@ import android.content.Intent
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
-import pl.org.seva.navigator.friendship.FriendshipListener
+import pl.org.seva.navigator.ui.createNotificationBuilder
 
 inline fun friendshipRequestedNotification(context: Context, f: PeerRequestedFriendship.() -> Unit) =
         PeerRequestedFriendship(context).apply { f() }.build()

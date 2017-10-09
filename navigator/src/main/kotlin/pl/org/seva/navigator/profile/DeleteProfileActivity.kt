@@ -15,15 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.recycler.adapter
+package pl.org.seva.navigator.profile
 
-import pl.org.seva.navigator.data.model.Contact
+import android.app.Activity
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_delete_user.*
+import pl.org.seva.navigator.R
 
-class SingleContactAdapter(
-        private val contact: Contact,
-        listener: ContactListener? = null) : ContactAdapter(listener) {
+class DeleteProfileActivity : AppCompatActivity() {
 
-    override fun getContact(position: Int) = contact
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_delete_user)
+        ok.setOnClickListener { onOkClicked() }
+        cancel.setOnClickListener { onCancelClicked() }
+    }
 
-    override fun getItemCount() = 1
+    private fun onOkClicked() {
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    private fun onCancelClicked() = finish()
 }

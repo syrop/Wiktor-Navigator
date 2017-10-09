@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.dialog
+package pl.org.seva.navigator.contacts
 
 import android.app.Dialog
 import android.content.Context

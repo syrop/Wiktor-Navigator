@@ -29,9 +29,8 @@ import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
-import pl.org.seva.navigator.friendship.FriendshipListener
-import pl.org.seva.navigator.friendship.FriendshipSource
-import pl.org.seva.navigator.ui.notification.Channels
+import pl.org.seva.navigator.contacts.FriendshipListener
+import pl.org.seva.navigator.contacts.FriendshipSource
 
 class Bootstrap(private val application: Application) : KodeinGlobalAware {
 
@@ -54,7 +53,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
             addFriendshipListeners()
             startService()
         }
-        instance<Channels>().create()
+        instance<NotificationChannels>().create()
     }
 
     fun login(user: FirebaseUser) {

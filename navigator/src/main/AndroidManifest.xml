@@ -19,7 +19,7 @@
             android:value="AIzaSyDECNjt1fl18jA2W5O2n3e_JMFueCjEdBs"/>
 
         <activity
-            android:name=".ui.activity.NavigationActivity"
+            android:name=".navigation.NavigationActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -30,20 +30,20 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.ContactsActivity"
+            android:name=".contacts.ContactsActivity"
             android:label="@string/contacts_activity_label">
         </activity>
 
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name=".profile.LoginActivity"
             android:label="@string/app_name" />
 
         <activity
-            android:name=".ui.activity.DeleteProfileActivity"
+            android:name=".profile.DeleteProfileActivity"
             android:label="@string/delete_user_activity_label" />
 
         <activity
-            android:name=".ui.activity.SeekContactActivity"
+            android:name=".contacts.SeekContactActivity"
             android:label="@string/seek_contact_activity_label"
             android:launchMode="singleTop" >
             <intent-filter>

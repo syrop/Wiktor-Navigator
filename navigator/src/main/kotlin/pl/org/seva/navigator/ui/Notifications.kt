@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.notification
+package pl.org.seva.navigator.ui
 
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.ui.activity.NavigationActivity
+import pl.org.seva.navigator.main.NotificationChannels
+import pl.org.seva.navigator.navigation.NavigationActivity
 
 fun createNotificationBuilder(context: Context): Notification.Builder =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -30,7 +31,7 @@ fun createNotificationBuilder(context: Context): Notification.Builder =
             Notification.Builder(context)
         }
         else {
-            Notification.Builder(context, Channels.QUESTION_CHANNEL_NAME)
+            Notification.Builder(context, NotificationChannels.QUESTION_CHANNEL_NAME)
         }
 
 fun Context.createOngoingNotification(): Notification {

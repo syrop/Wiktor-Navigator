@@ -17,7 +17,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package pl.org.seva.navigator.ui.activity
+package pl.org.seva.navigator.profile
 
 import android.app.ProgressDialog
 import android.content.Intent

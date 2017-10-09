@@ -28,12 +28,10 @@ import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.friendship.FriendshipListener
-import pl.org.seva.navigator.friendship.FriendshipSource
-import pl.org.seva.navigator.location.MyLocationSource
-import pl.org.seva.navigator.location.PeerLocationSource
-import pl.org.seva.navigator.ui.color.ColorFactory
-import pl.org.seva.navigator.ui.notification.Channels
+import pl.org.seva.navigator.contacts.FriendshipListener
+import pl.org.seva.navigator.contacts.FriendshipSource
+import pl.org.seva.navigator.navigation.MyLocationSource
+import pl.org.seva.navigator.navigation.PeerLocationSource
 
 fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
 
@@ -56,7 +54,7 @@ class KodeinModuleBuilder {
         bind<PeerLocationSource>() with singleton { PeerLocationSource() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
-        bind<Channels>() with singleton { Channels(application) }
+        bind<NotificationChannels>() with singleton { NotificationChannels(application) }
         bind<ColorFactory>() with singleton { ColorFactory(application) }
     }
 }

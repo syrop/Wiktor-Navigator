@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.location
+package pl.org.seva.navigator.navigation
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle

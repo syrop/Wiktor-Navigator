@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.activity
+package pl.org.seva.navigator.navigation
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -52,11 +52,9 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.main.Permissions
 import pl.org.seva.navigator.main.setDynamicShortcuts
-import pl.org.seva.navigator.location.PeerLocationSource
-import pl.org.seva.navigator.ui.activity.viewholder.NavigationViewHolder
-import pl.org.seva.navigator.ui.activity.viewholder.navigationView
-import pl.org.seva.navigator.ui.googlemap.mapFragment
-import pl.org.seva.navigator.ui.googlemap.ready
+import pl.org.seva.navigator.contacts.ContactsActivity
+import pl.org.seva.navigator.profile.DeleteProfileActivity
+import pl.org.seva.navigator.profile.LoginActivity
 
 class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
@@ -86,7 +84,8 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         setContentView(R.layout.activity_navigation)
         supportActionBar?.title = getString(R.string.navigation_activity_label)
         viewHolder = navigationView {
-            init(savedInstanceState) }
+            init(savedInstanceState)
+        }
         mapContainerId = map_container.id
         fab.setOnClickListener { onFabClicked() }
         checkLocationPermission()

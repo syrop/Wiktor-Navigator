@@ -23,7 +23,7 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
-import pl.org.seva.navigator.ui.color.ColorFactory
+import pl.org.seva.navigator.main.ColorFactory
 
 class AddedColorMigration : Migration(
         ContactsDatabase.ROOM_DATABASE_VERSION,

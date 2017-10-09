@@ -21,8 +21,8 @@ import android.arch.lifecycle.LifecycleService
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.location.MyLocationSource
-import pl.org.seva.navigator.ui.notification.createOngoingNotification
+import pl.org.seva.navigator.navigation.MyLocationSource
+import pl.org.seva.navigator.ui.createOngoingNotification
 
 class NavigatorService : LifecycleService(), KodeinGlobalAware {
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.friendship
+package pl.org.seva.navigator.contacts
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -34,7 +34,6 @@ import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.main.setDynamicShortcuts
-import pl.org.seva.navigator.ui.notification.friendshipRequestedNotification
 
 class FriendshipListener : KodeinGlobalAware {
 

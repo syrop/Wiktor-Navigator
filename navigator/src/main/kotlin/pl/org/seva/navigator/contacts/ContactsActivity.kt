@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.activity
+package pl.org.seva.navigator.contacts
 
 import android.app.Activity
 import android.content.Intent
@@ -41,10 +41,10 @@ import pl.org.seva.navigator.data.Login
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
-import pl.org.seva.navigator.ui.interaction.ContactTouchListener
+import pl.org.seva.navigator.navigation.NavigationActivity
 import pl.org.seva.navigator.main.setDynamicShortcuts
-import pl.org.seva.navigator.ui.recycler.adapter.ContactAdapter
-import pl.org.seva.navigator.ui.recycler.decoration.DividerItemDecoration
+import pl.org.seva.navigator.contacts.adapter.ContactAdapter
+import pl.org.seva.navigator.ui.DividerItemDecoration
 
 class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 

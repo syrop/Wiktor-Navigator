@@ -26,7 +26,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.data.model.Contact
-import pl.org.seva.navigator.ui.color.ColorFactory
+import pl.org.seva.navigator.main.ColorFactory
 
 class FbReader : Fb() {
 

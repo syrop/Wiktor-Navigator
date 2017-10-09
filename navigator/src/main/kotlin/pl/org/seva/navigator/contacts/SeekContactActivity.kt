@@ -17,7 +17,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package pl.org.seva.navigator.ui.activity
+package pl.org.seva.navigator.contacts
 
 import android.app.ProgressDialog
 import android.app.SearchManager
@@ -44,8 +44,7 @@ import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.Login
-import pl.org.seva.navigator.ui.recycler.adapter.SingleContactAdapter
-import pl.org.seva.navigator.ui.dialog.FriendshipAddDialogBuilder
+import pl.org.seva.navigator.contacts.adapter.SingleContactAdapter
 
 @Suppress("DEPRECATION")
 class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {

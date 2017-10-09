@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui.notification
+package pl.org.seva.navigator.main
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -24,7 +24,7 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import pl.org.seva.navigator.R
 
-class Channels(private val context: Context) {
+class NotificationChannels(private val context: Context) {
 
     fun create() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
