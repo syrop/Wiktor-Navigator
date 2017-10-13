@@ -22,20 +22,18 @@ import pl.org.seva.navigator.data.model.Contact
 
 class LoggedInUser {
 
-    var isLoggedIn: Boolean = false
+    val isLoggedIn get() = name == null || email == null
     var email: String? = null
-    private var displayName: String? = null
+    private var name: String? = null
 
     val loggedInContact: Contact
-        get() = Contact(email!!, displayName!!)
+        get() = Contact(email!!, name!!)
 
     fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        isLoggedIn = true
         email = user.email
-        displayName = user.displayName
+        name = user.displayName
     } else {
-        isLoggedIn = false
         email = null
-        displayName = null
+        name = null
     }
 }
