@@ -25,8 +25,8 @@ import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.main.service.NavigatorService
-import pl.org.seva.navigator.data.ContactsStore
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.contacts.FriendshipListener
@@ -34,22 +34,22 @@ import pl.org.seva.navigator.contacts.FriendshipSource
 
 class Bootstrap(private val application: Application) : KodeinGlobalAware {
 
-    private val contactsStore: ContactsStore = instance()
+    private val contacts: Contacts = instance()
     private val friendshipSource: FriendshipSource = instance()
     private val friendshipListener: FriendshipListener = instance()
     private val contactDao = instance<ContactsDatabase>().contactDao
-    private val login: Login = instance()
+    private val loggedInUser: LoggedInUser = instance()
     private var isServiceRunning = false
 
     fun boot() {
-        login.setCurrentUser(FirebaseAuth.getInstance().currentUser)
+        loggedInUser.setCurrentUser(FirebaseAuth.getInstance().currentUser)
         instance<ActivityRecognitionSource>().initGoogleApiClient(application)
         with(instance<ContactsDatabase>().contactDao) {
-            contactsStore.addAll(getAll().map { it.contactValue() })
+            contacts.addAll(getAll().map { it.contactValue() })
         }
         setDynamicShortcuts(application)
         friendshipListener.init(application)
-        if (login.isLoggedIn) {
+        if (loggedInUser.isLoggedIn) {
             addFriendshipListeners()
             startService()
         }
@@ -60,11 +60,11 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         fun downloadFriendsFromCloud() =
                 friendshipSource.downloadFriendsFromCloud(
                         onFriendFound = {
-                            contactsStore.add(it)
+                            contacts.add(it)
                             contactDao.insert(ContactEntity(it))
                         }, onCompleted = { setDynamicShortcuts(application) })
 
-        login.setCurrentUser(user)
+        loggedInUser.setCurrentUser(user)
         addFriendshipListeners()
         downloadFriendsFromCloud()
         startService()
@@ -74,8 +74,8 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         stopService()
         removeFriendshipListeners()
         contactDao.deleteAll()
-        contactsStore.clear()
-        login.setCurrentUser(null)
+        contacts.clear()
+        loggedInUser.setCurrentUser(null)
         setDynamicShortcuts(application)
     }
 

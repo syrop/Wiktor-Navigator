@@ -26,15 +26,15 @@ import com.google.firebase.database.FirebaseDatabase
 
 import java.util.Locale
 
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.profile.LoggedInUser
 
 open class Fb : KodeinGlobalAware {
 
-    protected val login: Login = instance()
+    protected val loggedInUser: LoggedInUser = instance()
 
     protected val db = FirebaseDatabase.getInstance()!!
 
-    protected fun currentUserReference() = login.email!!.toReference()
+    protected fun currentUserReference() = loggedInUser.email!!.toReference()
 
     protected fun String.toReference() = db.getReference(USER_ROOT + "/" + to64())!!
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data
+package pl.org.seva.navigator.contacts
 
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
@@ -23,11 +23,12 @@ import java.util.ArrayList
 import java.util.Collections
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.model.Contact
 
-class ContactsStore : KodeinGlobalAware {
+class Contacts : KodeinGlobalAware {
 
-    val login: Login = instance()
+    val loggedInUser: LoggedInUser = instance()
 
     private val contacts: MutableList<Contact>
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()

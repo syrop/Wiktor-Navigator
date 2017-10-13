@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data
+package pl.org.seva.navigator.profile
 
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.data.model.Contact
 
-class Login {
+class LoggedInUser {
 
     var isLoggedIn: Boolean = false
     var email: String? = null

@@ -39,11 +39,10 @@ import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.model.Contact
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.contacts.adapter.SingleContactAdapter
 
 @Suppress("DEPRECATION")
@@ -51,8 +50,8 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()
-    private val store: ContactsStore = instance()
-    private val login: Login = instance()
+    private val store: Contacts = instance()
+    private val loggedInUser: LoggedInUser = instance()
 
     private var progress: ProgressDialog? = null
 
@@ -172,7 +171,7 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private fun onContactClicked(contact: Contact) = when {
         store.contains(contact) -> finish()
-        contact.email == login.email ->
+        contact.email == loggedInUser.email ->
             Toast.makeText(this, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
         else -> FriendshipAddDialogBuilder(this)
                 .setContact(contact)

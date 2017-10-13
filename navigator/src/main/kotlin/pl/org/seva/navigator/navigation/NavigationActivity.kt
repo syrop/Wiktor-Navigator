@@ -46,8 +46,8 @@ import org.apache.commons.io.IOUtils
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.data.model.Contact
-import pl.org.seva.navigator.data.ContactsStore
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.main.Permissions
@@ -59,9 +59,9 @@ import pl.org.seva.navigator.profile.LoginActivity
 class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private val peerLocationSource: PeerLocationSource = instance()
-    private val store: ContactsStore = instance()
+    private val store: Contacts = instance()
     private val permissions: Permissions = instance()
-    private val login: Login = instance()
+    private val loggedInUser: LoggedInUser = instance()
     private val fbWriter: FbWriter = instance()
 
     private var backClickTime = 0L
@@ -134,7 +134,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         checkLocationPermission(
                 onGranted = {
                     snackbar?.dismiss()
-                    if (!login.isLoggedIn) {
+                    if (!loggedInUser.isLoggedIn) {
                         showLoginSnackbar()
                     }
                 },
@@ -174,7 +174,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         viewHolder.stopWatchingPeer()
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
-        } else if (login.isLoggedIn) {
+        } else if (loggedInUser.isLoggedIn) {
             startActivityForResult(
                     Intent(this, ContactsActivity::class.java),
                     CONTACTS_ACTIVITY_REQUEST_ID)
@@ -222,9 +222,9 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_help).isVisible = !isLocationPermissionGranted || !login.isLoggedIn
-        menu.findItem(R.id.action_logout).isVisible = login.isLoggedIn
-        menu.findItem(R.id.action_delete_user).isVisible = login.isLoggedIn
+        menu.findItem(R.id.action_help).isVisible = !isLocationPermissionGranted || !loggedInUser.isLoggedIn
+        menu.findItem(R.id.action_logout).isVisible = loggedInUser.isLoggedIn
+        menu.findItem(R.id.action_delete_user).isVisible = loggedInUser.isLoggedIn
         return true
     }
 
@@ -240,7 +240,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         R.id.action_help -> {
             if (!isLocationPermissionGranted) {
                 showLocationPermissionHelp()
-            } else if (!login.isLoggedIn) {
+            } else if (!loggedInUser.isLoggedIn) {
                 showLoginHelp()
             }
             true
@@ -296,7 +296,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onLocationPermissionGranted() {
         invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
-        if (!login.isLoggedIn) {
+        if (!loggedInUser.isLoggedIn) {
             showLoginSnackbar()
         } else {
             (application as NavigatorApplication).startService()

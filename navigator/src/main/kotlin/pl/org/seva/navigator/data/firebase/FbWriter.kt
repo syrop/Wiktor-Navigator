@@ -31,29 +31,29 @@ class FbWriter : Fb() {
     }
 
     infix fun writeMyLocation(latLng: LatLng) {
-        login.email!!.toReference().child(LAT_LNG).setValue(latLng.toFbString())
+        loggedInUser.email!!.toReference().child(LAT_LNG).setValue(latLng.toFbString())
     }
 
     fun requestFriendship(contact: Contact) =
-            contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(login.loggedInContact)
+            contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(loggedInUser.loggedInContact)
 
     fun acceptFriendship(contact: Contact) {
-        contact.email.toReference().child(FRIENDSHIP_ACCEPTED).write(login.loggedInContact)
+        contact.email.toReference().child(FRIENDSHIP_ACCEPTED).write(loggedInUser.loggedInContact)
         addFriendship(contact)
     }
 
     fun addFriendship(contact: Contact) {
-        login.email!!.toReference().child(FRIENDS).write(contact)
+        loggedInUser.email!!.toReference().child(FRIENDS).write(contact)
         contact.deleteMeFromTag(FRIENDSHIP_DELETED)
     }
 
     fun deleteFriendship(contact: Contact) {
-        contact.email.toReference().child(FRIENDSHIP_DELETED).write(login.loggedInContact)
+        contact.email.toReference().child(FRIENDSHIP_DELETED).write(loggedInUser.loggedInContact)
         contact.deleteFromMyFriends()
     }
 
     fun deleteMe() {
-        login.email!!.toReference().removeValue()
+        loggedInUser.email!!.toReference().removeValue()
     }
 
     private fun Contact.write(reference: DatabaseReference) = reference.write(this)
@@ -64,8 +64,8 @@ class FbWriter : Fb() {
     }
 
     private fun Contact.deleteMeFromTag(tag: String) =
-        email.toReference().child(tag).child(login.email!!.to64()).removeValue()
+        email.toReference().child(tag).child(loggedInUser.email!!.to64()).removeValue()
 
     private fun Contact.deleteFromMyFriends() =
-        login.email!!.toReference().child(FRIENDS).child(email.to64()).removeValue()
+        loggedInUser.email!!.toReference().child(FRIENDS).child(email.to64()).removeValue()
 }

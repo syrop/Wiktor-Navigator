@@ -27,7 +27,7 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.data.model.Contact
 
 typealias ContactListener = (contact: Contact) -> Unit
@@ -36,7 +36,7 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
         RecyclerView.Adapter<ContactAdapter.ViewHolder>(),
         KodeinGlobalAware {
 
-    private val store: ContactsStore = instance()
+    private val store: Contacts = instance()
 
     protected open fun getContact(position: Int) = store[position]
 

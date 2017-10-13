@@ -26,7 +26,7 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.navigation.NavigationActivity
 
@@ -44,7 +44,7 @@ fun setDynamicShortcuts(context: Context) {
         return
     }
     val cm = context.getSystemService(ShortcutManager::class.java)
-    val shortcuts = instance<ContactsStore>().snapshot()
+    val shortcuts = instance<Contacts>().snapshot()
             .asSequence()
             .take(cm.maxShortcutCountPerActivity)
             .map { it.shortcut() }

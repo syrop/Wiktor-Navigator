@@ -36,8 +36,7 @@ import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.model.Contact
-import pl.org.seva.navigator.data.ContactsStore
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.data.room.entity.ContactEntity
@@ -48,9 +47,9 @@ import pl.org.seva.navigator.ui.DividerItemDecoration
 
 class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 
-    private val store: ContactsStore = instance()
+    private val store: Contacts = instance()
     private val fbWriter: FbWriter = instance()
-    private val login: Login = instance()
+    private val loggedInUser: LoggedInUser = instance()
     private val contactDao = instance<ContactsDatabase>().contactDao
 
     private var snackbar: Snackbar? = null
@@ -96,7 +95,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)
 
-        if (contact.email != login.email) {
+        if (contact.email != loggedInUser.email) {
             intent.putExtra(NavigationActivity.CONTACT_EXTRA, contact)
         }
         setResult(Activity.RESULT_OK, intent)

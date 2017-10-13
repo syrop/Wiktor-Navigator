@@ -27,7 +27,6 @@ import com.github.salomonbrys.kodein.instance
 
 import java.util.Random
 
-import pl.org.seva.navigator.data.ContactsStore
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
@@ -37,7 +36,7 @@ import pl.org.seva.navigator.main.setDynamicShortcuts
 
 class FriendshipListener : KodeinGlobalAware {
 
-    private val store: ContactsStore = instance()
+    private val store: Contacts = instance()
     private val contactDao = instance<ContactsDatabase>().contactDao
     private val fbWriter: FbWriter = instance()
 

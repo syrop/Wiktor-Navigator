@@ -23,8 +23,8 @@ import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.singleton
-import pl.org.seva.navigator.data.ContactsStore
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
@@ -44,8 +44,8 @@ class KodeinModuleBuilder {
     fun build() = Kodein.Module {
         bind<Bootstrap>() with singleton { Bootstrap(application) }
         bind<FbReader>() with singleton { FbReader() }
-        bind<ContactsStore>() with singleton { ContactsStore() }
-        bind<Login>() with singleton { Login() }
+        bind<Contacts>() with singleton { Contacts() }
+        bind<LoggedInUser>() with singleton { LoggedInUser() }
         bind<FbWriter>() with singleton { FbWriter() }
         bind<FriendshipListener>() with singleton { FriendshipListener() }
         bind<Permissions>() with singleton { Permissions() }

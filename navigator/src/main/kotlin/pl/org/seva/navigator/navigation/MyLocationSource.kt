@@ -35,7 +35,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.ActivityRecognitionSource
 import pl.org.seva.navigator.main.observe
-import pl.org.seva.navigator.data.Login
+import pl.org.seva.navigator.profile.LoggedInUser
 
 class MyLocationSource :
         GoogleApiClient.ConnectionCallbacks,
@@ -44,7 +44,7 @@ class MyLocationSource :
         KodeinGlobalAware {
 
     private val activityRecognitionSource: ActivityRecognitionSource = instance()
-    private val login: Login = instance()
+    private val loggedInUser: LoggedInUser = instance()
 
     private var googleApiClient: GoogleApiClient? = null
     private var locationRequest: LocationRequest? = null
@@ -58,7 +58,7 @@ class MyLocationSource :
 
     init {
         locationObservable = locationSubject
-                .filter { login.isLoggedIn }
+                .filter { loggedInUser.isLoggedIn }
                 .timestamp()
                 .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
                 .doOnNext { lastSentLocationTime = it.time() }

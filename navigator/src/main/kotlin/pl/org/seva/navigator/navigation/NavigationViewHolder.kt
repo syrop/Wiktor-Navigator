@@ -34,7 +34,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.data.model.Contact
-import pl.org.seva.navigator.data.ContactsStore
+import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.ui.OnSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
@@ -43,7 +43,7 @@ fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
 class NavigationViewHolder: KodeinGlobalAware {
 
     private val peerLocationSource: PeerLocationSource = instance()
-    private val store: ContactsStore = instance()
+    private val store: Contacts = instance()
 
     private var map: GoogleMap? = null
     var peerLocation: LatLng? = null
