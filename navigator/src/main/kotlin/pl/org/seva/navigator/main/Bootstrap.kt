@@ -42,13 +42,13 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
     private var isServiceRunning = false
 
     fun boot() {
-        loggedInUser.setCurrentUser(FirebaseAuth.getInstance().currentUser)
-        instance<ActivityRecognitionSource>().initGoogleApiClient(application)
+        loggedInUser setCurrentUser FirebaseAuth.getInstance().currentUser
+        instance<ActivityRecognitionSource>() initGoogleApiClient application
         with(instance<ContactsDatabase>().contactDao) {
             contacts.addAll(getAll().map { it.contactValue() })
         }
         setDynamicShortcuts(application)
-        friendshipListener.init(application)
+        friendshipListener init application
         if (loggedInUser.isLoggedIn) {
             addFriendshipListeners()
             startService()
@@ -64,7 +64,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
                             contactDao.insert(ContactEntity(it))
                         }, onCompleted = { setDynamicShortcuts(application) })
 
-        loggedInUser.setCurrentUser(user)
+        loggedInUser setCurrentUser user
         addFriendshipListeners()
         downloadFriendsFromCloud()
         startService()
@@ -75,7 +75,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         removeFriendshipListeners()
         contactDao.deleteAll()
         contacts.clear()
-        loggedInUser.setCurrentUser(null)
+        loggedInUser setCurrentUser null
         setDynamicShortcuts(application)
     }
 

@@ -42,7 +42,7 @@ open class ActivityRecognitionSource :
     private lateinit var context: Context
     private var activityRecognitionReceiver : BroadcastReceiver? = null
 
-    fun initGoogleApiClient(context: Context) {
+    infix fun initGoogleApiClient(context: Context) {
         if (initialized) {
             return
         }

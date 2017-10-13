@@ -26,10 +26,9 @@ class LoggedInUser {
     var email: String? = null
     private var name: String? = null
 
-    val loggedInContact: Contact
-        get() = Contact(email!!, name!!)
+    val loggedInContact get() = Contact(email!!, name!!)
 
-    fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
+    infix fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
         email = user.email
         name = user.displayName
     } else {

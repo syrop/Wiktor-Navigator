@@ -43,7 +43,7 @@ class FriendshipListener : KodeinGlobalAware {
     private lateinit var context: Context
     private val nm get() = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    fun init(context: Context) {
+    infix fun init(context: Context) {
         this.context = context
     }
 
