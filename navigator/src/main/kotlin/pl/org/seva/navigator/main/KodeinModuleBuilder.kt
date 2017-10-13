@@ -23,6 +23,7 @@ import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.conf.global
 import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.singleton
+import com.google.android.gms.location.FusedLocationProviderClient
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbReader
@@ -43,6 +44,7 @@ class KodeinModuleBuilder {
 
     fun build() = Kodein.Module {
         bind<Bootstrap>() with singleton { Bootstrap(application) }
+        bind<FusedLocationProviderClient>() with singleton { FusedLocationProviderClient(application) }
         bind<FbReader>() with singleton { FbReader() }
         bind<Contacts>() with singleton { Contacts() }
         bind<LoggedInUser>() with singleton { LoggedInUser() }

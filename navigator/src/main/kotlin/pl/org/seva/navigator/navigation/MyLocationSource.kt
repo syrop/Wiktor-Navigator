@@ -21,49 +21,40 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleService
 import android.location.Location
-import android.os.Bundle
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.ActivityRecognitionSource
+import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.observe
 import pl.org.seva.navigator.profile.LoggedInUser
 
-class MyLocationSource :
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener,
-        KodeinGlobalAware {
+class MyLocationSource {
 
     private val activityRecognitionSource: ActivityRecognitionSource = instance()
     private val loggedInUser: LoggedInUser = instance()
+    private val provider: FusedLocationProviderClient = instance()
 
-    private var googleApiClient: GoogleApiClient? = null
-    private var locationRequest: LocationRequest? = null
+    private val locationRequest = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(UPDATE_FREQUENCY)
+            .setSmallestDisplacement(MIN_DISTANCE)
 
-    private val locationSubject: PublishSubject<LatLng> = PublishSubject.create<LatLng>()
-    private val locationObservable: Observable<LatLng>
+    private val callback = MyLocationCallback()
+
+    private val locationSubject = PublishSubject.create<LatLng>()
+    private val locationObservable = locationSubject
+            .filter { loggedInUser.isLoggedIn }
+            .timestamp()
+            .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
+            .doOnNext { lastSentLocationTime = it.time() }
+            .map { it.value() }
 
     private var location: Location? = null
     private var lastSentLocationTime: Long = 0
     private lateinit  var lifecycle: Lifecycle
-
-    init {
-        locationObservable = locationSubject
-                .filter { loggedInUser.isLoggedIn }
-                .timestamp()
-                .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
-                .doOnNext { lastSentLocationTime = it.time() }
-                .map { it.value() }
-    }
 
     fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) =
             lifecycle.observe { locationObservable.subscribe(myLocationListener) }
@@ -73,22 +64,13 @@ class MyLocationSource :
                     onStationary = { removeRequest() },
                     onMoving = { request() })
 
-    private fun connectGoogleApiClient() = googleApiClient!!.connect()
-
     infix fun initWithService(service: LifecycleService) {
         lifecycle = service.lifecycle
-        googleApiClient?:let {
-            googleApiClient = GoogleApiClient.Builder(service)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build()
-        }
-
-        connectGoogleApiClient()
+        request()
+        addActivityRecognitionListeners()
     }
 
-    override fun onLocationChanged(location: Location) {
+    fun onLocationChanged(location: Location) {
         if (location.accuracy >= ACCURACY_THRESHOLD) {
             return
         }
@@ -100,36 +82,19 @@ class MyLocationSource :
     }
 
     @SuppressLint("MissingPermission")
-    override fun onConnected(bundle: Bundle?) {
-        location?:let {
-            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
-        }
-
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
-        locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(UPDATE_FREQUENCY)
-                .setSmallestDisplacement(MIN_DISTANCE)
-        request()
-        addActivityRecognitionListeners()
-    }
-
-    @SuppressLint("MissingPermission")
     private fun request() {
-        if (googleApiClient == null || locationRequest == null) {
-            return
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this)
+        provider.requestLocationUpdates(locationRequest, callback, null)
     }
 
     private fun removeRequest() {
-        googleApiClient?.apply {
-            LocationServices.FusedLocationApi.removeLocationUpdates(this, this@MyLocationSource) }
+        provider.removeLocationUpdates(callback)
     }
 
-    override fun onConnectionSuspended(i: Int) = Unit
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
+    inner class MyLocationCallback : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            onLocationChanged(result.lastLocation)
+        }
+    }
 
     companion object {
 
