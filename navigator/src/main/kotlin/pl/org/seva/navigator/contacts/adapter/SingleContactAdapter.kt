@@ -17,7 +17,7 @@
 
 package pl.org.seva.navigator.contacts.adapter
 
-import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.contacts.Contact
 
 class SingleContactAdapter(
         private val contact: Contact,

@@ -28,9 +28,10 @@ import pl.org.seva.navigator.main.service.NavigatorService
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.contacts.FriendshipListener
 import pl.org.seva.navigator.contacts.FriendshipSource
+
+import pl.org.seva.navigator.data.room.insert
 
 class Bootstrap(private val application: Application) : KodeinGlobalAware {
 
@@ -45,7 +46,7 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         loggedInUser setCurrentUser FirebaseAuth.getInstance().currentUser
         instance<ActivityRecognitionSource>() initGoogleApiClient application
         with(instance<ContactsDatabase>().contactDao) {
-            contacts.addAll(getAll().map { it.contactValue() })
+            contacts addAll getAll().map { it.contactValue() }
         }
         setDynamicShortcuts(application)
         friendshipListener init application
@@ -60,8 +61,8 @@ class Bootstrap(private val application: Application) : KodeinGlobalAware {
         fun downloadFriendsFromCloud() =
                 friendshipSource.downloadFriendsFromCloud(
                         onFriendFound = {
-                            contacts.add(it)
-                            contactDao.insert(ContactEntity(it))
+                            contacts add it
+                            contactDao insert it
                         }, onCompleted = { setDynamicShortcuts(application) })
 
         loggedInUser setCurrentUser user

@@ -28,11 +28,11 @@ import com.github.salomonbrys.kodein.instance
 import java.util.Random
 
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.main.setDynamicShortcuts
+import pl.org.seva.navigator.data.room.delete
+import pl.org.seva.navigator.data.room.insert
 
 class FriendshipListener : KodeinGlobalAware {
 
@@ -54,25 +54,25 @@ class FriendshipListener : KodeinGlobalAware {
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
-        store.add(contact)
-        contactDao.insert(ContactEntity(contact))
-        fbWriter.addFriendship(contact)
+        store add contact
+        contactDao insert contact
+        fbWriter addFriendship contact
         setDynamicShortcuts(context)
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
-        store.delete(contact)
-        contactDao.delete(ContactEntity(contact))
+        store delete contact
+        contactDao delete contact
         setDynamicShortcuts(context)
     }
 
     private fun acceptFriend(contact: Contact) {
-        fbWriter.acceptFriendship(contact)
-        if (store.contains(contact)) {
+        fbWriter acceptFriendship contact
+        if (contact in store) {
             return
         }
-        store.add(contact)
-        contactDao.insert(ContactEntity(contact))
+        store add contact
+        contactDao insert contact
     }
 
     private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =

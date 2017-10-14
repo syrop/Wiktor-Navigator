@@ -37,7 +37,7 @@ class LiteToRoomMigration: Migration(
         private val CREATION_STATEMENT =
                 "create table if not exists friends (email TEXT primary key not null, name TEXT not null)"
         private val COPY_STATEMENT =
-                "insert into friends(email, name) select email, name from friends_old"
+                "insertEntity into friends(email, name) select email, name from friends_old"
         private val DROP_STATEMENT =
                 "drop table friends_old"
     }
