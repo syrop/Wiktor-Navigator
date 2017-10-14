@@ -35,15 +35,15 @@ import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.data.room.entity.ContactEntity
 import pl.org.seva.navigator.navigation.NavigationActivity
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.contacts.adapter.ContactAdapter
 import pl.org.seva.navigator.ui.DividerItemDecoration
+
+import pl.org.seva.navigator.data.room.delete
 
 class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
 
@@ -114,19 +114,19 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun deleteFriend(contact: Contact) {
-        fbWriter.deleteFriendship(contact)
-        store.delete(contact)
-        contactDao.delete(ContactEntity(contact))
+        fbWriter deleteFriendship contact
+        store delete contact
+        contactDao delete contact
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
         setDynamicShortcuts(this)
     }
 
     private fun undeleteFriend(contact: Contact) {
-        fbWriter.addFriendship(contact)
-        fbWriter.acceptFriendship(contact)
-        store.add(contact)
-        contactDao.insert(ContactEntity(contact))
+        fbWriter addFriendship contact
+        fbWriter acceptFriendship contact
+        store add contact
+        contactDao.insert(contact.toEntity())
         adapter.notifyDataSetChanged()
         setDynamicShortcuts(this)
     }

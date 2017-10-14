@@ -21,7 +21,6 @@ import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.data.firebase.FbReader
 
 class FriendshipSource : KodeinGlobalAware {

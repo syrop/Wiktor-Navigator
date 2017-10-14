@@ -21,19 +21,23 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
-import pl.org.seva.navigator.data.room.entity.ContactEntity
+import pl.org.seva.navigator.contacts.Contact
+
+infix fun ContactDao.insert(contact: Contact) = insert(contact.toEntity())
+
+infix fun ContactDao.delete(contact: Contact) = delete(contact.toEntity())
 
 @Dao
 interface ContactDao {
 
     @Query("select * from ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<ContactEntity>
+    fun getAll(): List<Contact.ContactEntity>
 
     @Insert
-    fun insert(contact: ContactEntity)
+    fun insert(contact: Contact.ContactEntity)
 
     @Delete
-    fun delete(contact: ContactEntity)
+    fun delete(contact: Contact.ContactEntity)
 
     @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
     fun deleteAll(): Int
