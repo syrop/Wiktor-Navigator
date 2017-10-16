@@ -113,7 +113,7 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun onUserLoggedIn(user: FirebaseUser) {
-        fbWriter.login(user)
+        fbWriter login user
         (application as NavigatorApplication).login(user)
         if (performedAction) {
             finish()

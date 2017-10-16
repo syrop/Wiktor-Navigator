@@ -45,7 +45,7 @@ import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.NavigatorApplication
-import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.contacts.Contact
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
@@ -163,7 +163,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
         val email = preferences.getString(CONTACT_EMAIL_PROPERTY, "")
         if (name.isNotEmpty() && email.isNotEmpty()) {
             val contact = Contact(email = email, name = name)
-            if (store.contains(contact)) {
+            if (contact in store) {
                 return contact
             }
         }
@@ -296,9 +296,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onLocationPermissionGranted() {
         invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
-        if (!loggedInUser.isLoggedIn) {
-            showLoginSnackbar()
-        } else {
+        if (loggedInUser.isLoggedIn) {
             (application as NavigatorApplication).startService()
         }
     }

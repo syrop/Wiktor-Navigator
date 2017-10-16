@@ -21,11 +21,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 
-import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.contacts.Contact
 
 class FbWriter : Fb() {
 
-    fun login(user: FirebaseUser) {
+    infix fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)
         contact.write(db.getReference(USER_ROOT))
     }
@@ -34,20 +34,20 @@ class FbWriter : Fb() {
         loggedInUser.email!!.toReference().child(LAT_LNG).setValue(latLng.toFbString())
     }
 
-    fun requestFriendship(contact: Contact) =
+    infix fun requestFriendship(contact: Contact) =
             contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(loggedInUser.loggedInContact)
 
-    fun acceptFriendship(contact: Contact) {
+    infix fun acceptFriendship(contact: Contact) {
         contact.email.toReference().child(FRIENDSHIP_ACCEPTED).write(loggedInUser.loggedInContact)
         addFriendship(contact)
     }
 
-    fun addFriendship(contact: Contact) {
+    infix fun addFriendship(contact: Contact) {
         loggedInUser.email!!.toReference().child(FRIENDS).write(contact)
         contact.deleteMeFromTag(FRIENDSHIP_DELETED)
     }
 
-    fun deleteFriendship(contact: Contact) {
+    infix fun deleteFriendship(contact: Contact) {
         contact.email.toReference().child(FRIENDSHIP_DELETED).write(loggedInUser.loggedInContact)
         contact.deleteFromMyFriends()
     }

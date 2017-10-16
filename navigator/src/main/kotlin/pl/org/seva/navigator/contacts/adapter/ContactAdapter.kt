@@ -28,7 +28,7 @@ import com.github.salomonbrys.kodein.instance
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contacts.Contacts
-import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.contacts.Contact
 
 typealias ContactListener = (contact: Contact) -> Unit
 

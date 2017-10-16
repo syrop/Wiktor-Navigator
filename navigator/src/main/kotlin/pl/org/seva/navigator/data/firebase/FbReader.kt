@@ -25,7 +25,7 @@ import com.google.firebase.database.DatabaseReference
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
-import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.contacts.Contact
 import pl.org.seva.navigator.main.ColorFactory
 
 class FbReader : Fb() {

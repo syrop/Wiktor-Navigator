@@ -18,17 +18,12 @@
 package pl.org.seva.navigator.contacts
 
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import java.util.ArrayList
 import java.util.Collections
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.model.Contact
 
 class Contacts : KodeinGlobalAware {
-
-    val loggedInUser: LoggedInUser = instance()
 
     private val contacts: MutableList<Contact>
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()
@@ -41,7 +36,7 @@ class Contacts : KodeinGlobalAware {
 
     fun snapshot() = ArrayList(contacts)
 
-    fun add(contact: Contact) {
+    infix fun add(contact: Contact) {
         if (contacts.contains(contact)) {
             return
         }
@@ -50,12 +45,12 @@ class Contacts : KodeinGlobalAware {
         contactsUpdatedSubject.onNext(contact)
     }
 
-    fun addAll(contacts: Collection<Contact>) {
+    infix fun addAll(contacts: Collection<Contact>) {
         this.contacts.addAll(contacts)
         Collections.sort(this.contacts)
     }
 
-    fun delete(contact: Contact) {
+    infix fun delete(contact: Contact) {
         contacts.remove(contact)
         contactsUpdatedSubject.onNext(contact)
     }

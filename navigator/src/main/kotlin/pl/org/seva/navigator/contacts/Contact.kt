@@ -15,13 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.model
+package pl.org.seva.navigator.contacts
 
 import android.annotation.SuppressLint
+import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import android.graphics.Color
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import pl.org.seva.navigator.data.room.ContactsDatabase
 
 @SuppressLint("ParcelCreator")
 @Parcelize
@@ -46,4 +49,23 @@ data class Contact(
         !(other == null || other !is Contact) && email == other.email
 
     override fun hashCode() = email.hashCode()
+
+    fun toEntity() = ContactEntity(this)
+
+    @Entity(tableName = ContactsDatabase.TABLE_NAME)
+    class ContactEntity() {
+        @PrimaryKey
+        lateinit var email: String
+        lateinit var name: String
+        var color: Int = Color.GRAY
+
+        constructor(contact: Contact): this() {
+            email = contact.email
+            name = contact.name
+            color = contact.color
+        }
+
+        fun contactValue() = Contact(email, name, color)
+    }
+
 }

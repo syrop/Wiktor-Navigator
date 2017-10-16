@@ -41,7 +41,6 @@ import kotlinx.android.synthetic.main.activity_seek_contact.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.model.Contact
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.contacts.adapter.SingleContactAdapter
 
@@ -170,7 +169,7 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onContactClicked(contact: Contact) = when {
-        store.contains(contact) -> finish()
+        contact in store -> finish()
         contact.email == loggedInUser.email ->
             Toast.makeText(this, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
         else -> FriendshipAddDialogBuilder(this)
@@ -183,7 +182,7 @@ class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private fun contactApprovedAndFinish(contact: Contact) {
         Toast.makeText(this, R.string.seek_contact_waiting_for_party, Toast.LENGTH_SHORT).show()
-        fbWriter.requestFriendship(contact)
+        fbWriter requestFriendship contact
         finish()
     }
 

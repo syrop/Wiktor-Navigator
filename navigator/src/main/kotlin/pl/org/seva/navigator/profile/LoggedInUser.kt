@@ -18,11 +18,11 @@
 package pl.org.seva.navigator.profile
 
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.data.model.Contact
+import pl.org.seva.navigator.contacts.Contact
 
 class LoggedInUser {
 
-    val isLoggedIn get() = name == null || email == null
+    val isLoggedIn get() = name != null && email != null
     var email: String? = null
     private var name: String? = null
 
