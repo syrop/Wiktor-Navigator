@@ -23,6 +23,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.instance
@@ -75,7 +76,7 @@ class NavigationViewHolder: KodeinGlobalAware {
         }
     }
 
-    lateinit var view: View
+    lateinit var view: ViewGroup
     var contact: Contact? = null
         set(value) {
             field = value
@@ -87,10 +88,11 @@ class NavigationViewHolder: KodeinGlobalAware {
     fun updateHud() = view.hud.run {
         alpha = 1.0f
         if (contact == null) {
-            visibility = View.GONE
+            animate().translationYBy(height.toFloat()).withEndAction { visibility = View.GONE }
             setOnTouchListener(null)
         } else {
             visibility = View.VISIBLE
+            animate().translationYBy(0.0f).withEndAction { translationY = 0.0f }
             text = contactNameSpannable
             setOnTouchListener(hudSwipeListener)
         }
