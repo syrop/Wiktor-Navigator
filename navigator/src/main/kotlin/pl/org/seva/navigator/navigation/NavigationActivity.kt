@@ -296,9 +296,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
     private fun onLocationPermissionGranted() {
         invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
-        if (!loggedInUser.isLoggedIn) {
-            showLoginSnackbar()
-        } else {
+        if (loggedInUser.isLoggedIn) {
             (application as NavigatorApplication).startService()
         }
     }
