@@ -60,7 +60,8 @@ class MyLocationSource {
             lifecycle.observe { locationObservable.subscribe(myLocationListener) }
 
     private fun addActivityRecognitionListeners() =
-            activityRecognitionSource.addActivityRecognitionListener(lifecycle,
+            activityRecognitionSource.listen(
+                    lifecycle,
                     onStationary = { removeRequest() },
                     onMoving = { request() })
 

@@ -88,7 +88,7 @@ open class ActivityRecognitionSource :
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
-    fun addActivityRecognitionListener(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
+    fun listen(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
         lifecycle.observe { stationarySubject.subscribe { onStationary() } }
         lifecycle.observe { movingSubject.subscribe { onMoving() } }
     }
@@ -119,7 +119,7 @@ open class ActivityRecognitionSource :
         private val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         /** The device is only stationary if confidence >= this level. */
-        private val MIN_CONFIDENCE = 70
+        private val MIN_CONFIDENCE = 75
 
         private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
