@@ -181,8 +181,13 @@ class LoginActivity : AppCompatActivity(),
                 }
     }
 
-    private fun signInFailed() {
-        Toast.makeText(this, R.string.login_authentication_failed, Toast.LENGTH_SHORT).show()
+    private fun signInFailed(message: String = "") {
+        if (!message.isBlank()) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+        else {
+            Toast.makeText(this, R.string.login_authentication_failed, Toast.LENGTH_SHORT).show()
+        }
         finish()
     }
 
