@@ -23,4 +23,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class android.support.v7.widget.SearchView { *; }
+-dontwarn java.lang.invoke**
+-dontwarn sun.misc.Unsafe
+-keep class rx.internal.util.unsafe.** { *; }
+
+#Probably a temporary solution. Doco says that configuring ProGuard for Google Play Services is not necessary.
+#https://stackoverflow.com/questions/18646899/proguard-cant-find-referenced-class-com-google-android-gms-r
+#https://developers.google.com/android/guides/setup#Proguard
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
+-keep public class com.google.firebase.* { public *; }
+-dontwarn com.google.firebase.**
+ #android.support.v7.widget.FitWindowsLinearLayout
+-keep public class android.support.v7.widget.* { public *; }

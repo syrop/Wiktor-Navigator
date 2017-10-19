@@ -307,7 +307,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private fun showLocationPermissionSnackbar() {
         snackbar = Snackbar.make(
-                map_container,
+                coordinator,
                 R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
@@ -316,7 +316,7 @@ class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
 
     private fun showLoginSnackbar() {
         snackbar = Snackbar.make(
-                map_container,
+                coordinator,
                 R.string.snackbar_please_log_in,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_login) { login() }

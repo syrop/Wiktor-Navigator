@@ -16,6 +16,7 @@
 
     <android.support.design.widget.CoordinatorLayout
         tools:context=".navigation.NavigationActivity"
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/hud">
