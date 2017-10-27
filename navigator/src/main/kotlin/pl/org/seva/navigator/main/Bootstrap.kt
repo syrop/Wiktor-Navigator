@@ -20,8 +20,6 @@ package pl.org.seva.navigator.main
 import android.app.Application
 import android.content.Intent
 import android.os.Build
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.main.service.NavigatorService
@@ -33,7 +31,7 @@ import pl.org.seva.navigator.contacts.FriendshipSource
 
 import pl.org.seva.navigator.data.room.insert
 
-class Bootstrap(private val application: Application) : KodeinGlobalAware {
+class Bootstrap(private val application: Application) {
 
     private val contacts: Contacts = instance()
     private val friendshipSource: FriendshipSource = instance()

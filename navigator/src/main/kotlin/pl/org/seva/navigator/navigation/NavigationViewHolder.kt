@@ -25,8 +25,6 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -36,12 +34,13 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.contacts.Contact
 import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.ui.OnSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
         NavigationViewHolder().apply(f)
 
-class NavigationViewHolder: KodeinGlobalAware {
+class NavigationViewHolder {
 
     private val peerLocationSource: PeerLocationSource = instance()
     private val store: Contacts = instance()

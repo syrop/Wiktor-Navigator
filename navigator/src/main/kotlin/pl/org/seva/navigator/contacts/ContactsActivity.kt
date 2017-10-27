@@ -30,8 +30,6 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
@@ -45,8 +43,9 @@ import pl.org.seva.navigator.ui.DividerItemDecoration
 
 import pl.org.seva.navigator.data.room.delete
 import pl.org.seva.navigator.data.room.insert
+import pl.org.seva.navigator.main.instance
 
-class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
+class ContactsActivity : AppCompatActivity() {
 
     private val store: Contacts = instance()
     private val fbWriter: FbWriter = instance()
@@ -90,8 +89,6 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
     }
 
     private fun onFabClicked() = startActivity(Intent(this, SeekContactActivity::class.java))
-
-
 
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)
@@ -141,7 +138,7 @@ class ContactsActivity : AppCompatActivity(), KodeinGlobalAware {
         prompt.text = ssBuilder
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> {
             finish()
             true

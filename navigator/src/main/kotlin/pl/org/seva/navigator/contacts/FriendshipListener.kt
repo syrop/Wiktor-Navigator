@@ -22,19 +22,18 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import java.util.Random
 
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.data.room.delete
 import pl.org.seva.navigator.data.room.insert
+import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.setDynamicShortcuts
 
-class FriendshipListener : KodeinGlobalAware {
+class FriendshipListener {
 
     private val store: Contacts = instance()
     private val contactDao = instance<ContactsDatabase>().contactDao

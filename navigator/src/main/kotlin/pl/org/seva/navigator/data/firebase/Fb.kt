@@ -18,17 +18,16 @@
 package pl.org.seva.navigator.data.firebase
 
 import android.util.Base64
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.FirebaseDatabase
+import pl.org.seva.navigator.main.instance
 
 import java.util.Locale
 
 import pl.org.seva.navigator.profile.LoggedInUser
 
-open class Fb : KodeinGlobalAware {
+open class Fb {
 
     protected val loggedInUser: LoggedInUser = instance()
 

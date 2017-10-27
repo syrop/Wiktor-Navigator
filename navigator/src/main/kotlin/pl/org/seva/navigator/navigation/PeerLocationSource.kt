@@ -17,14 +17,13 @@
 
 package pl.org.seva.navigator.navigation
 
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.data.firebase.FbReader
+import pl.org.seva.navigator.main.instance
 
-class PeerLocationSource : KodeinGlobalAware {
+class PeerLocationSource {
 
     private val fbReader: FbReader = instance()
 

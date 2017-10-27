@@ -34,8 +34,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
@@ -43,9 +41,10 @@ import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.contacts.adapter.SingleContactAdapter
+import pl.org.seva.navigator.main.instance
 
 @Suppress("DEPRECATION")
-class SeekContactActivity : AppCompatActivity(), KodeinGlobalAware {
+class SeekContactActivity : AppCompatActivity() {
 
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()

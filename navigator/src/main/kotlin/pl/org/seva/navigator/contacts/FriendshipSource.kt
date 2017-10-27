@@ -17,13 +17,12 @@
 
 package pl.org.seva.navigator.contacts
 
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import pl.org.seva.navigator.data.firebase.FbReader
+import pl.org.seva.navigator.main.instance
 
-class FriendshipSource : KodeinGlobalAware {
+class FriendshipSource {
 
     private val fbReader: FbReader = instance()
 
