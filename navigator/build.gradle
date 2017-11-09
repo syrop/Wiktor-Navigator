@@ -73,9 +73,9 @@ dependencies {
     implementation 'com.github.salomonbrys.kodein:kodein-conf:4.1.0'
 
     // Architecture
-    kapt 'android.arch.persistence.room:compiler:1.0.0-rc1'
-    implementation 'android.arch.persistence.room:rxjava2:1.0.0-rc1'
-    implementation 'android.arch.lifecycle:extensions:1.0.0-rc1'
+    kapt 'android.arch.persistence.room:compiler:1.0.0'
+    implementation 'android.arch.persistence.room:rxjava2:1.0.0'
+    implementation 'android.arch.lifecycle:extensions:1.0.0'
 
     // Play, Firebase
     implementation 'com.google.android.gms:play-services-maps:11.6.0'
