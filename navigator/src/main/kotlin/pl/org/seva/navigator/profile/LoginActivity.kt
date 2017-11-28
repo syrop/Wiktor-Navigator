@@ -25,8 +25,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -41,11 +39,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.main.instance
 
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity(),
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks, KodeinGlobalAware {
+        GoogleApiClient.ConnectionCallbacks {
 
     private val fbWriter: FbWriter = instance()
     private lateinit var firebaseAuth: FirebaseAuth

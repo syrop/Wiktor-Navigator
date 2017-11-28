@@ -23,18 +23,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.contacts.Contact
+import pl.org.seva.navigator.main.instance
 
 typealias ContactListener = (contact: Contact) -> Unit
 
 open class ContactAdapter(private val listener: ContactListener? = null) :
-        RecyclerView.Adapter<ContactAdapter.ViewHolder>(),
-        KodeinGlobalAware {
+        RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
     private val store: Contacts = instance()
 

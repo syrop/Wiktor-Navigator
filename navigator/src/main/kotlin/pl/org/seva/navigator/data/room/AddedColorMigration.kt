@@ -21,14 +21,12 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 import pl.org.seva.navigator.main.ColorFactory
+import pl.org.seva.navigator.main.instance
 
 class AddedColorMigration : Migration(
         ContactsDatabase.ROOM_DATABASE_VERSION,
-        ContactsDatabase.ADDED_COLOR_DATABASE_VERSION),
-        KodeinGlobalAware {
+        ContactsDatabase.ADDED_COLOR_DATABASE_VERSION) {
 
     private val cf: ColorFactory = instance()
 

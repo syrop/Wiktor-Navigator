@@ -22,7 +22,7 @@ import android.content.Context
 
 class ContactsDatabase {
 
-    lateinit var db: ContactsDatabaseAbstract
+    private lateinit var db: ContactsDatabaseAbstract
 
     fun initWithContext(context: Context) {
         db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME)

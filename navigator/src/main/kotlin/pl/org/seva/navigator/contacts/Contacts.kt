@@ -17,13 +17,12 @@
 
 package pl.org.seva.navigator.contacts
 
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import java.util.ArrayList
 import java.util.Collections
 
 import io.reactivex.subjects.PublishSubject
 
-class Contacts : KodeinGlobalAware {
+class Contacts {
 
     private val contacts: MutableList<Contact>
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()

@@ -19,13 +19,11 @@ package pl.org.seva.navigator.main
 
 import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
 import com.github.salomonbrys.kodein.conf.global
-import com.github.salomonbrys.kodein.instance
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.data.room.ContactsDatabase
 
-class NavigatorApplication : Application(), KodeinGlobalAware {
+class NavigatorApplication : Application() {
 
     init {
         Kodein.global.addImport(module { application = this@NavigatorApplication })

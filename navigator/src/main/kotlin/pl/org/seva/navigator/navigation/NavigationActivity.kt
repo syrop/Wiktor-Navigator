@@ -35,8 +35,6 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import android.widget.Toast
-import com.github.salomonbrys.kodein.conf.KodeinGlobalAware
-import com.github.salomonbrys.kodein.instance
 
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -53,10 +51,11 @@ import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.main.Permissions
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.contacts.ContactsActivity
+import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.profile.DeleteProfileActivity
 import pl.org.seva.navigator.profile.LoginActivity
 
-class NavigationActivity : AppCompatActivity(), KodeinGlobalAware {
+class NavigationActivity : AppCompatActivity() {
 
     private val peerLocationSource: PeerLocationSource = instance()
     private val store: Contacts = instance()
