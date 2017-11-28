@@ -72,13 +72,13 @@ dependencies {
     implementation 'com.github.salomonbrys.kodein:kodein-conf:4.1.0'
 
     // Play, Firebase
-    implementation 'com.google.android.gms:play-services-maps:11.6.0'
-    implementation 'com.google.android.gms:play-services-location:11.6.0'
-    implementation 'com.google.android.gms:play-services-auth:11.6.0'
-    implementation 'com.google.firebase:firebase-core:11.6.0'
-    implementation 'com.google.firebase:firebase-auth:11.6.0'
-    implementation 'com.google.firebase:firebase-database:11.6.0'
-    implementation 'com.google.firebase:firebase-crash:11.6.0'
+    implementation 'com.google.android.gms:play-services-maps:11.6.2'
+    implementation 'com.google.android.gms:play-services-location:11.6.2'
+    implementation 'com.google.android.gms:play-services-auth:11.6.2'
+    implementation 'com.google.firebase:firebase-core:11.6.2'
+    implementation 'com.google.firebase:firebase-auth:11.6.2'
+    implementation 'com.google.firebase:firebase-database:11.6.2'
+    implementation 'com.google.firebase:firebase-crash:11.6.2'
 
     // Commons
     implementation 'commons-io:commons-io:2.5'
