@@ -1,9 +1,8 @@
 buildscript {
-    ext.kotlin_version = '1.2.0-rc-84'
+    ext.kotlin_version = '1.2.0'
     repositories {
         google()
         jcenter()
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
@@ -17,7 +16,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
     }
 }
 
