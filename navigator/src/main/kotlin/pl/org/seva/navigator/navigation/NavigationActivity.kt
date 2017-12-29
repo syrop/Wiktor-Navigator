@@ -371,7 +371,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun deleteMapFragment() {
         mapFragment?.apply {
-            fragmentManager.beginTransaction().remove(this).commitAllowingStateLoss()
+            fragmentManager!!.beginTransaction().remove(this).commitAllowingStateLoss()
             mapFragment = null
         }
     }
