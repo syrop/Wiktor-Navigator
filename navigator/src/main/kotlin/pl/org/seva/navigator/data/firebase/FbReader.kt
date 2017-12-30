@@ -92,6 +92,6 @@ class FbReader : Fb() {
             } else Contact()
 
     companion object {
-        val READ_ONCE = 1L
+        const val READ_ONCE = 1L
     }
 }
