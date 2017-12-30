@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.contacts.Contact
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.ui.OnSwipeListener
+import pl.org.seva.navigator.main.ui.OnSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
         NavigationViewHolder().apply(f)

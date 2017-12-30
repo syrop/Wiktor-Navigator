@@ -21,7 +21,7 @@ import android.arch.lifecycle.LifecycleService
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.navigation.MyLocationSource
-import pl.org.seva.navigator.ui.createOngoingNotification
+import pl.org.seva.navigator.main.ui.createOngoingNotification
 
 class NavigatorService : LifecycleService() {
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.ui
+package pl.org.seva.navigator.main.ui
 
 import android.app.Notification
 import android.app.PendingIntent

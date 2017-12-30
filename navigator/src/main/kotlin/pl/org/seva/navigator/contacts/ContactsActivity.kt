@@ -39,7 +39,7 @@ import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.navigation.NavigationActivity
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.contacts.adapter.ContactAdapter
-import pl.org.seva.navigator.ui.DividerItemDecoration
+import pl.org.seva.navigator.main.ui.DividerItemDecoration
 
 import pl.org.seva.navigator.data.room.delete
 import pl.org.seva.navigator.data.room.insert
