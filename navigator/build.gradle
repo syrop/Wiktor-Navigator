@@ -55,6 +55,11 @@ android {
     }
 }
 
+// https://blog.jetbrains.com/kotlin/2018/01/kotlin-1-2-20-is-out/
+kapt {
+    useBuildCache = true
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
