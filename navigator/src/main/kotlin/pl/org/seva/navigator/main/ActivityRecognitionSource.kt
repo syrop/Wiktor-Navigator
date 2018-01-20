@@ -33,6 +33,8 @@ import com.google.android.gms.location.DetectedActivity
 
 import io.reactivex.subjects.PublishSubject
 
+fun activityRecognition() = instance<ActivityRecognitionSource>()
+
 open class ActivityRecognitionSource :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -110,7 +112,8 @@ open class ActivityRecognitionSource :
         }
 
         private infix fun ActivityRecognitionResult.probably(activity: Int) =
-                mostProbableActivity.type == activity && getActivityConfidence(activity) >= MIN_CONFIDENCE
+                mostProbableActivity.type == activity &&
+                        getActivityConfidence(activity) >= MIN_CONFIDENCE
     }
 
     companion object {

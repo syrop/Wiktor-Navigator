@@ -32,7 +32,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contacts.Contact
@@ -115,7 +114,7 @@ class NavigationViewHolder {
         }
     }
 
-    fun updateHud() = view.hud.run {
+    fun updateHud() = view.hud_following.run {
         alpha = 1.0f
         if (contact == null) {
             animate().translationYBy(height.toFloat()).withEndAction { visibility = View.GONE }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.firebase
+package pl.org.seva.navigator.main.data.firebase
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.DataSnapshot
@@ -25,7 +25,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.contacts.Contact
-import pl.org.seva.navigator.main.ColorFactory
+import pl.org.seva.navigator.main.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
 
 class FbReader : Fb() {

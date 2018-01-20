@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.firebase
+package pl.org.seva.navigator.main.data.firebase
 
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot

@@ -53,6 +53,6 @@
                 android:resource="@xml/searchable_contact"/>
         </activity>
 
-        <service android:name="pl.org.seva.navigator.main.service.NavigatorService"/>
+        <service android:name="pl.org.seva.navigator.main.NavigatorService"/>
     </application>
 </manifest>

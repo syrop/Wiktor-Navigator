@@ -37,10 +37,9 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.firebase.FbReader
-import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.main.data.firebase.FbReader
+import pl.org.seva.navigator.main.data.firebase.FbWriter
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.contacts.adapter.SingleContactAdapter
 import pl.org.seva.navigator.main.instance
 
 @Suppress("DEPRECATION")
@@ -163,7 +162,7 @@ class SeekContactActivity : AppCompatActivity() {
         contacts.setHasFixedSize(true)
         val lm = LinearLayoutManager(this)
         contacts.layoutManager = lm
-        val adapter = SingleContactAdapter(contact) { onContactClicked(it) }
+        val adapter = ContactSingleAdapter(contact) { onContactClicked(it) }
         contacts.adapter = adapter
     }
 

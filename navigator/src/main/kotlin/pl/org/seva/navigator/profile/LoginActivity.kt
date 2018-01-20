@@ -38,7 +38,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.main.data.firebase.FbWriter
 import pl.org.seva.navigator.main.instance
 
 @Suppress("DEPRECATION")

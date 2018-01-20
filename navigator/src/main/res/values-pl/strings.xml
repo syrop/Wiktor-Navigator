@@ -30,6 +30,7 @@
     <string name="snackbar_please_log_in">Zaloguj się</string>
     <string name="navigation_following_name">Obserwowanie [name]</string>
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz aby wyjść z aplikacji</string>
+    <string name="device_not_moving">Urządzenie się nie porusza</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Nieudane logowanie.</string>

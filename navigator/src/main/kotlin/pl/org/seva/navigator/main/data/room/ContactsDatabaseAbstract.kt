@@ -15,12 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data
+package pl.org.seva.navigator.main.data.room
 
-import android.annotation.SuppressLint
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.Database
+import pl.org.seva.navigator.contacts.Contact
 
-@SuppressLint("ParcelCreator")
-@Parcelize
-class ParcelableInt(val value: Int) : Parcelable
+@Database(
+        entities = [Contact.ContactEntity::class],
+        version = ContactsDatabase.ADDED_COLOR_DATABASE_VERSION)
+abstract class ContactsDatabaseAbstract : RoomDatabase() {
+
+    abstract fun contactDao(): ContactDao
+}

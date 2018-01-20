@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.ui
 
 import android.app.Application
 import android.graphics.Color
@@ -36,7 +36,7 @@ class ColorFactory(private val application: Application ) {
     }
 
     companion object {
-        val COLOR_ARRAY_NAME = "mdcolor_"
-        val COLOR_TYPE = "400"
+        const val COLOR_ARRAY_NAME = "mdcolor_"
+        const val COLOR_TYPE = "400"
     }
 }

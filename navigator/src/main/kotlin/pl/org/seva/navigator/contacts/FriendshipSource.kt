@@ -19,13 +19,12 @@ package pl.org.seva.navigator.contacts
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import pl.org.seva.navigator.data.firebase.FbReader
+import pl.org.seva.navigator.main.data.firebase.FbReader
 import pl.org.seva.navigator.main.instance
 
 class FriendshipSource {
 
     private val fbReader: FbReader = instance()
-
     private val cd = CompositeDisposable()
 
     fun addFriendshipListener(friendshipListener: FriendshipListener) {

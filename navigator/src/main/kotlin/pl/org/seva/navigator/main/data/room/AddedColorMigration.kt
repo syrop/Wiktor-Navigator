@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.room
+package pl.org.seva.navigator.main.data.room
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import pl.org.seva.navigator.main.ColorFactory
+import pl.org.seva.navigator.main.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
 
 class AddedColorMigration : Migration(

@@ -15,11 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.main.service
+package pl.org.seva.navigator.main
 
 import android.arch.lifecycle.LifecycleService
-import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.data.firebase.FbWriter
 import pl.org.seva.navigator.map.MyLocationSource
 import pl.org.seva.navigator.main.ui.createOngoingNotification
 
@@ -41,6 +40,6 @@ class NavigatorService : LifecycleService() {
             myLocationSource.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
 
     companion object {
-        private val ONGOING_NOTIFICATION_ID = 1
+        private const val ONGOING_NOTIFICATION_ID = 1
     }
 }

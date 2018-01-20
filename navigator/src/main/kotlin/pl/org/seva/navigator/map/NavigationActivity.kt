@@ -43,8 +43,8 @@ import org.apache.commons.io.IOUtils
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contacts.*
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.main.data.firebase.FbWriter
+import pl.org.seva.navigator.main.data.room.ContactsDatabase
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.DeleteProfileActivity
 import pl.org.seva.navigator.profile.LoginActivity
@@ -74,7 +74,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
-        supportActionBar?.title = getString(R.string.navigation_activity_label)
+        supportActionBar!!.title = getString(R.string.navigation_activity_label)
         viewHolder = navigationView {
             init(savedInstanceState, root, intent.getStringExtra(CONTACT_EMAIL_EXTRA))
             checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
@@ -83,6 +83,10 @@ class NavigationActivity : AppCompatActivity() {
         mapContainerId = map_container.id
         fab.setOnClickListener { onAddContactClicked() }
         checkLocationPermission()
+        activityRecognition().listen(
+                lifecycle,
+                onStationary = { hud_stationary.visibility = View.VISIBLE },
+                onMoving = { hud_stationary.visibility = View.GONE})
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -114,7 +118,7 @@ class NavigationActivity : AppCompatActivity() {
             fm = supportFragmentManager
             container = mapContainerId
             tag = MAP_FRAGMENT_TAG
-        } ready {
+        } doOnReady {
             viewHolder ready this
         }
     }

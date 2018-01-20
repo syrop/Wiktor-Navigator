@@ -20,7 +20,7 @@ package pl.org.seva.navigator.map
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.data.firebase.FbReader
+import pl.org.seva.navigator.main.data.firebase.FbReader
 import pl.org.seva.navigator.main.instance
 
 class PeerLocationSource {

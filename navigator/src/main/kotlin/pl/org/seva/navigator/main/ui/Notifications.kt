@@ -22,7 +22,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.NotificationChannels
 import pl.org.seva.navigator.map.NavigationActivity
 
 fun createNotificationBuilder(context: Context): Notification.Builder =

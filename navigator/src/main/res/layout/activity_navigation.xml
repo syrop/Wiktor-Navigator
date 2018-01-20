@@ -8,8 +8,19 @@
     android:layout_height="match_parent"
     android:id="@+id/root">
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/hud_stationary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#99000000"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:textColor="#ffffff"
+        android:text="@string/device_not_moving"/>
 
+    <FrameLayout
         android:id="@+id/map_container"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
@@ -19,7 +30,7 @@
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/hud">
+        android:layout_above="@id/hud_following">
 
         <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -32,7 +43,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <TextView
-            android:id="@+id/hud"
+            android:id="@+id/hud_following"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#99000000"

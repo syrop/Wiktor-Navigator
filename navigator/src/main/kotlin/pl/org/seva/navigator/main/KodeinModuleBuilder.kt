@@ -29,11 +29,13 @@ import com.github.salomonbrys.kodein.singleton
 import com.google.android.gms.location.FusedLocationProviderClient
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.firebase.FbReader
-import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.main.data.firebase.FbReader
+import pl.org.seva.navigator.main.data.firebase.FbWriter
+import pl.org.seva.navigator.main.data.room.ContactsDatabase
 import pl.org.seva.navigator.contacts.FriendshipListener
 import pl.org.seva.navigator.contacts.FriendshipSource
+import pl.org.seva.navigator.main.ui.ColorFactory
+import pl.org.seva.navigator.main.ui.NotificationChannels
 import pl.org.seva.navigator.map.MyLocationSource
 import pl.org.seva.navigator.map.PeerLocationSource
 

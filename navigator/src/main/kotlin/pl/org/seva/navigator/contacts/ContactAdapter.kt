@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.contacts.adapter
+package pl.org.seva.navigator.contacts
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -25,8 +25,6 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.contacts.Contacts
-import pl.org.seva.navigator.contacts.Contact
 import pl.org.seva.navigator.main.instance
 
 typealias ContactListener = (contact: Contact) -> Unit
@@ -42,7 +40,7 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
             ViewHolder(parent.inflate())
 
     private fun ViewGroup.inflate() =
-        LayoutInflater.from(context).inflate(LAYOUT , this, false)
+        LayoutInflater.from(context).inflate(LAYOUT, this, false)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = getContact(position)
