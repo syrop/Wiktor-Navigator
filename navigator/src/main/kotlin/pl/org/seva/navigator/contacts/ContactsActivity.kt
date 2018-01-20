@@ -36,7 +36,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.navigation.NavigationActivity
+import pl.org.seva.navigator.map.NavigationActivity
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.contacts.adapter.ContactAdapter
 import pl.org.seva.navigator.main.ui.DividerItemDecoration

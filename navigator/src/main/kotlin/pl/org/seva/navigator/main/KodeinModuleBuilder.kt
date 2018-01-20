@@ -18,6 +18,9 @@
 package pl.org.seva.navigator.main
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.conf.global
@@ -31,14 +34,18 @@ import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.contacts.FriendshipListener
 import pl.org.seva.navigator.contacts.FriendshipSource
-import pl.org.seva.navigator.navigation.MyLocationSource
-import pl.org.seva.navigator.navigation.PeerLocationSource
+import pl.org.seva.navigator.map.MyLocationSource
+import pl.org.seva.navigator.map.PeerLocationSource
 
-fun module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder().apply { f() }.build()
+fun Context.module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder(this).apply { f() }.build()
 
 inline fun <reified T : Any> instance() = Kodein.global.instance<T>()
 
-class KodeinModuleBuilder {
+fun prefs() = instance<SharedPreferences>()
+
+fun applicationContext() = instance<Context>()
+
+class KodeinModuleBuilder(private val ctx: Context) {
 
     lateinit var application: Application
 
@@ -58,5 +65,7 @@ class KodeinModuleBuilder {
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
         bind<NotificationChannels>() with singleton { NotificationChannels(application) }
         bind<ColorFactory>() with singleton { ColorFactory(application) }
+        bind<Context>() with singleton { ctx }
+        bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
     }
 }

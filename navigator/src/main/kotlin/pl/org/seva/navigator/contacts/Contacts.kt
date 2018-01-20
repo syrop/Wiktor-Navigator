@@ -18,9 +18,11 @@
 package pl.org.seva.navigator.contacts
 
 import java.util.ArrayList
-import java.util.Collections
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.main.instance
+
+fun contacts() = instance<Contacts>()
 
 class Contacts {
 
@@ -40,13 +42,13 @@ class Contacts {
             return
         }
         contacts.add(contact)
-        Collections.sort(contacts)
+        contacts.sort()
         contactsUpdatedSubject.onNext(contact)
     }
 
     infix fun addAll(contacts: Collection<Contact>) {
         this.contacts.addAll(contacts)
-        Collections.sort(this.contacts)
+        this.contacts.sort()
     }
 
     infix fun delete(contact: Contact) {

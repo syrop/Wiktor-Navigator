@@ -19,7 +19,7 @@
             android:value="AIzaSyDECNjt1fl18jA2W5O2n3e_JMFueCjEdBs"/>
 
         <activity
-            android:name=".navigation.NavigationActivity"
+            android:name=".map.NavigationActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTop" >
             <intent-filter>

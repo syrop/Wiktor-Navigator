@@ -28,7 +28,7 @@ import android.os.Build
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contacts.Contacts
 import pl.org.seva.navigator.contacts.Contact
-import pl.org.seva.navigator.navigation.NavigationActivity
+import pl.org.seva.navigator.map.NavigationActivity
 
 @SuppressLint("NewApi")
 fun setDynamicShortcuts(context: Context) {

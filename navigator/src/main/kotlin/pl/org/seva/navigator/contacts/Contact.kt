@@ -23,8 +23,32 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.graphics.Color
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import pl.org.seva.navigator.contacts.Contact.Companion.CONTACT_EMAIL_PROPERTY
+import pl.org.seva.navigator.contacts.Contact.Companion.CONTACT_NAME_PROPERTY
 import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.main.prefs
+
+fun Contact?.persist() {
+    val name = this?.name ?: ""
+    val email = this?.email ?: ""
+    prefs().edit()
+            .putString(CONTACT_NAME_PROPERTY, name)
+            .putString(CONTACT_EMAIL_PROPERTY, email).apply()
+}
+
+fun readContactFromProperties(): Contact? {
+    val name = prefs().getString(CONTACT_NAME_PROPERTY, "")
+    val email = prefs().getString(CONTACT_EMAIL_PROPERTY, "")
+    if (name.isNotEmpty() && email.isNotEmpty()) {
+        val contact = Contact(email = email, name = name)
+        if (contact in contacts()) {
+            return contact
+        }
+    }
+    return null
+}
 
 @SuppressLint("ParcelCreator")
 @Parcelize
@@ -33,6 +57,7 @@ data class Contact(
         val name: String = "",
         val color: Int = Color.GRAY) : Comparable<Contact>, Parcelable {
 
+    @IgnoredOnParcel
     @Ignore
     @Transient
     val isEmpty = email.isEmpty()
@@ -66,6 +91,11 @@ data class Contact(
         }
 
         fun contactValue() = Contact(email, name, color)
+    }
+
+    companion object {
+        const val CONTACT_NAME_PROPERTY = "navigation_map_followed_name"
+        const val CONTACT_EMAIL_PROPERTY = "navigation_map_followed_email"
     }
 
 }

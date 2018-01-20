@@ -15,10 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.navigation
+package pl.org.seva.navigator.map
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
+import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
@@ -31,10 +32,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.activity_navigation.view.*
+import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contacts.Contact
 import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.contacts.persist
+import pl.org.seva.navigator.contacts.readContactFromProperties
+import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.main.ui.OnSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
@@ -76,13 +83,37 @@ class NavigationViewHolder {
     }
 
     lateinit var view: ViewGroup
+
     var contact: Contact? = null
         set(value) {
             field = value
             field?.listen()
             updateHud()
         }
+
     lateinit var contactNameTemplate: String
+
+    fun init(savedInstanceState: Bundle?, root: ViewGroup, contactEmail: String?) {
+        view = root
+        zoom = prefs().getFloat(NavigationActivity.ZOOM_PROPERTY, NavigationActivity.DEFAULT_ZOOM)
+        lastCameraPosition = LatLng(prefs().getFloat(NavigationActivity.LATITUDE_PROPERTY, 0.0f).toDouble(),
+                prefs().getFloat(NavigationActivity.LONGITUDE_PROPERTY, 0.0f).toDouble())
+        contactNameTemplate = applicationContext().getString(R.string.navigation_following_name)
+
+        contactEmail?.apply {
+            contact = store[this]
+            contact?.persist()
+        }
+        if (contact == null) {
+            contact = readContactFromProperties()
+        }
+
+        deletePersistedContact = { null.persist() }
+        if (savedInstanceState != null) {
+            animateCamera = false
+            peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationActivity.SAVED_PEER_LOCATION)
+        }
+    }
 
     fun updateHud() = view.hud.run {
         alpha = 1.0f
@@ -147,17 +178,15 @@ class NavigationViewHolder {
     private fun onCameraIdle() = map!!.cameraPosition.let {
         zoom = it.zoom
         lastCameraPosition = it.target
-        if (lastCameraPosition different peerLocation) {
+        if (lastCameraPosition isDifferentFrom peerLocation) {
             moveCamera = ::moveCameraToLast
         }
         persistCameraPositionAndZoom()
     }
 
-    private infix fun LatLng.different(other: LatLng?): Boolean {
-        if (other == null) return true
-        return Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
+    private infix fun LatLng.isDifferentFrom(other: LatLng?) = if (other == null) true
+        else Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
                 Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
-    }
 
     private fun LatLng.putPeerMarker() {
         map?.also {
@@ -175,11 +204,10 @@ class NavigationViewHolder {
     }
 
     companion object {
+        private const val CONTACT_NAME_PLACEHOLDER = "[name]"
 
-        private val CONTACT_NAME_PLACEHOLDER = "[name]"
-
-        private val FLOAT_TOLERANCE = 0.002f
+        private const val FLOAT_TOLERANCE = 0.002f
         /** Calculated from #00bfa5, or A700 Teal. */
-        private val MARKER_HUE = 34.0f
+        private const val MARKER_HUE = 34.0f
     }
 }

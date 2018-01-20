@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.navigation
+package pl.org.seva.navigator.map
 
 import android.support.v4.app.FragmentManager
 import com.google.android.gms.maps.GoogleMap

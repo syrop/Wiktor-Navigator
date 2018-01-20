@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.navigation
+package pl.org.seva.navigator.map
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -37,28 +37,21 @@ import android.webkit.WebView
 import android.widget.Toast
 
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.NavigatorApplication
-import pl.org.seva.navigator.contacts.Contact
-import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.contacts.*
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.main.Permissions
-import pl.org.seva.navigator.main.setDynamicShortcuts
-import pl.org.seva.navigator.contacts.ContactsActivity
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.DeleteProfileActivity
 import pl.org.seva.navigator.profile.LoginActivity
 
 class NavigationActivity : AppCompatActivity() {
 
     private val peerLocationSource: PeerLocationSource = instance()
-    private val store: Contacts = instance()
     private val permissions: Permissions = instance()
     private val loggedInUser: LoggedInUser = instance()
     private val fbWriter: FbWriter = instance()
@@ -83,7 +76,9 @@ class NavigationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_navigation)
         supportActionBar?.title = getString(R.string.navigation_activity_label)
         viewHolder = navigationView {
-            init(savedInstanceState)
+            init(savedInstanceState, root, intent.getStringExtra(CONTACT_EMAIL_EXTRA))
+            checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
+            persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
         }
         mapContainerId = map_container.id
         fab.setOnClickListener { onAddContactClicked() }
@@ -93,33 +88,9 @@ class NavigationActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
-            val contact = store[this]
+            val contact = contacts()[this]
             viewHolder.contact = contact
             contact.persist()
-        }
-    }
-
-    private fun NavigationViewHolder.init(savedInstanceState: Bundle?) {
-        view = root
-        val properties = PreferenceManager.getDefaultSharedPreferences(this@NavigationActivity)
-        zoom = properties.getFloat(ZOOM_PROPERTY, DEFAULT_ZOOM)
-        lastCameraPosition = LatLng(properties.getFloat(LATITUDE_PROPERTY, 0.0f).toDouble(),
-                properties.getFloat(LONGITUDE_PROPERTY, 0.0f).toDouble())
-        contactNameTemplate = getString(R.string.navigation_following_name)
-        intent.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
-                contact = store[this]
-                contact?.persist()
-            }
-        if (contact == null) {
-            contact = readContactFromProperties()
-        }
-
-        checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
-        persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
-        deletePersistedContact = { null.persist() }
-        if (savedInstanceState != null) {
-            animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng?>(SAVED_PEER_LOCATION)
         }
     }
 
@@ -146,27 +117,6 @@ class NavigationActivity : AppCompatActivity() {
         } ready {
             viewHolder ready this
         }
-    }
-
-    private fun Contact?.persist() {
-        val name = this?.name ?: ""
-        val email = this?.email ?: ""
-        PreferenceManager.getDefaultSharedPreferences(this@NavigationActivity).edit()
-                .putString(CONTACT_NAME_PROPERTY, name)
-                .putString(CONTACT_EMAIL_PROPERTY, email).apply()
-    }
-
-    private fun readContactFromProperties(): Contact? {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val name = preferences.getString(CONTACT_NAME_PROPERTY, "")
-        val email = preferences.getString(CONTACT_EMAIL_PROPERTY, "")
-        if (name.isNotEmpty() && email.isNotEmpty()) {
-            val contact = Contact(email = email, name = name)
-            if (contact in store) {
-                return contact
-            }
-        }
-        return null
     }
 
     private fun onAddContactClicked() {
@@ -201,10 +151,10 @@ class NavigationActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    inline private fun ifLocationPermissionGranted(f: () -> Unit) =
+    private inline fun ifLocationPermissionGranted(f: () -> Unit) =
             checkLocationPermission(onGranted = f, onDenied = {})
 
-    inline private fun checkLocationPermission(
+    private inline fun checkLocationPermission(
             onGranted: () -> Unit = ::onLocationPermissionGranted,
             onDenied: () -> Unit = ::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
                     this,
@@ -342,7 +292,7 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun deleteProfile() {
         viewHolder.stopWatchingPeer()
-        store.clear()
+        contacts().clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
         setDynamicShortcuts(this)
         fbWriter.deleteMe()
@@ -390,32 +340,30 @@ class NavigationActivity : AppCompatActivity() {
 
     companion object {
 
-        private val DELETE_PROFILE_REQUEST_ID = 0
-        private val CONTACTS_ACTIVITY_REQUEST_ID = 1
+        private const val DELETE_PROFILE_REQUEST_ID = 0
+        private const val CONTACTS_ACTIVITY_REQUEST_ID = 1
 
-        private val UTF_8 = "UTF-8"
-        private val ASSET_DIR = "file:///android_asset/"
-        private val PLAIN_TEXT = "text/html"
-        private val APP_VERSION_PLACEHOLDER = "[app_version]"
-        private val APP_NAME_PLACEHOLDER = "[app_name]"
-        private val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
-        private val HELP_LOGIN_EN = "help_login_en.html"
+        private const val UTF_8 = "UTF-8"
+        private const val ASSET_DIR = "file:///android_asset/"
+        private const val PLAIN_TEXT = "text/html"
+        private const val APP_VERSION_PLACEHOLDER = "[app_version]"
+        private const val APP_NAME_PLACEHOLDER = "[app_name]"
+        private const val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
+        private const val HELP_LOGIN_EN = "help_login_en.html"
 
-        val CONTACT_EXTRA = "contact"
-        val CONTACT_EMAIL_EXTRA = "contact_email"
+        const val CONTACT_EXTRA = "contact"
+        const val CONTACT_EMAIL_EXTRA = "contact_email"
 
-        private val MAP_FRAGMENT_TAG = "map"
+        private const val MAP_FRAGMENT_TAG = "map"
 
-        private val SAVED_PEER_LOCATION = "saved_peer_location"
+        const val SAVED_PEER_LOCATION = "saved_peer_location"
 
-        private val ZOOM_PROPERTY = "navigation_map_zoom"
-        private val LATITUDE_PROPERTY = "navigation_map_latitude"
-        private val LONGITUDE_PROPERTY = "navigation_map_longitude"
-        private val CONTACT_NAME_PROPERTY = "navigation_map_followed_name"
-        private val CONTACT_EMAIL_PROPERTY = "navigation_map_followed_email"
-        private val DEFAULT_ZOOM = 7.5f
+        const val ZOOM_PROPERTY = "navigation_map_zoom"
+        const val LATITUDE_PROPERTY = "navigation_map_latitude"
+        const val LONGITUDE_PROPERTY = "navigation_map_longitude"
+        const val DEFAULT_ZOOM = 7.5f
 
         /** Length of time that will be taken for a double click.  */
-        private val DOUBLE_CLICK_MS: Long = 1000
+        private const val DOUBLE_CLICK_MS: Long = 1000
     }
 }
