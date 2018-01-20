@@ -30,7 +30,7 @@
     <string name="snackbar_please_log_in">Please log in</string>
     <string name="navigation_following_name">Following [name]</string>
     <string name="tap_back_second_time">Tap Back second time to exit the application</string>
-    <string name="device_not_moving">Your device is not moving</string>
+    <string name="device_not_moving">Your device is stationary</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>

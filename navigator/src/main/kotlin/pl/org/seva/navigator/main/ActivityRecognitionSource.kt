@@ -39,7 +39,8 @@ open class ActivityRecognitionSource :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private var initialized: Boolean = false
+    private var initialized = false
+    private var stationary = false
     private var googleApiClient: GoogleApiClient? = null
     private lateinit var context: Context
     private var activityRecognitionReceiver : BroadcastReceiver? = null
@@ -90,13 +91,24 @@ open class ActivityRecognitionSource :
     override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     fun listen(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
+        if (stationary) {
+            onStationary()
+        } else {
+            onMoving()
+        }
         lifecycle.observe { stationarySubject.subscribe { onStationary() } }
         lifecycle.observe { movingSubject.subscribe { onMoving() } }
     }
 
-    private fun onDeviceStationary() = stationarySubject.onNext(0)
+    private fun onDeviceStationary() {
+        stationary = true
+        stationarySubject.onNext(0)
+    }
 
-    private fun onDeviceMoving() = movingSubject.onNext(0)
+    private fun onDeviceMoving() {
+        stationary = false
+        movingSubject.onNext(0)
+    }
 
     private inner class ActivityRecognitionReceiver: BroadcastReceiver() {
 
