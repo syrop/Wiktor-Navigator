@@ -133,7 +133,7 @@ open class ActivityRecognitionSource :
         private const val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private const val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         /** The device is only stationary if confidence >= this level. */
-        private const val MIN_CONFIDENCE = 75 // 70 does not work on LG G6 Android 7.0
+        private const val MIN_CONFIDENCE = 80 // 70 does not work on LG G6 Android 7.0
 
         private val stationarySubject = PublishSubject.create<Any>()
         private val movingSubject = PublishSubject.create<Any>()
