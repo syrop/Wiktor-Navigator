@@ -9,8 +9,6 @@ android {
         applicationId 'pl.org.seva.navigator'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 43
-        versionName '2.6.0'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
 
@@ -23,6 +21,9 @@ android {
         lintOptions {
             checkReleaseBuilds false
         }
+
+        versionCode 44
+        versionName '2.6.1'
     }
 
     androidExtensions {
