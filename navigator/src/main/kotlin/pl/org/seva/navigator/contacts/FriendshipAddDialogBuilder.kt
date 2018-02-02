@@ -53,6 +53,6 @@ class FriendshipAddDialogBuilder(private val context: Context) {
             .create()
 
     companion object {
-        private val NAME_TAG = "[name]"
+        private const val NAME_TAG = "[name]"
     }
 }
