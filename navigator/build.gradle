@@ -11,6 +11,9 @@ android {
         targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
+        versionCode 44
+        versionName '2.6.1'
+
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -21,9 +24,6 @@ android {
         lintOptions {
             checkReleaseBuilds false
         }
-
-        versionCode 44
-        versionName '2.6.1'
     }
 
     androidExtensions {
