@@ -23,6 +23,7 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.graphics.Color
 import android.os.Parcelable
+import androidx.content.edit
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.contacts.Contact.Companion.CONTACT_EMAIL_PROPERTY
@@ -33,9 +34,10 @@ import pl.org.seva.navigator.main.prefs
 fun Contact?.persist() {
     val name = this?.name ?: ""
     val email = this?.email ?: ""
-    prefs().edit()
-            .putString(CONTACT_NAME_PROPERTY, name)
-            .putString(CONTACT_EMAIL_PROPERTY, email).apply()
+    prefs().edit {
+        putString(CONTACT_NAME_PROPERTY, name)
+        putString(CONTACT_EMAIL_PROPERTY, email)
+    }
 }
 
 fun readContactFromProperties(): Contact? {
