@@ -37,9 +37,9 @@ android {
 
     // Does not work with com.android.tools.build:gradle:3.2.0-alpha06
 
-//    androidExtensions {
-//        experimental = true
-//    }
+    androidExtensions {
+        experimental = true
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
