@@ -14,7 +14,6 @@ android {
         versionCode 44
         versionName '2.6.1'
 
-
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -67,9 +66,11 @@ android {
     }
 }
 
-// https://blog.jetbrains.com/kotlin/2018/01/kotlin-1-2-20-is-out/
 kapt {
+    // https://blog.jetbrains.com/kotlin/2018/01/kotlin-1-2-20-is-out/
     useBuildCache = true
+    // https://blog.jetbrains.com/kotlin/2018/03/kotlin-1-2-30-is-out/
+    mapDiagnosticLocations = true
 }
 
 dependencies {
