@@ -15,24 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.profile
+package pl.org.seva.navigator.contact
 
-import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contact.Contact
+class ContactSingleAdapter(
+        private val contact: Contact,
+        listener: ContactListener? = null) : ContactAdapter(listener) {
 
-class LoggedInUser {
+    override fun getContact(position: Int) = contact
 
-    val isLoggedIn get() = name != null && email != null
-    var email: String? = null
-    private var name: String? = null
-
-    val loggedInContact get() = Contact(email!!, name!!)
-
-    infix fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        email = user.email
-        name = user.displayName
-    } else {
-        email = null
-        name = null
-    }
+    override fun getItemCount() = 1
 }

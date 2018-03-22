@@ -15,24 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.profile
+package pl.org.seva.navigator.data.firebase
 
-import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contact.Contact
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
-class LoggedInUser {
+import io.reactivex.subjects.PublishSubject
 
-    val isLoggedIn get() = name != null && email != null
-    var email: String? = null
-    private var name: String? = null
+class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) : ValueEventListener {
 
-    val loggedInContact get() = Contact(email!!, name!!)
+    override fun onDataChange(dataSnapshot: DataSnapshot?) =
+        dataSnapshot?.run { valueEventSubject.onNext(this) } ?: Unit
 
-    infix fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        email = user.email
-        name = user.displayName
-    } else {
-        email = null
-        name = null
-    }
+    override fun onCancelled(databaseError: DatabaseError) =
+            valueEventSubject.onError(Exception(databaseError.message))
 }

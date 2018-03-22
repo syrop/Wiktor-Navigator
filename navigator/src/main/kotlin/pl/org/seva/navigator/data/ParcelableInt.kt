@@ -15,24 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.profile
+package pl.org.seva.navigator.data
 
-import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contact.Contact
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class LoggedInUser {
-
-    val isLoggedIn get() = name != null && email != null
-    var email: String? = null
-    private var name: String? = null
-
-    val loggedInContact get() = Contact(email!!, name!!)
-
-    infix fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        email = user.email
-        name = user.displayName
-    } else {
-        email = null
-        name = null
-    }
-}
+@SuppressLint("ParcelCreator")
+@Parcelize
+class ParcelableInt(val value: Int) : Parcelable

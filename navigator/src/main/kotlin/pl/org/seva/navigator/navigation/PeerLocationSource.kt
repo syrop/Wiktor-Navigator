@@ -15,24 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.profile
+package pl.org.seva.navigator.navigation
 
-import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contact.Contact
+import com.google.android.gms.maps.model.LatLng
 
-class LoggedInUser {
+import io.reactivex.disposables.CompositeDisposable
+import pl.org.seva.navigator.data.firebase.FbReader
+import pl.org.seva.navigator.main.instance
 
-    val isLoggedIn get() = name != null && email != null
-    var email: String? = null
-    private var name: String? = null
+class PeerLocationSource {
 
-    val loggedInContact get() = Contact(email!!, name!!)
+    private val fbReader: FbReader = instance()
 
-    infix fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        email = user.email
-        name = user.displayName
-    } else {
-        email = null
-        name = null
+    private val cd = CompositeDisposable()
+
+    fun addPeerLocationListener(email: String, peerLocationListener: (latLng: LatLng) -> Unit) {
+        cd.add(fbReader
+                .peerLocationListener(email)
+                .subscribe { peerLocationListener(it) })
     }
+
+    fun clearPeerLocationListeners() = cd.clear()
 }

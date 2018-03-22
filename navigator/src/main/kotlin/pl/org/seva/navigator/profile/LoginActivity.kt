@@ -38,7 +38,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.data.firebase.FbWriter
+import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.main.instance
 
 @Suppress("DEPRECATION")
@@ -220,12 +220,12 @@ class LoginActivity : AppCompatActivity(),
 
     companion object {
 
-        val ACTION = "action"
-        val LOGIN = "login"
-        val LOGOUT = "logout"
+        const val ACTION = "action"
+        const val LOGIN = "login"
+        const val LOGOUT = "logout"
 
         private val TAG = LoginActivity::class.java.simpleName
 
-        private val SIGN_IN_REQUEST_ID = 9001
+        private const val SIGN_IN_REQUEST_ID = 9001
     }
 }

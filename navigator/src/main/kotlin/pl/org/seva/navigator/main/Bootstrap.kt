@@ -22,14 +22,14 @@ import android.content.Intent
 import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contacts.Contacts
+import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.main.data.room.ContactsDatabase
-import pl.org.seva.navigator.contacts.FriendshipListener
-import pl.org.seva.navigator.contacts.FriendshipSource
+import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.FriendshipListener
+import pl.org.seva.navigator.contact.FriendshipSource
 
-import pl.org.seva.navigator.main.data.room.insert
-import pl.org.seva.navigator.main.ui.NotificationChannels
+import pl.org.seva.navigator.data.room.insert
+import pl.org.seva.navigator.ui.NotificationChannels
 
 class Bootstrap(private val application: Application) {
 

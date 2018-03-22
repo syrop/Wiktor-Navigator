@@ -18,8 +18,8 @@
 package pl.org.seva.navigator
 
 import com.google.android.gms.maps.model.LatLng
-import pl.org.seva.navigator.main.data.firebase.Fb.Companion.toFbString
-import pl.org.seva.navigator.main.data.firebase.Fb.Companion.toLatLng
+import pl.org.seva.navigator.data.firebase.Fb.Companion.toFbString
+import pl.org.seva.navigator.data.firebase.Fb.Companion.toLatLng
 
 import org.junit.Test
 

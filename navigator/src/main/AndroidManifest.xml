@@ -19,7 +19,7 @@
             android:value="AIzaSyDECNjt1fl18jA2W5O2n3e_JMFueCjEdBs"/>
 
         <activity
-            android:name=".map.NavigationActivity"
+            android:name=".navigation.NavigationActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -30,7 +30,7 @@
         </activity>
 
         <activity
-            android:name=".contacts.ContactsActivity"
+            android:name=".contact.ContactsActivity"
             android:label="@string/contacts_activity_label">
         </activity>
 
@@ -43,7 +43,7 @@
             android:label="@string/delete_user_activity_label" />
 
         <activity
-            android:name=".contacts.SeekContactActivity"
+            android:name=".contact.SeekContactActivity"
             android:label="@string/seek_contact_activity_label"
             android:launchMode="singleTop" >
             <intent-filter>

@@ -15,24 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.profile
+package pl.org.seva.navigator.ui
 
-import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contact.Contact
+import android.app.Application
+import android.graphics.Color
 
-class LoggedInUser {
+class ColorFactory(private val application: Application ) {
 
-    val isLoggedIn get() = name != null && email != null
-    var email: String? = null
-    private var name: String? = null
+    private val colors by lazy {
+        application.run {
+            resources.getIdentifier(COLOR_ARRAY_NAME + COLOR_TYPE,"array", packageName).let {
+                resources.obtainTypedArray(it)
+            }
+        }
+    }
 
-    val loggedInContact get() = Contact(email!!, name!!)
+    fun nextColor() = with(colors) {
+        val index = (Math.random() * length()).toInt()
+        getColor(index, Color.GRAY)
+    }
 
-    infix fun setCurrentUser(user: FirebaseUser?) = if (user != null) {
-        email = user.email
-        name = user.displayName
-    } else {
-        email = null
-        name = null
+    companion object {
+        const val COLOR_ARRAY_NAME = "mdcolor_"
+        const val COLOR_TYPE = "400"
     }
 }
