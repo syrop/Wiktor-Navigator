@@ -45,6 +45,7 @@ open class Fb {
         const val USER_ROOT = "user"
         const val DISPLAY_NAME = "display_name"
         const val LAT_LNG = "lat_lng"
+        const val DEBUG = "debug"
         const val FRIENDSHIP_REQUESTED = "friendship_requested"
         const val FRIENDSHIP_ACCEPTED = "friendship_accepted"
         const val FRIENDSHIP_DELETED = "friendship_deleted"

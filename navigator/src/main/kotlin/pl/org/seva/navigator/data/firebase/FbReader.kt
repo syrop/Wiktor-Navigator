@@ -34,11 +34,20 @@ class FbReader : Fb() {
 
     private val cf: ColorFactory = instance()
 
-    fun peerLocationListener(email: String): Observable<LatLng> = email.toReference().child(LAT_LNG).listen()
-            .filter { it.value != null }
-            .map { it.value!! }
-            .map { it as String }
-            .map { it.toLatLng() }
+    fun peerLocationListener(email: String): Observable<LatLng> {
+        return email.toReference().child(LAT_LNG).listen()
+                .filter { it.value != null }
+                .map { it.value!! }
+                .map { it as String }
+                .map { it.toLatLng() }
+    }
+
+    fun debugListener(email: String): Observable<String> {
+        return email.toReference().child(DEBUG).listen()
+                .filter { it.value != null }
+                .map { it.value!! }
+                .map { it as String }
+    }
 
     fun friendshipRequestedListener(): Observable<Contact> = FRIENDSHIP_REQUESTED.contactListener()
 
