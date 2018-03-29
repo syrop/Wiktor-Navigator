@@ -32,11 +32,9 @@ android {
        implementation generator. These features are not considered
        production ready yet, so you need to turn on the experimental
        mode in build.gradle in order to use them:
+
+       https://kotlinlang.org/docs/tutorials/android-plugin.html
      */
-
-    // https://kotlinlang.org/docs/tutorials/android-plugin.html
-
-    // Does not work with com.android.tools.build:gradle:3.2.0-alpha06
 
     androidExtensions {
         experimental = true
