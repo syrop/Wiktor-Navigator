@@ -31,11 +31,9 @@ android {
        implementation generator. These features are not considered
        production ready yet, so you need to turn on the experimental
        mode in build.gradle in order to use them:
+
+       https://kotlinlang.org/docs/tutorials/android-plugin.html
      */
-
-    // https://kotlinlang.org/docs/tutorials/android-plugin.html
-
-    // Does not work with com.android.tools.build:gradle:3.2.0-alpha06
 
     androidExtensions {
         experimental = true
@@ -98,12 +96,12 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
     // Play, Firebase
-    implementation 'com.google.android.gms:play-services-maps:12.0.0'
-    implementation 'com.google.android.gms:play-services-location:12.0.0'
-    implementation 'com.google.android.gms:play-services-auth:12.0.0'
-    implementation 'com.google.firebase:firebase-core:12.0.0'
-    implementation 'com.google.firebase:firebase-auth:12.0.0'
-    implementation 'com.google.firebase:firebase-database:12.0.0'
+    implementation 'com.google.android.gms:play-services-maps:12.0.1'
+    implementation 'com.google.android.gms:play-services-location:12.0.1'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
+    implementation 'com.google.firebase:firebase-core:12.0.1'
+    implementation 'com.google.firebase:firebase-auth:12.0.1'
+    implementation 'com.google.firebase:firebase-database:12.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
 
     // Commons
