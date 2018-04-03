@@ -70,7 +70,7 @@ class ContactsActivity : AppCompatActivity() {
 
         store.addContactsUpdatedListener { onContactsUpdatedInStore() }
 
-        supportActionBar?.let {
+        supportActionBar!!.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
         }
@@ -87,7 +87,9 @@ class ContactsActivity : AppCompatActivity() {
         prompt.visibility = View.VISIBLE
     }
 
-    private fun onFabClicked() = startActivity(Intent(this, SeekContactActivity::class.java))
+    private fun onFabClicked() {
+        startActivity(Intent(this, SeekContactActivity::class.java))
+    }
 
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)

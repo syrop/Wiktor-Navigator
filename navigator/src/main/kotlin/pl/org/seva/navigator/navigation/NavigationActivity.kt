@@ -48,6 +48,7 @@ import pl.org.seva.navigator.data.room.ContactsDatabase
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.DeleteProfileActivity
 import pl.org.seva.navigator.profile.LoginActivity
+import pl.org.seva.navigator.settings.SettingsActivity
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -175,7 +176,8 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_help).isVisible = !isLocationPermissionGranted || !loggedInUser.isLoggedIn
+        menu.findItem(R.id.action_help).isVisible =
+                !isLocationPermissionGranted || !loggedInUser.isLoggedIn
         menu.findItem(R.id.action_logout).isVisible = loggedInUser.isLoggedIn
         menu.findItem(R.id.action_delete_user).isVisible = loggedInUser.isLoggedIn
         return true
@@ -188,6 +190,10 @@ class NavigationActivity : AppCompatActivity() {
         }
         R.id.action_delete_user -> {
             onDeleteProfileClicked()
+            true
+        }
+        R.id.action_settings -> {
+            startActivity(Intent(this, SettingsActivity::class.java))
             true
         }
         R.id.action_help -> {

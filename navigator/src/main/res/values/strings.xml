@@ -7,6 +7,7 @@
     <string name="action_search">Search</string>
     <string name="action_help">Help</string>
     <string name="action_delete_user">Delete your profile</string>
+    <string name="action_settings">Settings screen</string>
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
 
@@ -16,7 +17,7 @@
     <string name="ongoing_channel_name">Ongoing</string>
     <string name="ongoing_channel_description">Services running in the foreground</string>
 
-    <!-- Contacts activity -->
+    <!-- Contacts activity. -->
     <string name="contacts_activity_label">Contacts</string>
     <string name="contacts_deleted_contact">Contact deleted</string>
     <string name="contacts_undelete">Undelete</string>
@@ -31,6 +32,9 @@
     <string name="navigation_following_name">Following [name]</string>
     <string name="tap_back_second_time">Tap Back second time to exit the application</string>
     <string name="device_not_moving">Your device is stationary</string>
+
+    <!-- Settings activity. -->
+    <string name="settings_activity_label">Settings</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>

@@ -7,6 +7,7 @@
     <string name="action_search">Szukaj</string>
     <string name="action_help">Pomoc</string>
     <string name="action_delete_user">Skasuj swój profil</string>
+    <string name="action_settings">Ustawienia</string>
     <string name="dialog_settings_button">Ustawienia</string>
     <string name="dialog_login_button">Login</string>
 
@@ -16,7 +17,7 @@
     <string name="ongoing_channel_name">Trwające</string>
     <string name="ongoing_channel_description">Serwisy działające na wierzchu</string>
 
-    <!-- Contacts activity -->
+    <!-- Contacts activity. -->
     <string name="contacts_activity_label">Kontakty</string>
     <string name="contacts_deleted_contact">Skasowany kontakt</string>
     <string name="contacts_undelete">Odzyskaj</string>
@@ -31,6 +32,9 @@
     <string name="navigation_following_name">Obserwowanie [name]</string>
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz aby wyjść z aplikacji</string>
     <string name="device_not_moving">Urządzenie się nie porusza</string>
+
+    <!-- Settings activity. -->
+    <string name="settings_activity_label">Ustawienia</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Nieudane logowanie.</string>
