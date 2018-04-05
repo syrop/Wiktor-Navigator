@@ -47,7 +47,7 @@ class Bootstrap(private val application: Application) {
             contacts addAll getAll().map { it.value() }
         }
         setDynamicShortcuts(application)
-        friendshipListener init application
+        friendshipListener withContext application
         if (loggedInUser.isLoggedIn) {
             addFriendshipListeners()
             startService()

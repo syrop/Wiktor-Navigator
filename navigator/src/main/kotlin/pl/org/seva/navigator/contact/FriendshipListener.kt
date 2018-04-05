@@ -42,7 +42,7 @@ class FriendshipListener {
     private lateinit var context: Context
     private val nm get() = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    infix fun init(context: Context) {
+    infix fun withContext(context: Context) {
         this.context = context
     }
 
