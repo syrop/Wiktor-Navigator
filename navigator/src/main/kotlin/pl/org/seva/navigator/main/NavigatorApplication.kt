@@ -33,7 +33,7 @@ class NavigatorApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        instance<ContactsDatabase>().initWithContext(this)
+        instance<ContactsDatabase>() withContext this
         bootstrap.boot()
     }
 

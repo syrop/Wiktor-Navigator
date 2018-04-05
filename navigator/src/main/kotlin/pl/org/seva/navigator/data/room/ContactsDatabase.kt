@@ -26,7 +26,7 @@ class ContactsDatabase {
 
     private lateinit var db: ContactsDatabaseAbstract
 
-    fun initWithContext(context: Context) {
+    infix fun withContext(context: Context) {
         db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME)
                 .addMigrations(LiteToRoomMigration(), AddedColorMigration())
                 .allowMainThreadQueries()
