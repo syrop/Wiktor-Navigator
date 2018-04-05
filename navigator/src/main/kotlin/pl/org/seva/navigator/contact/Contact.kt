@@ -86,13 +86,13 @@ data class Contact(
         lateinit var name: String
         var color: Int = Color.GRAY
 
-        constructor(contact: Contact): this() {
+        constructor(contact: Contact) : this() {
             email = contact.email
             name = contact.name
             color = contact.color
         }
 
-        fun contactValue() = Contact(email, name, color)
+        fun value() = Contact(email, name, color)
     }
 
     companion object {

@@ -44,7 +44,7 @@ class Bootstrap(private val application: Application) {
         loggedInUser setCurrentUser FirebaseAuth.getInstance().currentUser
         instance<ActivityRecognitionSource>() initGoogleApiClient application
         with(instance<ContactsDatabase>().contactDao) {
-            contacts addAll getAll().map { it.contactValue() }
+            contacts addAll getAll().map { it.value() }
         }
         setDynamicShortcuts(application)
         friendshipListener init application
