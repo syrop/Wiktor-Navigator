@@ -19,6 +19,8 @@ package pl.org.seva.navigator.data.room
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import pl.org.seva.navigator.data.room.migration.AddedColorMigration
+import pl.org.seva.navigator.data.room.migration.LiteToRoomMigration
 
 class ContactsDatabase {
 
