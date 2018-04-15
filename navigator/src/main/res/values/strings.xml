@@ -11,6 +11,10 @@
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
 
+    <!-- Settings. -->
+
+    <string name="pref_debug_mode">Debug mode</string>
+
     <!-- Channels. -->
     <string name="question_channel_name">Question</string>
     <string name="question_channel_description">Friends requests</string>
