@@ -19,7 +19,7 @@ package pl.org.seva.navigator.data.room.migration
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.ContactsDatabase
 
 class LiteToRoomMigration: Migration(
         ContactsDatabase.SQL_LITE_DATABASE_VERSION,

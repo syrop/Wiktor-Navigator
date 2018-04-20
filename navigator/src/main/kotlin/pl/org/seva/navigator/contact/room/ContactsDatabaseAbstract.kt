@@ -15,14 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.room
+package pl.org.seva.navigator.contact.room
 
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.Database
-import pl.org.seva.navigator.contact.Contact
 
 @Database(
-        entities = [Contact.ContactEntity::class],
+        entities = [ContactEntity::class],
         version = ContactsDatabase.ADDED_COLOR_DATABASE_VERSION)
 abstract class ContactsDatabaseAbstract : RoomDatabase() {
 

@@ -21,7 +21,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
 

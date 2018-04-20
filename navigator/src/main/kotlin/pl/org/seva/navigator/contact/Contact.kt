@@ -18,9 +18,7 @@
 package pl.org.seva.navigator.contact
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
 import android.graphics.Color
 import android.os.Parcelable
 import androidx.core.content.edit
@@ -28,7 +26,7 @@ import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_EMAIL_PROPERTY
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_NAME_PROPERTY
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.ContactEntity
 import pl.org.seva.navigator.main.prefs
 
 fun Contact?.persist() {
@@ -78,22 +76,6 @@ data class Contact(
     override fun hashCode() = email.hashCode()
 
     fun toEntity() = ContactEntity(this)
-
-    @Entity(tableName = ContactsDatabase.TABLE_NAME)
-    class ContactEntity() {
-        @PrimaryKey
-        lateinit var email: String
-        lateinit var name: String
-        var color: Int = Color.GRAY
-
-        constructor(contact: Contact) : this() {
-            email = contact.email
-            name = contact.name
-            color = contact.color
-        }
-
-        fun value() = Contact(email, name, color)
-    }
 
     companion object {
         const val CONTACT_NAME_PROPERTY = "navigation_map_followed_name"

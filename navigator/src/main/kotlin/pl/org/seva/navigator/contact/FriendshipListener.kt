@@ -27,9 +27,9 @@ import java.util.Random
 
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.data.ParcelableInt
-import pl.org.seva.navigator.data.room.ContactsDatabase
-import pl.org.seva.navigator.data.room.delete
-import pl.org.seva.navigator.data.room.insert
+import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.delete
+import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.setDynamicShortcuts
 

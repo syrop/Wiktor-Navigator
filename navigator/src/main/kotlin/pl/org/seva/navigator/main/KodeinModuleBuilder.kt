@@ -29,7 +29,7 @@ import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipSource
 import pl.org.seva.navigator.ui.ColorFactory

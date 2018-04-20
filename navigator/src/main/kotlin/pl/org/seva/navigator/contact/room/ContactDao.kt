@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.data.room
+package pl.org.seva.navigator.contact.room
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
@@ -31,13 +31,13 @@ infix fun ContactDao.delete(contact: Contact) = deleteEntity(contact.toEntity())
 interface ContactDao {
 
     @Query("select * from ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<Contact.ContactEntity>
+    fun getAll(): List<ContactEntity>
 
     @Insert
-    fun insertEntity(contact: Contact.ContactEntity)
+    fun insertEntity(contact: ContactEntity)
 
     @Delete
-    fun deleteEntity(contact: Contact.ContactEntity)
+    fun deleteEntity(contact: ContactEntity)
 
     @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
     fun deleteAll(): Int

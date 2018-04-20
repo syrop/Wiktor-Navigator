@@ -35,13 +35,13 @@ import kotlinx.android.synthetic.main.activity_contacts.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.navigation.NavigationActivity
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
-import pl.org.seva.navigator.data.room.delete
-import pl.org.seva.navigator.data.room.insert
+import pl.org.seva.navigator.contact.room.delete
+import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.main.instance
 
 class ContactsActivity : AppCompatActivity() {

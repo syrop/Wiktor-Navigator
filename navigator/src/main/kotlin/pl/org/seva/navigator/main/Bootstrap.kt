@@ -24,11 +24,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipSource
 
-import pl.org.seva.navigator.data.room.insert
+import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.ui.NotificationChannels
 
 class Bootstrap(private val application: Application) {
