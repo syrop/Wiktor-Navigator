@@ -21,11 +21,8 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.*
 import com.github.salomonbrys.kodein.conf.global
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import pl.org.seva.navigator.contact.Contacts
@@ -48,11 +45,14 @@ fun prefs() = instance<SharedPreferences>()
 
 fun applicationContext() = instance<Context>()
 
+fun context() = instance<Context>()
+
 class KodeinModuleBuilder(private val ctx: Context) {
 
     lateinit var application: Application
 
     fun build() = Kodein.Module {
+        bind<Context>() with provider { ctx }
         bind<Bootstrap>() with singleton { Bootstrap(application) }
         bind<FusedLocationProviderClient>() with singleton { LocationServices.getFusedLocationProviderClient(ctx) }
         bind<FbReader>() with singleton { FbReader() }
@@ -68,7 +68,6 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
         bind<NotificationChannels>() with singleton { NotificationChannels(application) }
         bind<ColorFactory>() with singleton { ColorFactory(application) }
-        bind<Context>() with singleton { ctx }
         bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
     }
 }

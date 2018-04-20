@@ -21,7 +21,6 @@ import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.data.room.ContactsDatabase
 
 class NavigatorApplication : Application() {
 
@@ -33,7 +32,6 @@ class NavigatorApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        instance<ContactsDatabase>() withContext this
         bootstrap.boot()
     }
 

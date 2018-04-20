@@ -18,16 +18,16 @@
 package pl.org.seva.navigator.data.room
 
 import android.arch.persistence.room.Room
-import android.content.Context
 import pl.org.seva.navigator.data.room.migration.AddedColorMigration
 import pl.org.seva.navigator.data.room.migration.LiteToRoomMigration
+import pl.org.seva.navigator.main.context
 
 class ContactsDatabase {
 
-    private lateinit var db: ContactsDatabaseAbstract
+    private val db: ContactsDatabaseAbstract
 
-    infix fun withContext(context: Context) {
-        db = Room.databaseBuilder(context, ContactsDatabaseAbstract::class.java, DATABASE_NAME)
+    init {
+        db = Room.databaseBuilder(context(), ContactsDatabaseAbstract::class.java, DATABASE_NAME)
                 .addMigrations(LiteToRoomMigration(), AddedColorMigration())
                 .allowMainThreadQueries()
                 .build()
