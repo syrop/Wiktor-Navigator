@@ -11,9 +11,6 @@
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
 
-    <!-- Settings. -->
-
-    <string name="pref_debug_mode">Debug mode</string>
 
     <!-- Channels. -->
     <string name="question_channel_name">Question</string>
@@ -39,6 +36,8 @@
 
     <!-- Settings activity. -->
     <string name="settings_activity_label">Settings</string>
+    <string name="pref_debug_mode">Debug mode</string>
+    <string name="settings_activity_debug_info">Info</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>
