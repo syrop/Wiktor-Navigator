@@ -32,7 +32,7 @@ class FirebaseTest {
         val lat = java.lang.Double.parseDouble(LAT)
         val lon = java.lang.Double.parseDouble(LON)
         val str = (LatLng(lat, lon)).toFbString()
-        assertEquals(LAT + ";" + LON, str)
+        assertEquals("$LAT;$LON", str)
     }
 
     @Test
@@ -44,7 +44,7 @@ class FirebaseTest {
 
     companion object {
 
-        private val LAT = "54.5922815"
-        private val LON = "-5.9634933"
+        private const val LAT = "54.5922815"
+        private const val LON = "-5.9634933"
     }
 }

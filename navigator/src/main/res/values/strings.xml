@@ -63,7 +63,5 @@
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Do you want to add user [name]?</string>
     <string name="friendship_confirmation">[name] ([email]) wants to be added as a friend. Do you accept?</string>
-    <string name="deleting_friend_title">Deleting a friend</string>
-    <string name="delete_friend_confirmation">Do you want to delete friendship with [name]?</string>
     <string name="friendship_requested_notification_short">Friendship requested…</string>
 </resources>

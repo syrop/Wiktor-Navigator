@@ -57,12 +57,12 @@ class NavigationViewHolder {
 
     lateinit var lastCameraPosition: LatLng
 
-    var animateCamera = true
+    private var animateCamera = true
     var zoom = 0.0f
 
     lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
     lateinit var persistCameraPositionAndZoom: () -> Unit
-    lateinit var deletePersistedContact: () -> Unit
+    private lateinit var deletePersistedContact: () -> Unit
 
     private val TextView.hudSwipeListener get() = OnHudSwipeListener(ctx = context) {
         animate().alpha(0.0f).withEndAction { visibility = View.GONE }
@@ -89,7 +89,7 @@ class NavigationViewHolder {
             updateHud()
         }
 
-    lateinit var contactNameTemplate: String
+    private lateinit var contactNameTemplate: String
 
     fun init(savedInstanceState: Bundle?, root: ViewGroup, contactEmail: String?) {
         view = root

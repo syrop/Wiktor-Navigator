@@ -70,7 +70,7 @@ class Permissions {
     }
 
     companion object {
-        val LOCATION_PERMISSION_REQUEST_ID = 0
+        const val LOCATION_PERMISSION_REQUEST_ID = 0
     }
 
     data class PermissionResult(val requestCode: Int, val permission: String)

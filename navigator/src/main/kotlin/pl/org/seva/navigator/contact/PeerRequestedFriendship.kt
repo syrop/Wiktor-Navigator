@@ -73,8 +73,8 @@ class PeerRequestedFriendship(private val context: Context) {
     }
 
     companion object {
-        private val NAME_TAG = "[name]"
-        private val EMAIL_TAG = "[email]"
-        private val PI_FLAG = PendingIntent.FLAG_ONE_SHOT
+        private const val NAME_TAG = "[name]"
+        private const val EMAIL_TAG = "[email]"
+        private const val PI_FLAG = PendingIntent.FLAG_ONE_SHOT
     }
 }

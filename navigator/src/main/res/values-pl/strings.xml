@@ -63,7 +63,5 @@
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Czy chcesz dodać [name]?</string>
     <string name="friendship_confirmation">[name] ([email]) chce ciebie dodać jako przyjaciela. Czy się zgadzasz?</string>
-    <string name="deleting_friend_title">Usuwanie przyjaciela</string>
-    <string name="delete_friend_confirmation">Czy chcesz usunąć przyjaźń z [name]?</string>
     <string name="friendship_requested_notification_short">Prośba o przyjaźń…</string>
 </resources>

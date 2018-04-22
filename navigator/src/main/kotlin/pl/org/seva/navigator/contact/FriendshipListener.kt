@@ -97,11 +97,11 @@ class FriendshipListener {
 
     companion object {
 
-        val FRIENDSHIP_REQUESTED_INTENT = "friendship_requested_intent"
-        val NOTIFICATION_ID = "notification_id"
-        val ACTION = "friendship_action"
-        val CONTACT_EXTRA = "contact_extra"
-        val ACCEPTED_ACTION = 0
-        val REJECTED_ACTION = 1
+        const val FRIENDSHIP_REQUESTED_INTENT = "friendship_requested_intent"
+        const val NOTIFICATION_ID = "notification_id"
+        const val ACTION = "friendship_action"
+        const val CONTACT_EXTRA = "contact_extra"
+        const val ACCEPTED_ACTION = 0
+        const val REJECTED_ACTION = 1
     }
 }

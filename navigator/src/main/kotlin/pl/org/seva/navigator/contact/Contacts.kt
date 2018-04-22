@@ -21,6 +21,7 @@ import java.util.ArrayList
 
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.neverDispose
 
 fun contacts() = instance<Contacts>()
 
@@ -67,7 +68,7 @@ class Contacts {
     fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {
         contactsUpdatedSubject
                 .filter { email == null || it.email == email }
-                .subscribe { contactsUpdatedListener() }
+                .subscribe { contactsUpdatedListener() }.neverDispose()
     }
 
     fun addContactsUpdatedListener(contactsUpdatedListener: () -> Unit) =

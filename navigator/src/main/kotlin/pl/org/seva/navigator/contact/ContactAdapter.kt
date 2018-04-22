@@ -65,6 +65,6 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
     }
 
     companion object {
-        private val LAYOUT = R.layout.row_contact
+        private const val LAYOUT = R.layout.row_contact
     }
 }

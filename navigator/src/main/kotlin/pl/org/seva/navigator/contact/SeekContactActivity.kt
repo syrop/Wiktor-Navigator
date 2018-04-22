@@ -41,6 +41,7 @@ import pl.org.seva.navigator.data.firebase.FbReader
 import pl.org.seva.navigator.data.firebase.FbWriter
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.neverDispose
 
 @Suppress("DEPRECATION")
 class SeekContactActivity : AppCompatActivity() {
@@ -142,7 +143,7 @@ class SeekContactActivity : AppCompatActivity() {
     private fun search(query: String) {
         progress = ProgressDialog.show(this, null, getString(R.string.seek_contact_searching))
         fbReader.findContact(query.toLowerCase())
-                .subscribe { onContactReceived(it) }
+                .subscribe { onContactReceived(it) }.neverDispose()
     }
 
     private fun onContactReceived(contact: Contact) {
@@ -185,7 +186,7 @@ class SeekContactActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val IMAGE_PLACEHOLDER = "[image]"
-        private val IMAGE_PLACEHOLDER_LENGTH = IMAGE_PLACEHOLDER.length
+        private const val IMAGE_PLACEHOLDER = "[image]"
+        private const val IMAGE_PLACEHOLDER_LENGTH = IMAGE_PLACEHOLDER.length
     }
 }
