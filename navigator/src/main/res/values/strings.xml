@@ -11,7 +11,6 @@
     <string name="dialog_settings_button">Settings</string>
     <string name="dialog_login_button">Login</string>
 
-
     <!-- Channels. -->
     <string name="question_channel_name">Question</string>
     <string name="question_channel_description">Friends requests</string>
@@ -37,7 +36,7 @@
     <!-- Settings activity. -->
     <string name="settings_activity_label">Settings</string>
     <string name="pref_debug_mode">Debug mode</string>
-    <string name="settings_activity_debug_info">Info</string>
+    <string name="settings_activity_debug_info">This mode periodically uploads information about the state of your device. (Whether it is aware of your current location, the last time it connected to the Internet). This information will be visible by your friend, together with your location, if available. Unless the developer asked you to do that, you probably do not need this setting.</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>

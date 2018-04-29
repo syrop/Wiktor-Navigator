@@ -36,7 +36,7 @@
     <!-- Settings activity. -->
     <string name="settings_activity_label">Ustawienia</string>
     <string name="pref_debug_mode">Tryb debugowy</string>
-    <string name="settings_activity_debug_info">Info</string>
+    <string name="settings_activity_debug_info">W trybie debugowym urządzenie przesyła informacje o swoim stanie, takie jak czy zna swoją lokalizację oraz czas ostatniego połączenia z Internetem. Te informacje będą dostępne dla twojego przyjaciela razem z lokalizacją, jeżeli jest dostępna. Jeżeli deweloper nie poprosił cię o włączenie tego trybu, prawdopodobnie nie potrzebujesz go używać.</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Nieudane logowanie.</string>

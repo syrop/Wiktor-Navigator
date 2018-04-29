@@ -3,6 +3,8 @@ What information do we collect?
 
 The program collects e-mail address and your location. This data is not encrypted.
 
+If you are in debug mode, it also collects information about your device state, like whether it is aware or your location, and the last time it connected to the Internet. Unless you have been asked by the developer to turn on this mode, you probably do not need to use it. The debug mode is off by default.
+
 Whenever an application crashes, the program sends anonymous information about the crash, when in happened, your device model, the application version and version of the operating system you use.
 
 What do we use your information for?
@@ -25,7 +27,7 @@ Changes to our Privacy Policy
 
 If we decide to change our privacy policy, we will post those changes or this page, and/or update the Privacy Policy modification date below.
 
-This policy was last modified on 3 May 2017.
+This policy was last modified on 29th April 2018.
 
 Contacting Us
 
