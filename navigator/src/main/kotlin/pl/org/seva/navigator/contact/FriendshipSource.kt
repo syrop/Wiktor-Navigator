@@ -21,6 +21,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 import pl.org.seva.navigator.data.fb.fbReader
+import pl.org.seva.navigator.main.instance
+
+fun friendshipSource() = instance<FriendshipSource>()
 
 class FriendshipSource {
 

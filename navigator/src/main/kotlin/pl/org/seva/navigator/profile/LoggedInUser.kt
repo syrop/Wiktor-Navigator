@@ -19,6 +19,9 @@ package pl.org.seva.navigator.profile
 
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.Contact
+import pl.org.seva.navigator.main.instance
+
+fun loggedInUser() = instance<LoggedInUser>()
 
 class LoggedInUser {
 

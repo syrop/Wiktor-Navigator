@@ -22,25 +22,24 @@ import android.content.Intent
 import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import pl.org.seva.navigator.contact.Contacts
-import pl.org.seva.navigator.profile.LoggedInUser
+import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.contact.room.ContactsDatabase
-import pl.org.seva.navigator.contact.FriendshipListener
-import pl.org.seva.navigator.contact.FriendshipSource
+import pl.org.seva.navigator.contact.room.contactsDatabase
 
 import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.navigation.NavigatorService
+import pl.org.seva.navigator.profile.loggedInUser
 import pl.org.seva.navigator.ui.notificationChannels
 
 class Bootstrap(private val application: Application) {
 
-    private val contacts: Contacts = instance()
-    private val friendshipSource: FriendshipSource = instance()
-    private val friendshipListener: FriendshipListener = instance()
-    private val contactDao = instance<ContactsDatabase>().contactDao
-    private val loggedInUser: LoggedInUser = instance()
+    private val contacts = contacts()
+    private val friendshipSource = friendshipSource()
+    private val friendshipListener = friendshipListener()
+    private val contactDao = contactsDatabase().contactDao
+    private val loggedInUser = loggedInUser()
     private var isServiceRunning = false
 
     fun boot() {

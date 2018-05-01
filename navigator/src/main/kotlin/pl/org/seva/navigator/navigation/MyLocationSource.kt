@@ -29,11 +29,11 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.activityRecognition
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.observe
-import pl.org.seva.navigator.profile.LoggedInUser
+import pl.org.seva.navigator.profile.loggedInUser
 
 class MyLocationSource {
 
-    private val loggedInUser: LoggedInUser = instance()
+    private val loggedInUser = loggedInUser()
     private val provider: FusedLocationProviderClient = instance()
 
     private val locationRequest = LocationRequest.create()

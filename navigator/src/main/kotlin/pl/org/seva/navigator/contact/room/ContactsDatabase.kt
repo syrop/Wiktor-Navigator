@@ -21,6 +21,9 @@ import android.arch.persistence.room.Room
 import pl.org.seva.navigator.data.room.migration.AddedColorMigration
 import pl.org.seva.navigator.data.room.migration.LiteToRoomMigration
 import pl.org.seva.navigator.main.context
+import pl.org.seva.navigator.main.instance
+
+fun contactsDatabase() = instance<ContactsDatabase>()
 
 class ContactsDatabase {
 

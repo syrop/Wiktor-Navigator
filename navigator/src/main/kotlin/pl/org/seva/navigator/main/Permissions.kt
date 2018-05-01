@@ -26,6 +26,8 @@ import android.support.v7.app.AppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
+fun permissions() = instance<Permissions>()
+
 class Permissions {
 
     private val grantedSubject = PublishSubject.create<PermissionResult>()

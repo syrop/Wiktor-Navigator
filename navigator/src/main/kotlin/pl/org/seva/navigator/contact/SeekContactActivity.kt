@@ -39,9 +39,9 @@ import kotlinx.android.synthetic.main.activity_seek_contact.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.FbReader
 import pl.org.seva.navigator.data.fb.FbWriter
-import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.neverDispose
+import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
 class SeekContactActivity : AppCompatActivity() {
@@ -49,7 +49,7 @@ class SeekContactActivity : AppCompatActivity() {
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()
     private val store: Contacts = instance()
-    private val loggedInUser: LoggedInUser = instance()
+    private val loggedInUser = loggedInUser()
 
     private var progress: ProgressDialog? = null
 

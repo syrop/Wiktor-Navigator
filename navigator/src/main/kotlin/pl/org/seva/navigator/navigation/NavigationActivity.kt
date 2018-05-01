@@ -42,20 +42,20 @@ import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.DeleteProfileActivity
 import pl.org.seva.navigator.profile.LoginActivity
+import pl.org.seva.navigator.profile.loggedInUser
 import pl.org.seva.navigator.settings.SettingsActivity
 
 class NavigationActivity : AppCompatActivity() {
 
-    private val peerLocationSource: PeerLocationSource = instance()
-    private val permissions: Permissions = instance()
-    private val loggedInUser: LoggedInUser = instance()
-    private val fbWriter: FbWriter = instance()
+    private val peerLocationSource = peerLocationSource()
+    private val permissions = permissions()
+    private val loggedInUser = loggedInUser()
+    private val fbWriter = fbWriter()
 
     private var backClickTime = 0L
 

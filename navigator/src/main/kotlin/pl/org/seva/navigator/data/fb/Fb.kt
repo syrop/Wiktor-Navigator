@@ -21,15 +21,14 @@ import android.util.Base64
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.FirebaseDatabase
-import pl.org.seva.navigator.main.instance
 
 import java.util.Locale
 
-import pl.org.seva.navigator.profile.LoggedInUser
+import pl.org.seva.navigator.profile.loggedInUser
 
 open class Fb {
 
-    protected val loggedInUser: LoggedInUser = instance()
+    protected val loggedInUser = loggedInUser()
 
     protected val db = FirebaseDatabase.getInstance()!!
 

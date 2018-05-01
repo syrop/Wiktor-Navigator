@@ -23,6 +23,8 @@ import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.data.fb.FbReader
 import pl.org.seva.navigator.main.instance
 
+fun peerLocationSource() = instance<PeerLocationSource>()
+
 class PeerLocationSource {
 
     private val fbReader: FbReader = instance()

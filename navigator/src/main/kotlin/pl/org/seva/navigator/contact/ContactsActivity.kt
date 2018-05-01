@@ -33,23 +33,22 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.fb.FbWriter
-import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.contactsDatabase
 import pl.org.seva.navigator.navigation.NavigationActivity
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
 import pl.org.seva.navigator.contact.room.delete
 import pl.org.seva.navigator.contact.room.insert
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.data.fb.fbWriter
+import pl.org.seva.navigator.profile.loggedInUser
 
 class ContactsActivity : AppCompatActivity() {
 
-    private val store: Contacts = instance()
-    private val fbWriter: FbWriter = instance()
-    private val loggedInUser: LoggedInUser = instance()
-    private val contactDao = instance<ContactsDatabase>().contactDao
+    private val store = contacts()
+    private val fbWriter = fbWriter()
+    private val loggedInUser = loggedInUser()
+    private val contactDao = contactsDatabase().contactDao
 
     private var snackbar: Snackbar? = null
 

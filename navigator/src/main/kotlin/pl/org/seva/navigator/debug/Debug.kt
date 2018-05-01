@@ -22,6 +22,7 @@ import io.reactivex.disposables.Disposables
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.prefs
+import pl.org.seva.navigator.profile.loggedInUser
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -31,11 +32,14 @@ fun isDebugMode() = prefs().getBoolean(Debug.PROPERTY, false)
 
 class Debug {
 
-    var disposable = Disposables.empty()
+    private val loggedInUser = loggedInUser()
+
+    private var disposable = Disposables.empty()
 
     fun start() {
-        disposable.dispose()
+        disposable.dispose()  // Idempotent operation (can be "disposed" if already disposed).
         disposable = Observable.interval(1, TimeUnit.MINUTES)
+                .filter { loggedInUser.isLoggedIn }
                 .subscribe {
                     val cal = Calendar.getInstance()
                     val message = "${cal.get(Calendar.HOUR_OF_DAY)}:" +
@@ -45,6 +49,7 @@ class Debug {
     }
 
     fun stop() {
+        // Dispose operation is idempotent. Calling it again is ignored.
         disposable.dispose()
     }
 

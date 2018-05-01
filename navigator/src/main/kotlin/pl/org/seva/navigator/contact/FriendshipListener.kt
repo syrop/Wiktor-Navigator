@@ -33,6 +33,8 @@ import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.setDynamicShortcuts
 
+fun friendshipListener() = instance<FriendshipListener>()
+
 class FriendshipListener {
 
     private val store: Contacts = instance()

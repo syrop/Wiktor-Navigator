@@ -6,6 +6,7 @@ import android.support.v7.preference.CheckBoxPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.debug.debug
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -15,6 +16,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun onDebugClicked(checkbox: CheckBoxPreference) {
         if (!checkbox.isChecked) {
+            debug().stop()
             return
         }
         val builder = AlertDialog.Builder(activity!!, android.R.style.Theme_Material_Dialog_Alert)
@@ -22,6 +24,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 .setTitle(R.string.pref_debug_mode)
                 .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()
+        debug().start()
     }
 
     override fun onPreferenceTreeClick(preference: Preference) = when (preference.key) {
