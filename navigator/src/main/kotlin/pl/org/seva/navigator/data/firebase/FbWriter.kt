@@ -25,13 +25,19 @@ import pl.org.seva.navigator.contact.Contact
 
 class FbWriter : Fb() {
 
+    private val me get() = loggedInUser.email!!.toReference()
+
     infix fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)
         contact.write(db.getReference(USER_ROOT))
     }
 
     infix fun writeMyLocation(latLng: LatLng) {
-        loggedInUser.email!!.toReference().child(LAT_LNG).setValue(latLng.toFbString())
+        me.child(LAT_LNG).setValue(latLng.toFbString())
+    }
+
+    infix fun debug(message: String) {
+        me.child(DEBUG).setValue(message)
     }
 
     infix fun requestFriendship(contact: Contact) =
@@ -43,7 +49,7 @@ class FbWriter : Fb() {
     }
 
     infix fun addFriendship(contact: Contact) {
-        loggedInUser.email!!.toReference().child(FRIENDS).write(contact)
+        me.child(FRIENDS).write(contact)
         contact.deleteMeFromTag(FRIENDSHIP_DELETED)
     }
 
@@ -53,7 +59,7 @@ class FbWriter : Fb() {
     }
 
     fun deleteMe() {
-        loggedInUser.email!!.toReference().removeValue()
+        me.removeValue()
     }
 
     private fun Contact.write(reference: DatabaseReference) = reference.write(this)
@@ -67,5 +73,5 @@ class FbWriter : Fb() {
         email.toReference().child(tag).child(loggedInUser.email!!.to64()).removeValue()
 
     private fun Contact.deleteFromMyFriends() =
-        loggedInUser.email!!.toReference().child(FRIENDS).child(email.to64()).removeValue()
+        me.child(FRIENDS).child(email.to64()).removeValue()
 }
