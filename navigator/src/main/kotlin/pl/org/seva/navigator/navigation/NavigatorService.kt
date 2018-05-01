@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.navigation
 
 import android.arch.lifecycle.LifecycleService
-import pl.org.seva.navigator.data.firebase.FbWriter
-import pl.org.seva.navigator.navigation.MyLocationSource
+import pl.org.seva.navigator.data.fb.FbWriter
+import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.ui.createOngoingNotification
 
 class NavigatorService : LifecycleService() {

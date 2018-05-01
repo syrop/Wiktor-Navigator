@@ -25,7 +25,7 @@ import android.content.IntentFilter
 
 import java.util.Random
 
-import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.data.ParcelableInt
 import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.contact.room.delete

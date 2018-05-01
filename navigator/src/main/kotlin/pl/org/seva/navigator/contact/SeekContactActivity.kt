@@ -37,8 +37,8 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.firebase.FbReader
-import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.fb.FbReader
+import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.neverDispose

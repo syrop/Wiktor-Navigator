@@ -27,11 +27,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.firebase.FbReader
-import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.fb.FbReader
+import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipSource
+import pl.org.seva.navigator.debug.Debug
 import pl.org.seva.navigator.ui.ColorFactory
 import pl.org.seva.navigator.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationSource
@@ -53,12 +54,15 @@ class KodeinModuleBuilder(private val ctx: Context) {
 
     fun build() = Kodein.Module {
         bind<Context>() with provider { ctx }
+        bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
         bind<Bootstrap>() with singleton { Bootstrap(application) }
-        bind<FusedLocationProviderClient>() with singleton { LocationServices.getFusedLocationProviderClient(ctx) }
+        bind<FusedLocationProviderClient>() with singleton {
+            LocationServices.getFusedLocationProviderClient(ctx)
+        }
         bind<FbReader>() with singleton { FbReader() }
+        bind<FbWriter>() with singleton { FbWriter() }
         bind<Contacts>() with singleton { Contacts() }
         bind<LoggedInUser>() with singleton { LoggedInUser() }
-        bind<FbWriter>() with singleton { FbWriter() }
         bind<FriendshipListener>() with singleton { FriendshipListener() }
         bind<Permissions>() with singleton { Permissions() }
         bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
@@ -68,6 +72,6 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
         bind<NotificationChannels>() with singleton { NotificationChannels(application) }
         bind<ColorFactory>() with singleton { ColorFactory(application) }
-        bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
+        bind<Debug>() with singleton { Debug() }
     }
 }

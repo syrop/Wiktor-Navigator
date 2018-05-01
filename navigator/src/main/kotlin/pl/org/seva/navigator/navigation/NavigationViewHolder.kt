@@ -41,6 +41,7 @@ import pl.org.seva.navigator.contact.readContactFromProperties
 import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.prefs
+import pl.org.seva.navigator.ui.OnHudSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
         NavigationViewHolder().apply(f)

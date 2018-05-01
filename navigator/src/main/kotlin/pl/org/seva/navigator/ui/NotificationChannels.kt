@@ -23,6 +23,9 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.main.instance
+
+fun notificationChannels() = instance<NotificationChannels>()
 
 class NotificationChannels(private val context: Context) {
 

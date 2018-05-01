@@ -21,6 +21,7 @@ import android.app.Application
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.conf.global
 import com.google.firebase.auth.FirebaseUser
+import pl.org.seva.navigator.debug.debug
 
 class NavigatorApplication : Application() {
 
@@ -35,8 +36,13 @@ class NavigatorApplication : Application() {
         bootstrap.boot()
     }
 
+    override fun onTerminate() {
+        super.onTerminate()
+        debug().stop()
+    }
+
     fun login(user: FirebaseUser) = bootstrap.login(user)
     fun logout() = bootstrap.logout()
-    fun stopService() = bootstrap.stopService()
-    fun startService() = bootstrap.startService()
+    fun stopService() = bootstrap.stopNavigatorService()
+    fun startService() = bootstrap.startNavigatorService()
 }

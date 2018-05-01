@@ -17,7 +17,7 @@
 
 //https://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures
 
-package pl.org.seva.navigator.navigation
+package pl.org.seva.navigator.ui
 
 import android.content.Context
 import android.view.GestureDetector

@@ -29,7 +29,10 @@ import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipSource
 
 import pl.org.seva.navigator.contact.room.insert
-import pl.org.seva.navigator.ui.NotificationChannels
+import pl.org.seva.navigator.debug.debug
+import pl.org.seva.navigator.debug.isDebugMode
+import pl.org.seva.navigator.navigation.NavigatorService
+import pl.org.seva.navigator.ui.notificationChannels
 
 class Bootstrap(private val application: Application) {
 
@@ -50,9 +53,9 @@ class Bootstrap(private val application: Application) {
         friendshipListener withContext application
         if (loggedInUser.isLoggedIn) {
             addFriendshipListeners()
-            startService()
+            startNavigatorService()
         }
-        instance<NotificationChannels>().create()
+        notificationChannels().create()
     }
 
     fun login(user: FirebaseUser) {
@@ -66,11 +69,14 @@ class Bootstrap(private val application: Application) {
         loggedInUser setCurrentUser user
         addFriendshipListeners()
         downloadFriendsFromCloud()
-        startService()
+        startNavigatorService()
+        if (isDebugMode()) {
+            debug().start()
+        }
     }
 
     fun logout() {
-        stopService()
+        stopNavigatorService()
         removeFriendshipListeners()
         contactDao.deleteAll()
         contacts.clear()
@@ -82,7 +88,7 @@ class Bootstrap(private val application: Application) {
 
     private fun removeFriendshipListeners() = friendshipSource.clearFriendshipListeners()
 
-    fun startService() {
+    fun startNavigatorService() {
         if (isServiceRunning) {
             return
         }
@@ -98,7 +104,7 @@ class Bootstrap(private val application: Application) {
         }
     }
 
-    fun stopService() {
+    fun stopNavigatorService() {
         if (!isServiceRunning) {
             return
         }

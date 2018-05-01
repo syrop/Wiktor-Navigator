@@ -58,6 +58,6 @@
                 android:resource="@xml/searchable_contact"/>
         </activity>
 
-        <service android:name="pl.org.seva.navigator.main.NavigatorService"/>
+        <service android:name="pl.org.seva.navigator.navigation.NavigatorService"/>
     </application>
 </manifest>

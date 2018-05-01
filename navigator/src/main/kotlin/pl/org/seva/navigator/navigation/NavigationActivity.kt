@@ -43,7 +43,7 @@ import org.apache.commons.io.IOUtils
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.data.firebase.FbWriter
+import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.DeleteProfileActivity
