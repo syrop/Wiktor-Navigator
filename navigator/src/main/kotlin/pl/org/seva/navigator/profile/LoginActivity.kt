@@ -20,6 +20,7 @@
 package pl.org.seva.navigator.profile
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -40,6 +41,11 @@ import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.start
+
+fun Context.loginActivity(action: String) = start(LoginActivity::class.java) {
+    putExtra(LoginActivity.ACTION, action)
+}
 
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity(),

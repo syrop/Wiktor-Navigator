@@ -45,17 +45,12 @@ import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
-import pl.org.seva.navigator.profile.DeleteProfileActivity
-import pl.org.seva.navigator.profile.LoginActivity
-import pl.org.seva.navigator.profile.loggedInUser
+import pl.org.seva.navigator.profile.*
 import pl.org.seva.navigator.settings.SettingsActivity
 
 class NavigationActivity : AppCompatActivity() {
 
-    private val peerLocationSource = peerLocationSource()
-    private val permissions = permissions()
     private val loggedInUser = loggedInUser()
-    private val fbWriter = fbWriter()
 
     private var backClickTime = 0L
 
@@ -101,7 +96,7 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        peerLocationSource.clearPeerLocationListeners()
+        peerLocationSource().clearPeerLocationListeners()
     }
 
     override fun onResume() {
@@ -119,7 +114,7 @@ class NavigationActivity : AppCompatActivity() {
             fm = supportFragmentManager
             container = mapContainerId
             tag = MAP_FRAGMENT_TAG
-        } doOnReady {
+        } doOnFragmentReady {
             viewHolder ready this
         }
     }
@@ -128,11 +123,13 @@ class NavigationActivity : AppCompatActivity() {
         viewHolder.stopWatchingPeer()
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
-        } else if (loggedInUser.isLoggedIn) {
+        }
+        else if (loggedInUser.isLoggedIn) {
             startActivityForResult(
                     Intent(this, ContactsActivity::class.java),
                     CONTACTS_ACTIVITY_REQUEST_ID)
-        } else {
+        }
+        else {
             showLoginSnackbar()
         }
     }
@@ -161,14 +158,16 @@ class NavigationActivity : AppCompatActivity() {
 
     private inline fun checkLocationPermission(
             onGranted: () -> Unit = ::onLocationPermissionGranted,
-            onDenied: () -> Unit = ::requestLocationPermission) = if (ContextCompat.checkSelfPermission(
+            onDenied: () -> Unit = ::requestLocationPermission) =
+                if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 isLocationPermissionGranted = true
                 onGranted.invoke()
-            } else {
+                }
+                else {
                 onDenied.invoke()
-            }
+                }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.navigation, menu)
@@ -199,7 +198,8 @@ class NavigationActivity : AppCompatActivity() {
         R.id.action_help -> {
             if (!isLocationPermissionGranted) {
                 showLocationPermissionHelp()
-            } else if (!loggedInUser.isLoggedIn) {
+            }
+            else if (!loggedInUser.isLoggedIn) {
                 showLoginHelp()
             }
             true
@@ -215,22 +215,23 @@ class NavigationActivity : AppCompatActivity() {
     private fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = ::login)
 
     private fun help(layout: Int, file: String, action: () -> Unit) {
-        dialog = Dialog(this)
-        dialog!!.setContentView(layout)
-        val web = dialog!!.findViewById<WebView>(R.id.web)
-        web.settings.defaultTextEncodingName = UTF_8
+        dialog = Dialog(this).apply {
+            setContentView(layout)
+            val web = findViewById<WebView>(R.id.web)
+            web.settings.defaultTextEncodingName = UTF_8
 
-        val content = IOUtils.toString(assets.open(file), UTF_8)
-                .replace(APP_VERSION_PLACEHOLDER, versionName)
-                .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
-        web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
+            val content = IOUtils.toString(assets.open(file), UTF_8)
+                    .replace(APP_VERSION_PLACEHOLDER, versionName)
+                    .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
+            web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
 
-        dialog!!.findViewById<View>(R.id.action_button).setOnClickListener { action() }
-        dialog!!.show()
+            findViewById<View>(R.id.action_button).setOnClickListener { action() }
+            show()
+        }
     }
 
-    private val versionName: String
-        get() = packageManager.getPackageInfo(packageName, 0).versionName
+    private val versionName: String get() =
+        packageManager.getPackageInfo(packageName, 0).versionName
 
     private fun onSettingsClicked() {
         dialog?.dismiss()
@@ -242,7 +243,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun requestLocationPermission() {
-        permissions.request(
+        permissions().request(
                 this,
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
@@ -270,7 +271,7 @@ class NavigationActivity : AppCompatActivity() {
                 R.string.snackbar_permission_request_denied,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
-        snackbar!!.show()
+                .apply { show() }
     }
 
     private fun showLoginSnackbar() {
@@ -279,25 +280,23 @@ class NavigationActivity : AppCompatActivity() {
                 R.string.snackbar_please_log_in,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_login) { login() }
-        snackbar!!.show()
+                .apply { show() }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) =
-            this.permissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            permissions().onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     private fun login() {
         dialog?.dismiss()
-        startActivity(Intent(this, LoginActivity::class.java)
-                .putExtra(LoginActivity.ACTION, LoginActivity.LOGIN))
+        loginActivity(LoginActivity.LOGIN)
     }
 
     private fun logout() {
         null.persist()
         viewHolder.stopWatchingPeer()
-        startActivity(Intent(this, LoginActivity::class.java)
-                .putExtra(LoginActivity.ACTION, LoginActivity.LOGOUT))
+        loginActivity(LoginActivity.LOGOUT)
     }
 
     private fun deleteProfile() {
@@ -305,13 +304,12 @@ class NavigationActivity : AppCompatActivity() {
         contacts().clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
         setDynamicShortcuts(this)
-        fbWriter.deleteMe()
+        fbWriter().deleteMe()
         logout()
     }
 
     private fun onDeleteProfileClicked() {
-        val intent = Intent(this, DeleteProfileActivity::class.java)
-        startActivityForResult(intent, DELETE_PROFILE_REQUEST_ID)
+        deleteProfileActivity(DELETE_PROFILE_REQUEST_ID)
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -343,8 +341,10 @@ class NavigationActivity : AppCompatActivity() {
     } else {
         exitApplicationToast?.cancel()
         exitApplicationToast =
-                Toast.makeText(this, R.string.tap_back_second_time, Toast.LENGTH_SHORT)
-        exitApplicationToast!!.show()
+                Toast.makeText(
+                        this,
+                        R.string.tap_back_second_time,
+                        Toast.LENGTH_SHORT).apply { show() }
         backClickTime = System.currentTimeMillis()
     }
 

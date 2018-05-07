@@ -19,9 +19,15 @@ package pl.org.seva.navigator.profile
 
 import android.app.Activity
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_delete_user.*
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.main.startForResult
+
+fun FragmentActivity.deleteProfileActivity(requestCode: Int) {
+    startForResult(DeleteProfileActivity::class.java, requestCode)
+}
 
 class DeleteProfileActivity : AppCompatActivity() {
 
