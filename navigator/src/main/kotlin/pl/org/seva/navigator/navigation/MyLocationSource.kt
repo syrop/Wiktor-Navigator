@@ -26,6 +26,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.main.ActivityRecognitionSource
 import pl.org.seva.navigator.main.activityRecognition
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.observe
@@ -56,13 +57,18 @@ class MyLocationSource {
     private lateinit  var lifecycle: Lifecycle
 
     fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) =
-            lifecycle.observe { locationObservable.subscribe(myLocationListener) }
+        observe(lifecycle) {
+            locationObservable.subscribe(myLocationListener)
+        }
 
-    private fun addActivityRecognitionListeners() =
-            activityRecognition().listen(
-                    lifecycle,
-                    onStationary = { removeRequest() },
-                    onMoving = { request() })
+    private fun addActivityRecognitionListeners() {
+        activityRecognition().listen(lifecycle) { state ->
+            when (state) {
+                ActivityRecognitionSource.STATIONARY -> removeRequest()
+                ActivityRecognitionSource.MOVING -> request()
+            }
+        }
+    }
 
     infix fun initWithService(service: LifecycleService) {
         lifecycle = service.lifecycle

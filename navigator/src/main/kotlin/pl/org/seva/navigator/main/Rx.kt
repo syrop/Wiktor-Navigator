@@ -22,7 +22,8 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.Disposable
 
-fun Lifecycle.observe(subscription: () -> Disposable) = addObserver(RxLifecycleObserver(subscription))
+fun observe(lifecycle: Lifecycle, subscription: () -> Disposable) =
+        lifecycle.addObserver(RxLifecycleObserver(subscription))
 
 @Suppress("unused")
 fun Disposable.neverDispose() = Unit

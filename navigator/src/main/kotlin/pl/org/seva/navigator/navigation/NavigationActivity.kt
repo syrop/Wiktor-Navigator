@@ -82,10 +82,12 @@ class NavigationActivity : AppCompatActivity() {
         mapContainerId = map_container.id
         fab.setOnClickListener { onAddContactClicked() }
         checkLocationPermission()
-        activityRecognition().listen(
-                lifecycle,
-                onStationary = { hud_stationary.visibility = View.VISIBLE },
-                onMoving = { hud_stationary.visibility = View.GONE})
+        activityRecognition().listen(lifecycle) { state ->
+            when (state) {
+                ActivityRecognitionSource.STATIONARY -> hud_stationary.visibility = View.VISIBLE
+                ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

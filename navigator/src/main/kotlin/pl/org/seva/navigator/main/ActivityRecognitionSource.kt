@@ -40,10 +40,12 @@ open class ActivityRecognitionSource :
         GoogleApiClient.OnConnectionFailedListener {
 
     private var initialized = false
-    private var stationary = false
+    private var state = STATIONARY
     private var googleApiClient: GoogleApiClient? = null
     private lateinit var context: Context
     private var activityRecognitionReceiver : BroadcastReceiver? = null
+
+    private val subject = PublishSubject.create<Any>()
 
     infix fun initGoogleApiClient(context: Context) {
         if (initialized) {
@@ -90,24 +92,21 @@ open class ActivityRecognitionSource :
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
-    fun listen(lifecycle: Lifecycle, onStationary: () -> Unit, onMoving: () -> Unit) {
-        if (stationary) {
-            onStationary()
-        } else {
-            onMoving()
+    fun listen(lifecycle: Lifecycle, f: (Int) -> Unit) {
+        f(state)
+        observe(lifecycle) {
+            subject.subscribe { f(state) }
         }
-        lifecycle.observe { stationarySubject.subscribe { onStationary() } }
-        lifecycle.observe { movingSubject.subscribe { onMoving() } }
     }
 
     private fun onDeviceStationary() {
-        stationary = true
-        stationarySubject.onNext(0)
+        state = STATIONARY
+        subject.onNext(STATIONARY)
     }
 
     private fun onDeviceMoving() {
-        stationary = false
-        movingSubject.onNext(0)
+        state = MOVING
+        subject.onNext(MOVING)
     }
 
     private inner class ActivityRecognitionReceiver: BroadcastReceiver() {
@@ -130,12 +129,12 @@ open class ActivityRecognitionSource :
 
     companion object {
 
+        const val STATIONARY = 0
+        const val MOVING = 1
+
         private const val ACTIVITY_RECOGNITION_INTENT = "activity_recognition_intent"
         private const val ACTIVITY_RECOGNITION_INTERVAL_MS = 1000L
         /** The device is only stationary if confidence >= this level. */
         private const val MIN_CONFIDENCE = 80 // 70 does not work on LG G6 Android 7.0
-
-        private val stationarySubject = PublishSubject.create<Any>()
-        private val movingSubject = PublishSubject.create<Any>()
     }
 }
