@@ -30,6 +30,8 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
@@ -64,6 +66,7 @@ class ContactsActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_contacts)
         fab.setOnClickListener { onFabClicked() }
 

@@ -35,8 +35,10 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 
 import com.google.android.gms.maps.SupportMapFragment
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
 
@@ -69,6 +71,7 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_navigation)
         supportActionBar!!.title = getString(R.string.navigation_activity_label)
         viewHolder = navigationView {

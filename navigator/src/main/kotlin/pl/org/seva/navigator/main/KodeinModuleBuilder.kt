@@ -21,10 +21,14 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.github.salomonbrys.kodein.*
-import com.github.salomonbrys.kodein.conf.global
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import org.kodein.di.Kodein
+import org.kodein.di.conf.global
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
+import org.kodein.di.generic.singleton
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.data.fb.FbReader
@@ -40,7 +44,10 @@ import pl.org.seva.navigator.navigation.PeerLocationSource
 
 fun Context.module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder(this).apply { f() }.build()
 
-inline fun <reified T : Any> instance() = Kodein.global.instance<T>()
+inline fun <reified R : Any> instance(): R {
+    val result by Kodein.global.instance<R>()
+    return result
+}
 
 fun prefs() = instance<SharedPreferences>()
 

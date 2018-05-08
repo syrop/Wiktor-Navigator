@@ -34,6 +34,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_seek_contact.*
 
 import pl.org.seva.navigator.R
@@ -57,6 +59,7 @@ class SeekContactActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
 
         setContentView(R.layout.activity_seek_contact)
 

@@ -21,6 +21,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_delete_user.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.startForResult
@@ -33,6 +35,7 @@ class DeleteProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_delete_user)
         ok.setOnClickListener { onOkClicked() }
         cancel.setOnClickListener { onCancelClicked() }

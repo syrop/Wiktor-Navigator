@@ -4,6 +4,7 @@
     package="pl.org.seva.navigator">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".main.NavigatorApplication"
@@ -17,6 +18,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDECNjt1fl18jA2W5O2n3e_JMFueCjEdBs"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9608349be08009dc4cc83fa48441db4bcc934626" />
 
         <activity
             android:name=".navigation.NavigationActivity"

@@ -18,9 +18,9 @@
 package pl.org.seva.navigator.main
 
 import android.app.Application
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.conf.global
 import com.google.firebase.auth.FirebaseUser
+import org.kodein.di.Kodein
+import org.kodein.di.conf.global
 import pl.org.seva.navigator.debug.debug
 
 class NavigatorApplication : Application() {

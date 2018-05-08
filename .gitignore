@@ -6,3 +6,4 @@
 *.apk
 navigator/release/
 navigator/schemas/
+navigator/fabric.properties
