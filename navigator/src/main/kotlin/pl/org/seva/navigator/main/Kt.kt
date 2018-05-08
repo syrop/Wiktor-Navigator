@@ -2,6 +2,7 @@ package pl.org.seva.navigator.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v4.app.FragmentActivity
 
 infix fun <T> Context.start(clazz: Class<T>): Boolean {
@@ -17,3 +18,10 @@ fun <T> Context.start(clazz: Class<T>, f: Intent.() -> Intent): Boolean {
 fun <T> FragmentActivity.startForResult(clazz: Class<T>, requestCode: Int) {
     startActivityForResult(Intent(this, clazz), requestCode)
 }
+
+
+fun prefs() = instance<SharedPreferences>()
+
+fun applicationContext() = instance<Context>()
+
+fun context() = instance<Context>()

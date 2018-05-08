@@ -49,12 +49,6 @@ inline fun <reified R : Any> instance(): R {
     return result
 }
 
-fun prefs() = instance<SharedPreferences>()
-
-fun applicationContext() = instance<Context>()
-
-fun context() = instance<Context>()
-
 class KodeinModuleBuilder(private val ctx: Context) {
 
     lateinit var application: Application
