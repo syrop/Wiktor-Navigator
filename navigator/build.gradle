@@ -6,7 +6,7 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '28.0-rc1'
+    buildToolsVersion '28.0-rc2'
     defaultConfig {
         applicationId 'pl.org.seva.navigator'
         minSdkVersion 21
