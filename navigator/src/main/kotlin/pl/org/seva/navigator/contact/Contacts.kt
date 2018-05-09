@@ -17,11 +17,11 @@
 
 package pl.org.seva.navigator.contact
 
+import android.annotation.SuppressLint
 import java.util.ArrayList
 
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.main.neverDispose
 
 fun contacts() = instance<Contacts>()
 
@@ -65,10 +65,11 @@ class Contacts {
 
     fun size() = contacts.size
 
+    @SuppressLint("CheckResult")
     fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {
         contactsUpdatedSubject
                 .filter { email == null || it.email == email }
-                .subscribe { contactsUpdatedListener() }.neverDispose()
+                .subscribe { contactsUpdatedListener() }
     }
 
     fun addContactsUpdatedListener(contactsUpdatedListener: () -> Unit) =

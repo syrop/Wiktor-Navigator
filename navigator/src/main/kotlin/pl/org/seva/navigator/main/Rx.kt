@@ -25,9 +25,6 @@ import io.reactivex.disposables.Disposable
 fun observe(lifecycle: Lifecycle, subscription: () -> Disposable) =
         lifecycle.addObserver(RxLifecycleObserver(subscription))
 
-@Suppress("unused")
-fun Disposable.neverDispose() = Unit
-
 private class RxLifecycleObserver(val subscription: () -> Disposable) : LifecycleObserver {
     private lateinit var disposable: Disposable
 

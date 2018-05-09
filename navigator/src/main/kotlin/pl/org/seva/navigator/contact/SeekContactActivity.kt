@@ -19,6 +19,7 @@
 
 package pl.org.seva.navigator.contact
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
@@ -42,7 +43,6 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.FbReader
 import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.main.neverDispose
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
@@ -143,10 +143,11 @@ class SeekContactActivity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("CheckResult")
     private fun search(query: String) {
         progress = ProgressDialog.show(this, null, getString(R.string.seek_contact_searching))
         fbReader.findContact(query.toLowerCase())
-                .subscribe { onContactReceived(it) }.neverDispose()
+                .subscribe { onContactReceived(it) }
     }
 
     private fun onContactReceived(contact: Contact) {
