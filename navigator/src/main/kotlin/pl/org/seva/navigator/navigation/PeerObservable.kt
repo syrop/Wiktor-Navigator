@@ -20,22 +20,26 @@ package pl.org.seva.navigator.navigation
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.data.fb.FbReader
+import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.subscribe
 
-fun peerLocationSource() = instance<PeerLocationSource>()
+fun peerObservableSource() = instance<PeerObservable>()
 
-class PeerLocationSource {
-
-    private val fbReader: FbReader = instance()
+class PeerObservable {
 
     private val cd = CompositeDisposable()
 
-    fun addPeerLocationListener(email: String, peerLocationListener: (latLng: LatLng) -> Unit) {
-        cd.add(fbReader
+    fun addPeerLocationListener(email: String, f: (latLng: LatLng) -> Unit) {
+        fbReader()
                 .peerLocationListener(email)
-                .subscribe { peerLocationListener(it) })
+                .subscribe(cd) { f(it) }
     }
 
-    fun clearPeerLocationListeners() = cd.clear()
+    fun addDebugListener(email: String, f: (String) -> Unit) {
+        fbReader().debugListener(email)
+                .subscribe(cd) { f(it) }
+    }
+
+    fun clearPeerListeners() = cd.clear()
 }

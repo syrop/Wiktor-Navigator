@@ -20,10 +20,16 @@ package pl.org.seva.navigator.main
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 fun observe(lifecycle: Lifecycle, subscription: () -> Disposable) =
         lifecycle.addObserver(RxLifecycleObserver(subscription))
+
+fun <T> Observable<T>.subscribe(cd: CompositeDisposable, onNext: (T) -> Unit) {
+    cd.add(subscribe(onNext))
+}
 
 private class RxLifecycleObserver(private val subscription: () -> Disposable) : LifecycleObserver {
     private lateinit var disposable: Disposable

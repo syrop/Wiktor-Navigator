@@ -101,7 +101,7 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        peerLocationSource().clearPeerLocationListeners()
+        peerObservableSource().clearPeerListeners()
     }
 
     override fun onResume() {

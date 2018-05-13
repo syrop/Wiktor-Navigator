@@ -48,7 +48,7 @@ fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
 
 class NavigationViewHolder {
 
-    private val peerLocationSource: PeerLocationSource = instance()
+    private val peerObservable: PeerObservable = instance()
     private val store: Contacts = instance()
 
     private var map: GoogleMap? = null
@@ -128,7 +128,7 @@ class NavigationViewHolder {
     }
 
     fun stopWatchingPeer() {
-        peerLocationSource.clearPeerLocationListeners()
+        peerObservable.clearPeerListeners()
         peerLocation = null
         contact = null
         clearMap()
@@ -199,7 +199,7 @@ class NavigationViewHolder {
 
     private fun Contact.listen() {
         store.addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
-        peerLocationSource.addPeerLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
+        peerObservable.addPeerLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
     }
 
     companion object {
