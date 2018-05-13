@@ -22,7 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import io.reactivex.disposables.CompositeDisposable
 import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.main.subscribe
+import pl.org.seva.navigator.main.subscribeWithComposite
 
 fun peerObservableSource() = instance<PeerObservable>()
 
@@ -33,12 +33,12 @@ class PeerObservable {
     fun addPeerLocationListener(email: String, f: (latLng: LatLng) -> Unit) {
         fbReader()
                 .peerLocationListener(email)
-                .subscribe(cd) { f(it) }
+                .subscribeWithComposite(cd) { f(it) }
     }
 
     fun addDebugListener(email: String, f: (String) -> Unit) {
         fbReader().debugListener(email)
-                .subscribe(cd) { f(it) }
+                .subscribeWithComposite(cd) { f(it) }
     }
 
     fun clearPeerListeners() = cd.clear()
