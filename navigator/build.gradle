@@ -35,7 +35,6 @@ android {
 
        https://kotlinlang.org/docs/tutorials/android-plugin.html
      */
-
     androidExtensions {
         experimental = true
     }
@@ -125,6 +124,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
-}
