@@ -34,12 +34,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.contact.Contact
-import pl.org.seva.navigator.contact.Contacts
-import pl.org.seva.navigator.contact.persist
-import pl.org.seva.navigator.contact.readContactFromProperties
+import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.applicationContext
-import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
@@ -47,9 +43,6 @@ fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
         NavigationViewHolder().apply(f)
 
 class NavigationViewHolder {
-
-    private val peerObservable: PeerObservable = instance()
-    private val store: Contacts = instance()
 
     private var map: GoogleMap? = null
     var peerLocation: LatLng? = null
@@ -100,7 +93,7 @@ class NavigationViewHolder {
         contactNameTemplate = applicationContext().getString(R.string.navigation_following_name)
 
         contactEmail?.apply {
-            contact = store[this]
+            contact = contacts()[this]
             contact?.persist()
         }
         if (contact == null) {
@@ -128,7 +121,7 @@ class NavigationViewHolder {
     }
 
     fun stopWatchingPeer() {
-        peerObservable.clearPeerListeners()
+        peerObservable().clearPeerListeners()
         peerLocation = null
         contact = null
         clearMap()
@@ -198,8 +191,8 @@ class NavigationViewHolder {
     }
 
     private fun Contact.listen() {
-        store.addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
-        peerObservable.addPeerLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
+        contacts().addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
+        peerObservable().addLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
     }
 
     companion object {

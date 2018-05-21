@@ -24,21 +24,18 @@ import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.subscribeWithComposite
 
-fun peerObservableSource() = instance<PeerObservable>()
+fun peerObservable() = instance<PeerObservable>()
 
 class PeerObservable {
 
     private val cd = CompositeDisposable()
 
-    fun addPeerLocationListener(email: String, f: (latLng: LatLng) -> Unit) {
-        fbReader()
-                .peerLocationListener(email)
-                .subscribeWithComposite(cd) { f(it) }
+    fun addLocationListener(email: String, f: (latLng: LatLng) -> Unit) {
+        fbReader().peerLocationListener(email).subscribeWithComposite(cd) { f(it) }
     }
 
     fun addDebugListener(email: String, f: (String) -> Unit) {
-        fbReader().debugListener(email)
-                .subscribeWithComposite(cd) { f(it) }
+        fbReader().debugListener(email).subscribeWithComposite(cd) { f(it) }
     }
 
     fun clearPeerListeners() = cd.clear()
