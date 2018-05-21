@@ -25,6 +25,12 @@ import pl.org.seva.navigator.main.instance
 
 fun contacts() = instance<Contacts>()
 
+fun addContact(contact: Contact) = contacts() add contact
+
+fun deleteContact(contact: Contact) = contacts() delete contact
+
+fun clearAllContacts() = contacts().clear()
+
 class Contacts {
 
     private val contacts: MutableList<Contact>

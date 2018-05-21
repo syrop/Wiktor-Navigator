@@ -35,7 +35,9 @@ import pl.org.seva.navigator.data.fb.FbReader
 import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
-import pl.org.seva.navigator.contact.FriendshipSource
+import pl.org.seva.navigator.contact.FriendshipObservable
+import pl.org.seva.navigator.contact.room.ContactDao
+import pl.org.seva.navigator.contact.room.contactsDatabase
 import pl.org.seva.navigator.debug.Debug
 import pl.org.seva.navigator.ui.ColorFactory
 import pl.org.seva.navigator.ui.NotificationChannels
@@ -67,12 +69,13 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<FriendshipListener>() with singleton { FriendshipListener() }
         bind<Permissions>() with singleton { Permissions() }
         bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
-        bind<FriendshipSource>() with singleton { FriendshipSource() }
+        bind<FriendshipObservable>() with singleton { FriendshipObservable() }
         bind<PeerObservable>() with singleton { PeerObservable() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
         bind<NotificationChannels>() with singleton { NotificationChannels(application) }
         bind<ColorFactory>() with singleton { ColorFactory(application) }
         bind<Debug>() with singleton { Debug() }
+        bind<ContactDao>() with singleton { contactsDatabase().contactDao }
     }
 }

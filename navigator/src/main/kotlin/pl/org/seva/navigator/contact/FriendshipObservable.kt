@@ -23,28 +23,24 @@ import io.reactivex.disposables.Disposable
 import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.main.instance
 
-fun friendshipSource() = instance<FriendshipSource>()
+fun friendshipObservable() = instance<FriendshipObservable>()
 
-class FriendshipSource {
+class FriendshipObservable {
 
-    private val fbReader = fbReader()
     private val cd = CompositeDisposable()
 
-    fun addFriendshipListener(friendshipListener: FriendshipListener) {
+    infix fun addFriendshipListener(friendshipListener: FriendshipListener) = with (fbReader()) {
         cd.addAll(
-                fbReader
-                        .friendshipRequestedListener()
-                        .subscribe{ friendshipListener.onPeerRequestedFriendship(it) },
-                fbReader
-                        .friendshipAcceptedListener()
+                friendshipRequestedListener()
+                        .subscribe { friendshipListener.onPeerRequestedFriendship(it) },
+                friendshipAcceptedListener()
                         .subscribe { friendshipListener.onPeerAcceptedFriendship(it) },
-                fbReader
-                        .friendshipDeletedListener()
+                friendshipDeletedListener()
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
     }
 
     fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Disposable =
-            fbReader.readFriends().doOnComplete(onCompleted).subscribe{ onFriendFound(it) }
+            fbReader().readFriends().doOnComplete(onCompleted).subscribe{ onFriendFound(it) }
 
     fun clearFriendshipListeners() = cd.clear()
 }

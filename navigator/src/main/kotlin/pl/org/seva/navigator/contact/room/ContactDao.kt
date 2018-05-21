@@ -22,10 +22,13 @@ import android.arch.persistence.room.Query
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import pl.org.seva.navigator.contact.Contact
+import pl.org.seva.navigator.main.instance
 
 infix fun ContactDao.insert(contact: Contact) = insertEntity(contact.toEntity())
 
 infix fun ContactDao.delete(contact: Contact) = deleteEntity(contact.toEntity())
+
+fun contactDao() = instance<ContactDao>()
 
 @Dao
 interface ContactDao {

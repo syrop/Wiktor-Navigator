@@ -23,7 +23,7 @@ import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.contactDao
 import pl.org.seva.navigator.contact.room.contactsDatabase
 
 import pl.org.seva.navigator.contact.room.insert
@@ -35,22 +35,16 @@ import pl.org.seva.navigator.ui.notificationChannels
 
 class Bootstrap(private val application: Application) {
 
-    private val contacts = contacts()
-    private val friendshipSource = friendshipSource()
-    private val friendshipListener = friendshipListener()
-    private val contactDao = contactsDatabase().contactDao
-    private val loggedInUser = loggedInUser()
     private var isServiceRunning = false
 
     fun boot() {
-        loggedInUser setCurrentUser FirebaseAuth.getInstance().currentUser
+        loggedInUser() setCurrentUser FirebaseAuth.getInstance().currentUser
         instance<ActivityRecognitionSource>() initGoogleApiClient application
-        with(instance<ContactsDatabase>().contactDao) {
-            contacts addAll getAll().map { it.value() }
+        with(contactsDatabase().contactDao) {
+            contacts() addAll getAll().map { it.value() }
         }
         setDynamicShortcuts(application)
-        friendshipListener withContext application
-        if (loggedInUser.isLoggedIn) {
+        if (loggedInUser().isLoggedIn) {
             addFriendshipListeners()
             startNavigatorService()
         }
@@ -59,13 +53,13 @@ class Bootstrap(private val application: Application) {
 
     fun login(user: FirebaseUser) {
         fun downloadFriendsFromCloud() =
-                friendshipSource.downloadFriendsFromCloud(
+                friendshipObservable().downloadFriendsFromCloud(
                         onFriendFound = {
-                            contacts add it
-                            contactDao insert it
+                            addContact(it)
+                            contactDao() insert it
                         }, onCompleted = { setDynamicShortcuts(application) })
 
-        loggedInUser setCurrentUser user
+        loggedInUser() setCurrentUser user
         addFriendshipListeners()
         downloadFriendsFromCloud()
         startNavigatorService()
@@ -77,15 +71,16 @@ class Bootstrap(private val application: Application) {
     fun logout() {
         stopNavigatorService()
         removeFriendshipListeners()
-        contactDao.deleteAll()
-        contacts.clear()
-        loggedInUser setCurrentUser null
+        contactDao().deleteAll()
+        clearAllContacts()
+        loggedInUser() setCurrentUser null
         setDynamicShortcuts(application)
     }
 
-    private fun addFriendshipListeners() = friendshipSource.addFriendshipListener(friendshipListener)
+    private fun addFriendshipListeners() = friendshipObservable() addFriendshipListener
+            friendshipListener()
 
-    private fun removeFriendshipListeners() = friendshipSource.clearFriendshipListeners()
+    private fun removeFriendshipListeners() = friendshipObservable().clearFriendshipListeners()
 
     fun startNavigatorService() {
         if (isServiceRunning) {

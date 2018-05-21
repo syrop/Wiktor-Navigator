@@ -25,11 +25,12 @@ import android.content.IntentFilter
 
 import java.util.Random
 
-import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.data.ParcelableInt
-import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.contact.room.contactDao
 import pl.org.seva.navigator.contact.room.delete
 import pl.org.seva.navigator.contact.room.insert
+import pl.org.seva.navigator.data.fb.fbWriter
+import pl.org.seva.navigator.main.context
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.setDynamicShortcuts
 
@@ -37,47 +38,38 @@ fun friendshipListener() = instance<FriendshipListener>()
 
 class FriendshipListener {
 
-    private val store: Contacts = instance()
-    private val contactDao = instance<ContactsDatabase>().contactDao
-    private val fbWriter: FbWriter = instance()
-
-    private lateinit var context: Context
-    private val nm get() = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-    infix fun withContext(context: Context) {
-        this.context = context
-    }
+    private val nm get() = context().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     fun onPeerRequestedFriendship(contact: Contact) {
-        context.registerReceiver(FriendshipReceiver(), IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
+        context().registerReceiver(FriendshipReceiver(), IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
         nm.friendshipRequested(contact, notificationId)
     }
 
     fun onPeerAcceptedFriendship(contact: Contact) {
-        store add contact
-        contactDao insert contact
-        fbWriter addFriendship contact
-        setDynamicShortcuts(context)
+        addContact(contact)
+        contactDao() insert contact
+        fbWriter() addFriendship contact
+        setDynamicShortcuts(context())
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
-        store delete contact
-        contactDao delete contact
-        setDynamicShortcuts(context)
+        deleteContact(contact)
+        contactDao() delete contact
+        setDynamicShortcuts(context())
     }
 
     private fun acceptFriend(contact: Contact) {
-        fbWriter acceptFriendship contact
-        if (contact in store) {
+        fbWriter() acceptFriendship contact
+        if (contact in contacts()) {
             return
         }
-        store add contact
-        contactDao insert contact
+        addContact(contact)
+        contactDao() insert contact
     }
 
     private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =
-            notify(notificationId.value, friendshipRequestedNotification(context) {
+            notify(notificationId.value, friendshipRequestedNotification(context()) {
                 this.contact = contact
                 this.nid = notificationId
             })
