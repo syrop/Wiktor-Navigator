@@ -52,8 +52,6 @@ import pl.org.seva.navigator.settings.SettingsActivity
 
 class NavigationActivity : AppCompatActivity() {
 
-    private val loggedInUser = loggedInUser()
-
     private var backClickTime = 0L
 
     private var mapFragment: SupportMapFragment? = null
@@ -68,6 +66,8 @@ class NavigationActivity : AppCompatActivity() {
     private var exitApplicationToast: Toast? = null
 
     private lateinit var viewHolder: NavigationViewHolder
+
+    private val isLoggedIn get() = isLoggedIn()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +109,7 @@ class NavigationActivity : AppCompatActivity() {
         checkLocationPermission(
                 onGranted = {
                     snackbar?.dismiss()
-                    if (!loggedInUser.isLoggedIn) {
+                    if (!isLoggedIn) {
                         showLoginSnackbar()
                     }
                 },
@@ -129,7 +129,7 @@ class NavigationActivity : AppCompatActivity() {
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
         }
-        else if (loggedInUser.isLoggedIn) {
+        else if (isLoggedIn) {
             startActivityForResult(
                     Intent(this, ContactsActivity::class.java),
                     CONTACTS_ACTIVITY_REQUEST_ID)
@@ -181,9 +181,9 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.action_help).isVisible =
-                !isLocationPermissionGranted || !loggedInUser.isLoggedIn
-        menu.findItem(R.id.action_logout).isVisible = loggedInUser.isLoggedIn
-        menu.findItem(R.id.action_delete_user).isVisible = loggedInUser.isLoggedIn
+                !isLocationPermissionGranted || !isLoggedIn
+        menu.findItem(R.id.action_logout).isVisible = isLoggedIn
+        menu.findItem(R.id.action_delete_user).isVisible = isLoggedIn
         return true
     }
 
@@ -204,7 +204,7 @@ class NavigationActivity : AppCompatActivity() {
             if (!isLocationPermissionGranted) {
                 showLocationPermissionHelp()
             }
-            else if (!loggedInUser.isLoggedIn) {
+            else if (!isLoggedIn) {
                 showLoginHelp()
             }
             true
@@ -261,7 +261,7 @@ class NavigationActivity : AppCompatActivity() {
     private fun onLocationPermissionGranted() {
         invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
-        if (loggedInUser.isLoggedIn) {
+        if (isLoggedIn) {
             (application as NavigatorApplication).startService()
         }
     }

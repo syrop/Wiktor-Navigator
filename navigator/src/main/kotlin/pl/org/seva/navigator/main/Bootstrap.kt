@@ -30,7 +30,9 @@ import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.navigation.NavigatorService
-import pl.org.seva.navigator.profile.loggedInUser
+import pl.org.seva.navigator.profile.clearCurrentUser
+import pl.org.seva.navigator.profile.isLoggedIn
+import pl.org.seva.navigator.profile.setCurrent
 import pl.org.seva.navigator.ui.notificationChannels
 
 class Bootstrap(private val application: Application) {
@@ -38,14 +40,14 @@ class Bootstrap(private val application: Application) {
     private var isServiceRunning = false
 
     fun boot() {
-        loggedInUser() setCurrentUser FirebaseAuth.getInstance().currentUser
+        FirebaseAuth.getInstance().currentUser?.setCurrent()
         instance<ActivityRecognitionSource>() initGoogleApiClient application
         with(contactsDatabase().contactDao) {
             contacts() addAll getAll().map { it.value() }
         }
         setDynamicShortcuts(application)
-        if (loggedInUser().isLoggedIn) {
-            addFriendshipListeners()
+        if (isLoggedIn()) {
+            addFriendshipListener()
             startNavigatorService()
         }
         notificationChannels().create()
@@ -59,8 +61,8 @@ class Bootstrap(private val application: Application) {
                             contactDao() insert it
                         }, onCompleted = { setDynamicShortcuts(application) })
 
-        loggedInUser() setCurrentUser user
-        addFriendshipListeners()
+        user.setCurrent()
+        addFriendshipListener()
         downloadFriendsFromCloud()
         startNavigatorService()
         if (isDebugMode()) {
@@ -70,17 +72,13 @@ class Bootstrap(private val application: Application) {
 
     fun logout() {
         stopNavigatorService()
-        removeFriendshipListeners()
+        cleanFriendshipListeners()
         contactDao().deleteAll()
         clearAllContacts()
-        loggedInUser() setCurrentUser null
+        clearCurrentUser()
         setDynamicShortcuts(application)
     }
 
-    private fun addFriendshipListeners() = friendshipObservable() addFriendshipListener
-            friendshipListener()
-
-    private fun removeFriendshipListeners() = friendshipObservable().clearFriendshipListeners()
 
     fun startNavigatorService() {
         if (isServiceRunning) {

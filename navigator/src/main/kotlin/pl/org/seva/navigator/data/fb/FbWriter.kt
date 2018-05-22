@@ -23,12 +23,13 @@ import com.google.firebase.database.DatabaseReference
 
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.profile.loggedInUser
 
 fun fbWriter() = instance<FbWriter>()
 
 class FbWriter : Fb() {
 
-    private val me get() = loggedInUser.email!!.toReference()
+    private val me get() = loggedInUser().email!!.toReference()
 
     infix fun login(user: FirebaseUser) {
         val contact = Contact(user.email!!, user.displayName!!)
@@ -44,10 +45,10 @@ class FbWriter : Fb() {
     }
 
     infix fun requestFriendship(contact: Contact) =
-            contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(loggedInUser.loggedInContact)
+            contact.email.toReference().child(FRIENDSHIP_REQUESTED).write(loggedInUser().loggedInContact)
 
     infix fun acceptFriendship(contact: Contact) {
-        contact.email.toReference().child(FRIENDSHIP_ACCEPTED).write(loggedInUser.loggedInContact)
+        contact.email.toReference().child(FRIENDSHIP_ACCEPTED).write(loggedInUser().loggedInContact)
         addFriendship(contact)
     }
 
@@ -57,7 +58,7 @@ class FbWriter : Fb() {
     }
 
     infix fun deleteFriendship(contact: Contact) {
-        contact.email.toReference().child(FRIENDSHIP_DELETED).write(loggedInUser.loggedInContact)
+        contact.email.toReference().child(FRIENDSHIP_DELETED).write(loggedInUser().loggedInContact)
         contact.deleteFromMyFriends()
     }
 
@@ -73,7 +74,7 @@ class FbWriter : Fb() {
     }
 
     private fun Contact.deleteMeFromTag(tag: String) =
-        email.toReference().child(tag).child(loggedInUser.email!!.to64()).removeValue()
+        email.toReference().child(tag).child(loggedInUser().email!!.to64()).removeValue()
 
     private fun Contact.deleteFromMyFriends() =
         me.child(FRIENDS).child(email.to64()).removeValue()

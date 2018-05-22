@@ -22,7 +22,7 @@ import io.reactivex.disposables.Disposables
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.prefs
-import pl.org.seva.navigator.profile.loggedInUser
+import pl.org.seva.navigator.profile.isLoggedIn
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -32,14 +32,12 @@ fun isDebugMode() = prefs().getBoolean(Debug.PROPERTY, false)
 
 class Debug {
 
-    private val loggedInUser = loggedInUser()
-
     private var disposable = Disposables.empty()
 
     fun start() {
         disposable.dispose()  // Idempotent operation (can be "disposed" if already disposed).
         disposable = Observable.interval(1, TimeUnit.MINUTES)
-                .filter { loggedInUser.isLoggedIn }
+                .filter { isLoggedIn() }
                 .subscribe {
                     val cal = Calendar.getInstance()
                     val message = "${cal.get(Calendar.HOUR_OF_DAY)}:" +

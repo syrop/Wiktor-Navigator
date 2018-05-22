@@ -23,6 +23,12 @@ import pl.org.seva.navigator.main.instance
 
 fun loggedInUser() = instance<LoggedInUser>()
 
+fun FirebaseUser.setCurrent() = loggedInUser() setCurrentUser this
+
+fun clearCurrentUser() = loggedInUser() setCurrentUser null
+
+fun isLoggedIn() = loggedInUser().isLoggedIn
+
 class LoggedInUser {
 
     val isLoggedIn get() = name != null && email != null

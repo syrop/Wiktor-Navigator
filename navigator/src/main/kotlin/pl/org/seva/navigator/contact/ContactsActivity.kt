@@ -49,7 +49,6 @@ class ContactsActivity : AppCompatActivity() {
 
     private val store = contacts()
     private val fbWriter = fbWriter()
-    private val loggedInUser = loggedInUser()
     private val contactDao = contactsDatabase().contactDao
 
     private var snackbar: Snackbar? = null
@@ -96,7 +95,7 @@ class ContactsActivity : AppCompatActivity() {
     private fun onContactClicked(contact: Contact) {
         val intent = Intent(this, NavigationActivity::class.java)
 
-        if (contact.email != loggedInUser.email) {
+        if (contact.email != loggedInUser().email) {
             intent.putExtra(NavigationActivity.CONTACT_EXTRA, contact)
         }
         setResult(Activity.RESULT_OK, intent)

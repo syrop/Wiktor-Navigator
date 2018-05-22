@@ -30,11 +30,10 @@ import pl.org.seva.navigator.main.ActivityRecognitionSource
 import pl.org.seva.navigator.main.activityRecognition
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.observe
-import pl.org.seva.navigator.profile.loggedInUser
+import pl.org.seva.navigator.profile.isLoggedIn
 
 class MyLocationSource {
 
-    private val loggedInUser = loggedInUser()
     private val provider: FusedLocationProviderClient = instance()
 
     private val locationRequest = LocationRequest.create()
@@ -46,7 +45,7 @@ class MyLocationSource {
 
     private val locationSubject = PublishSubject.create<LatLng>()
     private val locationObservable = locationSubject
-            .filter { loggedInUser.isLoggedIn }
+            .filter { isLoggedIn() }
             .timestamp()
             .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
             .doOnNext { lastSentLocationTime = it.time() }

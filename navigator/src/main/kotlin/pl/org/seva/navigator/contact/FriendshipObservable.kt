@@ -25,6 +25,10 @@ import pl.org.seva.navigator.main.instance
 
 fun friendshipObservable() = instance<FriendshipObservable>()
 
+fun cleanFriendshipListeners() = friendshipObservable().clearFriendshipListeners()
+
+fun addFriendshipListener() = friendshipObservable() addFriendshipListener friendshipListener()
+
 class FriendshipObservable {
 
     private val cd = CompositeDisposable()
