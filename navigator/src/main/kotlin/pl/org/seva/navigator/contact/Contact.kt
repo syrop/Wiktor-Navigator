@@ -55,7 +55,8 @@ fun readContactFromProperties(): Contact? {
 data class Contact(
         val email: String = "",
         val name: String = "",
-        val color: Int = Color.GRAY) : Comparable<Contact>, Parcelable {
+        val color: Int = Color.GRAY,
+        val debugVersion: Int = 0) : Comparable<Contact>, Parcelable {
 
     @IgnoredOnParcel
     @Ignore

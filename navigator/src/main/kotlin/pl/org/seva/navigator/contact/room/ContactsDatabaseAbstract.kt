@@ -22,7 +22,7 @@ import android.arch.persistence.room.Database
 
 @Database(
         entities = [ContactEntity::class],
-        version = ContactsDatabase.ADDED_COLOR_DATABASE_VERSION)
+        version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION)
 abstract class ContactsDatabaseAbstract : RoomDatabase() {
 
     abstract fun contactDao(): ContactDao

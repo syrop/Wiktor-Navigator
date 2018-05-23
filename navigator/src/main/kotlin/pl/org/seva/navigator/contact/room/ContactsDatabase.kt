@@ -19,6 +19,7 @@ package pl.org.seva.navigator.contact.room
 
 import android.arch.persistence.room.Room
 import pl.org.seva.navigator.data.room.migration.AddedColorMigration
+import pl.org.seva.navigator.data.room.migration.AddedDebugMigration
 import pl.org.seva.navigator.data.room.migration.LiteToRoomMigration
 import pl.org.seva.navigator.main.context
 import pl.org.seva.navigator.main.instance
@@ -31,7 +32,7 @@ class ContactsDatabase {
 
     init {
         db = Room.databaseBuilder(context(), ContactsDatabaseAbstract::class.java, DATABASE_NAME)
-                .addMigrations(LiteToRoomMigration(), AddedColorMigration())
+                .addMigrations(LiteToRoomMigration(), AddedColorMigration(), AddedDebugMigration())
                 .allowMainThreadQueries()
                 .build()
     }
@@ -42,6 +43,7 @@ class ContactsDatabase {
         const val SQL_LITE_DATABASE_VERSION = 1
         const val ROOM_DATABASE_VERSION = 2
         const val ADDED_COLOR_DATABASE_VERSION = 3
+        const val ADDED_DEBUG_DATABASE_VERSION = 5
         const val DATABASE_NAME = "Friends.db"
         const val TABLE_NAME = "friends"
     }

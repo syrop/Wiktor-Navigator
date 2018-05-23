@@ -10,7 +10,8 @@ class ContactEntity() {
     @PrimaryKey
     lateinit var email: String
     lateinit var name: String
-    var color: Int = Color.GRAY
+    var color = Color.GRAY
+    var debugVersion = 0
 
     constructor(contact: Contact) : this() {
         email = contact.email
