@@ -37,6 +37,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.prefs
+import pl.org.seva.navigator.main.toaster
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
 fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
@@ -135,6 +136,10 @@ class NavigationViewHolder {
         moveCamera()
     }
 
+    private fun onDebugReceived(message: String) {
+        toaster().toast { message }
+    }
+
     private fun LatLng.moveCamera() {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
         if (animateCamera) {
@@ -193,6 +198,7 @@ class NavigationViewHolder {
     private fun Contact.listen() {
         contacts().addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
         peerObservable().addLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
+        peerObservable().addDebugListener(email, this@NavigationViewHolder::onDebugReceived)
     }
 
     companion object {

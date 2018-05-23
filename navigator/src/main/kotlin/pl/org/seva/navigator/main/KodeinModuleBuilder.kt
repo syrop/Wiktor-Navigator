@@ -77,5 +77,6 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<ColorFactory>() with singleton { ColorFactory(application) }
         bind<Debug>() with singleton { Debug() }
         bind<ContactDao>() with singleton { contactsDatabase().contactDao }
+        bind<Toaster>() with singleton { Toaster(ctx) }
     }
 }

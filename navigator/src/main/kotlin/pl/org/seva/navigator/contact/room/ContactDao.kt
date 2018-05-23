@@ -33,7 +33,7 @@ fun contactDao() = instance<ContactDao>()
 @Dao
 interface ContactDao {
 
-    @Query("select * from ${ContactsDatabase.TABLE_NAME}")
+    @Query("SELECT * FROM ${ContactsDatabase.TABLE_NAME}")
     fun getAll(): List<ContactEntity>
 
     @Insert

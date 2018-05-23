@@ -35,7 +35,7 @@ class Debug {
     private var disposable = Disposables.empty()
 
     fun start() {
-        disposable.dispose()  // Idempotent operation (can be "disposed" if already disposed).
+        disposable.dispose()
         disposable = Observable.interval(1, TimeUnit.MINUTES)
                 .filter { isLoggedIn() }
                 .subscribe {
@@ -47,7 +47,6 @@ class Debug {
     }
 
     fun stop() {
-        // Dispose operation is idempotent. Calling it again is ignored.
         disposable.dispose()
     }
 
