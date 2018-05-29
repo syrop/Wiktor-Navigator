@@ -15,6 +15,7 @@ android {
         vectorDrawables.useSupportLibrary true
         versionCode 44
         versionName '2.6.1'
+        resConfigs 'en', 'pl'
 
         javaCompileOptions {
             annotationProcessorOptions {

@@ -36,6 +36,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
+import android.widget.Button
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 
@@ -172,12 +173,10 @@ class NavigationActivity : AppCompatActivity() {
                 if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                isLocationPermissionGranted = true
-                onGranted.invoke()
+                        isLocationPermissionGranted = true
+                        onGranted.invoke()
                 }
-                else {
-                onDenied.invoke()
-                }
+                else { onDenied.invoke() }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.navigation, menu)
@@ -194,12 +193,12 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        fun help(layout: Int, file: String, action: () -> Unit): Boolean {
+        fun help(caption: Int, file: String, action: () -> Unit): Boolean {
             dialog = Dialog(this).apply {
-                setContentView(layout)
+                setContentView(R.layout.dialog_help)
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
-
+                findViewById<Button>(R.id.action_button).setText(caption)
                 val content = IOUtils.toString(assets.open(file), UTF_8)
                         .replace(APP_VERSION_PLACEHOLDER, versionName)
                         .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
@@ -212,11 +211,13 @@ class NavigationActivity : AppCompatActivity() {
         }
 
         fun showLocationPermissionHelp() = help(
-                R.layout.dialog_help_location_permission,
+                R.string.dialog_settings_button,
                 HELP_LOCATION_PERMISSION_EN,
                 action = ::onSettingsClicked)
 
-        fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = ::login)
+        fun showLoginHelp() = help(R.string.dialog_login_button, HELP_LOGIN_EN, action = ::login)
+
+        fun credits() = help(android.R.string.ok, HELP_CREDITS_EN, action = {})
 
         return when (item.itemId) {
             R.id.action_logout -> logout()
@@ -228,6 +229,7 @@ class NavigationActivity : AppCompatActivity() {
                 showLoginHelp()
             } else true
             R.id.action_settings -> settingsActivity()
+            R.id.action_credits -> credits()
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -357,6 +359,7 @@ class NavigationActivity : AppCompatActivity() {
         private const val APP_NAME_PLACEHOLDER = "[app_name]"
         private const val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
         private const val HELP_LOGIN_EN = "help_login_en.html"
+        private const val HELP_CREDITS_EN = "help_credits_en.html"
 
         const val CONTACT_EXTRA = "contact"
         const val CONTACT_EMAIL_EXTRA = "contact_email"
