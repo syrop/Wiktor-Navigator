@@ -29,8 +29,9 @@ import kotlinx.android.synthetic.main.activity_delete_user.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.startForResult
 
-fun FragmentActivity.deleteProfileActivity(requestCode: Int) {
+fun FragmentActivity.deleteProfileActivity(requestCode: Int): Boolean {
     startForResult(DeleteProfileActivity::class.java, requestCode)
+    return true
 }
 
 class DeleteProfileActivity : AppCompatActivity() {

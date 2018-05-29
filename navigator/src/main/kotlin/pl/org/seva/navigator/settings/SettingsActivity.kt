@@ -19,12 +19,19 @@
 
 package pl.org.seva.navigator.settings
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import pl.org.seva.navigator.R
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+
+fun Context.settingsActivity(): Boolean {
+    startActivity(Intent(this, SettingsActivity::class.java))
+    return true
+}
 
 class SettingsActivity : AppCompatActivity() {
 

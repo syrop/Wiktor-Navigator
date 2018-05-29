@@ -50,7 +50,7 @@ import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.*
-import pl.org.seva.navigator.settings.SettingsActivity
+import pl.org.seva.navigator.settings.settingsActivity
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -70,6 +70,9 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var viewHolder: NavigationViewHolder
 
     private val isLoggedIn get() = isLoggedIn()
+
+    private val versionName: String get() =
+        packageManager.getPackageInfo(packageName, 0).versionName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,56 +192,46 @@ class NavigationActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_logout -> {
-            logout()
-            true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        fun help(layout: Int, file: String, action: () -> Unit): Boolean {
+            dialog = Dialog(this).apply {
+                setContentView(layout)
+                val web = findViewById<WebView>(R.id.web)
+                web.settings.defaultTextEncodingName = UTF_8
+
+                val content = IOUtils.toString(assets.open(file), UTF_8)
+                        .replace(APP_VERSION_PLACEHOLDER, versionName)
+                        .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
+                web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
+
+                findViewById<View>(R.id.action_button).setOnClickListener { action() }
+                show()
+            }
+            return true
         }
-        R.id.action_delete_user -> {
-            onDeleteProfileClicked()
-            true
-        }
-        R.id.action_settings -> {
-            startActivity(Intent(this, SettingsActivity::class.java))
-            true
-        }
-        R.id.action_help -> {
-            if (!isLocationPermissionGranted) {
+
+        fun showLocationPermissionHelp() = help(
+                R.layout.dialog_help_location_permission,
+                HELP_LOCATION_PERMISSION_EN,
+                action = ::onSettingsClicked)
+
+        fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = ::login)
+
+        return when (item.itemId) {
+            R.id.action_logout -> logout()
+            R.id.action_delete_user -> deleteProfileActivity(DELETE_PROFILE_REQUEST_ID)
+            R.id.action_help -> if (!isLocationPermissionGranted) {
                 showLocationPermissionHelp()
             }
             else if (!isLoggedIn) {
                 showLoginHelp()
-            }
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
+            } else true
+            R.id.action_settings -> settingsActivity()
 
-    private fun showLocationPermissionHelp() = help(
-            R.layout.dialog_help_location_permission,
-            HELP_LOCATION_PERMISSION_EN,
-            action = ::onSettingsClicked)
-
-    private fun showLoginHelp() = help(R.layout.dialog_help_login, HELP_LOGIN_EN, action = ::login)
-
-    private fun help(layout: Int, file: String, action: () -> Unit) {
-        dialog = Dialog(this).apply {
-            setContentView(layout)
-            val web = findViewById<WebView>(R.id.web)
-            web.settings.defaultTextEncodingName = UTF_8
-
-            val content = IOUtils.toString(assets.open(file), UTF_8)
-                    .replace(APP_VERSION_PLACEHOLDER, versionName)
-                    .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
-            web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
-
-            findViewById<View>(R.id.action_button).setOnClickListener { action() }
-            show()
+            else -> super.onOptionsItemSelected(item)
         }
     }
-
-    private val versionName: String get() =
-        packageManager.getPackageInfo(packageName, 0).versionName
 
     private fun onSettingsClicked() {
         dialog?.dismiss()
@@ -300,10 +293,11 @@ class NavigationActivity : AppCompatActivity() {
         loginActivity(LoginActivity.LOGIN)
     }
 
-    private fun logout() {
+    private fun logout(): Boolean {
         null.persist()
         viewHolder.stopWatchingPeer()
         loginActivity(LoginActivity.LOGOUT)
+        return true
     }
 
     private fun deleteProfile() {
@@ -313,10 +307,6 @@ class NavigationActivity : AppCompatActivity() {
         setDynamicShortcuts(this)
         fbWriter().deleteMe()
         logout()
-    }
-
-    private fun onDeleteProfileClicked() {
-        deleteProfileActivity(DELETE_PROFILE_REQUEST_ID)
     }
 
     @SuppressLint("CommitPrefEdits")

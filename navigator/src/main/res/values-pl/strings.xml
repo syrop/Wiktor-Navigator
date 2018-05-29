@@ -8,6 +8,7 @@
     <string name="action_help">Pomoc</string>
     <string name="action_delete_user">Skasuj swój profil</string>
     <string name="action_settings">Ustawienia</string>
+    <string name="action_credits">Twórcy</string>
     <string name="dialog_settings_button">Ustawienia</string>
     <string name="dialog_login_button">Login</string>
 
