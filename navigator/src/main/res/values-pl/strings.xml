@@ -61,6 +61,10 @@
 
     <!-- Credits activity. -->
     <string name="credits_activity_label">Twórcy</string>
+    <string name="credits_activity_version">wer. [version]</string>
+    <string name="credits_activity_developer">Deweloper:</string>
+    <string name="credits_activity_developer_donate">Podaruj autorowi BTC:</string>
+    <string name="credits_activity_launcher_icon_by">Autor ikony programu:</string>
 
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Czy chcesz dodać [name]?</string>

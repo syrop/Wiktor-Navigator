@@ -73,9 +73,6 @@ class NavigationActivity : AppCompatActivity() {
 
     private val isLoggedIn get() = isLoggedIn()
 
-    private val versionName: String get() =
-        packageManager.getPackageInfo(packageName, 0).versionName
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())

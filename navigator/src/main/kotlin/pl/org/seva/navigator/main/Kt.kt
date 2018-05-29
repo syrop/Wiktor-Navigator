@@ -43,3 +43,6 @@ fun prefs() = instance<SharedPreferences>()
 fun applicationContext() = instance<Context>()
 
 fun context() = instance<Context>()
+
+val versionName get(): String =
+    context().packageManager.getPackageInfo(context().packageName, 0).versionName
