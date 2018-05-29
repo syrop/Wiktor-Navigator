@@ -74,7 +74,7 @@ class FbReader : Fb() {
         return reference.read()
                 .concatMapIterable<DataSnapshot> { it.children }
                 .concatWith(reference.childListener())
-                .doOnNext { reference.child(it.key).removeValue() }
+                .doOnNext { reference.child(it.key!!).removeValue() }
                 .map { it.toContact() }
     }
 
@@ -101,7 +101,7 @@ class FbReader : Fb() {
 
     private fun DataSnapshot.toContact() =
             if (exists()) {
-                Contact(key.from64(), child(DISPLAY_NAME).value as String, cf.nextColor())
+                Contact(key!!.from64(), child(DISPLAY_NAME).value as String, cf.nextColor())
             } else Contact()
 
     companion object {
