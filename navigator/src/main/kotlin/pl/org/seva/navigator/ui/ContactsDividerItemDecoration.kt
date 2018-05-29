@@ -13,10 +13,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you like this program, consider donating bitcoin: 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
  */
 
 package pl.org.seva.navigator.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -29,6 +32,7 @@ class ContactsDividerItemDecoration(context: Context) : RecyclerView.ItemDecorat
     private var divider: Drawable
 
     init {
+        @SuppressLint("Recycle")
         val a = context.obtainStyledAttributes(ATTRS)
         divider = a.getDrawable(0)
         a.recycle()
