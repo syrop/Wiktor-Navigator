@@ -27,3 +27,5 @@ If you are logged in to the program and somebody wanted to add you to their frie
 When following a friend, their name will appear at the top of the screen. You can swipe this banner to stop following them. You can only follow one friend at a time.
 
 When your device is stationary, no data is sent to the Internet to save data and battery power. You will still receive location updates from your friend.
+
+**Donate bitcoin:** 37vHXbpPcDBwcCTpZfjGL63JRwn6FPiXTS
