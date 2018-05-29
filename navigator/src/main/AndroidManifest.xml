@@ -53,6 +53,10 @@
             android:label="@string/delete_user_activity_label" />
 
         <activity
+            android:name=".credits.CreditsActivity"
+            android:label="@string/credits_activity_label" />
+
+        <activity
             android:name=".contact.SeekContactActivity"
             android:label="@string/seek_contact_activity_label"
             android:launchMode="singleTop" >

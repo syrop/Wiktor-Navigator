@@ -59,6 +59,9 @@
     <string name="seek_contact_waiting_for_party">Oczekiwanie na odpowiedź.</string>
     <string name="seek_contact_cannot_add_yourself">Nie możesz dodać siebie.</string>
 
+    <!-- Credits activity. -->
+    <string name="credits_activity_label">Twórcy</string>
+
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Czy chcesz dodać [name]?</string>
     <string name="friendship_confirmation">[name] ([email]) chce ciebie dodać jako przyjaciela. Czy się zgadzasz?</string>

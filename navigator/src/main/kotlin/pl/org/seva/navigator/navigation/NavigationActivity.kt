@@ -48,6 +48,7 @@ import org.apache.commons.io.IOUtils
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.credits.creditsActivity
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.*
@@ -178,7 +179,7 @@ class NavigationActivity : AppCompatActivity() {
                 }
                 else { onDenied.invoke() }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.navigation, menu)
         return true
     }
@@ -194,7 +195,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         fun help(caption: Int, file: String, action: () -> Unit): Boolean {
-            dialog = Dialog(this).apply {
+                dialog = Dialog(this).apply {
                 setContentView(R.layout.dialog_help)
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
@@ -204,7 +205,10 @@ class NavigationActivity : AppCompatActivity() {
                         .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
                 web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
 
-                findViewById<View>(R.id.action_button).setOnClickListener { action() }
+                findViewById<View>(R.id.action_button).setOnClickListener {
+                    action()
+                    dismiss()
+                }
                 show()
             }
             return true
@@ -217,8 +221,6 @@ class NavigationActivity : AppCompatActivity() {
 
         fun showLoginHelp() = help(R.string.dialog_login_button, HELP_LOGIN_EN, action = ::login)
 
-        fun credits() = help(android.R.string.ok, HELP_CREDITS_EN, action = {})
-
         return when (item.itemId) {
             R.id.action_logout -> logout()
             R.id.action_delete_user -> deleteProfileActivity(DELETE_PROFILE_REQUEST_ID)
@@ -229,7 +231,7 @@ class NavigationActivity : AppCompatActivity() {
                 showLoginHelp()
             } else true
             R.id.action_settings -> settingsActivity()
-            R.id.action_credits -> credits()
+            R.id.action_credits -> creditsActivity()
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -359,7 +361,6 @@ class NavigationActivity : AppCompatActivity() {
         private const val APP_NAME_PLACEHOLDER = "[app_name]"
         private const val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
         private const val HELP_LOGIN_EN = "help_login_en.html"
-        private const val HELP_CREDITS_EN = "help_credits_en.html"
 
         const val CONTACT_EXTRA = "contact"
         const val CONTACT_EMAIL_EXTRA = "contact_email"
