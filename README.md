@@ -1,4 +1,9 @@
 # Wiktor-Navigator (Android)
+
+<h1 align=center>
+<img src="Logo/horizontal.png" width=55%>
+</h1>
+
 Like GPS-Texter, it shares your location with one other person. This time it uses Firebase Realtime Database to save on SMS fees. Use your Gmail account to sign in.
 
 ![Permissions](images/permission.png)
