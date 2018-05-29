@@ -45,7 +45,7 @@ fun Context.createOngoingNotification(): Notification {
             0)
     return createNotificationBuilder(this)
             .setContentTitle(getString(R.string.app_name))
-            .setSmallIcon(R.drawable.ic_navigation_white_24dp)
+            .setSmallIcon(R.drawable.notification)
             .setContentIntent(pi)
             .setAutoCancel(false)
             .build()

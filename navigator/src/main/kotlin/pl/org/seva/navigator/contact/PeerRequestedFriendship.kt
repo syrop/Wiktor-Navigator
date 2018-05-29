@@ -61,7 +61,7 @@ class PeerRequestedFriendship(private val context: Context) {
         return createNotificationBuilder(context)
                 .setStyle(bigTextStyle)
                 .setContentText(context.getText(R.string.friendship_requested_notification_short))
-                .setSmallIcon(R.drawable.ic_navigation_white_24dp)
+                .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(false)
                 .addAction(
                         R.drawable.ic_close_black_24dp,
