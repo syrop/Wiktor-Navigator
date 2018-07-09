@@ -28,4 +28,4 @@ When following a friend, their name will appear at the top of the screen. You ca
 
 When your device is stationary, no data is sent to the Internet to save data and battery power. You will still receive location updates from your friend.
 
-**Donate bitcoin:** 3JVNWUeVH118S3pzU4hDgkUNwEeNarZySf
+**Donate bitcoin:** 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
