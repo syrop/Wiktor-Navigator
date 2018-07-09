@@ -13,8 +13,8 @@ android {
         targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
-        versionCode 46
-        versionName '2.7.1'
+        versionCode 47
+        versionName '2.7.2'
         resConfigs 'en', 'pl'
 
         javaCompileOptions {
