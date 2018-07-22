@@ -1,6 +1,6 @@
 buildscript {
 
-    ext.kotlin_version = '1.2.60-eap-27'
+    ext.kotlin_version = '1.2.60-eap-44'
 
     repositories {
         google()
@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha02'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha03'
         classpath 'com.google.gms:google-services:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'io.fabric.tools:gradle:1.25.4'  // This might not be necessary (29 Jun 2018)
