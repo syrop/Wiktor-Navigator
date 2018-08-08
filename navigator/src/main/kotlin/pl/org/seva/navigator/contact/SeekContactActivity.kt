@@ -174,7 +174,7 @@ class SeekContactActivity : AppCompatActivity() {
 
     private fun onContactClicked(contact: Contact) = when {
         contact in store -> finish()
-        contact.email == loggedInUser().email ->
+        contact.email == loggedInUser.email ->
             Toast.makeText(this, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
         else -> FriendshipAddDialogBuilder(this)
                 .setContact(contact)

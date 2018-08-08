@@ -35,7 +35,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun onDebugClicked(checkbox: CheckBoxPreference) {
         if (!checkbox.isChecked) {
-            debug().stop()
+            debug.stop()
             return
         }
         val builder = AlertDialog.Builder(activity!!, android.R.style.Theme_Material_Dialog_Alert)
@@ -43,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 .setTitle(R.string.pref_debug_mode)
                 .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()
-        debug().start()
+        debug.start()
     }
 
     override fun onPreferenceTreeClick(preference: Preference) = when (preference.key) {
@@ -55,6 +55,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
     companion object {
-        const val DEBUG = "debug"
+        const val DEBUG = "writeDebug"
     }
 }

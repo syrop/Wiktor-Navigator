@@ -68,7 +68,7 @@ class Bootstrap(private val application: Application) {
         downloadFriendsFromCloud()
         startNavigatorService()
         if (isDebugMode) {
-            debug().start()
+            debug.start()
         }
     }
 
