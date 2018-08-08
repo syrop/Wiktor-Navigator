@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_navigation.view.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
+import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.main.toaster
@@ -90,10 +91,10 @@ class NavigationViewHolder {
 
     fun init(savedInstanceState: Bundle?, root: ViewGroup, contactEmail: String?) {
         view = root
-        zoom = prefs().getFloat(NavigationActivity.ZOOM_PROPERTY, NavigationActivity.DEFAULT_ZOOM)
-        lastCameraPosition = LatLng(prefs().getFloat(NavigationActivity.LATITUDE_PROPERTY, 0.0f).toDouble(),
-                prefs().getFloat(NavigationActivity.LONGITUDE_PROPERTY, 0.0f).toDouble())
-        contactNameTemplate = applicationContext().getString(R.string.navigation_following_name)
+        zoom = prefs.getFloat(NavigationActivity.ZOOM_PROPERTY, NavigationActivity.DEFAULT_ZOOM)
+        lastCameraPosition = LatLng(prefs.getFloat(NavigationActivity.LATITUDE_PROPERTY, 0.0f).toDouble(),
+                prefs.getFloat(NavigationActivity.LONGITUDE_PROPERTY, 0.0f).toDouble())
+        contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
         contactEmail?.apply {
             contact = contacts()[this]
@@ -124,7 +125,7 @@ class NavigationViewHolder {
     }
 
     fun stopWatchingPeer() {
-        peerObservable().clearPeerListeners()
+        peerObservable.clearPeerListeners()
         peerLocation = null
         contact = null
         clearMap()
@@ -199,8 +200,10 @@ class NavigationViewHolder {
 
     private fun Contact.listen() {
         contacts().addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
-        peerObservable().addLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
-        peerObservable().addDebugListener(email, this@NavigationViewHolder::onDebugReceived)
+        peerObservable.addLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
+        if (isDebugMode) {
+            peerObservable.addDebugListener(email, this@NavigationViewHolder::onDebugReceived)
+        }
     }
 
     companion object {

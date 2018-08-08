@@ -38,9 +38,9 @@ fun <T> FragmentActivity.startForResult(clazz: Class<T>, requestCode: Int) {
     startActivityForResult(Intent(this, clazz), requestCode)
 }
 
-fun prefs() = instance<SharedPreferences>()
+val prefs get() = instance<SharedPreferences>()
 
-fun applicationContext() = instance<Context>()
+val applicationContext get() = instance<Context>()
 
 fun context() = instance<Context>()
 

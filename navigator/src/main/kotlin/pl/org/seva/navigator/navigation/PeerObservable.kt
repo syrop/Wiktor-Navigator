@@ -26,7 +26,7 @@ import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.subscribeWithComposite
 
-fun peerObservable() = instance<PeerObservable>()
+val peerObservable get() = instance<PeerObservable>()
 
 class PeerObservable {
 

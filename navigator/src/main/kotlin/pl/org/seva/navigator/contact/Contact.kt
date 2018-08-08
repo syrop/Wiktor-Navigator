@@ -34,15 +34,15 @@ import pl.org.seva.navigator.main.prefs
 fun Contact?.persist() {
     val name = this?.name ?: ""
     val email = this?.email ?: ""
-    prefs().edit {
+    prefs.edit {
         putString(CONTACT_NAME_PROPERTY, name)
         putString(CONTACT_EMAIL_PROPERTY, email)
     }
 }
 
 fun readContactFromProperties(): Contact? {
-    val name = prefs().getString(CONTACT_NAME_PROPERTY, "")
-    val email = prefs().getString(CONTACT_EMAIL_PROPERTY, "")
+    val name = prefs.getString(CONTACT_NAME_PROPERTY, "")
+    val email = prefs.getString(CONTACT_EMAIL_PROPERTY, "")
     if (name.isNotEmpty() && email.isNotEmpty()) {
         val contact = Contact(email = email, name = name)
         if (contact in contacts()) {

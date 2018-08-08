@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 
 fun debug() = instance<Debug>()
 
-fun isDebugMode() = prefs().getBoolean(Debug.PROPERTY, false)
+val isDebugMode get() = prefs.getBoolean(Debug.PROPERTY, false)
 
 class Debug {
 
