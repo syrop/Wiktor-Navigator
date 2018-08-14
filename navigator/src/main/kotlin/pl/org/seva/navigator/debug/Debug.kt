@@ -44,7 +44,7 @@ class Debug {
                     val cal = Calendar.getInstance()
                     val message = "${cal.get(Calendar.HOUR_OF_DAY)}:" +
                             "${cal.get(Calendar.MINUTE)}:${cal.get(Calendar.SECOND)}"
-                    fbWriter().writeDebug(message)
+                    fbWriter.writeDebug(message)
                 }
     }
 

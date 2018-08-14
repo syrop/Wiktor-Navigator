@@ -25,13 +25,13 @@ import java.util.ArrayList
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.instance
 
-fun contacts() = instance<Contacts>()
+val contactsStore get() = instance<Contacts>()
 
-fun addContact(contact: Contact) = contacts() add contact
+fun addContact(contact: Contact) = contactsStore add contact
 
-fun deleteContact(contact: Contact) = contacts() delete contact
+fun deleteContact(contact: Contact) = contactsStore delete contact
 
-fun clearAllContacts() = contacts().clear()
+fun clearAllContacts() = contactsStore.clear()
 
 class Contacts {
 

@@ -28,7 +28,7 @@ import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.profile.loggedInUser
 
-fun fbWriter() = instance<FbWriter>()
+val fbWriter get() = instance<FbWriter>()
 
 class FbWriter : Fb() {
 

@@ -97,7 +97,7 @@ class NavigationViewHolder {
         contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
         contactEmail?.apply {
-            contact = contacts()[this]
+            contact = contactsStore[this]
             contact?.persist()
         }
         if (contact == null) {
@@ -199,7 +199,7 @@ class NavigationViewHolder {
     }
 
     private fun Contact.listen() {
-        contacts().addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
+        contactsStore.addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
         peerObservable.addLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
         if (isDebugMode) {
             peerObservable.addDebugListener(email, this@NavigationViewHolder::onDebugReceived)

@@ -51,7 +51,7 @@ class FriendshipListener {
     fun onPeerAcceptedFriendship(contact: Contact) {
         addContact(contact)
         contactDao() insert contact
-        fbWriter() addFriendship contact
+        fbWriter addFriendship contact
         setDynamicShortcuts(context())
     }
 
@@ -62,8 +62,8 @@ class FriendshipListener {
     }
 
     private fun acceptFriend(contact: Contact) {
-        fbWriter() acceptFriendship contact
-        if (contact in contacts()) {
+        fbWriter acceptFriendship contact
+        if (contact in contactsStore) {
             return
         }
         addContact(contact)

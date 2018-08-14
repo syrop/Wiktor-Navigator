@@ -49,9 +49,8 @@ import pl.org.seva.navigator.profile.loggedInUser
 
 class ContactsActivity : AppCompatActivity() {
 
-    private val store = contacts()
-    private val fbWriter = fbWriter()
-    private val contactDao = contactsDatabase().contactDao
+    private val store = contactsStore
+    private val contactDao = contactsDatabase.contactDao
 
     private var snackbar: Snackbar? = null
 

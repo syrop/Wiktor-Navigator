@@ -94,7 +94,7 @@ class NavigationActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
-            val contact = contacts()[this]
+            val contact = contactsStore[this]
             viewHolder.contact = contact
             contact.persist()
         }
@@ -297,10 +297,10 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun deleteProfile() {
         viewHolder.stopWatchingPeer()
-        contacts().clear()
+        contactsStore.clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
         setDynamicShortcuts(this)
-        fbWriter().deleteMe()
+        fbWriter.deleteMe()
         logout()
     }
 
