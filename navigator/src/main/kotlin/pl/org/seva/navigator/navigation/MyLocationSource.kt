@@ -63,17 +63,17 @@ class MyLocationSource {
         }
 
     private fun addActivityRecognitionListeners() {
-        activityRecognition().listen(lifecycle) { state ->
+        activityRecognition.listen(lifecycle) { state ->
             when (state) {
                 ActivityRecognitionSource.STATIONARY -> removeRequest()
-                ActivityRecognitionSource.MOVING -> request()
+                ActivityRecognitionSource.MOVING -> requestLocationUpdates()
             }
         }
     }
 
     infix fun initWithService(service: LifecycleService) {
         lifecycle = service.lifecycle
-        request()
+        requestLocationUpdates()
         addActivityRecognitionListeners()
     }
 
@@ -89,7 +89,7 @@ class MyLocationSource {
     }
 
     @SuppressLint("MissingPermission")
-    private fun request() {
+    private fun requestLocationUpdates() {
         provider.requestLocationUpdates(locationRequest, callback, null)
     }
 

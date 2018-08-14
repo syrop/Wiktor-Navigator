@@ -35,7 +35,7 @@ import com.google.android.gms.location.DetectedActivity
 
 import io.reactivex.subjects.PublishSubject
 
-fun activityRecognition() = instance<ActivityRecognitionSource>()
+val activityRecognition get() = instance<ActivityRecognitionSource>()
 
 open class ActivityRecognitionSource :
         GoogleApiClient.ConnectionCallbacks,

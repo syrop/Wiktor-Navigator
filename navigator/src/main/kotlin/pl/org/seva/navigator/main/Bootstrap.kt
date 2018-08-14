@@ -43,7 +43,7 @@ class Bootstrap(private val application: Application) {
 
     fun boot() {
         FirebaseAuth.getInstance().currentUser?.setCurrent()
-        instance<ActivityRecognitionSource>() initGoogleApiClient application
+        activityRecognition initGoogleApiClient application
         with(contactsDatabase.contactDao) {
             contactsStore addAll getAll().map { it.value() }
         }
@@ -52,7 +52,7 @@ class Bootstrap(private val application: Application) {
             addFriendshipListener()
             startNavigatorService()
         }
-        notificationChannels().create()
+        notificationChannels.create()
     }
 
     fun login(user: FirebaseUser) {

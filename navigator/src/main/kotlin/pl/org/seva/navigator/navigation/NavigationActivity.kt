@@ -83,7 +83,7 @@ class NavigationActivity : AppCompatActivity() {
         }
         fab.setOnClickListener { onAddContactClicked() }
         checkLocationPermission()
-        activityRecognition().listen(lifecycle) { state ->
+        activityRecognition.listen(lifecycle) { state ->
             when (state) {
                 ActivityRecognitionSource.STATIONARY -> hud_stationary.visibility = View.VISIBLE
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
