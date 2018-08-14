@@ -21,7 +21,7 @@ package pl.org.seva.navigator.contact
 
 import android.app.Dialog
 import android.content.Context
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 
 import pl.org.seva.navigator.R
 

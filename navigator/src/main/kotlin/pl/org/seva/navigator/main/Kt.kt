@@ -22,7 +22,7 @@ package pl.org.seva.navigator.main
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 
 infix fun <T> Context.start(clazz: Class<T>): Boolean {
     startActivity(Intent(this, clazz))

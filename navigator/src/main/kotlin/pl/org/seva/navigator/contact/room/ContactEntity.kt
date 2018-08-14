@@ -19,9 +19,9 @@
 
 package pl.org.seva.navigator.contact.room
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
 import android.graphics.Color
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import pl.org.seva.navigator.contact.Contact
 
 @Entity(tableName = ContactsDatabase.TABLE_NAME)

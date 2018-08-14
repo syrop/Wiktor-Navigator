@@ -20,12 +20,12 @@
 package pl.org.seva.navigator.main
 
 import android.app.PendingIntent
-import android.arch.lifecycle.Lifecycle
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import androidx.lifecycle.Lifecycle
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient

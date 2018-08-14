@@ -20,9 +20,9 @@
 package pl.org.seva.navigator.navigation
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleService
 import android.location.Location
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleService
 
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng

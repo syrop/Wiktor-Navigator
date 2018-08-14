@@ -22,8 +22,8 @@ package pl.org.seva.navigator.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import pl.org.seva.navigator.R
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric

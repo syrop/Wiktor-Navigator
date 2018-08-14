@@ -20,10 +20,10 @@
 package pl.org.seva.navigator.settings
 
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.preference.CheckBoxPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.debug.debug
 

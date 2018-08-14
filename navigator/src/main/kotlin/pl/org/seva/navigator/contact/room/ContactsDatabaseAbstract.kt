@@ -19,8 +19,8 @@
 
 package pl.org.seva.navigator.contact.room
 
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.Database
+import androidx.room.Database
+import androidx.room.RoomDatabase
 
 @Database(
         entities = [ContactEntity::class],

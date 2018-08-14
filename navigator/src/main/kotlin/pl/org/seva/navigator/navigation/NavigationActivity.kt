@@ -29,18 +29,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.material.snackbar.Snackbar
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_navigation.*
 import org.apache.commons.io.IOUtils
@@ -65,8 +65,6 @@ class NavigationActivity : AppCompatActivity() {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-    private var mapContainerId: Int = 0
-
     private var exitApplicationToast: Toast? = null
 
     private lateinit var viewHolder: NavigationViewHolder
@@ -83,7 +81,6 @@ class NavigationActivity : AppCompatActivity() {
             checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
             persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
         }
-        mapContainerId = map_container.id
         fab.setOnClickListener { onAddContactClicked() }
         checkLocationPermission()
         activityRecognition().listen(lifecycle) { state ->
@@ -119,13 +116,10 @@ class NavigationActivity : AppCompatActivity() {
                 },
                 onDenied = {})
         invalidateOptionsMenu()
-        mapFragment = mapFragment {
-            fm = supportFragmentManager
-            container = mapContainerId
-            tag = MAP_FRAGMENT_TAG
-        } doOnFragmentReady {
-            viewHolder ready this
-        }
+        val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync { viewHolder ready it }
+
     }
 
     private fun onAddContactClicked() {
@@ -361,8 +355,6 @@ class NavigationActivity : AppCompatActivity() {
 
         const val CONTACT_EXTRA = "contact"
         const val CONTACT_EMAIL_EXTRA = "contact_email"
-
-        private const val MAP_FRAGMENT_TAG = "map"
 
         const val SAVED_PEER_LOCATION = "saved_peer_location"
 

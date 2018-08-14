@@ -25,8 +25,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.actility_credits.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.versionName
