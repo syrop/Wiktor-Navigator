@@ -28,9 +28,9 @@ import pl.org.seva.navigator.profile.isLoggedIn
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-fun debug() = instance<Debug>()
+val debug get() = instance<Debug>()
 
-fun isDebugMode() = prefs().getBoolean(Debug.PROPERTY, false)
+val isDebugMode get() = prefs.getBoolean(Debug.PROPERTY, false)
 
 class Debug {
 
@@ -44,7 +44,7 @@ class Debug {
                     val cal = Calendar.getInstance()
                     val message = "${cal.get(Calendar.HOUR_OF_DAY)}:" +
                             "${cal.get(Calendar.MINUTE)}:${cal.get(Calendar.SECOND)}"
-                    fbWriter().debug(message)
+                    fbWriter().writeDebug(message)
                 }
     }
 
@@ -52,7 +52,16 @@ class Debug {
         disposable.dispose()
     }
 
+    fun isIgnoredForPeer(
+            @Suppress("UNUSED_PARAMETER") peer: String,
+            @Suppress("UNUSED_PARAMETER") message: String) = true
+
+    fun withPeerVersionNumber(
+            @Suppress("UNUSED_PARAMETER") peer: String,
+            message: String) = "0$VERSION_SEPARATOR$message"
+
     companion object {
         const val PROPERTY = "debug"
+        private const val VERSION_SEPARATOR = ":"
     }
 }

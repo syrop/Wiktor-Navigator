@@ -27,6 +27,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.contact.Contact
+import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
 
@@ -49,6 +50,7 @@ class FbReader : Fb() {
                 .filter { it.value != null }
                 .map { it.value!! }
                 .map { it as String }
+                .filter { !debug.isIgnoredForPeer(email, it) }
     }
 
     fun friendshipRequestedListener(): Observable<Contact> = FRIENDSHIP_REQUESTED.contactListener()

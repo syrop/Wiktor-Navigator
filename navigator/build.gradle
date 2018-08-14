@@ -6,15 +6,15 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '28.0-rc2'
+    buildToolsVersion '28.0.1'
     defaultConfig {
         applicationId 'pl.org.seva.navigator'
         minSdkVersion 21
         targetSdkVersion 27
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
-        versionCode 47
-        versionName '2.7.2'
+        versionCode 48
+        versionName '2.8.0'
         resConfigs 'en', 'pl'
 
         javaCompileOptions {
@@ -56,10 +56,10 @@ android {
         }
     }
 
-    kotlin { experimental { coroutines 'enable' } }
-
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/main.kotlin_module'
+
     }
 
     compileOptions {
@@ -93,12 +93,11 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'org.kodein.di:kodein-di-generic-jvm:5.2.0'
-    implementation 'org.kodein.di:kodein-di-framework-android:5.0.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:5.2.0'
+    implementation 'org.kodein.di:kodein-di-framework-android:5.0.0'
     implementation 'androidx.core:core-ktx:0.3'
 
     // Architecture
@@ -109,9 +108,9 @@ dependencies {
     // Play, Firebase
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true

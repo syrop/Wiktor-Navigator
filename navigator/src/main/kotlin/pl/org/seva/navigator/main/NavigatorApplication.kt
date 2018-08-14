@@ -40,7 +40,7 @@ class NavigatorApplication : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
-        debug().stop()
+        debug.stop()
     }
 
     fun login(user: FirebaseUser) = bootstrap.login(user)

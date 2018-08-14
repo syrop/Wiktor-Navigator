@@ -30,11 +30,11 @@ import pl.org.seva.navigator.profile.loggedInUser
 
 open class Fb {
 
-    protected val db = FirebaseDatabase.getInstance()!!
+    protected val db = FirebaseDatabase.getInstance()
 
-    protected fun currentUserReference() = loggedInUser().email!!.toReference()
+    protected fun currentUserReference() = loggedInUser.email!!.toReference()
 
-    protected fun String.toReference() = db.getReference(USER_ROOT + "/" + to64())!!
+    protected fun String.toReference() = db.getReference(USER_ROOT + "/" + to64())
 
     fun String.to64() = Base64.encodeToString(toByteArray(), Base64.NO_WRAP)!!
 
