@@ -57,7 +57,7 @@ class KodeinModuleBuilder(private val ctx: Context) {
 
     lateinit var application: Application
 
-    fun build() = Kodein.Module {
+    fun build() = Kodein.Module("main") {
         bind<Context>() with provider { ctx }
         bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
         bind<Bootstrap>() with singleton { Bootstrap(application) }

@@ -76,7 +76,6 @@ class LoginActivity : AppCompatActivity(),
                 .build()
 
         googleApiClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addConnectionCallbacks(this)
                 .build()
