@@ -6,7 +6,7 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId 'pl.org.seva.navigator'
         minSdkVersion 21
@@ -83,11 +83,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Support Library
-    implementation 'androidx.appcompat:appcompat:1.0.0-rc02'
-    implementation 'com.google.android.material:material:1.0.0-rc02'
-    implementation 'androidx.cardview:cardview:1.0.0-rc02'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'
-    implementation 'androidx.legacy:legacy-preference-v14:1.0.0-rc02'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     // Kotlin
@@ -97,15 +97,15 @@ dependencies {
     implementation 'org.kodein.di:kodein-di-generic-jvm:5.2.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:5.2.0'
     implementation 'org.kodein.di:kodein-di-framework-android:5.0.0'
-    implementation 'androidx.core:core-ktx:1.0.0-rc02'
+    implementation 'androidx.core:core-ktx:1.0.0'
 
     // Jetpack
     kapt 'androidx.room:room-compiler:2.0.0-rc01'
     implementation 'androidx.room:room-runtime:2.0.0-rc01'
     implementation 'androidx.room:room-rxjava2:2.0.0-rc01'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha06'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha06'
 
     // Play, Firebase
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
