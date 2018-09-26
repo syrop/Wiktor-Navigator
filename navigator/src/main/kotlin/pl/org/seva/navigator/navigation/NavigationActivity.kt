@@ -39,7 +39,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
 
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.snackbar.Snackbar
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_navigation.*
@@ -57,8 +56,6 @@ import pl.org.seva.navigator.settings.settingsActivity
 class NavigationActivity : AppCompatActivity() {
 
     private var backClickTime = 0L
-
-    private var mapFragment: SupportMapFragment? = null
 
     private var isLocationPermissionGranted = false
 
@@ -116,10 +113,6 @@ class NavigationActivity : AppCompatActivity() {
                 },
                 onDenied = {})
         invalidateOptionsMenu()
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync { viewHolder ready it }
-
     }
 
     private fun onAddContactClicked() {
@@ -314,16 +307,8 @@ class NavigationActivity : AppCompatActivity() {
             }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        deleteMapFragment()
         outState.putParcelable(SAVED_PEER_LOCATION, viewHolder.peerLocation)
         super.onSaveInstanceState(outState)
-    }
-
-    private fun deleteMapFragment() {
-        mapFragment?.apply {
-            fragmentManager!!.beginTransaction().remove(this).commitAllowingStateLoss()
-            mapFragment = null
-        }
     }
 
     override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
