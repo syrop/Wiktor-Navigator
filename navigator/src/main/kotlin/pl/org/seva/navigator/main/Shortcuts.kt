@@ -38,7 +38,7 @@ fun setDynamicShortcuts(context: Context) {
     fun Contact.shortcut() = ShortcutInfo.Builder(context, System.nanoTime().toString())
                 .setShortLabel(name)
                 .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, context, NavigationFragment::class.java)
-                        .putExtra(NavigationFragment.CONTACT_EMAIL_EXTRA, email))
+                        .putExtra(MainActivity.CONTACT_EMAIL_EXTRA, email))
                 .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
                 .build()
 
