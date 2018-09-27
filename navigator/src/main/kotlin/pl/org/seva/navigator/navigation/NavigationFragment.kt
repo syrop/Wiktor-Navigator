@@ -53,14 +53,10 @@ import pl.org.seva.navigator.profile.*
 
 class NavigationFragment : Fragment() {
 
-    private var backClickTime = 0L
-
     private var isLocationPermissionGranted = false
 
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
-
-    private var exitApplicationToast: Toast? = null
 
     private lateinit var viewHolder: NavigationViewHolder
 
@@ -309,20 +305,6 @@ class NavigationFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
-        (activity!!.application as NavigatorApplication).stopService()
-        exitApplicationToast?.cancel()
-        super.onBackPressed()
-    } else {
-        exitApplicationToast?.cancel()
-        exitApplicationToast =
-                Toast.makeText(
-                        context,
-                        R.string.tap_back_second_time,
-                        Toast.LENGTH_SHORT).apply { show() }
-        backClickTime = System.currentTimeMillis()
-    }
-
     companion object {
 
         private const val DELETE_PROFILE_REQUEST_ID = 0
@@ -337,7 +319,6 @@ class NavigationFragment : Fragment() {
         private const val HELP_LOGIN_EN = "help_login_en.html"
 
         const val CONTACT_EXTRA = "contact"
-        const val CONTACT_EMAIL_EXTRA = "contact_email"
 
         const val SAVED_PEER_LOCATION = "saved_peer_location"
 
@@ -346,7 +327,6 @@ class NavigationFragment : Fragment() {
         const val LONGITUDE_PROPERTY = "navigation_map_longitude"
         const val DEFAULT_ZOOM = 7.5f
 
-        /** Length of time that will be taken for a double click.  */
-        private const val DOUBLE_CLICK_MS: Long = 1000
+
     }
 }
