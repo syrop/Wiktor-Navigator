@@ -229,7 +229,7 @@ class NavigationFragment : Fragment() {
 
     private fun requestLocationPermission() {
         permissions().request(
-                this,
+                activity,
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -239,7 +239,7 @@ class NavigationFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        invalidateOptionsMenu()
+        invalidateOptionsMenu(activity)
         viewHolder.locationPermissionGranted()
         if (isLoggedIn) {
             (activity!!.application as NavigatorApplication).startService()
