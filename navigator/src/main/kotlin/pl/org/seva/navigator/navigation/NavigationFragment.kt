@@ -33,9 +33,11 @@ import android.view.*
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.maps.SupportMapFragment
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_navigation.*
@@ -88,23 +90,6 @@ class NavigationFragment : Fragment() {
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.fragment_navigation)
-        supportActionBar!!.title = getString(R.string.navigation_activity_label)
-
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
-            val contact = contactsStore[this]
-            viewHolder.contact = contact
-            contact.persist()
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         peerObservable.clearPeerListeners()
@@ -120,7 +105,11 @@ class NavigationFragment : Fragment() {
                     }
                 },
                 onDenied = {})
-        invalidateOptionsMenu()
+        invalidateOptionsMenu(activity)
+
+        val mapFragment = activity!!.supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync { viewHolder ready it }
     }
 
     private fun onAddContactClicked() {
@@ -187,12 +176,12 @@ class NavigationFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         fun help(caption: Int, file: String, action: () -> Unit): Boolean {
-                dialog = Dialog(this).apply {
+                dialog = Dialog(activity).apply {
                 setContentView(R.layout.dialog_help)
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
                 findViewById<Button>(R.id.action_button).setText(caption)
-                val content = IOUtils.toString(assets.open(file), UTF_8)
+                val content = IOUtils.toString(activity!!.assets.open(file), UTF_8)
                         .replace(APP_VERSION_PLACEHOLDER, versionName)
                         .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
                 web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
@@ -233,7 +222,7 @@ class NavigationFragment : Fragment() {
         dialog?.dismiss()
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package", packageName, null)
+        val uri = Uri.fromParts("package", activity!!.packageName, null)
         intent.data = uri
         startActivity(intent)
     }
@@ -253,7 +242,7 @@ class NavigationFragment : Fragment() {
         invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
         if (isLoggedIn) {
-            (application as NavigatorApplication).startService()
+            (activity!!.application as NavigatorApplication).startService()
         }
     }
 

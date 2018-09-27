@@ -89,19 +89,16 @@ class NavigationViewHolder {
 
     private lateinit var contactNameTemplate: String
 
-    fun init(savedInstanceState: Bundle?, root: ViewGroup, contactEmail: String?) {
+    fun init(savedInstanceState: Bundle?, root: ViewGroup, contact: Contact?) {
         view = root
         zoom = prefs.getFloat(NavigationFragment.ZOOM_PROPERTY, NavigationFragment.DEFAULT_ZOOM)
         lastCameraPosition = LatLng(prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
                 prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble())
         contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
-        contactEmail?.apply {
-            contact = contactsStore[this]
-            contact?.persist()
-        }
+        contact?.persist()
         if (contact == null) {
-            contact = readContactFromProperties()
+            this.contact = readContactFromProperties()
         }
 
         deletePersistedContact = { null.persist() }
