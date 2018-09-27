@@ -297,7 +297,7 @@ class NavigationFragment : Fragment() {
 
     @SuppressLint("CommitPrefEdits")
     private fun persistCameraPositionAndZoom() =
-            with (PreferenceManager.getDefaultSharedPreferences(this).edit()) {
+            with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {
                 putFloat(ZOOM_PROPERTY, viewHolder.zoom)
                 putFloat(LATITUDE_PROPERTY, viewHolder.lastCameraPosition.latitude.toFloat())
                 putFloat(LONGITUDE_PROPERTY, viewHolder.lastCameraPosition.longitude.toFloat())
