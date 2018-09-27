@@ -26,4 +26,5 @@ import pl.org.seva.navigator.contact.Contact
 class NavigationViewModel : ViewModel() {
 
     val contact: MutableLiveData<Contact> = MutableLiveData()
+    val deleteProfile: MutableLiveData<Boolean> = MutableLiveData()
 }

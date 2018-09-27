@@ -19,37 +19,36 @@
 
 package pl.org.seva.navigator.profile
 
-import android.app.Activity
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_delete_user.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.fragment_delete_profile.*
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.startForResult
+import pl.org.seva.navigator.navigation.NavigationViewModel
 
-fun FragmentActivity.deleteProfileActivity(requestCode: Int): Boolean {
-    startForResult(DeleteProfileActivity::class.java, requestCode)
-    return true
-}
+class DeleteProfileFragment : Fragment() {
 
-class DeleteProfileActivity : AppCompatActivity() {
+    private val navigationModel =
+            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_delete_user)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = layoutInflater.inflate(R.layout.fragment_delete_profile, container, false)
         ok.setOnClickListener { onOkClicked() }
         cancel.setOnClickListener { onCancelClicked() }
+        return view
     }
 
     private fun onOkClicked() {
-        setResult(Activity.RESULT_OK)
-        finish()
+        navigationModel.deleteProfile.value = true
+        findNavController().popBackStack()
     }
 
     private fun onCancelClicked() {
-        finish()
+        navigationModel.deleteProfile.value = false
+        findNavController().popBackStack()
     }
 }

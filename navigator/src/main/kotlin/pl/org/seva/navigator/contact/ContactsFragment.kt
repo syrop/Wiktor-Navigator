@@ -19,35 +19,34 @@
 
 package pl.org.seva.navigator.contact
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
-import android.view.MenuItem
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
-import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_contacts.*
+import kotlinx.android.synthetic.main.fragment_contacts.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.room.contactsDatabase
-import pl.org.seva.navigator.navigation.NavigationFragment
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
 import pl.org.seva.navigator.contact.room.delete
 import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.data.fb.fbWriter
-import pl.org.seva.navigator.profile.loggedInUser
+import pl.org.seva.navigator.navigation.NavigationViewModel
 
-class ContactsActivity : AppCompatActivity() {
+class ContactsFragment : Fragment() {
 
     private val store = contactsStore
     private val contactDao = contactsDatabase.contactDao
@@ -56,29 +55,27 @@ class ContactsActivity : AppCompatActivity() {
 
     private val adapter = ContactAdapter { onContactClicked(it) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val navigationModel =
+            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fun initContactsRecyclerView() {
             contacts.setHasFixedSize(true)
-            contacts.layoutManager = LinearLayoutManager(this)
+            contacts.layoutManager = LinearLayoutManager(context)
             contacts.adapter = adapter
-            contacts.addItemDecoration(ContactsDividerItemDecoration(this))
+            contacts.addItemDecoration(ContactsDividerItemDecoration(context!!))
             ItemTouchHelper(ContactTouchListener { onContactSwiped(it) }).attachToRecyclerView(contacts)
         }
 
-        super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_contacts)
+        val view = layoutInflater.inflate(R.layout.fragment_contacts, container, false)
         fab.setOnClickListener { onFabClicked() }
 
         store.addContactsUpdatedListener { onContactsUpdatedInStore() }
 
-        supportActionBar!!.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
-        }
         setPromptLabelText()
         initContactsRecyclerView()
         promptOrRecyclerView()
+        return view
     }
 
     private fun promptOrRecyclerView() = if (store.size() > 0) {
@@ -90,17 +87,12 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun onFabClicked() {
-        startActivity(Intent(this, SeekContactActivity::class.java))
+        startActivity(Intent(this, SeekContactFragment::class.java))
     }
 
     private fun onContactClicked(contact: Contact) {
-        val intent = Intent(this, NavigationFragment::class.java)
-
-        if (contact.email != loggedInUser.email) {
-            intent.putExtra(NavigationFragment.CONTACT_EXTRA, contact)
-        }
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+        navigationModel.contact.value = contact
+        findNavController().popBackStack()
     }
 
     private fun onContactSwiped(position: Int) {
@@ -120,7 +112,7 @@ class ContactsActivity : AppCompatActivity() {
         contactDao delete contact
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
-        setDynamicShortcuts(this)
+        setDynamicShortcuts(context!!)
     }
 
     private fun undeleteFriend(contact: Contact) {
@@ -129,7 +121,7 @@ class ContactsActivity : AppCompatActivity() {
         store add contact
         contactDao insert contact
         adapter.notifyDataSetChanged()
-        setDynamicShortcuts(this)
+        setDynamicShortcuts(context!!)
     }
 
     private fun setPromptLabelText() {
@@ -139,14 +131,6 @@ class ContactsActivity : AppCompatActivity() {
         val ssBuilder = SpannableStringBuilder(str)
         ssBuilder.setSpan(boldSpan, idPlus, idPlus + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         prompt.text = ssBuilder
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        android.R.id.home -> {
-            finish()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
     }
 
     private fun onContactsUpdatedInStore() {

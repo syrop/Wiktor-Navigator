@@ -36,10 +36,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_seek_contact.*
+import kotlinx.android.synthetic.main.fragment_seek_contact.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.FbReader
@@ -48,7 +49,7 @@ import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
-class SeekContactActivity : AppCompatActivity() {
+class SeekContactFragment : Fragment() {
 
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()
@@ -56,20 +57,15 @@ class SeekContactActivity : AppCompatActivity() {
 
     private var progress: ProgressDialog? = null
 
-    private val searchManager get() = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
 
-        setContentView(R.layout.activity_seek_contact)
+        setContentView(R.layout.fragment_seek_contact)
 
         if (Intent.ACTION_SEARCH == intent.action) {
             search(intent.getStringExtra(SearchManager.QUERY))
         }
-
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         setPromptText(R.string.seek_contact_press_to_begin)
     }

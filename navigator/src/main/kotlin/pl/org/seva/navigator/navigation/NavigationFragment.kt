@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.SupportMapFragment
 
 import com.google.android.material.snackbar.Snackbar
@@ -64,8 +65,6 @@ class NavigationFragment : Fragment() {
             ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-
         val view = layoutInflater.inflate(R.layout.fragment_navigation, container, false)
 
         viewHolder = navigationView {
@@ -113,9 +112,7 @@ class NavigationFragment : Fragment() {
             checkLocationPermission()
         }
         else if (isLoggedIn) {
-            startActivityForResult(
-                    Intent(this, ContactsActivity::class.java),
-                    CONTACTS_ACTIVITY_REQUEST_ID)
+            findNavController().navigate(R.id.action_navigationFragment_to_contactsFragment)
         }
         else {
             showLoginSnackbar()
@@ -196,7 +193,10 @@ class NavigationFragment : Fragment() {
 
         return when (item.itemId) {
             R.id.action_logout -> logout()
-            R.id.action_delete_user -> deleteProfileActivity(DELETE_PROFILE_REQUEST_ID)
+            R.id.action_delete_user -> {
+                findNavController().navigate(R.id.action_navigationFragment_to_deleteProfileFragment)
+                true
+            }
             R.id.action_help -> if (!isLocationPermissionGranted) {
                 showLocationPermissionHelp()
             }
