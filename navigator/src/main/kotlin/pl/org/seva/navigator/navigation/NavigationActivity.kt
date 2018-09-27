@@ -38,6 +38,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
+import com.google.android.gms.maps.SupportMapFragment
 
 import com.google.android.material.snackbar.Snackbar
 import io.fabric.sdk.android.Fabric
@@ -113,6 +114,10 @@ class NavigationActivity : AppCompatActivity() {
                 },
                 onDenied = {})
         invalidateOptionsMenu()
+
+        val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync { viewHolder ready it }
     }
 
     private fun onAddContactClicked() {
