@@ -33,6 +33,7 @@ import android.view.*
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -229,7 +230,7 @@ class NavigationFragment : Fragment() {
 
     private fun requestLocationPermission() {
         permissions().request(
-                activity,
+                activity as AppCompatActivity,
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -289,7 +290,7 @@ class NavigationFragment : Fragment() {
         viewHolder.stopWatchingPeer()
         contactsStore.clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
-        setDynamicShortcuts(this)
+        setDynamicShortcuts(context!!)
         fbWriter.deleteMe()
         logout()
     }
@@ -309,14 +310,14 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
-        (application as NavigatorApplication).stopService()
+        (activity!!.application as NavigatorApplication).stopService()
         exitApplicationToast?.cancel()
         super.onBackPressed()
     } else {
         exitApplicationToast?.cancel()
         exitApplicationToast =
                 Toast.makeText(
-                        this,
+                        context,
                         R.string.tap_back_second_time,
                         Toast.LENGTH_SHORT).apply { show() }
         backClickTime = System.currentTimeMillis()
