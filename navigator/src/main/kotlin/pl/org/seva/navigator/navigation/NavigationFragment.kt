@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 package pl.org.seva.navigator.navigation
@@ -32,9 +32,7 @@ import android.provider.Settings
 import android.view.*
 import android.webkit.WebView
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -102,7 +100,7 @@ class NavigationFragment : Fragment() {
                     }
                 },
                 onDenied = {})
-        invalidateOptionsMenu(activity)
+        activity!!.invalidateOptionsMenu()
 
         val mapFragment = activity!!.supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
@@ -233,7 +231,7 @@ class NavigationFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        invalidateOptionsMenu(activity)
+        activity!!.invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
         if (isLoggedIn) {
             (activity!!.application as NavigatorApplication).startService()
