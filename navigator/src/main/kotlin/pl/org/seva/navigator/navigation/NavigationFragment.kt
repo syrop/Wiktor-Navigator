@@ -176,7 +176,7 @@ class NavigationFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         fun help(caption: Int, file: String, action: () -> Unit): Boolean {
-                dialog = Dialog(context).apply {
+                dialog = Dialog(context!!).apply {
                 setContentView(R.layout.dialog_help)
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
