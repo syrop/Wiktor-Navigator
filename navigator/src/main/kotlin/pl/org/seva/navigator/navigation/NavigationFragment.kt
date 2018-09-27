@@ -150,24 +150,21 @@ class NavigationFragment : Fragment() {
             onGranted: () -> Unit = ::onLocationPermissionGranted,
             onDenied: () -> Unit = ::requestLocationPermission) =
                 if (ContextCompat.checkSelfPermission(
-                    this,
+                    context!!,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         isLocationPermissionGranted = true
                         onGranted.invoke()
                 }
                 else { onDenied.invoke() }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) =
         menuInflater.inflate(R.menu.navigation, menu)
-        return true
-    }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.action_help).isVisible =
                 !isLocationPermissionGranted || !isLoggedIn
         menu.findItem(R.id.action_logout).isVisible = isLoggedIn
         menu.findItem(R.id.action_delete_user).isVisible = isLoggedIn
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
