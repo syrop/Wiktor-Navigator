@@ -27,7 +27,7 @@
             android:value="9608349be08009dc4cc83fa48441db4bcc934626" />
 
         <activity
-            android:name=".navigation.NavigationActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -35,6 +35,12 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".navigation.NavigationFragment"
+            android:label="@string/app_name_short"
+            android:launchMode="singleTop" >
         </activity>
 
         <activity

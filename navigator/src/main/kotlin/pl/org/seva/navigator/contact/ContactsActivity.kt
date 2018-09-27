@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.activity_contacts.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.room.contactsDatabase
-import pl.org.seva.navigator.navigation.NavigationActivity
+import pl.org.seva.navigator.navigation.NavigationFragment
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
@@ -94,10 +94,10 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun onContactClicked(contact: Contact) {
-        val intent = Intent(this, NavigationActivity::class.java)
+        val intent = Intent(this, NavigationFragment::class.java)
 
         if (contact.email != loggedInUser.email) {
-            intent.putExtra(NavigationActivity.CONTACT_EXTRA, contact)
+            intent.putExtra(NavigationFragment.CONTACT_EXTRA, contact)
         }
         setResult(Activity.RESULT_OK, intent)
         finish()

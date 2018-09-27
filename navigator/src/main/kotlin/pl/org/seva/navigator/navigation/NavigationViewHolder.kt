@@ -34,7 +34,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_navigation.view.*
+import kotlinx.android.synthetic.main.fragment_navigation.view.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.isDebugMode
@@ -91,9 +91,9 @@ class NavigationViewHolder {
 
     fun init(savedInstanceState: Bundle?, root: ViewGroup, contactEmail: String?) {
         view = root
-        zoom = prefs.getFloat(NavigationActivity.ZOOM_PROPERTY, NavigationActivity.DEFAULT_ZOOM)
-        lastCameraPosition = LatLng(prefs.getFloat(NavigationActivity.LATITUDE_PROPERTY, 0.0f).toDouble(),
-                prefs.getFloat(NavigationActivity.LONGITUDE_PROPERTY, 0.0f).toDouble())
+        zoom = prefs.getFloat(NavigationFragment.ZOOM_PROPERTY, NavigationFragment.DEFAULT_ZOOM)
+        lastCameraPosition = LatLng(prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
+                prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble())
         contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
         contactEmail?.apply {
@@ -107,7 +107,7 @@ class NavigationViewHolder {
         deletePersistedContact = { null.persist() }
         if (savedInstanceState != null) {
             animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationActivity.SAVED_PEER_LOCATION)
+            peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationFragment.SAVED_PEER_LOCATION)
         }
     }
 

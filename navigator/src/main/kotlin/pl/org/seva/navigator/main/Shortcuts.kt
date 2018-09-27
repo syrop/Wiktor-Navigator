@@ -30,15 +30,15 @@ import android.os.Build
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.contact.Contact
-import pl.org.seva.navigator.navigation.NavigationActivity
+import pl.org.seva.navigator.navigation.NavigationFragment
 
 @SuppressLint("NewApi")
 fun setDynamicShortcuts(context: Context) {
     @Suppress("unused")
     fun Contact.shortcut() = ShortcutInfo.Builder(context, System.nanoTime().toString())
                 .setShortLabel(name)
-                .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, context, NavigationActivity::class.java)
-                        .putExtra(NavigationActivity.CONTACT_EMAIL_EXTRA, email))
+                .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, context, NavigationFragment::class.java)
+                        .putExtra(NavigationFragment.CONTACT_EMAIL_EXTRA, email))
                 .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
                 .build()
 

@@ -29,31 +29,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 
 import com.google.android.material.snackbar.Snackbar
-import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_navigation.*
+import kotlinx.android.synthetic.main.fragment_navigation.*
 import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.contact.room.ContactsDatabase
-import pl.org.seva.navigator.credits.creditsActivity
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.*
-import pl.org.seva.navigator.settings.settingsActivity
 
-class NavigationActivity : AppCompatActivity() {
+class NavigationFragment : Fragment() {
 
     private var backClickTime = 0L
 
@@ -68,15 +63,18 @@ class NavigationActivity : AppCompatActivity() {
 
     private val isLoggedIn get() = isLoggedIn()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_navigation)
-        supportActionBar!!.title = getString(R.string.navigation_activity_label)
+    private val navigationModel =
+            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+
+        val view = layoutInflater.inflate(R.layout.fragment_navigation, container, false)
+
         viewHolder = navigationView {
-            init(savedInstanceState, root, intent.getStringExtra(CONTACT_EMAIL_EXTRA))
-            checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
-            persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
+            init(savedInstanceState, root, navigationModel.contact.value)
+            checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
+            persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
         }
         fab.setOnClickListener { onAddContactClicked() }
         checkLocationPermission()
@@ -86,6 +84,16 @@ class NavigationActivity : AppCompatActivity() {
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
+
+        return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.fragment_navigation)
+        supportActionBar!!.title = getString(R.string.navigation_activity_label)
+
     }
 
     override fun onNewIntent(intent: Intent?) {
