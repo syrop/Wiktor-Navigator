@@ -21,10 +21,19 @@
         android:id="@+id/contactsFragment"
         android:name="pl.org.seva.navigator.contact.ContactsFragment"
         android:label="fragment_contacts"
-        tools:layout="@layout/fragment_contacts"/>
+        tools:layout="@layout/fragment_contacts">
+        <action
+            android:id="@+id/action_contactsFragment_to_seekContactFragment"
+            app:destination="@id/seekContactFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/deleteProfileFragment"
         android:name="pl.org.seva.navigator.profile.DeleteProfileFragment"
         android:label="DeleteProfileFragment"
         tools:layout="@layout/fragment_delete_profile"/>
+    <fragment
+        android:id="@+id/seekContactFragment"
+        android:name="pl.org.seva.navigator.contact.SeekContactFragment"
+        android:label="SeekContactFragment"
+        tools:layout="@layout/fragment_seek_contact"/>
 </navigation>

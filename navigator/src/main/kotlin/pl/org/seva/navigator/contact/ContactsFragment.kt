@@ -19,7 +19,6 @@
 
 package pl.org.seva.navigator.contact
 
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -87,7 +86,7 @@ class ContactsFragment : Fragment() {
     }
 
     private fun onFabClicked() {
-        startActivity(Intent(this, SeekContactFragment::class.java))
+        findNavController().navigate(R.id.action_navigationFragment_to_contactsFragment)
     }
 
     private fun onContactClicked(contact: Contact) {
