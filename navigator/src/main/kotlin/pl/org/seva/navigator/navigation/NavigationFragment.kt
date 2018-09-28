@@ -21,7 +21,6 @@ package pl.org.seva.navigator.navigation
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -300,9 +299,6 @@ class NavigationFragment : Fragment() {
 
     companion object {
 
-        private const val DELETE_PROFILE_REQUEST_ID = 0
-        private const val CONTACTS_ACTIVITY_REQUEST_ID = 1
-
         private const val UTF_8 = "UTF-8"
         private const val ASSET_DIR = "file:///android_asset/"
         private const val PLAIN_TEXT = "text/html"
@@ -310,8 +306,6 @@ class NavigationFragment : Fragment() {
         private const val APP_NAME_PLACEHOLDER = "[app_name]"
         private const val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
         private const val HELP_LOGIN_EN = "help_login_en.html"
-
-        const val CONTACT_EXTRA = "contact"
 
         const val SAVED_PEER_LOCATION = "saved_peer_location"
 
