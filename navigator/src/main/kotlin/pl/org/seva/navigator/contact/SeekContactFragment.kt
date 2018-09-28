@@ -25,7 +25,6 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -35,6 +34,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_seek_contact.*
 
@@ -91,15 +91,6 @@ class SeekContactFragment : Fragment() {
         return result
     }
 
-    override fun onNewIntent(intent: Intent) {
-        setIntent(intent)
-
-        if (Intent.ACTION_SEARCH == intent.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY).trim { it <= ' ' }
-            search(query)
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.seek_contact, menu)
 
@@ -110,7 +101,7 @@ class SeekContactFragment : Fragment() {
 
     private fun MenuItem.prepareSearchView() = with (actionView as SearchView) {
         setOnSearchClickListener { onSearchClicked() }
-        setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
         setOnCloseListener { onSearchViewClosed() }
     }
 
@@ -130,11 +121,7 @@ class SeekContactFragment : Fragment() {
         R.id.action_search -> {
             prompt.visibility = View.GONE
             contacts.visibility = View.GONE
-            onSearchRequested()
-            true
-        }
-        android.R.id.home -> {
-            finish()
+            activity!!.onSearchRequested()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -142,7 +129,7 @@ class SeekContactFragment : Fragment() {
 
     @SuppressLint("CheckResult")
     private fun search(query: String) {
-        progress = ProgressDialog.show(this, null, getString(R.string.seek_contact_searching))
+        progress = ProgressDialog.show(context, null, getString(R.string.seek_contact_searching))
         fbReader.findContact(query.toLowerCase())
                 .subscribe { onContactReceived(it) }
     }
@@ -162,28 +149,31 @@ class SeekContactFragment : Fragment() {
 
     private fun initRecyclerView(contact: Contact) {
         contacts.setHasFixedSize(true)
-        val lm = LinearLayoutManager(this)
+        val lm = LinearLayoutManager(context)
         contacts.layoutManager = lm
         val adapter = ContactSingleAdapter(contact) { onContactClicked(it) }
         contacts.adapter = adapter
     }
 
     private fun onContactClicked(contact: Contact) = when {
-        contact in store -> finish()
+        contact in store -> {
+            findNavController().popBackStack()
+            Unit
+        }
         contact.email == loggedInUser.email ->
-            Toast.makeText(this, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
-        else -> FriendshipAddDialogBuilder(this)
+            Toast.makeText(activity, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
+        else -> FriendshipAddDialogBuilder(context!!)
                 .setContact(contact)
                 .setYesAction { contactApprovedAndFinish(contact) }
-                .setNoAction { finish() }
+                .setNoAction { findNavController().popBackStack() }
                 .build()
                 .show()
     }
 
     private fun contactApprovedAndFinish(contact: Contact) {
-        Toast.makeText(this, R.string.seek_contact_waiting_for_party, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, R.string.seek_contact_waiting_for_party, Toast.LENGTH_SHORT).show()
         fbWriter requestFriendship contact
-        finish()
+        findNavController().popBackStack()
     }
 
     companion object {
