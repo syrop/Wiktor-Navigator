@@ -35,6 +35,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.SupportMapFragment
@@ -80,6 +81,7 @@ class NavigationFragment : Fragment() {
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
+        navigationModel.contact.observe(this, Observer<Contact> { viewHolder.contact = it })
 
         return view
     }
