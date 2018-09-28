@@ -81,7 +81,21 @@ class NavigationFragment : Fragment() {
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
-        navigationModel.contact.observe(this, Observer<Contact> { viewHolder.contact = it })
+        navigationModel.contact.observe(
+                this,
+                Observer<Contact> { contact ->
+                    viewHolder.contact = contact
+                    contact.persist()
+                })
+        navigationModel.deleteProfile.observe(
+                this,
+                Observer<Boolean> { result ->
+                    if (result) {
+                        deleteProfile()
+                        navigationModel.deleteProfile.value = false
+                    }
+                }
+        )
 
         return view
     }
@@ -121,24 +135,6 @@ class NavigationFragment : Fragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            CONTACTS_ACTIVITY_REQUEST_ID -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    val contact: Contact? = data?.getParcelableExtra(CONTACT_EXTRA)
-                    contact.persist()
-                    viewHolder.contact = contact
-                }
-                viewHolder.updateHud()
-            }
-            DELETE_PROFILE_REQUEST_ID -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    deleteProfile()
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     private inline fun ifLocationPermissionGranted(f: () -> Unit) =
             checkLocationPermission(onGranted = f, onDenied = {})
