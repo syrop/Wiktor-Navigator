@@ -27,4 +27,5 @@ class NavigationViewModel : ViewModel() {
 
     val contact: MutableLiveData<Contact> = MutableLiveData()
     val deleteProfile: MutableLiveData<Boolean> = MutableLiveData()
+    val query: MutableLiveData<String> = MutableLiveData()
 }

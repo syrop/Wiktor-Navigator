@@ -80,21 +80,16 @@ class NavigationFragment : Fragment() {
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
-        navigationModel.contact.observe(
-                this,
-                Observer<Contact> { contact ->
+        navigationModel.contact.observe(this) { contact ->
                     viewHolder.contact = contact
                     contact.persist()
-                })
-        navigationModel.deleteProfile.observe(
-                this,
-                Observer<Boolean> { result ->
+                }
+        navigationModel.deleteProfile.observe(this) { result ->
                     if (result) {
                         deleteProfile()
                         navigationModel.deleteProfile.value = false
                     }
                 }
-        )
 
         return view
     }

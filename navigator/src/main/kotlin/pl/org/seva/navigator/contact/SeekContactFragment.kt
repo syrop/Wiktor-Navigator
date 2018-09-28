@@ -30,13 +30,11 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_seek_contact.*
 
@@ -44,6 +42,8 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.FbReader
 import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.observe
+import pl.org.seva.navigator.navigation.NavigationViewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
@@ -57,15 +57,24 @@ class SeekContactFragment : Fragment() {
 
     private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    private val navigationModel =
+            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
-        setContentView(R.layout.fragment_seek_contact)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_seek_contact, container, false)
+
 
         if (Intent.ACTION_SEARCH == intent.action) {
             search(intent.getStringExtra(SearchManager.QUERY))
         }
 
+
         setPromptText(R.string.seek_contact_press_to_begin)
+        navigationModel.query.observe(this) {
+            search(it)
+        }
+
+        return view
     }
 
     private fun setPromptText(id: Int) {
