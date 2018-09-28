@@ -19,6 +19,7 @@
 
 package pl.org.seva.navigator.main
 
+import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -53,6 +54,9 @@ class MainActivity : AppCompatActivity() {
             val contact = contactsStore[this]
             navigationModel.contact.value = contact
             contact.persist()
+        }
+        if (Intent.ACTION_SEARCH == intent?.action) {
+            navigationModel.query.value = intent.getStringExtra(SearchManager.QUERY)
         }
     }
 

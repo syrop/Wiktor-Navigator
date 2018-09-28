@@ -63,12 +63,6 @@ class SeekContactFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_seek_contact, container, false)
 
-
-        if (Intent.ACTION_SEARCH == intent.action) {
-            search(intent.getStringExtra(SearchManager.QUERY))
-        }
-
-
         setPromptText(R.string.seek_contact_press_to_begin)
         navigationModel.query.observe(this) {
             search(it)
