@@ -25,20 +25,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.actility_credits.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_credits.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.versionName
 
-fun Context.creditsActivity(): Boolean {
-    startActivity(Intent(this, CreditsActivity::class.java))
-    return true
-}
+class CreditsFragment : Fragment() {
 
-class CreditsActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         fun String.inBrowser() {
             val i = Intent(Intent.ACTION_VIEW)
@@ -47,13 +44,11 @@ class CreditsActivity : AppCompatActivity() {
         }
 
         fun String.toClipboard() {
-            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", this)
         }
 
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.actility_credits)
+        val view = inflater.inflate(R.layout.fragment_credits, container, false)
         version.text = getString(R.string.credits_activity_version)
                 .replace(VERSION_PLACEHOLDER, versionName)
 
@@ -69,18 +64,7 @@ class CreditsActivity : AppCompatActivity() {
             getString(R.string.credits_activity_developer_btc).toClipboard()
         }
 
-        supportActionBar!!.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        android.R.id.home -> {
-            finish()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
+        return view
     }
 
     companion object {

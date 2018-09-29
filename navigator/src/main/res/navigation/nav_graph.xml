@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_navigationFragment_to_settingsFragmentContainer"
             app:destination="@id/settingsFragmentContainer"/>
+        <action
+            android:id="@+id/action_navigationFragment_to_creditsFragment"
+            app:destination="@id/creditsFragment"/>
     </fragment>
     <fragment
         android:id="@+id/contactsFragment"
@@ -44,4 +47,9 @@
         android:name="pl.org.seva.navigator.settings.SettingsFragmentContainer"
         android:label="SettingsFragmentContainer"
         tools:layout="@layout/fragment_settings"/>
+    <fragment
+        android:id="@+id/creditsFragment"
+        android:name="pl.org.seva.navigator.credits.CreditsFragment"
+        android:label="CreditsFragment"
+        tools:layout="@layout/fragment_credits"/>
 </navigation>

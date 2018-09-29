@@ -198,7 +198,10 @@ class NavigationFragment : Fragment() {
                 findNavController().navigate(R.id.action_navigationFragment_to_settingsFragmentContainer)
                 true
             }
-            R.id.action_credits -> creditsActivity()
+            R.id.action_credits -> {
+                findNavController().navigate(R.id.action_navigationFragment_to_creditsFragment)
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -310,7 +313,5 @@ class NavigationFragment : Fragment() {
         const val LATITUDE_PROPERTY = "navigation_map_latitude"
         const val LONGITUDE_PROPERTY = "navigation_map_longitude"
         const val DEFAULT_ZOOM = 7.5f
-
-
     }
 }
