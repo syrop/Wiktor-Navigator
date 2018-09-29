@@ -32,14 +32,16 @@ import pl.org.seva.navigator.navigation.NavigationViewModel
 
 class DeleteProfileFragment : Fragment() {
 
-    private val navigationModel =
-            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+    private lateinit var navigationModel: NavigationViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = layoutInflater.inflate(R.layout.fragment_delete_profile, container, false)
+        return layoutInflater.inflate(R.layout.fragment_delete_profile, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
         ok.setOnClickListener { onOkClicked() }
         cancel.setOnClickListener { onCancelClicked() }
-        return view
     }
 
     private fun onOkClicked() {

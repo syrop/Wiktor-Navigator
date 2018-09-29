@@ -36,7 +36,10 @@ import pl.org.seva.navigator.main.versionName
 class CreditsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_credits, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fun String.inBrowser() {
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(this)
@@ -48,7 +51,6 @@ class CreditsFragment : Fragment() {
             clipboard.primaryClip = ClipData.newPlainText("", this)
         }
 
-        val view = inflater.inflate(R.layout.fragment_credits, container, false)
         version.text = getString(R.string.credits_activity_version)
                 .replace(VERSION_PLACEHOLDER, versionName)
 
@@ -63,8 +65,6 @@ class CreditsFragment : Fragment() {
         developer_crypto_address.setOnClickListener {
             getString(R.string.credits_activity_developer_btc).toClipboard()
         }
-
-        return view
     }
 
     companion object {

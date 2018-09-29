@@ -57,18 +57,19 @@ class SeekContactFragment : Fragment() {
 
     private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-    private val navigationModel =
-            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+    private lateinit var navigationModel: NavigationViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_seek_contact, container, false)
+        return inflater.inflate(R.layout.fragment_seek_contact, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
 
         setPromptText(R.string.seek_contact_press_to_begin)
         navigationModel.query.observe(this) {
             search(it)
         }
-
-        return view
     }
 
     private fun setPromptText(id: Int) {

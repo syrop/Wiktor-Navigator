@@ -88,7 +88,7 @@ class ContactsFragment : Fragment() {
     }
 
     private fun onFabClicked() {
-        findNavController().navigate(R.id.action_navigationFragment_to_contactsFragment)
+        findNavController().navigate(R.id.action_contactsFragment_to_seekContactFragment)
     }
 
     private fun onContactClicked(contact: Contact) {
