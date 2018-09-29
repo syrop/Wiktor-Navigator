@@ -39,12 +39,12 @@ class MainActivity : AppCompatActivity() {
 
     private var exitApplicationToast: Toast? = null
 
-    private val navigationModel =
-            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+    private lateinit var navigationModel: NavigationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
+        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
         setContentView(R.layout.activity_main)
     }
 

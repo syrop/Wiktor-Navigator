@@ -108,7 +108,7 @@ class NavigationViewHolder {
         }
     }
 
-    fun updateHud() = view.hud_following.run {
+    private fun updateHud() = view.hud_following.run {
         alpha = 1.0f
         if (contact == null) {
             animate().translationYBy(height.toFloat()).withEndAction { visibility = View.GONE }

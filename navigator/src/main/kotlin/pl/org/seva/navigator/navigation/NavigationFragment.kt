@@ -60,18 +60,21 @@ class NavigationFragment : Fragment() {
 
     private val isLoggedIn get() = isLoggedIn()
 
-    private val navigationModel =
-            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+    private lateinit var navigationModel: NavigationViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = layoutInflater.inflate(R.layout.fragment_navigation, container, false)
+        return layoutInflater.inflate(R.layout.fragment_navigation, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
         viewHolder = navigationView {
             init(savedInstanceState, root, navigationModel.contact.value)
             checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
             persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
         }
         fab.setOnClickListener { onAddContactClicked() }
+
         checkLocationPermission()
         activityRecognition.listen(lifecycle) { state ->
             when (state) {
@@ -89,8 +92,6 @@ class NavigationFragment : Fragment() {
                         navigationModel.deleteProfile.value = false
                     }
                 }
-
-        return view
     }
 
     override fun onDestroy() {
@@ -110,8 +111,7 @@ class NavigationFragment : Fragment() {
                 onDenied = {})
         activity!!.invalidateOptionsMenu()
 
-        val mapFragment = activity!!.supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { viewHolder ready it }
     }
 
@@ -218,7 +218,7 @@ class NavigationFragment : Fragment() {
 
     private fun requestLocationPermission() {
         permissions().request(
-                activity as AppCompatActivity,
+                activity!! as AppCompatActivity,
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
