@@ -34,7 +34,6 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.SupportMapFragment
@@ -195,7 +194,10 @@ class NavigationFragment : Fragment() {
             else if (!isLoggedIn) {
                 showLoginHelp()
             } else true
-            R.id.action_settings -> settingsActivity()
+            R.id.action_settings -> {
+                findNavController().navigate(R.id.action_navigationFragment_to_settingsFragmentContainer)
+                true
+            }
             R.id.action_credits -> creditsActivity()
 
             else -> super.onOptionsItemSelected(item)

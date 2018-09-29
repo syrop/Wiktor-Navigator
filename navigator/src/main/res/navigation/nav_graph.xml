@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigationFragment_to_deleteProfileFragment"
             app:destination="@id/deleteProfileFragment"/>
+        <action
+            android:id="@+id/action_navigationFragment_to_settingsFragmentContainer"
+            app:destination="@id/settingsFragmentContainer"/>
     </fragment>
     <fragment
         android:id="@+id/contactsFragment"
@@ -36,4 +39,9 @@
         android:name="pl.org.seva.navigator.contact.SeekContactFragment"
         android:label="SeekContactFragment"
         tools:layout="@layout/fragment_seek_contact"/>
+    <fragment
+        android:id="@+id/settingsFragmentContainer"
+        android:name="pl.org.seva.navigator.settings.SettingsFragmentContainer"
+        android:label="SettingsFragmentContainer"
+        tools:layout="@layout/fragment_settings"/>
 </navigation>
