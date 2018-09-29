@@ -54,10 +54,13 @@ class ContactsFragment : Fragment() {
 
     private val adapter = ContactAdapter { onContactClicked(it) }
 
-    private val navigationModel =
-            ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+    private lateinit var navigationModel: NavigationViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return layoutInflater.inflate(R.layout.fragment_contacts, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fun initContactsRecyclerView() {
             contacts.setHasFixedSize(true)
             contacts.layoutManager = LinearLayoutManager(context)
@@ -66,7 +69,7 @@ class ContactsFragment : Fragment() {
             ItemTouchHelper(ContactTouchListener { onContactSwiped(it) }).attachToRecyclerView(contacts)
         }
 
-        val view = layoutInflater.inflate(R.layout.fragment_contacts, container, false)
+        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
         fab.setOnClickListener { onFabClicked() }
 
         store.addContactsUpdatedListener { onContactsUpdatedInStore() }
@@ -74,7 +77,6 @@ class ContactsFragment : Fragment() {
         setPromptLabelText()
         initContactsRecyclerView()
         promptOrRecyclerView()
-        return view
     }
 
     private fun promptOrRecyclerView() = if (store.size() > 0) {
