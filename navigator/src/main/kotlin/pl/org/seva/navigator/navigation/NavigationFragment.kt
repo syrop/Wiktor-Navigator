@@ -264,13 +264,13 @@ class NavigationFragment : Fragment() {
 
     private fun login() {
         dialog?.dismiss()
-        loginActivity(LoginActivity.LOGIN)
+        activity!!.loginActivity(LoginActivity.LOGIN)
     }
 
     private fun logout(): Boolean {
         null.persist()
         viewHolder.stopWatchingPeer()
-        loginActivity(LoginActivity.LOGOUT)
+        activity!!.loginActivity(LoginActivity.LOGOUT)
         return true
     }
 
