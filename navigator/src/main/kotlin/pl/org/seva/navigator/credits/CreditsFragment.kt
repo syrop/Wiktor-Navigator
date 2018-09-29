@@ -31,6 +31,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_credits.*
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.main.toaster
 import pl.org.seva.navigator.main.versionName
 
 class CreditsFragment : Fragment() {
@@ -49,6 +50,7 @@ class CreditsFragment : Fragment() {
         fun String.toClipboard() {
             val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", this)
+            toaster().toast { getString(R.string.credits_activity_copied_to_clipboard) }
         }
 
         version.text = getString(R.string.credits_activity_version)
