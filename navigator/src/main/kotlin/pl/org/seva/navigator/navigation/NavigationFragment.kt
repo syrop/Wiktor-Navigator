@@ -62,6 +62,11 @@ class NavigationFragment : Fragment() {
 
     private lateinit var navigationModel: NavigationViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_navigation, container, false)
     }
@@ -127,7 +132,6 @@ class NavigationFragment : Fragment() {
             showLoginSnackbar()
         }
     }
-
 
     private inline fun ifLocationPermissionGranted(f: () -> Unit) =
             checkLocationPermission(onGranted = f, onDenied = {})
