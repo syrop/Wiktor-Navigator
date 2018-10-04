@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 @file:Suppress("DEPRECATION")
@@ -25,30 +25,29 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_seek_contact.*
+import kotlinx.android.synthetic.main.fragment_seek_contact.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.FbReader
 import pl.org.seva.navigator.data.fb.FbWriter
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.observe
+import pl.org.seva.navigator.navigation.NavigationViewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
-class SeekContactActivity : AppCompatActivity() {
+class SeekContactFragment : Fragment() {
 
     private val fbWriter: FbWriter = instance()
     private val fbReader: FbReader = instance()
@@ -56,22 +55,26 @@ class SeekContactActivity : AppCompatActivity() {
 
     private var progress: ProgressDialog? = null
 
-    private val searchManager get() = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var navigationModel: NavigationViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
+        setHasOptionsMenu(true)
+    }
 
-        setContentView(R.layout.activity_seek_contact)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_seek_contact, container, false)
+    }
 
-        if (Intent.ACTION_SEARCH == intent.action) {
-            search(intent.getStringExtra(SearchManager.QUERY))
-        }
-
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
 
         setPromptText(R.string.seek_contact_press_to_begin)
+        navigationModel.query.observe(this) {
+            search(it)
+        }
     }
 
     private fun setPromptText(id: Int) {
@@ -94,27 +97,17 @@ class SeekContactActivity : AppCompatActivity() {
         return result
     }
 
-    override fun onNewIntent(intent: Intent) {
-        setIntent(intent)
-
-        if (Intent.ACTION_SEARCH == intent.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY).trim { it <= ' ' }
-            search(query)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.seek_contact, menu)
 
         val searchMenuItem = menu.findItem(R.id.action_search)
         searchMenuItem.collapseActionView()
         searchMenuItem.prepareSearchView()
-        return true
     }
 
     private fun MenuItem.prepareSearchView() = with (actionView as SearchView) {
         setOnSearchClickListener { onSearchClicked() }
-        setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
         setOnCloseListener { onSearchViewClosed() }
     }
 
@@ -134,11 +127,7 @@ class SeekContactActivity : AppCompatActivity() {
         R.id.action_search -> {
             prompt.visibility = View.GONE
             contacts.visibility = View.GONE
-            onSearchRequested()
-            true
-        }
-        android.R.id.home -> {
-            finish()
+            activity!!.onSearchRequested()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -146,7 +135,7 @@ class SeekContactActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun search(query: String) {
-        progress = ProgressDialog.show(this, null, getString(R.string.seek_contact_searching))
+        progress = ProgressDialog.show(context, null, getString(R.string.seek_contact_searching))
         fbReader.findContact(query.toLowerCase())
                 .subscribe { onContactReceived(it) }
     }
@@ -166,28 +155,31 @@ class SeekContactActivity : AppCompatActivity() {
 
     private fun initRecyclerView(contact: Contact) {
         contacts.setHasFixedSize(true)
-        val lm = LinearLayoutManager(this)
+        val lm = LinearLayoutManager(context)
         contacts.layoutManager = lm
         val adapter = ContactSingleAdapter(contact) { onContactClicked(it) }
         contacts.adapter = adapter
     }
 
     private fun onContactClicked(contact: Contact) = when {
-        contact in store -> finish()
+        contact in store -> {
+            findNavController().popBackStack()
+            Unit
+        }
         contact.email == loggedInUser.email ->
-            Toast.makeText(this, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
-        else -> FriendshipAddDialogBuilder(this)
+            Toast.makeText(activity, R.string.seek_contact_cannot_add_yourself, Toast.LENGTH_SHORT).show()
+        else -> FriendshipAddDialogBuilder(context!!)
                 .setContact(contact)
                 .setYesAction { contactApprovedAndFinish(contact) }
-                .setNoAction { finish() }
+                .setNoAction { findNavController().popBackStack() }
                 .build()
                 .show()
     }
 
     private fun contactApprovedAndFinish(contact: Contact) {
-        Toast.makeText(this, R.string.seek_contact_waiting_for_party, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, R.string.seek_contact_waiting_for_party, Toast.LENGTH_SHORT).show()
         fbWriter requestFriendship contact
-        finish()
+        findNavController().popBackStack()
     }
 
     companion object {

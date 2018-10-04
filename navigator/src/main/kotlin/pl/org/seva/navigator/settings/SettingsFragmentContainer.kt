@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Wiktor Nizio
+ * Copyright (C) 2017 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,18 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.contact.room
+package pl.org.seva.navigator.settings
 
-import android.graphics.Color
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import pl.org.seva.navigator.contact.Contact
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import pl.org.seva.navigator.R
 
-@Entity(tableName = ContactsDatabase.TABLE_NAME)
-class ContactEntity() {
-    @PrimaryKey
-    lateinit var email: String
-    lateinit var name: String
-    var color = Color.GRAY
-    var debugVersion = 0
+class SettingsFragmentContainer : Fragment() {
 
-    constructor(contact: Contact) : this() {
-        email = contact.email
-        name = contact.name
-        color = contact.color
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_settings, container, false)
     }
-
-    fun value() = Contact(email, name, color)
 }

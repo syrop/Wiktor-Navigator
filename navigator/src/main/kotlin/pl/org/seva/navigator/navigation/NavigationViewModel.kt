@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Wiktor Nizio
+ * Copyright (C) 2017 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,15 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.contact.room
+package pl.org.seva.navigator.navigation
 
-import android.graphics.Color
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import pl.org.seva.navigator.contact.Contact
 
-@Entity(tableName = ContactsDatabase.TABLE_NAME)
-class ContactEntity() {
-    @PrimaryKey
-    lateinit var email: String
-    lateinit var name: String
-    var color = Color.GRAY
-    var debugVersion = 0
+class NavigationViewModel : ViewModel() {
 
-    constructor(contact: Contact) : this() {
-        email = contact.email
-        name = contact.name
-        color = contact.color
-    }
-
-    fun value() = Contact(email, name, color)
+    val contact: MutableLiveData<Contact> = MutableLiveData()
+    val deleteProfile: MutableLiveData<Boolean> = MutableLiveData()
+    val query: MutableLiveData<String> = MutableLiveData()
 }

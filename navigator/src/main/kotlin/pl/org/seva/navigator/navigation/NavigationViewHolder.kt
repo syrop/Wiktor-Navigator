@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 package pl.org.seva.navigator.navigation
@@ -34,7 +34,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_navigation.view.*
+import kotlinx.android.synthetic.main.fragment_navigation.view.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.isDebugMode
@@ -89,29 +89,26 @@ class NavigationViewHolder {
 
     private lateinit var contactNameTemplate: String
 
-    fun init(savedInstanceState: Bundle?, root: ViewGroup, contactEmail: String?) {
+    fun init(savedInstanceState: Bundle?, root: ViewGroup, contact: Contact?) {
         view = root
-        zoom = prefs.getFloat(NavigationActivity.ZOOM_PROPERTY, NavigationActivity.DEFAULT_ZOOM)
-        lastCameraPosition = LatLng(prefs.getFloat(NavigationActivity.LATITUDE_PROPERTY, 0.0f).toDouble(),
-                prefs.getFloat(NavigationActivity.LONGITUDE_PROPERTY, 0.0f).toDouble())
+        zoom = prefs.getFloat(NavigationFragment.ZOOM_PROPERTY, NavigationFragment.DEFAULT_ZOOM)
+        lastCameraPosition = LatLng(prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
+                prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble())
         contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
-        contactEmail?.apply {
-            contact = contactsStore[this]
-            contact?.persist()
-        }
+        contact?.persist()
         if (contact == null) {
-            contact = readContactFromProperties()
+            this.contact = readContactFromProperties()
         }
 
         deletePersistedContact = { null.persist() }
         if (savedInstanceState != null) {
             animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationActivity.SAVED_PEER_LOCATION)
+            peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationFragment.SAVED_PEER_LOCATION)
         }
     }
 
-    fun updateHud() = view.hud_following.run {
+    private fun updateHud() = view.hud_following.run {
         alpha = 1.0f
         if (contact == null) {
             animate().translationYBy(height.toFloat()).withEndAction { visibility = View.GONE }

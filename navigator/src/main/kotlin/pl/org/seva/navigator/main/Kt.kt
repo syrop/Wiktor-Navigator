@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 package pl.org.seva.navigator.main
@@ -22,7 +22,13 @@ package pl.org.seva.navigator.main
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import androidx.annotation.MainThread
+import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 infix fun <T> Context.start(clazz: Class<T>): Boolean {
     startActivity(Intent(this, clazz))
@@ -46,3 +52,24 @@ fun context() = instance<Context>()
 
 val versionName get(): String =
     context().packageManager.getPackageInfo(context().packageName, 0).versionName
+
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, f: (T) -> Unit) =
+        observe(owner, Observer<T> { f(it) })
+
+//@MainThread
+//fun observe(@NonNull owner: LifecycleOwner, @NonNull observer: Observer<in T>) {
+//    assertMainThread("observe")
+//    if (owner.lifecycle.currentState == DESTROYED) {
+//        // ignore
+//        return
+//    }
+//    val wrapper = LifecycleBoundObserver(owner, observer)
+//    val existing = mObservers.putIfAbsent(observer, wrapper)
+//    if (existing != null && !existing!!.isAttachedTo(owner)) {
+//        throw IllegalArgumentException("Cannot add the same observer" + " with different lifecycles")
+//    }
+//    if (existing != null) {
+//        return
+//    }
+//    owner.lifecycle.addObserver(wrapper)
+//}

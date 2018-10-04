@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 package pl.org.seva.navigator.navigation
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -29,57 +28,58 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.webkit.WebView
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.SupportMapFragment
 
 import com.google.android.material.snackbar.Snackbar
-import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_navigation.*
+import kotlinx.android.synthetic.main.fragment_navigation.*
 import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.contact.room.ContactsDatabase
-import pl.org.seva.navigator.credits.creditsActivity
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.*
-import pl.org.seva.navigator.settings.settingsActivity
 
-class NavigationActivity : AppCompatActivity() {
-
-    private var backClickTime = 0L
+class NavigationFragment : Fragment() {
 
     private var isLocationPermissionGranted = false
 
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-    private var exitApplicationToast: Toast? = null
-
     private lateinit var viewHolder: NavigationViewHolder
 
     private val isLoggedIn get() = isLoggedIn()
 
+    private lateinit var navigationModel: NavigationViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_navigation)
-        supportActionBar!!.title = getString(R.string.navigation_activity_label)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return layoutInflater.inflate(R.layout.fragment_navigation, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
         viewHolder = navigationView {
-            init(savedInstanceState, root, intent.getStringExtra(CONTACT_EMAIL_EXTRA))
-            checkLocationPermission = this@NavigationActivity::ifLocationPermissionGranted
-            persistCameraPositionAndZoom = this@NavigationActivity::persistCameraPositionAndZoom
+            init(savedInstanceState, root, navigationModel.contact.value)
+            checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
+            persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
         }
         fab.setOnClickListener { onAddContactClicked() }
+
         checkLocationPermission()
         activityRecognition.listen(lifecycle) { state ->
             when (state) {
@@ -87,14 +87,15 @@ class NavigationActivity : AppCompatActivity() {
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
-            val contact = contactsStore[this]
+        navigationModel.contact.observe(this) { contact ->
             viewHolder.contact = contact
             contact.persist()
+        }
+        navigationModel.deleteProfile.observe(this) { result ->
+            if (result) {
+                deleteProfile()
+                navigationModel.deleteProfile.value = false
+            }
         }
     }
 
@@ -113,10 +114,9 @@ class NavigationActivity : AppCompatActivity() {
                     }
                 },
                 onDenied = {})
-        invalidateOptionsMenu()
+        activity!!.invalidateOptionsMenu()
 
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { viewHolder ready it }
     }
 
@@ -126,32 +126,11 @@ class NavigationActivity : AppCompatActivity() {
             checkLocationPermission()
         }
         else if (isLoggedIn) {
-            startActivityForResult(
-                    Intent(this, ContactsActivity::class.java),
-                    CONTACTS_ACTIVITY_REQUEST_ID)
+            findNavController().navigate(R.id.action_navigationFragment_to_contactsFragment)
         }
         else {
             showLoginSnackbar()
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            CONTACTS_ACTIVITY_REQUEST_ID -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    val contact: Contact? = data?.getParcelableExtra(CONTACT_EXTRA)
-                    contact.persist()
-                    viewHolder.contact = contact
-                }
-                viewHolder.updateHud()
-            }
-            DELETE_PROFILE_REQUEST_ID -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    deleteProfile()
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private inline fun ifLocationPermissionGranted(f: () -> Unit) =
@@ -161,35 +140,32 @@ class NavigationActivity : AppCompatActivity() {
             onGranted: () -> Unit = ::onLocationPermissionGranted,
             onDenied: () -> Unit = ::requestLocationPermission) =
                 if (ContextCompat.checkSelfPermission(
-                    this,
+                    context!!,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         isLocationPermissionGranted = true
                         onGranted.invoke()
                 }
                 else { onDenied.invoke() }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) =
         menuInflater.inflate(R.menu.navigation, menu)
-        return true
-    }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.action_help).isVisible =
                 !isLocationPermissionGranted || !isLoggedIn
         menu.findItem(R.id.action_logout).isVisible = isLoggedIn
         menu.findItem(R.id.action_delete_user).isVisible = isLoggedIn
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         fun help(caption: Int, file: String, action: () -> Unit): Boolean {
-                dialog = Dialog(this).apply {
+                dialog = Dialog(context!!).apply {
                 setContentView(R.layout.dialog_help)
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
                 findViewById<Button>(R.id.action_button).setText(caption)
-                val content = IOUtils.toString(assets.open(file), UTF_8)
+                val content = IOUtils.toString(activity!!.assets.open(file), UTF_8)
                         .replace(APP_VERSION_PLACEHOLDER, versionName)
                         .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
                 web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
@@ -212,15 +188,24 @@ class NavigationActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.action_logout -> logout()
-            R.id.action_delete_user -> deleteProfileActivity(DELETE_PROFILE_REQUEST_ID)
+            R.id.action_delete_user -> {
+                findNavController().navigate(R.id.action_navigationFragment_to_deleteProfileFragment)
+                true
+            }
             R.id.action_help -> if (!isLocationPermissionGranted) {
                 showLocationPermissionHelp()
             }
             else if (!isLoggedIn) {
                 showLoginHelp()
             } else true
-            R.id.action_settings -> settingsActivity()
-            R.id.action_credits -> creditsActivity()
+            R.id.action_settings -> {
+                findNavController().navigate(R.id.action_navigationFragment_to_settingsFragmentContainer)
+                true
+            }
+            R.id.action_credits -> {
+                findNavController().navigate(R.id.action_navigationFragment_to_creditsFragment)
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -230,14 +215,14 @@ class NavigationActivity : AppCompatActivity() {
         dialog?.dismiss()
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package", packageName, null)
+        val uri = Uri.fromParts("package", activity!!.packageName, null)
         intent.data = uri
         startActivity(intent)
     }
 
     private fun requestLocationPermission() {
         permissions().request(
-                this,
+                activity!! as AppCompatActivity,
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -247,10 +232,10 @@ class NavigationActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        invalidateOptionsMenu()
+        activity!!.invalidateOptionsMenu()
         viewHolder.locationPermissionGranted()
         if (isLoggedIn) {
-            (application as NavigatorApplication).startService()
+            (activity!!.application as NavigatorApplication).startService()
         }
     }
 
@@ -283,13 +268,13 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun login() {
         dialog?.dismiss()
-        loginActivity(LoginActivity.LOGIN)
+        activity!!.loginActivity(LoginActivity.LOGIN)
     }
 
     private fun logout(): Boolean {
         null.persist()
         viewHolder.stopWatchingPeer()
-        loginActivity(LoginActivity.LOGOUT)
+        activity!!.loginActivity(LoginActivity.LOGOUT)
         return true
     }
 
@@ -297,14 +282,14 @@ class NavigationActivity : AppCompatActivity() {
         viewHolder.stopWatchingPeer()
         contactsStore.clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
-        setDynamicShortcuts(this)
+        setDynamicShortcuts(context!!)
         fbWriter.deleteMe()
         logout()
     }
 
     @SuppressLint("CommitPrefEdits")
     private fun persistCameraPositionAndZoom() =
-            with (PreferenceManager.getDefaultSharedPreferences(this).edit()) {
+            with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {
                 putFloat(ZOOM_PROPERTY, viewHolder.zoom)
                 putFloat(LATITUDE_PROPERTY, viewHolder.lastCameraPosition.latitude.toFloat())
                 putFloat(LONGITUDE_PROPERTY, viewHolder.lastCameraPosition.longitude.toFloat())
@@ -316,24 +301,7 @@ class NavigationActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onBackPressed() = if (System.currentTimeMillis() - backClickTime < DOUBLE_CLICK_MS) {
-        (application as NavigatorApplication).stopService()
-        exitApplicationToast?.cancel()
-        super.onBackPressed()
-    } else {
-        exitApplicationToast?.cancel()
-        exitApplicationToast =
-                Toast.makeText(
-                        this,
-                        R.string.tap_back_second_time,
-                        Toast.LENGTH_SHORT).apply { show() }
-        backClickTime = System.currentTimeMillis()
-    }
-
     companion object {
-
-        private const val DELETE_PROFILE_REQUEST_ID = 0
-        private const val CONTACTS_ACTIVITY_REQUEST_ID = 1
 
         private const val UTF_8 = "UTF-8"
         private const val ASSET_DIR = "file:///android_asset/"
@@ -343,17 +311,11 @@ class NavigationActivity : AppCompatActivity() {
         private const val HELP_LOCATION_PERMISSION_EN = "help_location_permission_en.html"
         private const val HELP_LOGIN_EN = "help_login_en.html"
 
-        const val CONTACT_EXTRA = "contact"
-        const val CONTACT_EMAIL_EXTRA = "contact_email"
-
         const val SAVED_PEER_LOCATION = "saved_peer_location"
 
         const val ZOOM_PROPERTY = "navigation_map_zoom"
         const val LATITUDE_PROPERTY = "navigation_map_latitude"
         const val LONGITUDE_PROPERTY = "navigation_map_longitude"
         const val DEFAULT_ZOOM = 7.5f
-
-        /** Length of time that will be taken for a double click.  */
-        private const val DOUBLE_CLICK_MS: Long = 1000
     }
 }

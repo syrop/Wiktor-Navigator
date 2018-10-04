@@ -27,7 +27,7 @@
             android:value="9608349be08009dc4cc83fa48441db4bcc934626" />
 
         <activity
-            android:name=".navigation.NavigationActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -35,40 +35,16 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:label="@string/settings_activity_label">
-        </activity>
-
-        <activity
-            android:name=".contact.ContactsActivity"
-            android:label="@string/contacts_activity_label">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable_contact"/>
         </activity>
 
         <activity
             android:name=".profile.LoginActivity"
             android:label="@string/app_name" />
-
-        <activity
-            android:name=".profile.DeleteProfileActivity"
-            android:label="@string/delete_user_activity_label" />
-
-        <activity
-            android:name=".credits.CreditsActivity"
-            android:label="@string/credits_activity_label" />
-
-        <activity
-            android:name=".contact.SeekContactActivity"
-            android:label="@string/seek_contact_activity_label"
-            android:launchMode="singleTop" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable_contact"/>
-        </activity>
 
         <service android:name="pl.org.seva.navigator.navigation.NavigatorService"/>
     </application>

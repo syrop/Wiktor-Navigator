@@ -15,10 +15,10 @@
               android:name="com.google.android.gms.maps.SupportMapFragment"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context=".navigation.NavigationActivity"/>
+              tools:context=".navigation.NavigationFragment"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        tools:context=".navigation.NavigationActivity"
+        tools:context=".navigation.NavigationFragment"
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you like this program, consider donating bitcoin: 36uxha7sy4mv6c9LdePKjGNmQe8eK16aX6
+ * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
 package pl.org.seva.navigator.ui
@@ -24,7 +24,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.navigation.NavigationActivity
+import pl.org.seva.navigator.navigation.NavigationFragment
 
 fun createNotificationBuilder(context: Context): Notification.Builder =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -36,7 +36,7 @@ fun createNotificationBuilder(context: Context): Notification.Builder =
         }
 
 fun Context.createOngoingNotification(): Notification {
-    val mainActivityIntent = android.content.Intent(this, NavigationActivity::class.java)
+    val mainActivityIntent = android.content.Intent(this, NavigationFragment::class.java)
 
     val pi = PendingIntent.getActivity(
             this,
