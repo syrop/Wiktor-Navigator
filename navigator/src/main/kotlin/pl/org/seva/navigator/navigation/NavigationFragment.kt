@@ -88,15 +88,15 @@ class NavigationFragment : Fragment() {
             }
         }
         navigationModel.contact.observe(this) { contact ->
-                    viewHolder.contact = contact
-                    contact.persist()
-                }
+            viewHolder.contact = contact
+            contact.persist()
+        }
         navigationModel.deleteProfile.observe(this) { result ->
-                    if (result) {
-                        deleteProfile()
-                        navigationModel.deleteProfile.value = false
-                    }
-                }
+            if (result) {
+                deleteProfile()
+                navigationModel.deleteProfile.value = false
+            }
+        }
     }
 
     override fun onDestroy() {
