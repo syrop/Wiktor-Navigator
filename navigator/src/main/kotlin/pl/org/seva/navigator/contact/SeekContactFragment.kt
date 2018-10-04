@@ -59,6 +59,11 @@ class SeekContactFragment : Fragment() {
 
     private lateinit var navigationModel: NavigationViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_seek_contact, container, false)
     }
