@@ -69,7 +69,7 @@ class SeekContactFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
 
         setPromptText(R.string.seek_contact_press_to_begin)
         navigationModel.query.observe(this) {

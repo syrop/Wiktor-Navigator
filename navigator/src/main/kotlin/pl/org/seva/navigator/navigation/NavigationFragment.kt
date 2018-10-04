@@ -72,7 +72,7 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
         viewHolder = navigationView {
             init(savedInstanceState, root, navigationModel.contact.value)
             checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted

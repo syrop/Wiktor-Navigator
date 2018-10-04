@@ -39,7 +39,7 @@ class DeleteProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
         ok.setOnClickListener { onOkClicked() }
         cancel.setOnClickListener { onCancelClicked() }
     }

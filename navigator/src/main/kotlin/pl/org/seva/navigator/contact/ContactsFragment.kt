@@ -69,7 +69,7 @@ class ContactsFragment : Fragment() {
             ItemTouchHelper(ContactTouchListener { onContactSwiped(it) }).attachToRecyclerView(contacts)
         }
 
-        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
         fab.setOnClickListener { onFabClicked() }
 
         store.addContactsUpdatedListener { onContactsUpdatedInStore() }
