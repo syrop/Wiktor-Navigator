@@ -128,7 +128,7 @@ class NavigationViewHolder {
         clearMap()
     }
 
-    private fun clearMap() = map!!.clear()
+    private fun clearMap() = map?.clear()
 
     private fun onPeerLocationReceived(latLng: LatLng) {
         peerLocation = latLng
