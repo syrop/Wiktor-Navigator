@@ -26,14 +26,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import kotlinx.android.synthetic.main.activity_navigator.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contactsStore
 import pl.org.seva.navigator.contact.persist
 import pl.org.seva.navigator.navigation.NavigationViewModel
 
-class MainActivity : AppCompatActivity() {
+class NavigatorActivity : AppCompatActivity() {
 
     private var backClickTime = 0L
 
@@ -45,7 +47,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_navigator)
+
+        setSupportActionBar(toolbar)
+        NavigationUI.setupActionBarWithNavController(
+                this,
+                findNavController(R.id.nav_host_fragment))
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -22,10 +22,6 @@ package pl.org.seva.navigator.main
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.annotation.MainThread
-import androidx.annotation.NonNull
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -40,10 +36,6 @@ fun <T> Context.start(clazz: Class<T>, f: Intent.() -> Intent): Boolean {
     return true
 }
 
-fun <T> FragmentActivity.startForResult(clazz: Class<T>, requestCode: Int) {
-    startActivityForResult(Intent(this, clazz), requestCode)
-}
-
 val prefs get() = instance<SharedPreferences>()
 
 val applicationContext get() = instance<Context>()
@@ -55,21 +47,3 @@ val versionName get(): String =
 
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, f: (T) -> Unit) =
         observe(owner, Observer<T> { f(it) })
-
-//@MainThread
-//fun observe(@NonNull owner: LifecycleOwner, @NonNull observer: Observer<in T>) {
-//    assertMainThread("observe")
-//    if (owner.lifecycle.currentState == DESTROYED) {
-//        // ignore
-//        return
-//    }
-//    val wrapper = LifecycleBoundObserver(owner, observer)
-//    val existing = mObservers.putIfAbsent(observer, wrapper)
-//    if (existing != null && !existing!!.isAttachedTo(owner)) {
-//        throw IllegalArgumentException("Cannot add the same observer" + " with different lifecycles")
-//    }
-//    if (existing != null) {
-//        return
-//    }
-//    owner.lifecycle.addObserver(wrapper)
-//}
