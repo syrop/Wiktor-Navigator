@@ -57,7 +57,7 @@ class Bootstrap(private val application: Application) {
 
     fun login(user: FirebaseUser) {
         fun downloadFriendsFromCloud() =
-                friendshipObservable().downloadFriendsFromCloud(
+                friendshipObservable.downloadFriendsFromCloud(
                         onFriendFound = {
                             addContact(it)
                             contactDao() insert it
