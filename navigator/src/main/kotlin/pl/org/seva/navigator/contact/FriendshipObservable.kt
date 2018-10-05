@@ -35,7 +35,7 @@ class FriendshipObservable {
 
     private val cd = CompositeDisposable()
 
-    infix fun addFriendshipListener(friendshipListener: FriendshipListener) = with (fbReader()) {
+    infix fun addFriendshipListener(friendshipListener: FriendshipListener) = with (fbReader) {
         cd.addAll(
                 friendshipRequestedListener()
                         .subscribe { friendshipListener.onPeerRequestedFriendship(it) },
@@ -46,7 +46,7 @@ class FriendshipObservable {
     }
 
     fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Disposable =
-            fbReader().readFriends().doOnComplete(onCompleted).subscribe{ onFriendFound(it) }
+            fbReader.readFriends().doOnComplete(onCompleted).subscribe{ onFriendFound(it) }
 
     fun clearFriendshipListeners() = cd.clear()
 }

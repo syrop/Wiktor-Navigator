@@ -39,19 +39,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.fb.FbReader
-import pl.org.seva.navigator.data.fb.FbWriter
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.data.fb.fbReader
+import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.observe
 import pl.org.seva.navigator.navigation.NavigationViewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
 class SeekContactFragment : Fragment() {
-
-    private val fbWriter: FbWriter = instance()
-    private val fbReader: FbReader = instance()
-    private val store: Contacts = instance()
 
     private var progress: ProgressDialog? = null
 
@@ -162,7 +157,7 @@ class SeekContactFragment : Fragment() {
     }
 
     private fun onContactClicked(contact: Contact) = when {
-        contact in store -> {
+        contact in contactsStore -> {
             findNavController().popBackStack()
             Unit
         }

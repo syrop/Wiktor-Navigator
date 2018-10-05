@@ -31,7 +31,7 @@ import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
 
-fun fbReader() = instance<FbReader>()
+val fbReader get() = instance<FbReader>()
 
 class FbReader : Fb() {
 
