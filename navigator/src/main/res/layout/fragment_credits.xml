@@ -27,7 +27,7 @@
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_marginTop="32dp"
-        android:text="@string/credits_activity_developer"/>
+        android:text="@string/credits_fragment_developer"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,21 +40,21 @@
         android:id="@+id/developer_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/credits_activity_developer_url_short"
+        android:text="@string/credits_fragment_developer_url_short"
         android:textColor="@color/colorAccent"
         android:textSize="16sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/credits_activity_developer_donate"
+        android:text="@string/credits_fragment_developer_donate"
         android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/developer_crypto_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/credits_activity_developer_btc"
+        android:text="@string/credits_fragment_developer_btc"
         android:textColor="@color/colorAccent"
         android:textSize="16sp"/>
 
@@ -65,7 +65,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
-        android:text="@string/credits_activity_launcher_icon_by"/>
+        android:text="@string/credits_fragment_launcher_icon_by"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -80,6 +80,6 @@
         android:textColor="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/credits_activity_icon_github_short"/>
+        android:text="@string/credits_fragment_icon_github_short"/>
 
 </LinearLayout>

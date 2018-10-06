@@ -18,14 +18,14 @@
     <string name="ongoing_channel_name">Ongoing</string>
     <string name="ongoing_channel_description">Services running in the foreground</string>
 
-    <!-- Contacts activity. -->
-    <string name="contacts_activity_label">Contacts</string>
+    <!-- Contacts fragment. -->
+    <string name="contacts_fragment_label">Contacts</string>
     <string name="contacts_deleted_contact">Contact deleted</string>
     <string name="contacts_undelete">Undelete</string>
     <string name="contacts_please_press_plus">Please press + to search for contacts.</string>
 
-    <!-- Navigation activity. -->
-    <string name="navigation_activity_label">Navigation</string>
+    <!-- Navigation fragment. -->
+    <string name="navigation_fragment_label">Navigation</string>
     <string name="snackbar_permission_request_denied">Location permission request was denied.</string>
     <string name="snackbar_retry">Retry</string>
     <string name="snackbar_login">Log in</string>
@@ -34,24 +34,24 @@
     <string name="tap_back_second_time">Tap Back second time to exit the application</string>
     <string name="device_not_moving">Your device is stationary</string>
 
-    <!-- Settings activity. -->
-    <string name="settings_activity_label">Settings</string>
+    <!-- Settings fragment. -->
+    <string name="settings_fragment_label">Settings</string>
     <string name="pref_debug_mode">Debug mode</string>
-    <string name="settings_activity_debug_info">This mode periodically uploads information about the state of your device. (Whether it is aware of your current location, the last time it connected to the Internet). This information will be visible by your friend, together with your location, if available. Unless the developer asked you to do that, you probably do not need this setting.</string>
+    <string name="settings_fragment_debug_info">This mode periodically uploads information about the state of your device. (Whether it is aware of your current location, the last time it connected to the Internet). This information will be visible by your friend, together with your location, if available. Unless the developer asked you to do that, you probably do not need this setting.</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Authentication failed.</string>
     <string name="login_loading">Loading…</string>
 
-    <!-- Delete user activity. -->
-    <string name="delete_user_activity_label">Delete your profile</string>
+    <!-- Delete user fragment. -->
+    <string name="delete_user_fragment_label">Delete your profile</string>
     <string name="delete_description">When you delete your profile, it is going to be deleted both from the server and the device immediately, along with your friends list and your last location.\n\nYour details may still be present in contact lists of your friends. It is recommended that you unfriend them before deleting your profile here.\n\nWhen you log back in, your profile will be created again, but all data it previously contained will be lost.</string>
     <string name="delete_user_cancel">Cancel</string>
     <string name="delete_user_ok">OK</string>
 
-    <!-- Seek contact activity. -->
-    <string name="seek_contact_activity_label">Add a new user</string>
-    <string name="seek_contact_activity_hint">Search by e-mail</string>
+    <!-- Seek contact fragment. -->
+    <string name="seek_contact_fragment_label">Add a new user</string>
+    <string name="seek_contact_fragment_hint">Search by e-mail</string>
     <string name="seek_contact_press_to_begin">Please press [image] to begin your search.</string>
     <string name="seek_contact_no_user_found">No user is found.</string>
     <string name="seek_contact_searching">Searching…</string>
@@ -59,18 +59,18 @@
     <string name="seek_contact_waiting_for_party">Waiting for your party to respond.</string>
     <string name="seek_contact_cannot_add_yourself">Cannot add yourself.</string>
 
-    <!-- Credits activity. -->
-    <string name="credits_activity_label">Credits</string>
-    <string name="credits_activity_version">ver. [version]</string>
-    <string name="credits_activity_developer">Developer:</string>
-    <string name="credits_activity_developer_url_short" translatable="false">github.com/syrop</string>
-    <string name="credits_activity_developer_url" translatable="false">https://github.com/syrop</string>
-    <string name="credits_activity_developer_donate">Donate BTC:</string>
-    <string name="credits_activity_developer_btc" translatable="false">bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp</string>
-    <string name="credits_activity_launcher_icon_by">Launcher icon by:</string>
-    <string name="credits_activity_icon_github_short" translatable="false">github.com/zularizal</string>
-    <string name="credits_activity_icon_github" translatable="false">https://github.com/zularizal</string>
-    <string name="credits_activity_copied_to_clipboard">Copied the text to clipboard</string>
+    <!-- Credits fragment. -->
+    <string name="credits_fragment_label">Credits</string>
+    <string name="credits_fragment_version">ver. [version]</string>
+    <string name="credits_fragment_developer">Developer:</string>
+    <string name="credits_fragment_developer_url_short" translatable="false">github.com/syrop</string>
+    <string name="credits_fragment_developer_url" translatable="false">https://github.com/syrop</string>
+    <string name="credits_fragment_developer_donate">Donate BTC:</string>
+    <string name="credits_fragment_developer_btc" translatable="false">bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp</string>
+    <string name="credits_fragment_launcher_icon_by">Launcher icon by:</string>
+    <string name="credits_fragment_icon_github_short" translatable="false">github.com/zularizal</string>
+    <string name="credits_fragment_icon_github" translatable="false">https://github.com/zularizal</string>
+    <string name="credits_fragment_copied_to_clipboard">Copied the text to clipboard</string>
 
 
     <!-- Dialogs and notifications. -->

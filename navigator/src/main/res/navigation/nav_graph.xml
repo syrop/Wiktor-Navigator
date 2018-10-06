@@ -35,21 +35,21 @@
     <fragment
         android:id="@+id/deleteProfileFragment"
         android:name="pl.org.seva.navigator.profile.DeleteProfileFragment"
-        android:label="@string/delete_user_activity_label"
+        android:label="@string/delete_user_fragment_label"
         tools:layout="@layout/fragment_delete_profile"/>
     <fragment
         android:id="@+id/seekContactFragment"
         android:name="pl.org.seva.navigator.contact.SeekContactFragment"
-        android:label="@string/contacts_activity_label"
+        android:label="@string/contacts_fragment_label"
         tools:layout="@layout/fragment_seek_contact"/>
     <fragment
         android:id="@+id/settingsFragmentContainer"
         android:name="pl.org.seva.navigator.settings.SettingsFragmentContainer"
-        android:label="@string/settings_activity_label"
+        android:label="@string/settings_fragment_label"
         tools:layout="@layout/fragment_settings"/>
     <fragment
         android:id="@+id/creditsFragment"
         android:name="pl.org.seva.navigator.credits.CreditsFragment"
-        android:label="@string/credits_activity_label"
+        android:label="@string/credits_fragment_label"
         tools:layout="@layout/fragment_credits"/>
 </navigation>

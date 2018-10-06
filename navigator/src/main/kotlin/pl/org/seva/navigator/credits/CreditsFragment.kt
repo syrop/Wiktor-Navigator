@@ -50,22 +50,22 @@ class CreditsFragment : Fragment() {
         fun String.toClipboard() {
             val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", this)
-            toaster().toast { getString(R.string.credits_activity_copied_to_clipboard) }
+            toaster().toast { getString(R.string.credits_fragment_copied_to_clipboard) }
         }
 
-        version.text = getString(R.string.credits_activity_version)
+        version.text = getString(R.string.credits_fragment_version)
                 .replace(VERSION_PLACEHOLDER, versionName)
 
         developer_url.setOnClickListener {
-            getString(R.string.credits_activity_developer_url).inBrowser()
+            getString(R.string.credits_fragment_developer_url).inBrowser()
         }
 
         icon_github.setOnClickListener {
-            getString(R.string.credits_activity_icon_github).inBrowser()
+            getString(R.string.credits_fragment_icon_github).inBrowser()
         }
 
         developer_crypto_address.setOnClickListener {
-            getString(R.string.credits_activity_developer_btc).toClipboard()
+            getString(R.string.credits_fragment_developer_btc).toClipboard()
         }
     }
 

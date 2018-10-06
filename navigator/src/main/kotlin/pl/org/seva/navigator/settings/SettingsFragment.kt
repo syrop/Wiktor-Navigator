@@ -39,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             return
         }
         val builder = AlertDialog.Builder(activity!!, android.R.style.Theme_Material_Dialog_Alert)
-        builder.setMessage(R.string.settings_activity_debug_info)
+        builder.setMessage(R.string.settings_fragment_debug_info)
                 .setTitle(R.string.pref_debug_mode)
                 .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()

@@ -18,14 +18,14 @@
     <string name="ongoing_channel_name">Trwające</string>
     <string name="ongoing_channel_description">Serwisy działające na wierzchu</string>
 
-    <!-- Contacts activity. -->
-    <string name="contacts_activity_label">Kontakty</string>
+    <!-- Contacts fragment. -->
+    <string name="contacts_fragment_label">Kontakty</string>
     <string name="contacts_deleted_contact">Skasowany kontakt</string>
     <string name="contacts_undelete">Odzyskaj</string>
     <string name="contacts_please_press_plus">Naciśnij + aby szukać kontaktów.</string>
 
-    <!-- Navigation activity. -->
-    <string name="navigation_activity_label">Nawigacja</string>
+    <!-- Navigation fragment. -->
+    <string name="navigation_fragment_label">Nawigacja</string>
     <string name="snackbar_permission_request_denied">Brak pozwolenia na lokalizację.</string>
     <string name="snackbar_retry">Ponów</string>
     <string name="snackbar_login">Zaloguj</string>
@@ -34,24 +34,24 @@
     <string name="tap_back_second_time">Naciśnij Wstecz drugi raz aby wyjść z aplikacji</string>
     <string name="device_not_moving">Urządzenie się nie porusza</string>
 
-    <!-- Settings activity. -->
-    <string name="settings_activity_label">Ustawienia</string>
+    <!-- Settings fragment. -->
+    <string name="settings_fragment_label">Ustawienia</string>
     <string name="pref_debug_mode">Tryb debugowy</string>
-    <string name="settings_activity_debug_info">W trybie debugowym urządzenie przesyła informacje o swoim stanie, takie jak czy zna swoją lokalizację oraz czas ostatniego połączenia z Internetem. Te informacje będą dostępne dla twojego przyjaciela razem z lokalizacją, jeżeli jest dostępna. Jeżeli deweloper nie poprosił cię o włączenie tego trybu, prawdopodobnie nie potrzebujesz go używać.</string>
+    <string name="settings_fragment_debug_info">W trybie debugowym urządzenie przesyła informacje o swoim stanie, takie jak czy zna swoją lokalizację oraz czas ostatniego połączenia z Internetem. Te informacje będą dostępne dla twojego przyjaciela razem z lokalizacją, jeżeli jest dostępna. Jeżeli deweloper nie poprosił cię o włączenie tego trybu, prawdopodobnie nie potrzebujesz go używać.</string>
 
     <!-- Login activity. -->
     <string name="login_authentication_failed">Nieudane logowanie.</string>
     <string name="login_loading">Ładowanie…</string>
 
-    <!-- Delete user activity. -->
-    <string name="delete_user_activity_label">Skasuj swój profil</string>
+    <!-- Delete user fragment. -->
+    <string name="delete_user_fragment_label">Skasuj swój profil</string>
     <string name="delete_description">Kiedy skasujesz swój profil, będzie natychmiast skasowany z serwera i z urządzenia, wraz z listą przyjaciół i twoją ostatnią lokalizacją.\n\nTwoje dane mogą wciąż być na liście kontaktów u twoich przyjaciół. Zaleca się usunięcie z listy wszystkich swoich przyjaciół przed skasowaniem swojego profilu.\n\nKiedy się znów lalogujesz. twój profil zostanie stworzony ponownie, ale dane, które poprzednio zawierał, nie będą odzyskane.</string>
     <string name="delete_user_cancel">Anuluj</string>
     <string name="delete_user_ok">OK</string>
 
-    <!-- Seek contact activity. -->
-    <string name="seek_contact_activity_label">Nowy kontakt</string>
-    <string name="seek_contact_activity_hint">Szukaj według e-mail</string>
+    <!-- Seek contact fragment. -->
+    <string name="seek_contact_fragment_label">Nowy kontakt</string>
+    <string name="seek_contact_fragment_hint">Szukaj według e-mail</string>
     <string name="seek_contact_press_to_begin">Naciśnij [image] aby szukać.</string>
     <string name="seek_contact_no_user_found">Nie znaleziono.</string>
     <string name="seek_contact_searching">Szukanie…</string>
@@ -59,13 +59,13 @@
     <string name="seek_contact_waiting_for_party">Oczekiwanie na odpowiedź.</string>
     <string name="seek_contact_cannot_add_yourself">Nie możesz dodać siebie.</string>
 
-    <!-- Credits activity. -->
-    <string name="credits_activity_label">Twórcy</string>
-    <string name="credits_activity_version">wer. [version]</string>
-    <string name="credits_activity_developer">Deweloper:</string>
-    <string name="credits_activity_developer_donate">Podaruj autorowi BTC:</string>
-    <string name="credits_activity_launcher_icon_by">Autor ikony programu:</string>
-    <string name="credits_activity_copied_to_clipboard">Copied the text to clipboard</string>
+    <!-- Credits fragment. -->
+    <string name="credits_fragment_label">Twórcy</string>
+    <string name="credits_fragment_version">wer. [version]</string>
+    <string name="credits_fragment_developer">Deweloper:</string>
+    <string name="credits_fragment_developer_donate">Podaruj autorowi BTC:</string>
+    <string name="credits_fragment_launcher_icon_by">Autor ikony programu:</string>
+    <string name="credits_fragment_copied_to_clipboard">Copied the text to clipboard</string>
 
     <!-- Dialogs and notifications. -->
     <string name="add_friend_confirmation">Czy chcesz dodać [name]?</string>
