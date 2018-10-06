@@ -28,7 +28,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_delete_profile.*
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.navigation.NavigatorViewModel
+import pl.org.seva.navigator.main.NavigatorViewModel
 
 class DeleteProfileFragment : Fragment() {
 

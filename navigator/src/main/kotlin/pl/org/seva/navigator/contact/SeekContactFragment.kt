@@ -42,7 +42,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.observe
-import pl.org.seva.navigator.navigation.NavigatorViewModel
+import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
@@ -68,7 +68,10 @@ class SeekContactFragment : Fragment() {
 
         setPromptText(R.string.seek_contact_press_to_begin)
         navigatorModel.query.observe(this) {
-            search(it)
+            if (!it.isEmpty()) {
+                navigatorModel.query.value = ""
+                search(it)
+            }
         }
     }
 

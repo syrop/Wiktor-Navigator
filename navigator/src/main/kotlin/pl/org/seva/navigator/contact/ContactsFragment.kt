@@ -43,7 +43,7 @@ import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 import pl.org.seva.navigator.contact.room.delete
 import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.data.fb.fbWriter
-import pl.org.seva.navigator.navigation.NavigatorViewModel
+import pl.org.seva.navigator.main.NavigatorViewModel
 
 class ContactsFragment : Fragment() {
 

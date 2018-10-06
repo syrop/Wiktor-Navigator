@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.activity_navigator.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contactsStore
 import pl.org.seva.navigator.contact.persist
-import pl.org.seva.navigator.navigation.NavigatorViewModel
 
 class NavigatorActivity : AppCompatActivity() {
 

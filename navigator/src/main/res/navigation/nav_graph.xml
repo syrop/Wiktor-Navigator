@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/contactsFragment"
         android:name="pl.org.seva.navigator.contact.ContactsFragment"
-        android:label="fragment_contacts"
+        android:label="@string/contacts_fragment_label"
         tools:layout="@layout/fragment_contacts">
         <action
             android:id="@+id/action_contactsFragment_to_seekContactFragment"
@@ -40,7 +40,7 @@
     <fragment
         android:id="@+id/seekContactFragment"
         android:name="pl.org.seva.navigator.contact.SeekContactFragment"
-        android:label="@string/contacts_fragment_label"
+        android:label="@string/seek_contact_fragment_label"
         tools:layout="@layout/fragment_seek_contact"/>
     <fragment
         android:id="@+id/settingsFragmentContainer"
