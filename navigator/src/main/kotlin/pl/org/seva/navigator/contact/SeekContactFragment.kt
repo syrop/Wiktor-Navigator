@@ -42,7 +42,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.data.fb.fbReader
 import pl.org.seva.navigator.data.fb.fbWriter
 import pl.org.seva.navigator.main.observe
-import pl.org.seva.navigator.navigation.NavigationViewModel
+import pl.org.seva.navigator.navigation.NavigatorViewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
@@ -52,7 +52,7 @@ class SeekContactFragment : Fragment() {
 
     private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-    private lateinit var navigationModel: NavigationViewModel
+    private lateinit var navigatorModel: NavigatorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,10 +64,10 @@ class SeekContactFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
+        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
 
         setPromptText(R.string.seek_contact_press_to_begin)
-        navigationModel.query.observe(this) {
+        navigatorModel.query.observe(this) {
             search(it)
         }
     }

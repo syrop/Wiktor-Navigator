@@ -23,7 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pl.org.seva.navigator.contact.Contact
 
-class NavigationViewModel : ViewModel() {
+class NavigatorViewModel : ViewModel() {
 
     val contact: MutableLiveData<Contact> = MutableLiveData()
     val deleteProfile: MutableLiveData<Boolean> = MutableLiveData()

@@ -43,7 +43,7 @@ import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 import pl.org.seva.navigator.contact.room.delete
 import pl.org.seva.navigator.contact.room.insert
 import pl.org.seva.navigator.data.fb.fbWriter
-import pl.org.seva.navigator.navigation.NavigationViewModel
+import pl.org.seva.navigator.navigation.NavigatorViewModel
 
 class ContactsFragment : Fragment() {
 
@@ -54,7 +54,7 @@ class ContactsFragment : Fragment() {
 
     private val adapter = ContactAdapter { onContactClicked(it) }
 
-    private lateinit var navigationModel: NavigationViewModel
+    private lateinit var navigatorModel: NavigatorViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_contacts, container, false)
@@ -69,7 +69,7 @@ class ContactsFragment : Fragment() {
             ItemTouchHelper(ContactTouchListener { onContactSwiped(it) }).attachToRecyclerView(contacts)
         }
 
-        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
+        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
         fab.setOnClickListener { onFabClicked() }
 
         store.addContactsUpdatedListener { onContactsUpdatedInStore() }
@@ -92,7 +92,7 @@ class ContactsFragment : Fragment() {
     }
 
     private fun onContactClicked(contact: Contact) {
-        navigationModel.contact.value = contact
+        navigatorModel.contact.value = contact
         findNavController().popBackStack()
     }
 

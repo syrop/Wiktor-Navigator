@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_navigator.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contactsStore
 import pl.org.seva.navigator.contact.persist
-import pl.org.seva.navigator.navigation.NavigationViewModel
+import pl.org.seva.navigator.navigation.NavigatorViewModel
 
 class NavigatorActivity : AppCompatActivity() {
 
@@ -41,12 +41,12 @@ class NavigatorActivity : AppCompatActivity() {
 
     private var exitApplicationToast: Toast? = null
 
-    private lateinit var navigationModel: NavigationViewModel
+    private lateinit var navigatorModel: NavigatorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        navigationModel = ViewModelProviders.of(this).get(NavigationViewModel::class.java)
+        navigatorModel = ViewModelProviders.of(this).get(NavigatorViewModel::class.java)
         setContentView(R.layout.activity_navigator)
 
         setSupportActionBar(toolbar)
@@ -59,11 +59,11 @@ class NavigatorActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
             val contact = contactsStore[this]
-            navigationModel.contact.value = contact
+            navigatorModel.contact.value = contact
             contact.persist()
         }
         if (Intent.ACTION_SEARCH == intent?.action) {
-            navigationModel.query.value = intent.getStringExtra(SearchManager.QUERY)
+            navigatorModel.query.value = intent.getStringExtra(SearchManager.QUERY)
         }
     }
 

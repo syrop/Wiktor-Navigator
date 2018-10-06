@@ -60,7 +60,7 @@ class NavigationFragment : Fragment() {
 
     private val isLoggedIn get() = isLoggedIn()
 
-    private lateinit var navigationModel: NavigationViewModel
+    private lateinit var navigatorModel: NavigatorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,9 +72,9 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigationModel = ViewModelProviders.of(activity!!).get(NavigationViewModel::class.java)
+        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
         viewHolder = navigationView {
-            init(savedInstanceState, root, navigationModel.contact.value)
+            init(savedInstanceState, root, navigatorModel.contact.value)
             checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
             persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
         }
@@ -87,14 +87,14 @@ class NavigationFragment : Fragment() {
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
-        navigationModel.contact.observe(this) { contact ->
+        navigatorModel.contact.observe(this) { contact ->
             viewHolder.contact = contact
             contact.persist()
         }
-        navigationModel.deleteProfile.observe(this) { result ->
+        navigatorModel.deleteProfile.observe(this) { result ->
             if (result) {
                 deleteProfile()
-                navigationModel.deleteProfile.value = false
+                navigatorModel.deleteProfile.value = false
             }
         }
     }
