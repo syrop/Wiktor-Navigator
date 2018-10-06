@@ -55,6 +55,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
     companion object {
-        const val DEBUG = "writeDebug"
+        const val DEBUG = "debug"
     }
 }

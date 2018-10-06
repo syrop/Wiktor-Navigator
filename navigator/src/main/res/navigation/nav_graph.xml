@@ -9,7 +9,7 @@
         android:id="@+id/navigationFragment"
         android:name="pl.org.seva.navigator.navigation.NavigationFragment"
         tools:layout="@layout/fragment_navigation"
-        android:label="NavigationFragment">
+        android:label="@string/app_name_short">
         <action
             android:id="@+id/action_navigationFragment_to_contactsFragment"
             app:destination="@id/contactsFragment"/>
@@ -35,21 +35,21 @@
     <fragment
         android:id="@+id/deleteProfileFragment"
         android:name="pl.org.seva.navigator.profile.DeleteProfileFragment"
-        android:label="DeleteProfileFragment"
+        android:label="@string/delete_user_activity_label"
         tools:layout="@layout/fragment_delete_profile"/>
     <fragment
         android:id="@+id/seekContactFragment"
         android:name="pl.org.seva.navigator.contact.SeekContactFragment"
-        android:label="SeekContactFragment"
+        android:label="@string/contacts_activity_label"
         tools:layout="@layout/fragment_seek_contact"/>
     <fragment
         android:id="@+id/settingsFragmentContainer"
         android:name="pl.org.seva.navigator.settings.SettingsFragmentContainer"
-        android:label="SettingsFragmentContainer"
+        android:label="@string/settings_activity_label"
         tools:layout="@layout/fragment_settings"/>
     <fragment
         android:id="@+id/creditsFragment"
         android:name="pl.org.seva.navigator.credits.CreditsFragment"
-        android:label="CreditsFragment"
+        android:label="@string/credits_activity_label"
         tools:layout="@layout/fragment_credits"/>
 </navigation>
