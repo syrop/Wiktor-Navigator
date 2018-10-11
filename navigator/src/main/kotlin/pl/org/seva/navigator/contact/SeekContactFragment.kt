@@ -76,23 +76,23 @@ class SeekContactFragment : Fragment() {
     }
 
     private fun setPromptText(id: Int) {
-        prompt.text = getString(id).insertImage()
-    }
-
-    private fun String.insertImage(): SpannableString {
-        val result = SpannableString(this)
-        val d = resources.getDrawable(R.drawable.ic_search_black_24dp)
-        d.setBounds(0, 0, d.intrinsicWidth, d.intrinsicHeight)
-        val span = ImageSpan(d, ImageSpan.ALIGN_BASELINE)
-        val idPlaceholder = indexOf(IMAGE_PLACEHOLDER)
-        if (idPlaceholder >= 0) {
-            result.setSpan(
-                    span,
-                    idPlaceholder,
-                    idPlaceholder + IMAGE_PLACEHOLDER_LENGTH,
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        fun String.insertSearchImage(): SpannableString {
+            val result = SpannableString(this)
+            val d = resources.getDrawable(R.drawable.ic_search_black_24dp)
+            d.setBounds(0, 0, d.intrinsicWidth, d.intrinsicHeight)
+            val span = ImageSpan(d, ImageSpan.ALIGN_BASELINE)
+            val idPlaceholder = indexOf(IMAGE_PLACEHOLDER)
+            if (idPlaceholder >= 0) {
+                result.setSpan(
+                        span,
+                        idPlaceholder,
+                        idPlaceholder + IMAGE_PLACEHOLDER_LENGTH,
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            }
+            return result
         }
-        return result
+
+        prompt.text = getString(id).insertSearchImage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
