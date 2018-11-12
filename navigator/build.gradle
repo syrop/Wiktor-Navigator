@@ -101,7 +101,7 @@ dependencies {
     implementation 'org.kodein.di:kodein-di-generic-jvm:5.3.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:5.3.0'
     implementation 'org.kodein.di:kodein-di-framework-android:5.0.0'
-    implementation 'androidx.core:core-ktx:1.0.0'
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     // Jetpack
     kapt 'androidx.room:room-compiler:2.0.0'
@@ -115,9 +115,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
     implementation 'com.google.firebase:firebase-auth:16.0.5'
-    implementation 'com.google.firebase:firebase-database:16.0.4'
+    implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
         transitive = true
     }
