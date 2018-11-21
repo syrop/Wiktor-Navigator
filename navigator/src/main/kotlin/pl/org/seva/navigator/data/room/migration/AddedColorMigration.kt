@@ -59,5 +59,4 @@ class AddedColorMigration : Migration(
         private const val DROP_STATEMENT =
                 "drop table friends_old"
     }
-
 }
