@@ -56,9 +56,7 @@ class NavigationFragment : Fragment() {
     private var dialog: Dialog? = null
     private var snackbar: Snackbar? = null
 
-    private lateinit var viewHolder: NavigationViewHolder
-
-    private val isLoggedIn get() = isLoggedIn()
+    private lateinit var mapHolder: MapHolder
 
     private lateinit var navigatorModel: NavigatorViewModel
 
@@ -73,7 +71,7 @@ class NavigationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
-        viewHolder = navigationView {
+        mapHolder = createMapHolder {
             init(savedInstanceState, root, navigatorModel.contact.value)
             checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
             persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
@@ -88,7 +86,7 @@ class NavigationFragment : Fragment() {
             }
         }
         navigatorModel.contact.observe(this) { contact ->
-            viewHolder.contact = contact
+            mapHolder.contact = contact
             contact.persist()
         }
         navigatorModel.deleteProfile.observe(this) { result ->
@@ -117,11 +115,11 @@ class NavigationFragment : Fragment() {
         activity!!.invalidateOptionsMenu()
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync { viewHolder ready it }
+        mapFragment.getMapAsync { map -> mapHolder withMap map }
     }
 
     private fun onAddContactClicked() {
-        viewHolder.stopWatchingPeer()
+        mapHolder.stopWatchingPeer()
         if (!isLocationPermissionGranted) {
             checkLocationPermission()
         }
@@ -233,7 +231,7 @@ class NavigationFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
         activity!!.invalidateOptionsMenu()
-        viewHolder.locationPermissionGranted()
+        mapHolder.locationPermissionGranted()
         if (isLoggedIn) {
             (activity!!.application as NavigatorApplication).startService()
         }
@@ -273,13 +271,13 @@ class NavigationFragment : Fragment() {
 
     private fun logout(): Boolean {
         null.persist()
-        viewHolder.stopWatchingPeer()
+        mapHolder.stopWatchingPeer()
         activity!!.loginActivity(LoginActivity.LOGOUT)
         return true
     }
 
     private fun deleteProfile() {
-        viewHolder.stopWatchingPeer()
+        mapHolder.stopWatchingPeer()
         contactsStore.clear()
         instance<ContactsDatabase>().contactDao.deleteAll()
         setDynamicShortcuts(context!!)
@@ -290,14 +288,14 @@ class NavigationFragment : Fragment() {
     @SuppressLint("CommitPrefEdits")
     private fun persistCameraPositionAndZoom() =
             with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {
-                putFloat(ZOOM_PROPERTY, viewHolder.zoom)
-                putFloat(LATITUDE_PROPERTY, viewHolder.lastCameraPosition.latitude.toFloat())
-                putFloat(LONGITUDE_PROPERTY, viewHolder.lastCameraPosition.longitude.toFloat())
+                putFloat(ZOOM_PROPERTY, mapHolder.zoom)
+                putFloat(LATITUDE_PROPERTY, mapHolder.lastCameraPosition.latitude.toFloat())
+                putFloat(LONGITUDE_PROPERTY, mapHolder.lastCameraPosition.longitude.toFloat())
                 apply()
             }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(SAVED_PEER_LOCATION, viewHolder.peerLocation)
+        outState.putParcelable(SAVED_PEER_LOCATION, mapHolder.peerLocation)
         super.onSaveInstanceState(outState)
     }
 

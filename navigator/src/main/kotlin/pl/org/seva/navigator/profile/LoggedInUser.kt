@@ -29,7 +29,7 @@ fun FirebaseUser.setCurrent() = loggedInUser setCurrentUser this
 
 fun clearCurrentUser() = loggedInUser setCurrentUser null
 
-fun isLoggedIn() = loggedInUser.isLoggedIn
+val isLoggedIn get() = loggedInUser.isLoggedIn
 
 class LoggedInUser {
 

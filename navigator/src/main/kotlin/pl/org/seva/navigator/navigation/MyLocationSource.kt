@@ -47,7 +47,7 @@ class MyLocationSource {
 
     private val locationSubject = PublishSubject.create<LatLng>()
     private val locationObservable = locationSubject
-            .filter { isLoggedIn() }
+            .filter { isLoggedIn }
             .timestamp()
             .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
             .doOnNext { lastSentLocationTime = it.time() }

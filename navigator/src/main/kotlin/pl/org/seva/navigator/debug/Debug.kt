@@ -39,7 +39,7 @@ class Debug {
     fun start() {
         disposable.dispose()
         disposable = Observable.interval(1, TimeUnit.MINUTES)
-                .filter { isLoggedIn() }
+                .filter { isLoggedIn }
                 .subscribe {
                     val cal = Calendar.getInstance()
                     val message = "${cal.get(Calendar.HOUR_OF_DAY)}:" +

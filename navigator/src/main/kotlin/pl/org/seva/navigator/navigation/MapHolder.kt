@@ -43,10 +43,10 @@ import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.main.toaster
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
-fun navigationView(f: NavigationViewHolder.() -> Unit): NavigationViewHolder =
-        NavigationViewHolder().apply(f)
+fun createMapHolder(f: MapHolder.() -> Unit): MapHolder =
+        MapHolder().apply(f)
 
-class NavigationViewHolder {
+class MapHolder {
 
     private var map: GoogleMap? = null
     var peerLocation: LatLng? = null
@@ -154,7 +154,7 @@ class NavigationViewHolder {
 
     private fun moveCameraToLast() = lastCameraPosition.moveCamera()
 
-    infix fun ready(map: GoogleMap) = map.onReady()
+    infix fun withMap(map: GoogleMap) = map.onReady()
 
     @SuppressLint("MissingPermission")
     fun locationPermissionGranted() {
@@ -163,13 +163,13 @@ class NavigationViewHolder {
 
     @SuppressLint("MissingPermission")
     private fun GoogleMap.onReady() {
-        this@NavigationViewHolder.map = this.apply {
+        this@MapHolder.map = this.apply {
             setOnCameraIdleListener { onCameraIdle() }
             checkLocationPermission { isMyLocationEnabled = true }
         }
         peerLocation?.putPeerMarker()
         moveCamera()
-        moveCamera = this@NavigationViewHolder::moveCameraToPeerOrLastLocation
+        moveCamera = this@MapHolder::moveCameraToPeerOrLastLocation
     }
 
     private fun onCameraIdle() = map!!.cameraPosition.let {
@@ -196,10 +196,10 @@ class NavigationViewHolder {
     }
 
     private fun Contact.listen() {
-        contactsStore.addContactsUpdatedListener(email, this@NavigationViewHolder::stopWatchingPeer)
-        peerObservable.addLocationListener(email, this@NavigationViewHolder::onPeerLocationReceived)
+        contactsStore.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
+        peerObservable.addLocationListener(email, this@MapHolder::onPeerLocationReceived)
         if (isDebugMode) {
-            peerObservable.addDebugListener(email, this@NavigationViewHolder::onDebugReceived)
+            peerObservable.addDebugListener(email, this@MapHolder::onDebugReceived)
         }
     }
 
