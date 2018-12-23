@@ -76,7 +76,7 @@ class NavigationFragment : Fragment() {
             checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
             persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
         }
-        fab.setOnClickListener { onAddContactClicked() }
+        add_contact_fab.setOnClickListener { onAddContactClicked() }
 
         checkLocationPermission()
         activityRecognition.listen(lifecycle) { state ->
