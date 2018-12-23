@@ -21,7 +21,7 @@ package pl.org.seva.navigator.debug
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
-import pl.org.seva.navigator.data.fb.fbWriter
+import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.profile.isLoggedIn

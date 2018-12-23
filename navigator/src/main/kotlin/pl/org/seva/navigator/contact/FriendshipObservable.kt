@@ -22,7 +22,7 @@ package pl.org.seva.navigator.contact
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-import pl.org.seva.navigator.data.fb.fbReader
+import pl.org.seva.navigator.main.fb.fbReader
 import pl.org.seva.navigator.main.instance
 
 val friendshipObservable get() = instance<FriendshipObservable>()

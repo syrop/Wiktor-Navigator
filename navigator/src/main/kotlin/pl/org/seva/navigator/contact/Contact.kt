@@ -29,7 +29,7 @@ import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_EMAIL_PROPERTY
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_NAME_PROPERTY
-import pl.org.seva.navigator.contact.room.ContactsDatabase
+import pl.org.seva.navigator.main.db.ContactsDatabase
 import pl.org.seva.navigator.main.prefs
 
 fun Contact?.persist() {

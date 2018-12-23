@@ -17,12 +17,12 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.contact.room
+package pl.org.seva.navigator.main.db
 
 import androidx.room.Room
-import pl.org.seva.navigator.data.room.migration.AddedColorMigration
-import pl.org.seva.navigator.data.room.migration.AddedDebugMigration
-import pl.org.seva.navigator.data.room.migration.LiteToRoomMigration
+import pl.org.seva.navigator.main.db.migration.AddedColorMigration
+import pl.org.seva.navigator.main.db.migration.AddedDebugMigration
+import pl.org.seva.navigator.main.db.migration.LiteToRoomMigration
 import pl.org.seva.navigator.main.context
 import pl.org.seva.navigator.main.instance
 
@@ -30,10 +30,10 @@ val contactsDatabase get() = instance<ContactsDatabase>()
 
 class ContactsDatabase {
 
-    private val db: ContactsDatabaseAbstract
+    private val db: NavigatorDbAbstract
 
     init {
-        db = Room.databaseBuilder(context(), ContactsDatabaseAbstract::class.java, DATABASE_NAME)
+        db = Room.databaseBuilder(context(), NavigatorDbAbstract::class.java, DATABASE_NAME)
                 .addMigrations(LiteToRoomMigration(), AddedColorMigration(), AddedDebugMigration())
                 .allowMainThreadQueries()
                 .build()

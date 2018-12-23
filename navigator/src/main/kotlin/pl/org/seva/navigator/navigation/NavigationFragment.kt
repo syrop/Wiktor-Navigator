@@ -44,8 +44,8 @@ import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.contact.room.ContactsDatabase
-import pl.org.seva.navigator.data.fb.fbWriter
+import pl.org.seva.navigator.main.db.ContactsDatabase
+import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.profile.*
 

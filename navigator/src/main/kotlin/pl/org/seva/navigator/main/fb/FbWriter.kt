@@ -17,7 +17,7 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.data.fb
+package pl.org.seva.navigator.main.fb
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseUser

@@ -27,11 +27,11 @@ import android.content.IntentFilter
 
 import java.util.Random
 
-import pl.org.seva.navigator.data.ParcelableInt
-import pl.org.seva.navigator.contact.room.contactDao
-import pl.org.seva.navigator.contact.room.delete
-import pl.org.seva.navigator.contact.room.insert
-import pl.org.seva.navigator.data.fb.fbWriter
+import pl.org.seva.navigator.main.ParcelableInt
+import pl.org.seva.navigator.main.db.contactDao
+import pl.org.seva.navigator.main.db.delete
+import pl.org.seva.navigator.main.db.insert
+import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.context
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.setDynamicShortcuts

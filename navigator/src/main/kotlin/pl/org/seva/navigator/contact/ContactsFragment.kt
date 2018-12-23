@@ -36,13 +36,13 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.contact.room.contactsDatabase
+import pl.org.seva.navigator.main.db.contactsDatabase
 import pl.org.seva.navigator.main.setDynamicShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
-import pl.org.seva.navigator.contact.room.delete
-import pl.org.seva.navigator.contact.room.insert
-import pl.org.seva.navigator.data.fb.fbWriter
+import pl.org.seva.navigator.main.db.delete
+import pl.org.seva.navigator.main.db.insert
+import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
 
 class ContactsFragment : Fragment() {

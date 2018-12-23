@@ -25,10 +25,10 @@ import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.contact.room.contactDao
-import pl.org.seva.navigator.contact.room.contactsDatabase
+import pl.org.seva.navigator.main.db.contactDao
+import pl.org.seva.navigator.main.db.contactsDatabase
 
-import pl.org.seva.navigator.contact.room.insert
+import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.navigation.NavigatorService

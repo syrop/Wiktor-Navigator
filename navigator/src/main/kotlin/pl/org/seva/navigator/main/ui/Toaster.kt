@@ -17,16 +17,20 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.contact.room
+package pl.org.seva.navigator.main.ui
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import pl.org.seva.navigator.contact.Contact
+import android.content.Context
+import android.widget.Toast
+import pl.org.seva.navigator.main.instance
 
-@Database(
-        entities = [Contact.Entity::class],
-        version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION)
-abstract class ContactsDatabaseAbstract : RoomDatabase() {
+fun toaster() = instance<Toaster>()
 
-    abstract fun contactDao(): ContactDao
+class Toaster(private val ctx: Context) {
+
+    fun toast(f: Context.() -> String) {
+        val s = ctx.f()
+        if (s.isNotBlank()) {
+            Toast.makeText(ctx, ctx.f(), Toast.LENGTH_SHORT).show()
+        }
+    }
 }

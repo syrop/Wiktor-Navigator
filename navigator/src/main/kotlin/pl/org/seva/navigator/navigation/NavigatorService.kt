@@ -20,7 +20,7 @@
 package pl.org.seva.navigator.navigation
 
 import androidx.lifecycle.LifecycleService
-import pl.org.seva.navigator.data.fb.FbWriter
+import pl.org.seva.navigator.main.fb.FbWriter
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.ui.createOngoingNotification
 

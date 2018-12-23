@@ -43,7 +43,7 @@ import io.fabric.sdk.android.Fabric
 
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.data.fb.FbWriter
+import pl.org.seva.navigator.main.fb.FbWriter
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.main.start
 
@@ -51,7 +51,6 @@ fun Context.loginActivity(action: String) = start(LoginActivity::class.java) {
     putExtra(LoginActivity.ACTION, action)
 }
 
-@Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity(),
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
@@ -71,7 +70,7 @@ class LoginActivity : AppCompatActivity(),
         Fabric.with(this, Crashlytics())
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(DEFAULT_WEB_CLIENT_ID)
                 .requestEmail()
                 .build()
 
@@ -82,8 +81,8 @@ class LoginActivity : AppCompatActivity(),
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        authStateListener = AuthStateListener { p0 ->
-            val user = p0.currentUser
+        authStateListener = AuthStateListener { auth ->
+            val user = auth.currentUser
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.uid)
                 onUserLoggedIn(user)
@@ -201,7 +200,6 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun showProgressDialog() {
-        @Suppress("DEPRECATION")
         progressDialog = ProgressDialog(this)
         progressDialog!!.setMessage(getString(R.string.login_loading))
         progressDialog!!.isIndeterminate = true
@@ -229,6 +227,8 @@ class LoginActivity : AppCompatActivity(),
     override fun onConnectionSuspended(i: Int) = Unit
 
     companion object {
+
+        const val DEFAULT_WEB_CLIENT_ID = "267180459782-548rckf296jcchkp8id9on17v57trcrf.apps.googleusercontent.com"
 
         const val ACTION = "action"
         const val LOGIN = "login"

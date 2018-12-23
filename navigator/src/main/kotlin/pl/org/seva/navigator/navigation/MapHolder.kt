@@ -40,7 +40,7 @@ import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.prefs
-import pl.org.seva.navigator.main.toaster
+import pl.org.seva.navigator.main.ui.toaster
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
 fun createMapHolder(f: MapHolder.() -> Unit): MapHolder =
