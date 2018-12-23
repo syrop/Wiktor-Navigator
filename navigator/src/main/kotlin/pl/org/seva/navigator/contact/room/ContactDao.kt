@@ -36,13 +36,13 @@ fun contactDao() = instance<ContactDao>()
 interface ContactDao {
 
     @Query("SELECT * FROM ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<ContactEntity>
+    fun getAll(): List<Contact.Entity>
 
     @Insert
-    fun insert(contact: ContactEntity)
+    fun insert(contact: Contact.Entity)
 
     @Delete
-    fun delete(contact: ContactEntity)
+    fun delete(contact: Contact.Entity)
 
     @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
     fun deleteAll(): Int

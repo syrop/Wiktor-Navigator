@@ -24,11 +24,12 @@ import android.graphics.Color
 import android.os.Parcelable
 import androidx.core.content.edit
 import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_EMAIL_PROPERTY
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_NAME_PROPERTY
-import pl.org.seva.navigator.contact.room.ContactEntity
+import pl.org.seva.navigator.contact.room.ContactsDatabase
 import pl.org.seva.navigator.main.prefs
 
 fun Contact?.persist() {
@@ -78,7 +79,25 @@ data class Contact(
 
     override fun hashCode() = email.hashCode()
 
-    fun toEntity() = ContactEntity(this)
+    fun toEntity() = Entity(this)
+
+    @androidx.room.Entity(tableName = ContactsDatabase.TABLE_NAME)
+    class Entity() {
+        @PrimaryKey
+        lateinit var email: String
+        lateinit var name: String
+        var color = Color.GRAY
+        var debugVersion = 0
+
+        constructor(contact: Contact) : this() {
+            email = contact.email
+            name = contact.name
+            color = contact.color
+        }
+
+        fun value() = Contact(email, name, color)
+    }
+
 
     companion object {
         const val CONTACT_NAME_PROPERTY = "navigation_map_followed_name"

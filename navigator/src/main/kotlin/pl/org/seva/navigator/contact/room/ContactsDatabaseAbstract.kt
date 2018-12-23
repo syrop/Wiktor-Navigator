@@ -21,9 +21,10 @@ package pl.org.seva.navigator.contact.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import pl.org.seva.navigator.contact.Contact
 
 @Database(
-        entities = [ContactEntity::class],
+        entities = [Contact.Entity::class],
         version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION)
 abstract class ContactsDatabaseAbstract : RoomDatabase() {
 
