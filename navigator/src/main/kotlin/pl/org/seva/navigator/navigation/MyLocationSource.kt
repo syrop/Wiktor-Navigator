@@ -31,8 +31,8 @@ import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.ActivityRecognitionSource
 import pl.org.seva.navigator.main.activityRecognition
 import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.main.observe
 import pl.org.seva.navigator.profile.isLoggedIn
+import pl.org.seva.navigator.main.subscribe
 
 class MyLocationSource {
 
@@ -58,9 +58,7 @@ class MyLocationSource {
     private lateinit  var lifecycle: Lifecycle
 
     fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) =
-        observe(lifecycle) {
-            locationObservable.subscribe(myLocationListener)
-        }
+        locationObservable.subscribe(lifecycle, myLocationListener)
 
     private fun addActivityRecognitionListeners() {
         activityRecognition.listen(lifecycle) { state ->

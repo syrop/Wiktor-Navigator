@@ -96,9 +96,7 @@ open class ActivityRecognitionSource :
 
     fun listen(lifecycle: Lifecycle, f: (Int) -> Unit) {
         f(state)
-        observe(lifecycle) {
-            subject.subscribe { f(state) }
-        }
+        subject.subscribe(lifecycle) { f(state) }
     }
 
     private fun onDeviceStationary() {
