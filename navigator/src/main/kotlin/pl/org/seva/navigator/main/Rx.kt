@@ -31,16 +31,21 @@ fun <T> Observable<T>.subscribeWithComposite(cd: CompositeDisposable, onNext: (T
 }
 
 fun <T> Observable<T>.subscribe(lifecycle: Lifecycle, onNext: (T) -> Unit) =
-        lifecycle.addObserver(RxLifecycleObserver { subscribe(onNext) })
+        subscribe(onNext).observeLifecycle(lifecycle)
 
-private class RxLifecycleObserver(private val subscription: () -> Disposable) : LifecycleObserver {
-    private lateinit var disposable: Disposable
+private fun Disposable.observeLifecycle(lifecycle: Lifecycle) =
+        lifecycle.addObserver(RxLifecycleObserver(lifecycle, this))
+
+private class RxLifecycleObserver(
+        private val lifecycle: Lifecycle,
+        private val subscription: Disposable) : LifecycleObserver {
+    private val initialState = lifecycle.currentState
 
     @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    private fun onStart() { disposable = subscription() }
-
-    @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    private fun onStop() = disposable.dispose()
+    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+    private fun onEvent() {
+        if (!lifecycle.currentState.isAtLeast(initialState)) {
+            subscription.dispose()
+        }
+    }
 }
