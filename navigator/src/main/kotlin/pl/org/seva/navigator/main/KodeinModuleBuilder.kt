@@ -47,7 +47,7 @@ import pl.org.seva.navigator.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationSource
 import pl.org.seva.navigator.navigation.PeerObservable
 
-fun Context.module(f: KodeinModuleBuilder.() -> Unit) = KodeinModuleBuilder(this).apply { f() }.build()
+val Context.module get() = KodeinModuleBuilder(this).build()
 
 inline fun <reified R : Any> instance(): R {
     val result by Kodein.global.instance<R>()

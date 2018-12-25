@@ -28,7 +28,7 @@ import pl.org.seva.navigator.debug.debug
 class NavigatorApplication : Application() {
 
     init {
-        Kodein.global.addImport(module { application = this@NavigatorApplication })
+        Kodein.global.addImport(module)
     }
 
     private val bootstrap: Bootstrap get() = instance()

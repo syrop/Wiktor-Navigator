@@ -19,7 +19,7 @@
 
 package pl.org.seva.navigator.main
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
@@ -37,17 +37,17 @@ import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.profile.setCurrent
 import pl.org.seva.navigator.ui.notificationChannels
 
-class Bootstrap(private val application: Application) {
+class Bootstrap(private val ctx: Context) {
 
     private var isServiceRunning = false
 
     fun boot() {
         FirebaseAuth.getInstance().currentUser?.setCurrent()
-        activityRecognition initGoogleApiClient application
+        activityRecognition initGoogleApiClient ctx
         with(contactsDatabase.contactDao) {
             contactsStore addAll getAll().map { it.value() }
         }
-        setDynamicShortcuts(application)
+        setDynamicShortcuts(ctx)
         if (isLoggedIn) {
             addFriendshipListener()
             startNavigatorService()
@@ -61,7 +61,7 @@ class Bootstrap(private val application: Application) {
                         onFriendFound = {
                             addContact(it)
                             contactDao() insert it
-                        }, onCompleted = { setDynamicShortcuts(application) })
+                        }, onCompleted = { setDynamicShortcuts(ctx) })
 
         user.setCurrent()
         addFriendshipListener()
@@ -78,7 +78,7 @@ class Bootstrap(private val application: Application) {
         contactDao().deleteAll()
         clearAllContacts()
         clearCurrentUser()
-        setDynamicShortcuts(application)
+        setDynamicShortcuts(ctx)
     }
 
 
@@ -86,15 +86,15 @@ class Bootstrap(private val application: Application) {
         if (isServiceRunning) {
             return
         }
-        startService(Intent(application.baseContext, NavigatorService::class.java))
+        startService(Intent(ctx, NavigatorService::class.java))
         isServiceRunning = true
     }
 
     private fun startService(intent: Intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            application.startForegroundService(intent)
+            ctx.startForegroundService(intent)
         } else {
-            application.startService(intent)
+            ctx.startService(intent)
         }
     }
 
@@ -102,7 +102,7 @@ class Bootstrap(private val application: Application) {
         if (!isServiceRunning) {
             return
         }
-        application.stopService(Intent(application.baseContext, NavigatorService::class.java))
+        ctx.stopService(Intent(ctx, NavigatorService::class.java))
         isServiceRunning = false
     }
 }
