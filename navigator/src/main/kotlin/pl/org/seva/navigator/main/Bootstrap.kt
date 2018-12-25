@@ -37,6 +37,8 @@ import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.profile.setCurrent
 import pl.org.seva.navigator.ui.notificationChannels
 
+val bootstrap: Bootstrap get() = instance()
+
 class Bootstrap(private val ctx: Context) {
 
     private var isServiceRunning = false

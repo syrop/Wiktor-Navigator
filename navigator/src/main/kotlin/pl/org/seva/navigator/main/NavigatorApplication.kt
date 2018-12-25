@@ -31,8 +31,6 @@ class NavigatorApplication : Application() {
         Kodein.global.addImport(module)
     }
 
-    private val bootstrap: Bootstrap get() = instance()
-
     override fun onCreate() {
         super.onCreate()
         bootstrap.boot()
