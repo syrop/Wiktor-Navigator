@@ -22,7 +22,16 @@ package pl.org.seva.navigator.main
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import io.reactivex.subjects.PublishSubject
+
+fun Fragment.requestPermissions(
+        requestCode: Int,
+        permissions: Array<Permissions.PermissionRequest>) =
+    permissions().request(
+            activity!! as AppCompatActivity,
+            requestCode,
+            permissions)
 
 fun permissions() = instance<Permissions>()
 

@@ -31,7 +31,6 @@ import android.provider.Settings
 import android.view.*
 import android.webkit.WebView
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -219,13 +218,21 @@ class NavigationFragment : Fragment() {
     }
 
     private fun requestLocationPermission() {
-        permissions().request(
-                activity!! as AppCompatActivity,
+        fun showLocationPermissionSnackbar() {
+            snackbar = Snackbar.make(
+                    coordinator,
+                    R.string.snackbar_permission_request_denied,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
+                    .apply { show() }
+        }
+
+        requestPermissions(
                 Permissions.LOCATION_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         onGranted = ::onLocationPermissionGranted,
-                        onDenied = ::onLocationPermissionDenied)))
+                        onDenied = ::showLocationPermissionSnackbar)))
     }
 
     @SuppressLint("MissingPermission")
@@ -237,19 +244,6 @@ class NavigationFragment : Fragment() {
         }
     }
 
-    private fun onLocationPermissionDenied() {
-        showLocationPermissionSnackbar()
-    }
-
-    private fun showLocationPermissionSnackbar() {
-        snackbar = Snackbar.make(
-                coordinator,
-                R.string.snackbar_permission_request_denied,
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.snackbar_retry)  { requestLocationPermission() }
-                .apply { show() }
-    }
-
     private fun showLoginSnackbar() {
         snackbar = Snackbar.make(
                 coordinator,
@@ -259,7 +253,8 @@ class NavigationFragment : Fragment() {
                 .apply { show() }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray) =
             permissions().onRequestPermissionsResult(requestCode, permissions, grantResults)
