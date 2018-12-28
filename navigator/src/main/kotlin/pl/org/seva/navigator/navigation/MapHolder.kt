@@ -28,8 +28,10 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -43,8 +45,10 @@ import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.main.ui.toaster
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
-fun createMapHolder(f: MapHolder.() -> Unit): MapHolder =
-        MapHolder().apply(f)
+fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {
+    val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+    mapFragment.getMapAsync { map -> it withMap map }
+}
 
 class MapHolder {
 

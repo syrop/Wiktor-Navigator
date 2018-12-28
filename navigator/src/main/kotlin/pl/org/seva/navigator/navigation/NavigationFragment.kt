@@ -35,7 +35,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.maps.SupportMapFragment
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_navigation.*
@@ -113,8 +112,7 @@ class NavigationFragment : Fragment() {
                 onDenied = {})
         activity!!.invalidateOptionsMenu()
 
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync { map -> mapHolder withMap map }
+
     }
 
     private fun onAddContactClicked() {
