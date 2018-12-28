@@ -170,7 +170,7 @@ class MapHolder {
             persistCameraPositionAndZoom()
         }
 
-        this@MapHolder.map = this.apply {
+        this@MapHolder.map = apply {
             setOnCameraIdleListener { onCameraIdle() }
             checkLocationPermission { isMyLocationEnabled = true }
         }
