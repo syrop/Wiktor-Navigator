@@ -50,7 +50,7 @@ class CreditsFragment : Fragment() {
         fun String.toClipboard() {
             val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", this)
-            toaster().toast { getString(R.string.credits_fragment_copied_to_clipboard) }
+            toaster.toast { getString(R.string.credits_fragment_copied_to_clipboard) }
         }
 
         version.text = getString(R.string.credits_fragment_version)

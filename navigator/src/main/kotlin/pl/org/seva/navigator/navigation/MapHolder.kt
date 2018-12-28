@@ -130,16 +130,6 @@ class MapHolder {
 
     private fun clearMap() = map?.clear()
 
-    private fun onPeerLocationReceived(latLng: LatLng) {
-        peerLocation = latLng
-        latLng.putPeerMarker()
-        moveCamera()
-    }
-
-    private fun onDebugReceived(message: String) {
-        toaster().toast { message }
-    }
-
     private fun LatLng.moveCamera() {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
         if (animateCamera) {
@@ -163,6 +153,19 @@ class MapHolder {
 
     @SuppressLint("MissingPermission")
     private fun GoogleMap.onReady() {
+        infix fun LatLng.isDifferentFrom(other: LatLng?) = if (other == null) true
+        else Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
+                Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
+
+        fun onCameraIdle() = map!!.cameraPosition.let {
+            zoom = it.zoom
+            lastCameraPosition = it.target
+            if (lastCameraPosition isDifferentFrom peerLocation) {
+                moveCamera = ::moveCameraToLast
+            }
+            persistCameraPositionAndZoom()
+        }
+
         this@MapHolder.map = this.apply {
             setOnCameraIdleListener { onCameraIdle() }
             checkLocationPermission { isMyLocationEnabled = true }
@@ -171,19 +174,6 @@ class MapHolder {
         moveCamera()
         moveCamera = this@MapHolder::moveCameraToPeerOrLastLocation
     }
-
-    private fun onCameraIdle() = map!!.cameraPosition.let {
-        zoom = it.zoom
-        lastCameraPosition = it.target
-        if (lastCameraPosition isDifferentFrom peerLocation) {
-            moveCamera = ::moveCameraToLast
-        }
-        persistCameraPositionAndZoom()
-    }
-
-    private infix fun LatLng.isDifferentFrom(other: LatLng?) = if (other == null) true
-        else Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
-                Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
 
     private fun LatLng.putPeerMarker() {
         map?.also {
@@ -196,10 +186,16 @@ class MapHolder {
     }
 
     private fun Contact.listen() {
+        fun onPeerLocationReceived(latLng: LatLng) {
+            peerLocation = latLng
+            latLng.putPeerMarker()
+            moveCamera()
+        }
+
         contactsStore.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
-        peerObservable.addLocationListener(email, this@MapHolder::onPeerLocationReceived)
+        peerObservable.addLocationListener(email)  { onPeerLocationReceived(it) }
         if (isDebugMode) {
-            peerObservable.addDebugListener(email, this@MapHolder::onDebugReceived)
+            peerObservable.addDebugListener(email)  { toaster.toast { it } }
         }
     }
 
