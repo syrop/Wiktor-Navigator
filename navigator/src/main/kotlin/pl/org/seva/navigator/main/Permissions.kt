@@ -27,13 +27,13 @@ import io.reactivex.subjects.PublishSubject
 
 fun Fragment.requestPermissions(
         requestCode: Int,
-        permissions: Array<Permissions.PermissionRequest>) =
-    permissions().request(
+        requests: Array<Permissions.PermissionRequest>) =
+    permissions.request(
             activity!! as AppCompatActivity,
             requestCode,
-            permissions)
+            requests)
 
-fun permissions() = instance<Permissions>()
+val permissions = instance<Permissions>()
 
 class Permissions {
 

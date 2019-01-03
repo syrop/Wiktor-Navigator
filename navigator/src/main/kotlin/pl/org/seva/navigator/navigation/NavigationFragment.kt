@@ -253,9 +253,9 @@ class NavigationFragment : Fragment() {
 
     override fun onRequestPermissionsResult(
             requestCode: Int,
-            permissions: Array<String>,
+            requests: Array<String>,
             grantResults: IntArray) =
-            permissions().onRequestPermissionsResult(requestCode, permissions, grantResults)
+            permissions.onRequestPermissionsResult(requestCode, requests, grantResults)
 
     private fun login() {
         dialog?.dismiss()
