@@ -111,8 +111,6 @@ class NavigationFragment : Fragment() {
                 },
                 onDenied = {})
         activity!!.invalidateOptionsMenu()
-
-
     }
 
     private fun onAddContactClicked() {
