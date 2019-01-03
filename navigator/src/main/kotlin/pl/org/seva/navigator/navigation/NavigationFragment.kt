@@ -226,7 +226,7 @@ class NavigationFragment : Fragment() {
         }
 
         requestPermissions(
-                Permissions.LOCATION_PERMISSION_REQUEST_ID,
+                Permissions.DEFAULT_PERMISSION_REQUEST_ID,
                 arrayOf(Permissions.PermissionRequest(
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         onGranted = ::onLocationPermissionGranted,
