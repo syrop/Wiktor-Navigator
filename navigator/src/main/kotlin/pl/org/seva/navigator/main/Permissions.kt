@@ -43,10 +43,10 @@ class Permissions {
     fun request(
             activity: AppCompatActivity,
             requestCode: Int,
-            permissions: Array<PermissionRequest>) {
+            requests: Array<PermissionRequest>) {
         val lifecycle = activity.lifecycle
         val permissionsToRequest = ArrayList<String>()
-        permissions.forEach { permission ->
+        requests.forEach { permission ->
             permissionsToRequest.add(permission.permission)
                 grantedSubject
                         .filter { it.requestCode == requestCode && it.permission == permission.permission }
