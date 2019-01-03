@@ -34,18 +34,13 @@ fun <T> Observable<T>.subscribe(lifecycle: Lifecycle, onNext: (T) -> Unit) =
         subscribe(onNext).observeLifecycle(lifecycle)
 
 private fun Disposable.observeLifecycle(lifecycle: Lifecycle) =
-        lifecycle.addObserver(RxLifecycleObserver(lifecycle, this))
+        lifecycle.addObserver(RxLifecycleObserver(this))
 
-private class RxLifecycleObserver(
-        private val lifecycle: Lifecycle,
-        private val subscription: Disposable) : LifecycleObserver {
-    private val initialState = lifecycle.currentState
+private class RxLifecycleObserver(private val subscription: Disposable) : LifecycleObserver {
 
     @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onEvent() {
-        if (!lifecycle.currentState.isAtLeast(initialState)) {
-            subscription.dispose()
-        }
+        subscription.dispose()
     }
 }

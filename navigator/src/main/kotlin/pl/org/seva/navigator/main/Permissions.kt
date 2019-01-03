@@ -20,8 +20,6 @@
 package pl.org.seva.navigator.main
 
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import io.reactivex.subjects.PublishSubject
 
@@ -29,7 +27,7 @@ fun Fragment.requestPermissions(
         requestCode: Int,
         requests: Array<Permissions.PermissionRequest>) =
     permissions.request(
-            activity!! as AppCompatActivity,
+            this,
             requestCode,
             requests)
 
@@ -41,10 +39,10 @@ class Permissions {
     private val deniedSubject = PublishSubject.create<PermissionResult>()
 
     fun request(
-            activity: AppCompatActivity,
+            fragment: Fragment,
             requestCode: Int,
             requests: Array<PermissionRequest>) {
-        val lifecycle = activity.lifecycle
+        val lifecycle = fragment.lifecycle
         val permissionsToRequest = ArrayList<String>()
         requests.forEach { permission ->
             permissionsToRequest.add(permission.permission)
@@ -55,7 +53,7 @@ class Permissions {
                         .filter { it.requestCode == requestCode && it.permission == permission.permission }
                         .subscribe(lifecycle) { permission.onDenied() }
         }
-        ActivityCompat.requestPermissions(activity, permissionsToRequest.toTypedArray(), requestCode)
+        fragment.requestPermissions(permissionsToRequest.toTypedArray(), requestCode)
     }
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
