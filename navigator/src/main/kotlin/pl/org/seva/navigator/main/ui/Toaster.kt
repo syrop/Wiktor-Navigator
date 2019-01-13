@@ -23,14 +23,18 @@ import android.content.Context
 import android.widget.Toast
 import pl.org.seva.navigator.main.instance
 
-val toaster by instance<Toaster>()
+@JvmName("extensionToast")
+fun CharSequence.toast() = toast(this)
+
+fun toast(message: CharSequence) = toaster toast message
+
+private val toaster by instance<Toaster>()
 
 class Toaster(private val ctx: Context) {
 
-    fun toast(f: Context.() -> String) {
-        val s = ctx.f()
-        if (s.isNotBlank()) {
-            Toast.makeText(ctx, ctx.f(), Toast.LENGTH_SHORT).show()
+    infix fun toast(message: CharSequence) {
+        if (message.isNotBlank()) {
+            Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
         }
     }
 }

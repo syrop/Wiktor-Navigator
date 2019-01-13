@@ -42,7 +42,7 @@ import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.prefs
-import pl.org.seva.navigator.main.ui.toaster
+import pl.org.seva.navigator.main.ui.toast
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
 fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {
@@ -199,7 +199,7 @@ class MapHolder {
         contactsStore.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
         peerObservable.addLocationListener(email)  { onPeerLocationReceived(it) }
         if (isDebugMode) {
-            peerObservable.addDebugListener(email)  { toaster.toast { it } }
+            peerObservable.addDebugListener(email)  { message -> message.toast() }
         }
     }
 
