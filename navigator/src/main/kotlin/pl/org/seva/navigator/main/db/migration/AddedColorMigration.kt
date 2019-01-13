@@ -31,7 +31,7 @@ class AddedColorMigration : Migration(
         ContactsDatabase.ROOM_DATABASE_VERSION,
         ContactsDatabase.ADDED_COLOR_DATABASE_VERSION) {
 
-    private val cf: ColorFactory = instance()
+    private val cf by instance<ColorFactory>()
 
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(RENAME_STATEMENT)

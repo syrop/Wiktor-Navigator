@@ -36,14 +36,15 @@ fun <T> Context.start(clazz: Class<T>, f: Intent.() -> Intent): Boolean {
     return true
 }
 
-val prefs get() = instance<SharedPreferences>()
+val prefs by instance<SharedPreferences>()
 
-val applicationContext get() = instance<Context>()
+val applicationContext by instance<Context>()
 
-fun context() = instance<Context>()
+val appContext by instance<Context>()
 
-val versionName get(): String =
-    context().packageManager.getPackageInfo(context().packageName, 0).versionName
+val versionName: String by lazy {
+    appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName
+}
 
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, f: (T) -> Unit) =
         observe(owner, Observer<T> { f(it) })

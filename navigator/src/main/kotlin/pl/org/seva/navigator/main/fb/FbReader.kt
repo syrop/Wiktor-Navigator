@@ -28,14 +28,12 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.debug.debug
-import pl.org.seva.navigator.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.ui.colorFactory
 
-val fbReader get() = instance<FbReader>()
+val fbReader by instance<FbReader>()
 
 class FbReader : Fb() {
-
-    private val cf: ColorFactory = instance()
 
     fun peerLocationListener(email: String): Observable<LatLng> {
         return email.toReference().child(LAT_LNG).listen()
@@ -103,7 +101,7 @@ class FbReader : Fb() {
 
     private fun DataSnapshot.toContact() =
             if (exists()) {
-                Contact(key!!.from64(), child(DISPLAY_NAME).value as String, cf.nextColor())
+                Contact(key!!.from64(), child(DISPLAY_NAME).value as String, colorFactory.nextColor())
             } else Contact()
 
     companion object {

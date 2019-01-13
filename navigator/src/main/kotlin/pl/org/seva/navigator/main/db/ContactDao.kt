@@ -30,7 +30,7 @@ infix fun ContactDao.insert(contact: Contact) = insert(contact.toEntity())
 
 infix fun ContactDao.delete(contact: Contact) = delete(contact.toEntity())
 
-fun contactDao() = instance<ContactDao>()
+val contactDao by instance<ContactDao>()
 
 @Dao
 interface ContactDao {

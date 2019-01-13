@@ -37,7 +37,7 @@ import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.profile.setCurrent
 import pl.org.seva.navigator.ui.notificationChannels
 
-val bootstrap: Bootstrap get() = instance()
+val bootstrap: Bootstrap by instance()
 
 class Bootstrap(private val ctx: Context) {
 
@@ -62,7 +62,7 @@ class Bootstrap(private val ctx: Context) {
                 friendshipObservable.downloadFriendsFromCloud(
                         onFriendFound = {
                             addContact(it)
-                            contactDao() insert it
+                            contactDao insert it
                         }, onCompleted = { setDynamicShortcuts(ctx) })
 
         user.setCurrent()
@@ -77,7 +77,7 @@ class Bootstrap(private val ctx: Context) {
     fun logout() {
         stopNavigatorService()
         cleanFriendshipListeners()
-        contactDao().deleteAll()
+        contactDao.deleteAll()
         clearAllContacts()
         clearCurrentUser()
         setDynamicShortcuts(ctx)

@@ -36,7 +36,7 @@ import pl.org.seva.navigator.main.subscribe
 
 class MyLocationSource {
 
-    private val provider: FusedLocationProviderClient = instance()
+    private val provider by instance<FusedLocationProviderClient>()
 
     private val locationRequest = LocationRequest.create()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)

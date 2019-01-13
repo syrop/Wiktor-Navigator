@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.main.instance
 
-val loggedInUser get() = instance<LoggedInUser>()
+val loggedInUser by instance<LoggedInUser>()
 
 fun FirebaseUser.setCurrent() = loggedInUser setCurrentUser this
 

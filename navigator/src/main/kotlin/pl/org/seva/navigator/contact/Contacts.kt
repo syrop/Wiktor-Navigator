@@ -25,7 +25,7 @@ import java.util.ArrayList
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.instance
 
-val contactsStore get() = instance<Contacts>()
+val contactsStore by instance<Contacts>()
 
 fun addContact(contact: Contact) = contactsStore add contact
 

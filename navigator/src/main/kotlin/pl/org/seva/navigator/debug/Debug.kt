@@ -28,7 +28,7 @@ import pl.org.seva.navigator.profile.isLoggedIn
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-val debug get() = instance<Debug>()
+val debug by instance<Debug>()
 
 val isDebugMode get() = prefs.getBoolean(Debug.PROPERTY, false)
 

@@ -21,6 +21,9 @@ package pl.org.seva.navigator.ui
 
 import android.content.Context
 import android.graphics.Color
+import pl.org.seva.navigator.main.instance
+
+val colorFactory by instance<ColorFactory>()
 
 class ColorFactory(private val ctx: Context ) {
 

@@ -25,11 +25,11 @@ import io.reactivex.disposables.Disposable
 import pl.org.seva.navigator.main.fb.fbReader
 import pl.org.seva.navigator.main.instance
 
-val friendshipObservable get() = instance<FriendshipObservable>()
+val friendshipObservable by instance<FriendshipObservable>()
 
 fun cleanFriendshipListeners() = friendshipObservable.clearFriendshipListeners()
 
-fun addFriendshipListener() = friendshipObservable addFriendshipListener friendshipListener()
+fun addFriendshipListener() = friendshipObservable addFriendshipListener friendshipListener
 
 class FriendshipObservable {
 

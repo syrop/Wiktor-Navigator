@@ -23,7 +23,7 @@ import android.content.Context
 import android.widget.Toast
 import pl.org.seva.navigator.main.instance
 
-val toaster get() = instance<Toaster>()
+val toaster by instance<Toaster>()
 
 class Toaster(private val ctx: Context) {
 

@@ -34,7 +34,7 @@ typealias ContactListener = (contact: Contact) -> Unit
 open class ContactAdapter(private val listener: ContactListener? = null) :
         RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
-    private val store: Contacts = instance()
+    private val store by instance<Contacts>()
 
     protected open fun getContact(position: Int) = store[position]
 

@@ -48,10 +48,7 @@ import pl.org.seva.navigator.navigation.PeerObservable
 
 val Context.module get() = KodeinModuleBuilder(this).build()
 
-inline fun <reified R : Any> instance(): R {
-    val result by Kodein.global.instance<R>()
-    return result
-}
+inline fun <reified R : Any> instance() = Kodein.global.instance<R>()
 
 class KodeinModuleBuilder(private val ctx: Context) {
 
@@ -72,7 +69,7 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<FriendshipObservable>() with singleton { FriendshipObservable() }
         bind<PeerObservable>() with singleton { PeerObservable() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
-        bind<ContactsDatabase>() with singleton { ContactsDatabase() }
+        bind<ContactsDatabase>() with singleton { ContactsDatabase(ctx) }
         bind<NotificationChannels>() with singleton { NotificationChannels(ctx) }
         bind<ColorFactory>() with singleton { ColorFactory(ctx) }
         bind<Debug>() with singleton { Debug() }

@@ -43,8 +43,7 @@ import io.fabric.sdk.android.Fabric
 
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.fb.FbWriter
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.start
 
 fun Context.loginActivity(action: String) = start(LoginActivity::class.java) {
@@ -55,7 +54,6 @@ class LoginActivity : AppCompatActivity(),
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
-    private val fbWriter: FbWriter = instance()
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var authStateListener: AuthStateListener
 

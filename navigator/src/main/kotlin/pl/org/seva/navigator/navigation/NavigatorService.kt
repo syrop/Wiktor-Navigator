@@ -26,8 +26,8 @@ import pl.org.seva.navigator.ui.createOngoingNotification
 
 class NavigatorService : LifecycleService() {
 
-    private val myLocationSource: MyLocationSource = instance()
-    private val fbWriter: FbWriter = instance()
+    private val myLocationSource by instance<MyLocationSource>()
+    private val fbWriter by instance<FbWriter>()
 
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
