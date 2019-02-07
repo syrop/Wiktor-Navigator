@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.row_contact.view.*
 
 import pl.org.seva.navigator.R
 
@@ -56,10 +57,10 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
     override fun getItemCount() = contacts.size
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.name)
-        val email: TextView = view.findViewById(R.id.email)
-        val view: View = view.findViewById(R.id.view)
-        val iconText: TextView = view.findViewById(R.id.icon_text)
-        val iconProfile: ImageView = view.findViewById(R.id.icon_profile)
+        val name: TextView = view.name
+        val email: TextView = view.email
+        val view: View = view.view
+        val iconText: TextView = view.icon_text
+        val iconProfile: ImageView = view.icon_profile
     }
 }
