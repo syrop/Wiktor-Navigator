@@ -39,7 +39,7 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
             ViewHolder(parent.inflate())
 
     private fun ViewGroup.inflate() =
-        LayoutInflater.from(context).inflate(LAYOUT, this, false)
+        LayoutInflater.from(context).inflate(R.layout.row_contact, this, false)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contact = getContact(position)
@@ -61,9 +61,5 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
         val view: View = view.findViewById(R.id.view)
         val iconText: TextView = view.findViewById(R.id.icon_text)
         val iconProfile: ImageView = view.findViewById(R.id.icon_profile)
-    }
-
-    companion object {
-        private const val LAYOUT = R.layout.row_contact
     }
 }
