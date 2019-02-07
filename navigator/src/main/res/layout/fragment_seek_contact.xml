@@ -13,7 +13,7 @@
         tools:text="@string/seek_contact_no_user_found"
         android:textAppearance="@style/TextAppearance.AppCompat" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/contacts"
+        android:id="@+id/contacts_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

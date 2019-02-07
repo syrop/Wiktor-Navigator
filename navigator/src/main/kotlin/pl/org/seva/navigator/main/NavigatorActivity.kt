@@ -31,7 +31,7 @@ import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_navigator.*
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.contact.contactsStore
+import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
 
 class NavigatorActivity : AppCompatActivity() {
@@ -57,7 +57,7 @@ class NavigatorActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
-            val contact = contactsStore[this]
+            val contact = contacts[this]
             navigatorModel.contact.value = contact
             contact.persist()
         }

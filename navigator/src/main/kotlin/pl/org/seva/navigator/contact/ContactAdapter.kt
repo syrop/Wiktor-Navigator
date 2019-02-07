@@ -27,16 +27,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.instance
 
 typealias ContactListener = (contact: Contact) -> Unit
 
 open class ContactAdapter(private val listener: ContactListener? = null) :
         RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
 
-    private val store by instance<Contacts>()
-
-    protected open fun getContact(position: Int) = store[position]
+    protected open fun getContact(position: Int) = contacts[position]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolder(parent.inflate())
@@ -56,7 +53,7 @@ open class ContactAdapter(private val listener: ContactListener? = null) :
 
     private fun onItemClick(position: Int) = listener?.invoke(getContact(position))
 
-    override fun getItemCount() = store.size()
+    override fun getItemCount() = contacts.size
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.name)

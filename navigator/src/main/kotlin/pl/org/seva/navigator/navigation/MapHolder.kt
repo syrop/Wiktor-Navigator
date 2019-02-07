@@ -196,7 +196,7 @@ class MapHolder {
             moveCamera()
         }
 
-        contactsStore.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
+        contacts.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
         peerObservable.addLocationListener(email)  { onPeerLocationReceived(it) }
         if (isDebugMode) {
             peerObservable.addDebugListener(email)  { message -> message.toast() }

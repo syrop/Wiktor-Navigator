@@ -47,7 +47,7 @@ class Bootstrap(private val ctx: Context) {
         FirebaseAuth.getInstance().currentUser?.setCurrent()
         activityRecognition initGoogleApiClient ctx
         with(contactsDatabase.contactDao) {
-            contactsStore addAll getAll().map { it.value() }
+            contacts addAll getAll().map { it.value() }
         }
         setDynamicShortcuts(ctx)
         if (isLoggedIn) {

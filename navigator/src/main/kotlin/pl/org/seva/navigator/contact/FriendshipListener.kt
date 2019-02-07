@@ -60,7 +60,7 @@ class FriendshipListener {
 
     private fun acceptFriend(contact: Contact) {
         fbWriter acceptFriendship contact
-        if (contact in contactsStore) {
+        if (contact in contacts) {
             return
         }
         addContact(contact)

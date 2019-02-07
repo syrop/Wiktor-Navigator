@@ -25,53 +25,49 @@ import java.util.ArrayList
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.instance
 
-val contactsStore by instance<Contacts>()
+val contacts by instance<Contacts>()
 
-fun addContact(contact: Contact) = contactsStore add contact
+fun addContact(contact: Contact) = contacts add contact
 
-fun deleteContact(contact: Contact) = contactsStore delete contact
+fun deleteContact(contact: Contact) = contacts delete contact
 
-fun clearAllContacts() = contactsStore.clear()
+fun clearAllContacts() = contacts.clear()
 
 class Contacts {
 
-    private val contacts: MutableList<Contact>
+    private val contactsCache = ArrayList<Contact>()
     private val contactsUpdatedSubject = PublishSubject.create<Contact>()
 
-    init {
-        contacts = ArrayList()
-    }
+    operator fun contains(contact: Contact) = contactsCache.contains(contact)
 
-    operator fun contains(contact: Contact) = contacts.contains(contact)
-
-    fun snapshot() = ArrayList(contacts)
+    fun snapshot() = ArrayList(contactsCache)
 
     infix fun add(contact: Contact) {
-        if (contacts.contains(contact)) {
+        if (contactsCache.contains(contact)) {
             return
         }
-        contacts.add(contact)
-        contacts.sort()
+        contactsCache.add(contact)
+        contactsCache.sort()
         contactsUpdatedSubject.onNext(contact)
     }
 
     infix fun addAll(contacts: Collection<Contact>) {
-        this.contacts.addAll(contacts)
-        this.contacts.sort()
+        this.contactsCache.addAll(contacts)
+        this.contactsCache.sort()
     }
 
     infix fun delete(contact: Contact) {
-        contacts.remove(contact)
+        contactsCache.remove(contact)
         contactsUpdatedSubject.onNext(contact)
     }
 
-    fun clear() = contacts.clear()
+    fun clear() = contactsCache.clear()
 
-    operator fun get(position: Int) = contacts[position]
+    operator fun get(position: Int) = contactsCache[position]
 
-    operator fun get(email: String) = contacts.first { it.email == email }
+    operator fun get(email: String) = contactsCache.first { it.email == email }
 
-    fun size() = contacts.size
+    val size get() = contactsCache.size
 
     @SuppressLint("CheckResult")
     fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {

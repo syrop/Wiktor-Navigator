@@ -34,6 +34,8 @@ import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.main.subscribe
 
+val myLocationSource by instance<MyLocationSource>()
+
 class MyLocationSource {
 
     private val provider by instance<FusedLocationProviderClient>()
@@ -69,7 +71,7 @@ class MyLocationSource {
         }
     }
 
-    infix fun initWithService(service: LifecycleService) {
+    infix fun withService(service: LifecycleService) {
         lifecycle = service.lifecycle
         requestLocationUpdates()
         addActivityRecognitionListeners()

@@ -110,7 +110,7 @@ class SeekContactFragment : Fragment() {
     }
 
     private fun onSearchViewClosed(): Boolean {
-        if (contacts.visibility != View.VISIBLE) {
+        if (contacts_view.visibility != View.VISIBLE) {
             prompt.visibility = View.VISIBLE
         }
         setPromptText(R.string.seek_contact_press_to_begin)
@@ -124,7 +124,7 @@ class SeekContactFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_search -> {
             prompt.visibility = View.GONE
-            contacts.visibility = View.GONE
+            contacts_view.visibility = View.GONE
             activity!!.onSearchRequested()
             true
         }
@@ -142,25 +142,25 @@ class SeekContactFragment : Fragment() {
         progress!!.cancel()
         if (contact.isEmpty) {
             prompt.visibility = View.VISIBLE
-            contacts.visibility = View.GONE
+            contacts_view.visibility = View.GONE
             setPromptText(R.string.seek_contact_no_user_found)
             return
         }
         prompt.visibility = View.GONE
-        contacts.visibility = View.VISIBLE
+        contacts_view.visibility = View.VISIBLE
         initRecyclerView(contact)
     }
 
     private fun initRecyclerView(contact: Contact) {
-        contacts.setHasFixedSize(true)
+        contacts_view.setHasFixedSize(true)
         val lm = LinearLayoutManager(context)
-        contacts.layoutManager = lm
+        contacts_view.layoutManager = lm
         val adapter = ContactSingleAdapter(contact) { onContactClicked(it) }
-        contacts.adapter = adapter
+        contacts_view.adapter = adapter
     }
 
     private fun onContactClicked(contact: Contact) = when {
-        contact in contactsStore -> {
+        contact in contacts -> {
             findNavController().popBackStack()
             Unit
         }

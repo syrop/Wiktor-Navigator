@@ -47,7 +47,6 @@ import pl.org.seva.navigator.main.NavigatorViewModel
 
 class ContactsFragment : Fragment() {
 
-    private val store = contactsStore
     private val contactDao = contactsDatabase.contactDao
 
     private var snackbar: Snackbar? = null
@@ -62,28 +61,29 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fun initContactsRecyclerView() {
-            contacts.setHasFixedSize(true)
-            contacts.layoutManager = LinearLayoutManager(context)
-            contacts.adapter = adapter
-            contacts.addItemDecoration(ContactsDividerItemDecoration(context!!))
-            ItemTouchHelper(ContactTouchListener { onContactSwiped(it) }).attachToRecyclerView(contacts)
+            contacts_view.setHasFixedSize(true)
+            contacts_view.layoutManager = LinearLayoutManager(context)
+            contacts_view.adapter = adapter
+            contacts_view.addItemDecoration(ContactsDividerItemDecoration(context!!))
+            ItemTouchHelper(ContactTouchListener { onContactSwiped(it) })
+                    .attachToRecyclerView(contacts_view)
         }
 
         navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
         fab.setOnClickListener { onFabClicked() }
 
-        store.addContactsUpdatedListener { onContactsUpdatedInStore() }
+        contacts.addContactsUpdatedListener { onContactsUpdatedInStore() }
 
         setPromptLabelText()
         initContactsRecyclerView()
         promptOrRecyclerView()
     }
 
-    private fun promptOrRecyclerView() = if (store.size() > 0) {
-        contacts.visibility = View.VISIBLE
+    private fun promptOrRecyclerView() = if (contacts.size > 0) {
+        contacts_view.visibility = View.VISIBLE
         prompt.visibility = View.GONE
     } else {
-        contacts.visibility = View.GONE
+        contacts_view.visibility = View.GONE
         prompt.visibility = View.VISIBLE
     }
 
@@ -97,7 +97,7 @@ class ContactsFragment : Fragment() {
     }
 
     private fun onContactSwiped(position: Int) {
-        val contact = store[position]
+        val contact = contacts[position]
         deleteFriend(contact)
         promptOrRecyclerView()
     }
@@ -109,7 +109,7 @@ class ContactsFragment : Fragment() {
 
     private fun deleteFriend(contact: Contact) {
         fbWriter deleteFriendship contact
-        store delete contact
+        contacts delete contact
         contactDao delete contact
         adapter.notifyDataSetChanged()
         showUndeleteSnackbar(contact)
@@ -119,7 +119,7 @@ class ContactsFragment : Fragment() {
     private fun undeleteFriend(contact: Contact) {
         fbWriter addFriendship contact
         fbWriter acceptFriendship contact
-        store add contact
+        contacts add contact
         contactDao insert contact
         adapter.notifyDataSetChanged()
         setDynamicShortcuts(context!!)
@@ -141,7 +141,7 @@ class ContactsFragment : Fragment() {
 
     private fun showUndeleteSnackbar(contact: Contact) {
         snackbar = Snackbar.make(
-                contacts,
+                contacts_view,
                 R.string.contacts_deleted_contact,
                 Snackbar.LENGTH_LONG)
                 .setAction(R.string.contacts_undelete) { onUndeleteClicked(contact) }

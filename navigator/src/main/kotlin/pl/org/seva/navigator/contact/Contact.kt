@@ -46,7 +46,7 @@ fun readContactFromProperties(): Contact? {
     val email = prefs.getString(CONTACT_EMAIL_PROPERTY, "")!!
     if (name.isNotEmpty() && email.isNotEmpty()) {
         val contact = Contact(email = email, name = name)
-        if (contact in contactsStore) {
+        if (contact in contacts) {
             return contact
         }
     }

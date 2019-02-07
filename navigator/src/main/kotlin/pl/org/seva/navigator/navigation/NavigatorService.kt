@@ -20,26 +20,19 @@
 package pl.org.seva.navigator.navigation
 
 import androidx.lifecycle.LifecycleService
-import pl.org.seva.navigator.main.fb.FbWriter
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.ui.createOngoingNotification
 
 class NavigatorService : LifecycleService() {
 
-    private val myLocationSource by instance<MyLocationSource>()
-    private val fbWriter by instance<FbWriter>()
-
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        myLocationSource initWithService this
+        myLocationSource withService this
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
-        addMyLocationListener()
+        myLocationSource.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
 
         return android.app.Service.START_STICKY
     }
-
-    private fun addMyLocationListener() =
-            myLocationSource.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
 
     companion object {
         private const val ONGOING_NOTIFICATION_ID = 1

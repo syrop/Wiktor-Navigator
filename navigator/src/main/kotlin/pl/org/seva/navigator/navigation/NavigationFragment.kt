@@ -269,7 +269,7 @@ class NavigationFragment : Fragment() {
 
     private fun deleteProfile() {
         mapHolder.stopWatchingPeer()
-        contactsStore.clear()
+        contacts.clear()
         contactsDatabase.contactDao.deleteAll()
         setDynamicShortcuts(context!!)
         fbWriter.deleteMe()
