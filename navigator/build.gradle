@@ -107,14 +107,14 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.0.0'
     implementation 'androidx.room:room-rxjava2:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha11'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha11'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-beta01'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-beta01'
 
     // Play, Firebase
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-database:16.0.6'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.8')
