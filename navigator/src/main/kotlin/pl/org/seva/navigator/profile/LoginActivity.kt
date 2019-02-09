@@ -84,7 +84,8 @@ class LoginActivity : AppCompatActivity(),
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.uid)
                 onUserLoggedIn(user)
-            } else {
+            }
+            else {
                 Log.d(TAG, "onAuthStateChanged:signed_out")
                 onUserLoggedOut()
             }
@@ -158,7 +159,8 @@ class LoginActivity : AppCompatActivity(),
                 // Google Sign In was successful, authenticate with Firebase
                 val account = result.signInAccount!!
                 firebaseAuthWithGoogle(account)
-            } else {
+            }
+            else {
                 signInFailed()
             }
         }

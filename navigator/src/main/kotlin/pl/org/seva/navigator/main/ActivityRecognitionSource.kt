@@ -116,15 +116,15 @@ open class ActivityRecognitionSource :
                 val result = ActivityRecognitionResult.extractResult(intent)
                 if (result probably DetectedActivity.STILL) {
                     onDeviceStationary()
-                } else {
+                }
+                else {
                     onDeviceMoving()
                 }
             }
         }
 
         private infix fun ActivityRecognitionResult.probably(activity: Int) =
-                mostProbableActivity.type == activity &&
-                        getActivityConfidence(activity) >= MIN_CONFIDENCE
+                mostProbableActivity.type == activity && getActivityConfidence(activity) >= MIN_CONFIDENCE
     }
 
     companion object {

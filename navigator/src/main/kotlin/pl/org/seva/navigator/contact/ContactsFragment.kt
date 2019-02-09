@@ -79,12 +79,15 @@ class ContactsFragment : Fragment() {
         promptOrRecyclerView()
     }
 
-    private fun promptOrRecyclerView() = if (contacts.size > 0) {
-        contacts_view.visibility = View.VISIBLE
-        prompt.visibility = View.GONE
-    } else {
-        contacts_view.visibility = View.GONE
-        prompt.visibility = View.VISIBLE
+    private fun promptOrRecyclerView()  {
+        if (contacts.size > 0) {
+            contacts_view.visibility = View.VISIBLE
+            prompt.visibility = View.GONE
+        }
+        else {
+            contacts_view.visibility = View.GONE
+            prompt.visibility = View.VISIBLE
+        }
     }
 
     private fun onFabClicked() {

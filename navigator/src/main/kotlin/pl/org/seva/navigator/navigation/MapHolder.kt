@@ -117,7 +117,8 @@ class MapHolder {
         if (contact == null) {
             animate().translationYBy(height.toFloat()).withEndAction { visibility = View.GONE }
             setOnTouchListener(null)
-        } else {
+        }
+        else {
             visibility = View.VISIBLE
             animate().translationYBy(0.0f).withEndAction { translationY = 0.0f }
             text = contactNameSpannable
@@ -138,7 +139,8 @@ class MapHolder {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
         if (animateCamera) {
             map?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        } else {
+        }
+        else {
             map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
         animateCamera = false

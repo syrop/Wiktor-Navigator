@@ -127,7 +127,8 @@ class MyLocationSource {
             if (isSignificantlyNewer) {
                 return true
                 // If the new location is more than two minutes older, it must be worse
-            } else if (isSignificantlyOlder) {
+            }
+            else if (isSignificantlyOlder) {
                 return false
             }
 
@@ -137,12 +138,7 @@ class MyLocationSource {
             val isSignificantlyLessAccurate = accuracyDelta > 200
 
             // Determine location quality using a combination of timeliness and accuracy
-            if (isMoreAccurate) {
-                return true
-            } else if (isNewer && !isSignificantlyLessAccurate) {
-                return true
-            }
-            return false
+            return if (isMoreAccurate) true else isNewer && !isSignificantlyLessAccurate
         }
     }
 }

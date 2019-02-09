@@ -65,10 +65,12 @@ class Permissions {
 
         if (grantResults.isEmpty()) {
             permissions.forEach { it onDenied requestCode }
-        } else repeat(permissions.size) {
+        }
+        else repeat(permissions.size) {
             if (grantResults[it] == PackageManager.PERMISSION_GRANTED) {
                 permissions[it] onGranted requestCode
-            } else {
+            }
+            else {
                 permissions[it] onDenied requestCode
             }
         }

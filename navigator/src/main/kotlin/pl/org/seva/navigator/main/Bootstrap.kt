@@ -92,7 +92,8 @@ class Bootstrap(private val ctx: Context) {
     private fun startService(intent: Intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.startForegroundService(intent)
-        } else {
+        }
+        else {
             ctx.startService(intent)
         }
     }
