@@ -45,8 +45,5 @@ class FriendshipObservable {
                         .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
     }
 
-    fun downloadFriendsFromCloud(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Disposable =
-            fbReader.readFriends().doOnComplete(onCompleted).subscribe{ onFriendFound(it) }
-
     fun clearFriendshipListeners() = cd.clear()
 }

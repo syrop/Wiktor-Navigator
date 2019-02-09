@@ -29,6 +29,8 @@ import pl.org.seva.navigator.main.instance
 
 val notificationChannels by instance<NotificationChannels>()
 
+fun createNotificationChannels() = notificationChannels.create()
+
 class NotificationChannels(private val context: Context) {
 
     fun create() {

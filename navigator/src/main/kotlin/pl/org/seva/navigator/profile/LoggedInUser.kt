@@ -27,8 +27,6 @@ val loggedInUser by instance<LoggedInUser>()
 
 fun FirebaseUser.setCurrent() = loggedInUser setCurrentUser this
 
-fun clearCurrentUser() = loggedInUser setCurrentUser null
-
 val isLoggedIn get() = loggedInUser.isLoggedIn
 
 class LoggedInUser {

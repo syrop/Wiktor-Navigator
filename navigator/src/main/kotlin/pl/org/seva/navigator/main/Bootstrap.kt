@@ -32,10 +32,10 @@ import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.navigation.NavigatorService
-import pl.org.seva.navigator.profile.clearCurrentUser
 import pl.org.seva.navigator.profile.isLoggedIn
+import pl.org.seva.navigator.profile.loggedInUser
 import pl.org.seva.navigator.profile.setCurrent
-import pl.org.seva.navigator.ui.notificationChannels
+import pl.org.seva.navigator.ui.createNotificationChannels
 
 val bootstrap: Bootstrap by instance()
 
@@ -54,20 +54,18 @@ class Bootstrap(private val ctx: Context) {
             addFriendshipListener()
             startNavigatorService()
         }
-        notificationChannels.create()
+        createNotificationChannels()
     }
 
     fun login(user: FirebaseUser) {
-        fun downloadFriendsFromCloud() =
-                friendshipObservable.downloadFriendsFromCloud(
-                        onFriendFound = {
-                            addContact(it)
-                            contactDao insert it
-                        }, onCompleted = { setDynamicShortcuts(ctx) })
-
         user.setCurrent()
         addFriendshipListener()
-        downloadFriendsFromCloud()
+        downloadFriendsFromFb(
+                onFriendFound = {
+                    contacts add it
+                    contactDao insert it
+                },
+                onCompleted = { setDynamicShortcuts(ctx) })
         startNavigatorService()
         if (isDebugMode) {
             debug.start()
@@ -78,11 +76,10 @@ class Bootstrap(private val ctx: Context) {
         stopNavigatorService()
         cleanFriendshipListeners()
         contactDao.deleteAll()
-        clearAllContacts()
-        clearCurrentUser()
+        contacts.clear()
+        loggedInUser setCurrentUser null
         setDynamicShortcuts(ctx)
     }
-
 
     fun startNavigatorService() {
         if (isServiceRunning) {

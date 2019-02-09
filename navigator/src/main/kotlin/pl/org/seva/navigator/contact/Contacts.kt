@@ -20,18 +20,17 @@
 package pl.org.seva.navigator.contact
 
 import android.annotation.SuppressLint
+import io.reactivex.disposables.Disposable
 import java.util.ArrayList
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.main.fb.fbReader
 import pl.org.seva.navigator.main.instance
 
 val contacts by instance<Contacts>()
 
-fun addContact(contact: Contact) = contacts add contact
-
-fun deleteContact(contact: Contact) = contacts delete contact
-
-fun clearAllContacts() = contacts.clear()
+fun downloadFriendsFromFb(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Disposable =
+        fbReader.readFriends().doOnComplete(onCompleted).subscribe { onFriendFound(it) }
 
 class Contacts {
 
