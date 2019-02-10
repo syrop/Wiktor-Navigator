@@ -33,7 +33,6 @@ import android.webkit.WebView
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_navigation.*
@@ -45,6 +44,7 @@ import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.main.db.contactsDatabase
 import pl.org.seva.navigator.main.extension.navigate
+import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.profile.*
 
 class NavigationFragment : Fragment() {
@@ -56,7 +56,7 @@ class NavigationFragment : Fragment() {
 
     private lateinit var mapHolder: MapHolder
 
-    private lateinit var navigatorModel: NavigatorViewModel
+    private val navigatorModel by viewModel<NavigatorViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,6 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
         mapHolder = createMapHolder {
             init(savedInstanceState, root, navigatorModel.contact.value)
             checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted

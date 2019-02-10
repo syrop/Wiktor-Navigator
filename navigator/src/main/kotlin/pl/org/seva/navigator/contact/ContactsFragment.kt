@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -45,6 +44,7 @@ import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.extension.navigate
 import pl.org.seva.navigator.main.extension.popBackStack
+import pl.org.seva.navigator.main.extension.viewModel
 
 class ContactsFragment : Fragment() {
 
@@ -52,9 +52,12 @@ class ContactsFragment : Fragment() {
 
     private var snackbar: Snackbar? = null
 
-    private val adapter = ContactAdapter { onContactClicked(it) }
+    private val adapter = ContactAdapter { contact ->
+        navigatorModel.contact.value = contact
+        popBackStack()
+    }
 
-    private lateinit var navigatorModel: NavigatorViewModel
+    private val navigatorModel by viewModel<NavigatorViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_contacts, container, false)
@@ -70,8 +73,9 @@ class ContactsFragment : Fragment() {
                     .attachToRecyclerView(contacts_view)
         }
 
-        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
-        fab.setOnClickListener { onFabClicked() }
+        seek_contact_fab.setOnClickListener {
+            navigate(R.id.action_contactsFragment_to_seekContactFragment)
+        }
 
         contacts.addContactsUpdatedListener { onContactsUpdatedInStore() }
 
@@ -89,15 +93,6 @@ class ContactsFragment : Fragment() {
             contacts_view.visibility = View.GONE
             prompt.visibility = View.VISIBLE
         }
-    }
-
-    private fun onFabClicked() {
-        navigate(R.id.action_contactsFragment_to_seekContactFragment)
-    }
-
-    private fun onContactClicked(contact: Contact) {
-        navigatorModel.contact.value = contact
-        popBackStack()
     }
 
     private fun onContactSwiped(position: Int) {

@@ -24,22 +24,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_delete_profile.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.NavigatorViewModel
+import pl.org.seva.navigator.main.extension.viewModel
 
 class DeleteProfileFragment : Fragment() {
 
-    private lateinit var navigatorModel: NavigatorViewModel
+    private val navigatorModel by viewModel<NavigatorViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_delete_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
         ok.setOnClickListener { onOkClicked() }
         cancel.setOnClickListener { onCancelClicked() }
     }

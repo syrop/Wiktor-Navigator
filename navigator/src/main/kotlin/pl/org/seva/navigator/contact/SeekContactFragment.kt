@@ -33,7 +33,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_seek_contact.*
@@ -43,6 +42,7 @@ import pl.org.seva.navigator.main.fb.fbReader
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.observe
 import pl.org.seva.navigator.main.NavigatorViewModel
+import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
@@ -52,7 +52,7 @@ class SeekContactFragment : Fragment() {
 
     private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-    private lateinit var navigatorModel: NavigatorViewModel
+    private val navigatorModel by viewModel<NavigatorViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +64,6 @@ class SeekContactFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        navigatorModel = ViewModelProviders.of(activity!!).get(NavigatorViewModel::class.java)
-
         setPromptText(R.string.seek_contact_press_to_begin)
         navigatorModel.query.observe(this) {
             if (!it.isEmpty()) {

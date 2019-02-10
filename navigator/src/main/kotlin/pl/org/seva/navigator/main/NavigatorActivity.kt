@@ -24,7 +24,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.crashlytics.android.Crashlytics
@@ -34,6 +33,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
 import pl.org.seva.navigator.main.extension.toast
+import pl.org.seva.navigator.main.extension.viewModel
 
 class NavigatorActivity : AppCompatActivity() {
 
@@ -41,12 +41,11 @@ class NavigatorActivity : AppCompatActivity() {
 
     private var exitApplicationToast: Toast? = null
 
-    private lateinit var navigatorModel: NavigatorViewModel
+    private val navigatorModel by viewModel<NavigatorViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        navigatorModel = ViewModelProviders.of(this).get(NavigatorViewModel::class.java)
         setContentView(R.layout.activity_navigator)
 
         setSupportActionBar(toolbar)
