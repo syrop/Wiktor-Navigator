@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_navigator.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
+import pl.org.seva.navigator.main.extension.toast
 
 class NavigatorActivity : AppCompatActivity() {
 
@@ -76,11 +77,7 @@ class NavigatorActivity : AppCompatActivity() {
         return if (nc.currentDestination!!.id == R.id.navigationFragment &&
                 System.currentTimeMillis() - backClickTime >= DOUBLE_CLICK_MS) {
             exitApplicationToast?.cancel()
-            exitApplicationToast =
-                    Toast.makeText(
-                            this,
-                            R.string.tap_back_second_time,
-                            Toast.LENGTH_SHORT).apply { show() }
+            exitApplicationToast = getString(R.string.tap_back_second_time).toast()
             backClickTime = System.currentTimeMillis()
             false
         } else {

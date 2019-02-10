@@ -41,8 +41,8 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.main.applicationContext
+import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.prefs
-import pl.org.seva.navigator.main.ui.toast
 import pl.org.seva.navigator.ui.OnHudSwipeListener
 
 fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {

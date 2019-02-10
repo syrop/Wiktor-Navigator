@@ -31,7 +31,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_credits.*
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.ui.toast
+import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.versionName
 
 class CreditsFragment : Fragment() {
