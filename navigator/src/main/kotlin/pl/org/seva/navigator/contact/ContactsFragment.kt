@@ -29,7 +29,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -44,6 +43,8 @@ import pl.org.seva.navigator.main.db.delete
 import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
+import pl.org.seva.navigator.main.extension.navigate
+import pl.org.seva.navigator.main.extension.popBackStack
 
 class ContactsFragment : Fragment() {
 
@@ -91,12 +92,12 @@ class ContactsFragment : Fragment() {
     }
 
     private fun onFabClicked() {
-        findNavController().navigate(R.id.action_contactsFragment_to_seekContactFragment)
+        navigate(R.id.action_contactsFragment_to_seekContactFragment)
     }
 
     private fun onContactClicked(contact: Contact) {
         navigatorModel.contact.value = contact
-        findNavController().popBackStack()
+        popBackStack()
     }
 
     private fun onContactSwiped(position: Int) {

@@ -34,7 +34,6 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_navigation.*
@@ -45,6 +44,7 @@ import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.main.db.contactsDatabase
+import pl.org.seva.navigator.main.extension.navigate
 import pl.org.seva.navigator.profile.*
 
 class NavigationFragment : Fragment() {
@@ -119,7 +119,7 @@ class NavigationFragment : Fragment() {
             checkLocationPermission()
         }
         else if (isLoggedIn) {
-            findNavController().navigate(R.id.action_navigationFragment_to_contactsFragment)
+            navigate(R.id.action_navigationFragment_to_contactsFragment)
         }
         else {
             showLoginSnackbar()
@@ -181,25 +181,13 @@ class NavigationFragment : Fragment() {
 
         return when (item.itemId) {
             R.id.action_logout -> logout()
-            R.id.action_delete_user -> {
-                findNavController().navigate(R.id.action_navigationFragment_to_deleteProfileFragment)
-                true
-            }
-            R.id.action_help -> if (!isLocationPermissionGranted) {
-                showLocationPermissionHelp()
-            }
+            R.id.action_delete_user -> navigate(R.id.action_navigationFragment_to_deleteProfileFragment)
+            R.id.action_help -> if (!isLocationPermissionGranted) showLocationPermissionHelp()
             else if (!isLoggedIn) {
                 showLoginHelp()
             } else true
-            R.id.action_settings -> {
-                findNavController().navigate(R.id.action_navigationFragment_to_settingsFragmentContainer)
-                true
-            }
-            R.id.action_credits -> {
-                findNavController().navigate(R.id.action_navigationFragment_to_creditsFragment)
-                true
-            }
-
+            R.id.action_settings -> navigate(R.id.action_navigationFragment_to_settingsFragmentContainer)
+            R.id.action_credits -> navigate(R.id.action_navigationFragment_to_creditsFragment)
             else -> super.onOptionsItemSelected(item)
         }
     }
