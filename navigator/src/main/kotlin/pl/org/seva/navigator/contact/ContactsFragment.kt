@@ -95,7 +95,7 @@ class ContactsFragment : Fragment() {
             }).attachToRecyclerView(contacts_view)
         }
 
-        fun setPromptLabelText() {
+        fun setPromptLabel() {
             val str = getString(R.string.contacts_please_press_plus)
             val idPlus = str.indexOf('+')
             val boldSpan = StyleSpan(Typeface.BOLD)
@@ -113,7 +113,7 @@ class ContactsFragment : Fragment() {
             refreshScreen()
         }
 
-        setPromptLabelText()
+        setPromptLabel()
         initContactsRecyclerView()
         refreshScreen()
     }
