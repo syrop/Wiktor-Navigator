@@ -32,7 +32,7 @@ fun Fragment.navigate(@IdRes resId: Int): Boolean {
     return true
 }
 
-fun Fragment.popBackStack() = findNavController().popBackStack()
+fun Fragment.back() = findNavController().popBackStack()
 
 inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<R> {
     override fun provideDelegate(receiver: Any?, prop: KProperty<Any?>) = lazy {

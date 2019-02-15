@@ -43,14 +43,14 @@ import pl.org.seva.navigator.main.db.contactDao
 import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.main.db.delete
 import pl.org.seva.navigator.main.extension.navigate
-import pl.org.seva.navigator.main.extension.popBackStack
+import pl.org.seva.navigator.main.extension.back
 import pl.org.seva.navigator.main.extension.viewModel
 
 class ContactsFragment : Fragment() {
 
     private val adapter = ContactAdapter { contact ->
         navigatorModel.contact.value = contact
-        popBackStack()
+        back()
     }
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
