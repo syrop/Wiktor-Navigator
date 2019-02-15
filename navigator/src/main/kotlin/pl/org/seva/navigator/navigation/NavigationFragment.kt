@@ -93,6 +93,15 @@ class NavigationFragment : Fragment() {
             }
         }
 
+        fun deleteProfile() {
+            mapHolder.stopWatchingPeer()
+            contacts.clear()
+            contactDao.deleteAll()
+            setShortcuts()
+            fbWriter.deleteMe()
+            logout()
+        }
+
         mapHolder = createMapHolder {
             init(savedInstanceState, root, navigatorModel.contact.value)
             checkLocationPermission = ::ifLocationPermissionGranted
@@ -261,15 +270,6 @@ class NavigationFragment : Fragment() {
         mapHolder.stopWatchingPeer()
         activity!!.loginActivity(LoginActivity.LOGOUT)
         return true
-    }
-
-    private fun deleteProfile() {
-        mapHolder.stopWatchingPeer()
-        contacts.clear()
-        contactDao.deleteAll()
-        setShortcuts()
-        fbWriter.deleteMe()
-        logout()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
