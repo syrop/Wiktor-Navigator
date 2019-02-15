@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.fragment_contacts.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.db.contactsDatabase
-import pl.org.seva.navigator.main.setDynamicShortcuts
+import pl.org.seva.navigator.main.setShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
 import pl.org.seva.navigator.main.db.delete
@@ -73,6 +73,15 @@ class ContactsFragment : Fragment() {
                     .attachToRecyclerView(contacts_view)
         }
 
+        fun setPromptLabelText() {
+            val str = getString(R.string.contacts_please_press_plus)
+            val idPlus = str.indexOf('+')
+            val boldSpan = StyleSpan(Typeface.BOLD)
+            val ssBuilder = SpannableStringBuilder(str)
+            ssBuilder.setSpan(boldSpan, idPlus, idPlus + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            prompt.text = ssBuilder
+        }
+
         seek_contact_fab.setOnClickListener {
             navigate(R.id.action_contactsFragment_to_seekContactFragment)
         }
@@ -81,10 +90,10 @@ class ContactsFragment : Fragment() {
 
         setPromptLabelText()
         initContactsRecyclerView()
-        promptOrRecyclerView()
+        refreshScreen()
     }
 
-    private fun promptOrRecyclerView()  {
+    private fun refreshScreen()  {
         if (contacts.size > 0) {
             contacts_view.visibility = View.VISIBLE
             prompt.visibility = View.GONE
@@ -96,23 +105,22 @@ class ContactsFragment : Fragment() {
     }
 
     private fun onContactSwiped(position: Int) {
-        val contact = contacts[position]
-        deleteFriend(contact)
-        promptOrRecyclerView()
+        fun Contact.delete() {
+            fbWriter deleteFriendship this
+            contacts delete this
+            contactDao delete this
+            adapter.notifyDataSetChanged()
+            showUndeleteSnackbar(this)
+            setShortcuts()
+        }
+
+        contacts[position].delete()
+        refreshScreen()
     }
 
     private fun onUndeleteClicked(contact: Contact) {
         undeleteFriend(contact)
-        promptOrRecyclerView()
-    }
-
-    private fun deleteFriend(contact: Contact) {
-        fbWriter deleteFriendship contact
-        contacts delete contact
-        contactDao delete contact
-        adapter.notifyDataSetChanged()
-        showUndeleteSnackbar(contact)
-        setDynamicShortcuts(context!!)
+        refreshScreen()
     }
 
     private fun undeleteFriend(contact: Contact) {
@@ -121,21 +129,13 @@ class ContactsFragment : Fragment() {
         contacts add contact
         contactDao insert contact
         adapter.notifyDataSetChanged()
-        setDynamicShortcuts(context!!)
+        setShortcuts()
     }
 
-    private fun setPromptLabelText() {
-        val str = getString(R.string.contacts_please_press_plus)
-        val idPlus = str.indexOf('+')
-        val boldSpan = StyleSpan(Typeface.BOLD)
-        val ssBuilder = SpannableStringBuilder(str)
-        ssBuilder.setSpan(boldSpan, idPlus, idPlus + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        prompt.text = ssBuilder
-    }
 
     private fun onContactsUpdatedInStore() {
         adapter.notifyDataSetChanged()
-        promptOrRecyclerView()
+        refreshScreen()
     }
 
     private fun showUndeleteSnackbar(contact: Contact) {

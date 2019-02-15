@@ -68,10 +68,22 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        @SuppressLint("CommitPrefEdits")
+        fun persistCameraPositionAndZoom() =
+                with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {
+                    putFloat(ZOOM_PROPERTY, mapHolder.zoom)
+                    putFloat(LATITUDE_PROPERTY, mapHolder.lastCameraPosition.latitude.toFloat())
+                    putFloat(LONGITUDE_PROPERTY, mapHolder.lastCameraPosition.longitude.toFloat())
+                    apply()
+                }
+
+        fun ifLocationPermissionGranted(f: () -> Unit) =
+                checkLocationPermission(onGranted = f, onDenied = {})
+
         mapHolder = createMapHolder {
             init(savedInstanceState, root, navigatorModel.contact.value)
-            checkLocationPermission = this@NavigationFragment::ifLocationPermissionGranted
-            persistCameraPositionAndZoom = this@NavigationFragment::persistCameraPositionAndZoom
+            checkLocationPermission = ::ifLocationPermissionGranted
+            persistCameraPositionAndZoom = ::persistCameraPositionAndZoom
         }
         add_contact_fab.setOnClickListener { onAddContactClicked() }
 
@@ -124,9 +136,6 @@ class NavigationFragment : Fragment() {
             showLoginSnackbar()
         }
     }
-
-    private inline fun ifLocationPermissionGranted(f: () -> Unit) =
-            checkLocationPermission(onGranted = f, onDenied = {})
 
     private inline fun checkLocationPermission(
             onGranted: () -> Unit = ::onLocationPermissionGranted,
@@ -258,19 +267,10 @@ class NavigationFragment : Fragment() {
         mapHolder.stopWatchingPeer()
         contacts.clear()
         contactsDatabase.contactDao.deleteAll()
-        setDynamicShortcuts(context!!)
+        setShortcuts()
         fbWriter.deleteMe()
         logout()
     }
-
-    @SuppressLint("CommitPrefEdits")
-    private fun persistCameraPositionAndZoom() =
-            with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {
-                putFloat(ZOOM_PROPERTY, mapHolder.zoom)
-                putFloat(LATITUDE_PROPERTY, mapHolder.lastCameraPosition.latitude.toFloat())
-                putFloat(LONGITUDE_PROPERTY, mapHolder.lastCameraPosition.longitude.toFloat())
-                apply()
-            }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(SAVED_PEER_LOCATION, mapHolder.peerLocation)

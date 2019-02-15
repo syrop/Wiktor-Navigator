@@ -37,9 +37,15 @@ val friendshipListener by instance<FriendshipListener>()
 
 class FriendshipListener {
 
-    private val nm get() = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val nm by lazy { appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     fun onPeerRequestedFriendship(contact: Contact) {
+        fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =
+                notify(notificationId.value, friendshipRequestedNotification(appContext) {
+                    this.contact = contact
+                    this.nid = notificationId
+                })
+
         appContext.registerReceiver(FriendshipReceiver(), IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
         val notificationId = ParcelableInt(Random().nextInt())
         nm.friendshipRequested(contact, notificationId)
@@ -49,41 +55,34 @@ class FriendshipListener {
         contacts add contact
         contactDao insert contact
         fbWriter addFriendship contact
-        setDynamicShortcuts(appContext)
+        setShortcuts()
     }
 
     fun onPeerDeletedFriendship(contact: Contact) {
         contacts delete contact
         contactDao delete contact
-        setDynamicShortcuts(appContext)
+        setShortcuts()
     }
-
-    private fun acceptFriend(contact: Contact) {
-        fbWriter acceptFriendship contact
-        if (contact in contacts) {
-            return
-        }
-        contacts add contact
-        contactDao insert contact
-    }
-
-    private fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =
-            notify(notificationId.value, friendshipRequestedNotification(appContext) {
-                this.contact = contact
-                this.nid = notificationId
-            })
 
     private inner class FriendshipReceiver: BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
+            fun Contact.acceptFriend() {
+                fbWriter acceptFriendship this
+                if (this in contacts) {
+                    return
+                }
+                contacts add this
+                contactDao insert this
+            }
+
             val nid = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
             nm.cancel(nid)
             context.unregisterReceiver(this)
-            val contact = intent.getParcelableExtra<Contact>(CONTACT_EXTRA)
             val action = intent.getParcelableExtra<ParcelableInt>(ACTION).value
             if (action == ACCEPTED_ACTION) {
-                acceptFriend(contact)
-                setDynamicShortcuts(context)
+                intent.getParcelableExtra<Contact>(CONTACT_EXTRA).acceptFriend()
+                setShortcuts()
             }
         }
     }

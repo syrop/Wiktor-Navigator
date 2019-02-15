@@ -55,7 +55,7 @@ class KodeinModuleBuilder(private val ctx: Context) {
     fun build() = Kodein.Module("main") {
         bind<Context>() with provider { ctx }
         bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
-        bind<Bootstrap>() with singleton { Bootstrap(ctx) }
+        bind<Bootstrap>() with singleton { Bootstrap() }
         bind<FusedLocationProviderClient>() with singleton {
             LocationServices.getFusedLocationProviderClient(ctx)
         }
@@ -69,11 +69,11 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<FriendshipObservable>() with singleton { FriendshipObservable() }
         bind<PeerObservable>() with singleton { PeerObservable() }
         bind<MyLocationSource>() with singleton { MyLocationSource() }
-        bind<ContactsDatabase>() with singleton { ContactsDatabase(ctx) }
-        bind<NotificationChannels>() with singleton { NotificationChannels(ctx) }
-        bind<ColorFactory>() with singleton { ColorFactory(ctx) }
+        bind<ContactsDatabase>() with singleton { ContactsDatabase() }
+        bind<NotificationChannels>() with singleton { NotificationChannels() }
+        bind<ColorFactory>() with singleton { ColorFactory() }
         bind<Debug>() with singleton { Debug() }
         bind<ContactDao>() with singleton { contactsDatabase.contactDao }
-        bind<Toaster>() with singleton { Toaster(ctx) }
+        bind<Toaster>() with singleton { Toaster() }
     }
 }

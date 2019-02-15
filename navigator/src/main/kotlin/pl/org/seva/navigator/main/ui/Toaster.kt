@@ -19,16 +19,16 @@
 
 package pl.org.seva.navigator.main.ui
 
-import android.content.Context
 import android.widget.Toast
+import pl.org.seva.navigator.main.appContext
 import pl.org.seva.navigator.main.instance
 
 val toaster by instance<Toaster>()
 
-class Toaster(private val ctx: Context) {
+class Toaster {
 
     infix fun toast(message: CharSequence) =
-        Toast.makeText(ctx, message, Toast.LENGTH_SHORT)!!.apply {
+        Toast.makeText(appContext, message, Toast.LENGTH_SHORT)!!.apply {
             if (message.isNotBlank()) {
                 show()
             }

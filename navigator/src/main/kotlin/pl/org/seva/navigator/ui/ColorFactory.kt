@@ -19,16 +19,16 @@
 
 package pl.org.seva.navigator.ui
 
-import android.content.Context
 import android.graphics.Color
+import pl.org.seva.navigator.main.appContext
 import pl.org.seva.navigator.main.instance
 
 val colorFactory by instance<ColorFactory>()
 
-class ColorFactory(private val ctx: Context ) {
+class ColorFactory {
 
     private val colors by lazy {
-        ctx.run {
+        appContext.run {
             resources.getIdentifier(COLOR_ARRAY_NAME + COLOR_TYPE,"array", packageName).let {
                 resources.obtainTypedArray(it)
             }

@@ -25,17 +25,18 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.main.appContext
 import pl.org.seva.navigator.main.instance
 
 val notificationChannels by instance<NotificationChannels>()
 
 fun createNotificationChannels() = notificationChannels.create()
 
-class NotificationChannels(private val context: Context) {
+class NotificationChannels {
 
     fun create() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val nm = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createOngoingChannel(nm)
         createQuestionChannel(nm)
     }
@@ -44,9 +45,9 @@ class NotificationChannels(private val context: Context) {
     private fun createOngoingChannel(nm: NotificationManager) {
         val id = ONGOING_NOTIFICATION_CHANNEL_NAME
         // The user-visible name of the channel.
-        val name = context.getString(R.string.question_channel_name)
+        val name = appContext.getString(R.string.question_channel_name)
         // The user-visible description of the channel.
-        val description = context.getString(R.string.question_channel_description)
+        val description = appContext.getString(R.string.question_channel_description)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(id, name, importance)
         channel.description = description
@@ -57,9 +58,9 @@ class NotificationChannels(private val context: Context) {
     private fun createQuestionChannel(nm: NotificationManager) {
         val id = QUESTION_CHANNEL_NAME
         // The user-visible name of the channel.
-        val name = context.getString(R.string.ongoing_channel_name)
+        val name = appContext.getString(R.string.ongoing_channel_name)
         // The user-visible description of the channel.
-        val description = context.getString(R.string.ongoing_channel_description)
+        val description = appContext.getString(R.string.ongoing_channel_description)
         val importance = NotificationManager.IMPORTANCE_LOW
         val channel = NotificationChannel(id, name, importance)
         channel.description = description

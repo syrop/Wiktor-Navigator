@@ -19,8 +19,8 @@
 
 package pl.org.seva.navigator.main.db
 
-import android.content.Context
 import androidx.room.Room
+import pl.org.seva.navigator.main.appContext
 import pl.org.seva.navigator.main.db.migration.AddedColorMigration
 import pl.org.seva.navigator.main.db.migration.AddedDebugMigration
 import pl.org.seva.navigator.main.db.migration.LiteToRoomMigration
@@ -28,12 +28,12 @@ import pl.org.seva.navigator.main.instance
 
 val contactsDatabase by instance<ContactsDatabase>()
 
-class ContactsDatabase(ctx: Context) {
+class ContactsDatabase {
 
     private val db: NavigatorDbAbstract
 
     init {
-        db = Room.databaseBuilder(ctx, NavigatorDbAbstract::class.java, DATABASE_NAME)
+        db = Room.databaseBuilder(appContext, NavigatorDbAbstract::class.java, DATABASE_NAME)
                 .addMigrations(LiteToRoomMigration(), AddedColorMigration(), AddedDebugMigration())
                 .allowMainThreadQueries()
                 .build()
