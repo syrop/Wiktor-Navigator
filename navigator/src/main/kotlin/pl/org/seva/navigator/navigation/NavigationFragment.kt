@@ -80,6 +80,19 @@ class NavigationFragment : Fragment() {
         fun ifLocationPermissionGranted(f: () -> Unit) =
                 checkLocationPermission(onGranted = f, onDenied = {})
 
+        fun onAddContactClicked() {
+            mapHolder.stopWatchingPeer()
+            if (!isLocationPermissionGranted) {
+                checkLocationPermission()
+            }
+            else if (isLoggedIn) {
+                navigate(R.id.action_navigationFragment_to_contactsFragment)
+            }
+            else {
+                showLoginSnackbar()
+            }
+        }
+
         mapHolder = createMapHolder {
             init(savedInstanceState, root, navigatorModel.contact.value)
             checkLocationPermission = ::ifLocationPermissionGranted
@@ -122,19 +135,6 @@ class NavigationFragment : Fragment() {
                 },
                 onDenied = {})
         activity!!.invalidateOptionsMenu()
-    }
-
-    private fun onAddContactClicked() {
-        mapHolder.stopWatchingPeer()
-        if (!isLocationPermissionGranted) {
-            checkLocationPermission()
-        }
-        else if (isLoggedIn) {
-            navigate(R.id.action_navigationFragment_to_contactsFragment)
-        }
-        else {
-            showLoginSnackbar()
-        }
     }
 
     private inline fun checkLocationPermission(
