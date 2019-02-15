@@ -98,10 +98,9 @@ data class Contact(
         fun value() = Contact(email, name, color)
     }
 
-
     companion object {
+
         const val CONTACT_NAME_PROPERTY = "navigation_map_followed_name"
         const val CONTACT_EMAIL_PROPERTY = "navigation_map_followed_email"
     }
-
 }

@@ -38,7 +38,7 @@ import pl.org.seva.navigator.main.db.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipObservable
 import pl.org.seva.navigator.main.db.ContactDao
-import pl.org.seva.navigator.main.db.contactsDatabase
+import pl.org.seva.navigator.main.db.db
 import pl.org.seva.navigator.debug.Debug
 import pl.org.seva.navigator.main.ui.Toaster
 import pl.org.seva.navigator.ui.ColorFactory
@@ -73,7 +73,7 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<NotificationChannels>() with singleton { NotificationChannels() }
         bind<ColorFactory>() with singleton { ColorFactory() }
         bind<Debug>() with singleton { Debug() }
-        bind<ContactDao>() with singleton { contactsDatabase.contactDao }
+        bind<ContactDao>() with singleton { db.contactDao }
         bind<Toaster>() with singleton { Toaster() }
     }
 }

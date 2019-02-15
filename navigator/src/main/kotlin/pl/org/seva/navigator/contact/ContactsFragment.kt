@@ -34,23 +34,19 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.db.contactsDatabase
 import pl.org.seva.navigator.main.setShortcuts
 import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
 
-import pl.org.seva.navigator.main.db.delete
-import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
+import pl.org.seva.navigator.main.db.contactDao
+import pl.org.seva.navigator.main.db.insert
+import pl.org.seva.navigator.main.db.delete
 import pl.org.seva.navigator.main.extension.navigate
 import pl.org.seva.navigator.main.extension.popBackStack
 import pl.org.seva.navigator.main.extension.viewModel
 
 class ContactsFragment : Fragment() {
-
-    private val contactDao = contactsDatabase.contactDao
-
-    private var snackbar: Snackbar? = null
 
     private val adapter = ContactAdapter { contact ->
         navigatorModel.contact.value = contact
@@ -58,6 +54,27 @@ class ContactsFragment : Fragment() {
     }
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
+
+    private fun Contact.delete(onChange: () -> Unit) {
+        fun undelete() {
+            fbWriter addFriendship this
+            fbWriter acceptFriendship this
+            contacts add this
+            contactDao insert this
+            onChange()
+        }
+
+        fbWriter deleteFriendship this
+        contacts delete this
+        contactDao delete this
+        Snackbar.make(
+                contacts_view,
+                R.string.contacts_deleted_contact,
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.contacts_undelete) { undelete() }
+                .show()
+        onChange()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_contacts, container, false)
@@ -69,8 +86,13 @@ class ContactsFragment : Fragment() {
             contacts_view.layoutManager = LinearLayoutManager(context)
             contacts_view.adapter = adapter
             contacts_view.addItemDecoration(ContactsDividerItemDecoration(context!!))
-            ItemTouchHelper(ContactTouchListener { onContactSwiped(it) })
-                    .attachToRecyclerView(contacts_view)
+            ItemTouchHelper(ContactTouchListener { position ->
+                contacts[position].delete {
+                    refreshScreen()
+                    adapter.notifyDataSetChanged()
+                    setShortcuts()
+                }
+            }).attachToRecyclerView(contacts_view)
         }
 
         fun setPromptLabelText() {
@@ -86,14 +108,17 @@ class ContactsFragment : Fragment() {
             navigate(R.id.action_contactsFragment_to_seekContactFragment)
         }
 
-        contacts.addContactsUpdatedListener { onContactsUpdatedInStore() }
+        contacts.addContactsUpdatedListener {
+            adapter.notifyDataSetChanged()
+            refreshScreen()
+        }
 
         setPromptLabelText()
         initContactsRecyclerView()
         refreshScreen()
     }
 
-    private fun refreshScreen()  {
+    private fun refreshScreen() {
         if (contacts.size > 0) {
             contacts_view.visibility = View.VISIBLE
             prompt.visibility = View.GONE
@@ -102,48 +127,5 @@ class ContactsFragment : Fragment() {
             contacts_view.visibility = View.GONE
             prompt.visibility = View.VISIBLE
         }
-    }
-
-    private fun onContactSwiped(position: Int) {
-        fun Contact.delete() {
-            fbWriter deleteFriendship this
-            contacts delete this
-            contactDao delete this
-            adapter.notifyDataSetChanged()
-            showUndeleteSnackbar(this)
-            setShortcuts()
-        }
-
-        contacts[position].delete()
-        refreshScreen()
-    }
-
-    private fun onUndeleteClicked(contact: Contact) {
-        undeleteFriend(contact)
-        refreshScreen()
-    }
-
-    private fun undeleteFriend(contact: Contact) {
-        fbWriter addFriendship contact
-        fbWriter acceptFriendship contact
-        contacts add contact
-        contactDao insert contact
-        adapter.notifyDataSetChanged()
-        setShortcuts()
-    }
-
-
-    private fun onContactsUpdatedInStore() {
-        adapter.notifyDataSetChanged()
-        refreshScreen()
-    }
-
-    private fun showUndeleteSnackbar(contact: Contact) {
-        snackbar = Snackbar.make(
-                contacts_view,
-                R.string.contacts_deleted_contact,
-                Snackbar.LENGTH_LONG)
-                .setAction(R.string.contacts_undelete) { onUndeleteClicked(contact) }
-        snackbar!!.show()
     }
 }

@@ -26,20 +26,16 @@ import pl.org.seva.navigator.main.db.migration.AddedDebugMigration
 import pl.org.seva.navigator.main.db.migration.LiteToRoomMigration
 import pl.org.seva.navigator.main.instance
 
-val contactsDatabase by instance<ContactsDatabase>()
+val db by instance<ContactsDatabase>()
 
 class ContactsDatabase {
 
-    private val db: NavigatorDbAbstract
-
-    init {
-        db = Room.databaseBuilder(appContext, NavigatorDbAbstract::class.java, DATABASE_NAME)
+    private val db = Room.databaseBuilder(appContext, NavigatorDbAbstract::class.java, DATABASE_NAME)
                 .addMigrations(LiteToRoomMigration(), AddedColorMigration(), AddedDebugMigration())
                 .allowMainThreadQueries()
                 .build()
-    }
 
-    val contactDao get() = db.contactDao()
+    val contactDao = db.contactDao()
 
     companion object {
         const val SQL_LITE_DATABASE_VERSION = 1

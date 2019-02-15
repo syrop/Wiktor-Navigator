@@ -42,7 +42,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.*
-import pl.org.seva.navigator.main.db.contactsDatabase
+import pl.org.seva.navigator.main.db.contactDao
 import pl.org.seva.navigator.main.extension.navigate
 import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.profile.*
@@ -266,7 +266,7 @@ class NavigationFragment : Fragment() {
     private fun deleteProfile() {
         mapHolder.stopWatchingPeer()
         contacts.clear()
-        contactsDatabase.contactDao.deleteAll()
+        contactDao.deleteAll()
         setShortcuts()
         fbWriter.deleteMe()
         logout()

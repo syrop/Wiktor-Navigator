@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.db.contactDao
-import pl.org.seva.navigator.main.db.contactsDatabase
 
 import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.debug.debug
@@ -45,7 +44,7 @@ class Bootstrap {
     fun boot() {
         FirebaseAuth.getInstance().currentUser?.setCurrent()
         activityRecognition initGoogleApiClient appContext
-        with(contactsDatabase.contactDao) {
+        with(contactDao) {
             contacts addAll getAll().map { it.value() }
         }
         setShortcuts()
