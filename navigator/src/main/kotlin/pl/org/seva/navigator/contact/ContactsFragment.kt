@@ -55,13 +55,13 @@ class ContactsFragment : Fragment() {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
-    private fun Contact.delete(onChange: () -> Unit) {
+    private fun Contact.delete(onChanged: () -> Unit) {
         fun undelete() {
             fbWriter addFriendship this
             fbWriter acceptFriendship this
             contacts add this
             contactDao insert this
-            onChange()
+            onChanged()
         }
 
         fbWriter deleteFriendship this
@@ -73,7 +73,7 @@ class ContactsFragment : Fragment() {
                 Snackbar.LENGTH_LONG)
                 .setAction(R.string.contacts_undelete) { undelete() }
                 .show()
-        onChange()
+        onChanged()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
