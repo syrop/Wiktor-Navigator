@@ -43,6 +43,7 @@ import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.main.db.contactDao
+import pl.org.seva.navigator.main.extension.inflate
 import pl.org.seva.navigator.main.extension.navigate
 import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.profile.*
@@ -63,9 +64,8 @@ class NavigationFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_navigation, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+            inflate(R.layout.fragment_navigation, container)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         @SuppressLint("CommitPrefEdits")

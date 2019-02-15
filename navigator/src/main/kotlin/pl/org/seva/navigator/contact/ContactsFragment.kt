@@ -44,6 +44,7 @@ import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.main.db.delete
 import pl.org.seva.navigator.main.extension.navigate
 import pl.org.seva.navigator.main.extension.back
+import pl.org.seva.navigator.main.extension.inflate
 import pl.org.seva.navigator.main.extension.viewModel
 
 class ContactsFragment : Fragment() {
@@ -76,9 +77,8 @@ class ContactsFragment : Fragment() {
         onChanged()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_contacts, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        inflate(R.layout.fragment_contacts, container)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fun initContactsRecyclerView() {

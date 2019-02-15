@@ -19,7 +19,10 @@
 
 package pl.org.seva.navigator.main.extension
 
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -39,3 +42,6 @@ inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<
         ViewModelProviders.of(this@viewModel.activity!!).get(R::class.java)
     }
 }
+
+fun Fragment.inflate(@LayoutRes resource: Int, root: ViewGroup?): View =
+    layoutInflater.inflate(resource, root, false)
