@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Wiktor Nizio
+ * Copyright (C) 2019 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,12 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.extension
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 
-val prefs by instance<SharedPreferences>()
-
-val applicationContext by instance<Context>()
-
-val appContext by instance<Context>()
-
-val versionName: String by lazy {
-    appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName
+fun <T> Context.start(clazz: Class<T>, f: Intent.() -> Intent): Boolean {
+    startActivity(Intent(this, clazz).run(f))
+    return true
 }
