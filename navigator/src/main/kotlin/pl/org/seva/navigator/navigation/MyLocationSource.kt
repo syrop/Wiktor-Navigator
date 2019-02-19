@@ -32,7 +32,7 @@ import pl.org.seva.navigator.main.ActivityRecognitionSource
 import pl.org.seva.navigator.main.activityRecognition
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.profile.isLoggedIn
-import pl.org.seva.navigator.main.subscribe
+import pl.org.seva.navigator.main.extension.subscribe
 
 val myLocationSource by instance<MyLocationSource>()
 

@@ -34,6 +34,7 @@ import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
 
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.main.extension.subscribe
 
 val activityRecognition by instance<ActivityRecognitionSource>()
 

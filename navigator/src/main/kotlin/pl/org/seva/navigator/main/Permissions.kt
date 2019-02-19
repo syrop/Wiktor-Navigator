@@ -22,6 +22,7 @@ package pl.org.seva.navigator.main
 import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 import io.reactivex.subjects.PublishSubject
+import pl.org.seva.navigator.main.extension.subscribe
 
 fun Fragment.requestPermissions(
         requestCode: Int,
