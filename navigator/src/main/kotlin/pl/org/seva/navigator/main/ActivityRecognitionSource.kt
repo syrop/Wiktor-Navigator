@@ -26,6 +26,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -48,7 +50,11 @@ open class ActivityRecognitionSource :
     private lateinit var context: Context
     private var activityRecognitionReceiver : BroadcastReceiver? = null
 
-    private val subject = PublishSubject.create<Any>()
+    private val stateSubject = PublishSubject.create<Int>()
+
+    private val mutableStateLiveData = MutableLiveData<Int>()
+
+    val stateLiveData: LiveData<Int> = mutableStateLiveData
 
     infix fun initGoogleApiClient(context: Context) {
         if (initialized) {
@@ -97,17 +103,19 @@ open class ActivityRecognitionSource :
 
     fun listen(lifecycle: Lifecycle, f: (Int) -> Unit) {
         f(state)
-        subject.subscribe(lifecycle) { f(state) }
+        stateSubject.subscribe(lifecycle) { f(state) }
     }
 
     private fun onDeviceStationary() {
         state = STATIONARY
-        subject.onNext(STATIONARY)
+        stateSubject.onNext(STATIONARY)
+        mutableStateLiveData.value = STATIONARY
     }
 
     private fun onDeviceMoving() {
         state = MOVING
-        subject.onNext(MOVING)
+        stateSubject.onNext(MOVING)
+        mutableStateLiveData.value = MOVING
     }
 
     private inner class ActivityRecognitionReceiver: BroadcastReceiver() {

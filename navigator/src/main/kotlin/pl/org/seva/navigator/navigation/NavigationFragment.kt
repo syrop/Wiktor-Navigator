@@ -33,6 +33,7 @@ import android.webkit.WebView
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_navigation.*
@@ -111,12 +112,13 @@ class NavigationFragment : Fragment() {
         add_contact_fab.setOnClickListener { onAddContactClicked() }
 
         checkLocationPermission()
-        activityRecognition.listen(lifecycle) { state ->
+        activityRecognition.stateLiveData.observe(this, Observer<Int> { state ->
             when (state) {
                 ActivityRecognitionSource.STATIONARY -> hud_stationary.visibility = View.VISIBLE
                 ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
             }
-        }
+        })
+
         navigatorModel.contact.observe(this) { contact ->
             mapHolder.contact = contact
             contact.persist()
