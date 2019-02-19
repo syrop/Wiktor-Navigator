@@ -62,7 +62,8 @@ class SeekContactFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflate(R.layout.fragment_seek_contact, container)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         setPromptText(R.string.seek_contact_press_to_begin)
         navigatorModel.query.observe(this) { query ->
             if (!query.isEmpty()) {

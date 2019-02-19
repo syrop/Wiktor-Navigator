@@ -80,7 +80,8 @@ class ContactsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflate(R.layout.fragment_contacts, container)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         fun initContactsRecyclerView() {
             contacts_view.setHasFixedSize(true)
             contacts_view.layoutManager = LinearLayoutManager(context)

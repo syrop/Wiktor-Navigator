@@ -67,7 +67,8 @@ class NavigationFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflate(R.layout.fragment_navigation, container)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         @SuppressLint("CommitPrefEdits")
         fun persistCameraPositionAndZoom() =
                 with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {

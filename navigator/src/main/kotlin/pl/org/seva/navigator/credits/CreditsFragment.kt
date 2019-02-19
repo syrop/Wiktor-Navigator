@@ -40,7 +40,8 @@ class CreditsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflate(R.layout.fragment_credits, container)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         fun String.inBrowser() {
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(this)
