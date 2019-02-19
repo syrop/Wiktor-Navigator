@@ -30,7 +30,7 @@ fun Disposable.observeLifecycle(lifecycle: Lifecycle) =
 private class RxLifecycleObserver(private val disposable: Disposable) : LifecycleObserver {
 
     @Suppress("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onEvent() {
         disposable.dispose()
     }
