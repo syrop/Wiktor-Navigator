@@ -43,7 +43,7 @@ import pl.org.seva.navigator.debug.isDebugMode
 import pl.org.seva.navigator.main.applicationContext
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.prefs
-import pl.org.seva.navigator.ui.OnHudSwipeListener
+import pl.org.seva.navigator.main.ui.OnHudSwipeListener
 
 fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {
     val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment

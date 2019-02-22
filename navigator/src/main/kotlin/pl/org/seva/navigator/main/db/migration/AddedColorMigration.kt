@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import pl.org.seva.navigator.main.db.ContactsDatabase
-import pl.org.seva.navigator.ui.ColorFactory
+import pl.org.seva.navigator.main.ui.ColorFactory
 import pl.org.seva.navigator.main.instance
 
 class AddedColorMigration : Migration(

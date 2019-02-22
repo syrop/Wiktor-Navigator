@@ -41,8 +41,8 @@ import pl.org.seva.navigator.main.db.ContactDao
 import pl.org.seva.navigator.main.db.db
 import pl.org.seva.navigator.debug.Debug
 import pl.org.seva.navigator.main.ui.Toaster
-import pl.org.seva.navigator.ui.ColorFactory
-import pl.org.seva.navigator.ui.NotificationChannels
+import pl.org.seva.navigator.main.ui.ColorFactory
+import pl.org.seva.navigator.main.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationSource
 import pl.org.seva.navigator.navigation.PeerObservable
 

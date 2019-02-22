@@ -33,7 +33,7 @@ import pl.org.seva.navigator.navigation.NavigatorService
 import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.profile.loggedInUser
 import pl.org.seva.navigator.profile.setCurrent
-import pl.org.seva.navigator.ui.createNotificationChannels
+import pl.org.seva.navigator.main.ui.createNotificationChannels
 
 val bootstrap: Bootstrap by instance()
 

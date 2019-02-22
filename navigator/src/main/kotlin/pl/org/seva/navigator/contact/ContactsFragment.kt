@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.fragment_contacts.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.setShortcuts
-import pl.org.seva.navigator.ui.ContactsDividerItemDecoration
+import pl.org.seva.navigator.main.ui.ContactsDividerItemDecoration
 
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel

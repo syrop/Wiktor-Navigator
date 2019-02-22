@@ -29,7 +29,7 @@ import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.ui.colorFactory
+import pl.org.seva.navigator.main.ui.colorFactory
 
 val fbReader by instance<FbReader>()
 
