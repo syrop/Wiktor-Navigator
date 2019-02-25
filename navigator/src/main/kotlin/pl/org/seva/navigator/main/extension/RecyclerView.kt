@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Wiktor Nizio
+ * Copyright (C) 2019 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,12 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.contact
+package pl.org.seva.navigator.main.extension
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import pl.org.seva.navigator.contact.ItemSwipeListener
 
-class ContactTouchListener(private val onItemSwiped: (Int) -> Unit) : ItemTouchHelper.Callback() {
-
-    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) =
-            makeMovementFlags(0, ItemTouchHelper.START or ItemTouchHelper.END)
-
-    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                        target: RecyclerView.ViewHolder) = false
-
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) =
-            onItemSwiped(viewHolder.adapterPosition)
-
-    override fun isLongPressDragEnabled() = false
+fun RecyclerView.swipeListener(listener: (Int) -> Unit) {
+    ItemTouchHelper(ItemSwipeListener(listener)).attachToRecyclerView(this)
 }

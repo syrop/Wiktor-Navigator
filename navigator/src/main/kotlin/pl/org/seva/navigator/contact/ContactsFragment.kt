@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contacts.*
@@ -42,43 +41,19 @@ import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.db.contactDao
 import pl.org.seva.navigator.main.db.insert
 import pl.org.seva.navigator.main.db.delete
-import pl.org.seva.navigator.main.extension.navigate
-import pl.org.seva.navigator.main.extension.back
-import pl.org.seva.navigator.main.extension.inflate
-import pl.org.seva.navigator.main.extension.viewModel
+import pl.org.seva.navigator.main.extension.*
 
 class ContactsFragment : Fragment() {
+
+    private val navigatorModel by viewModel<NavigatorViewModel>()
 
     private val adapter = ContactAdapter { contact ->
         navigatorModel.contact.value = contact
         back()
     }
 
-    private val navigatorModel by viewModel<NavigatorViewModel>()
-
-    private fun Contact.delete(onChanged: () -> Unit) {
-        fun undelete() {
-            fbWriter addFriendship this
-            fbWriter acceptFriendship this
-            contacts add this
-            contactDao insert this
-            onChanged()
-        }
-
-        fbWriter deleteFriendship this
-        contacts delete this
-        contactDao delete this
-        Snackbar.make(
-                contacts_view,
-                R.string.contacts_deleted_contact,
-                Snackbar.LENGTH_LONG)
-                .setAction(R.string.contacts_undelete) { undelete() }
-                .show()
-        onChanged()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflate(R.layout.fragment_contacts, container)
+            inflate(R.layout.fragment_contacts, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -87,13 +62,13 @@ class ContactsFragment : Fragment() {
             contacts_view.layoutManager = LinearLayoutManager(context)
             contacts_view.adapter = adapter
             contacts_view.addItemDecoration(ContactsDividerItemDecoration(context!!))
-            ItemTouchHelper(ContactTouchListener { position ->
+            contacts_view.swipeListener { position ->
                 contacts[position].delete {
                     refreshScreen()
                     adapter.notifyDataSetChanged()
                     setShortcuts()
                 }
-            }).attachToRecyclerView(contacts_view)
+            }
         }
 
         fun setPromptLabel() {
@@ -117,6 +92,28 @@ class ContactsFragment : Fragment() {
         setPromptLabel()
         initContactsRecyclerView()
         refreshScreen()
+    }
+
+
+    private fun Contact.delete(onChanged: () -> Unit) {
+        fun undelete() {
+            fbWriter addFriendship this
+            fbWriter acceptFriendship this
+            contacts add this
+            contactDao insert this
+            onChanged()
+        }
+
+        fbWriter deleteFriendship this
+        contacts delete this
+        contactDao delete this
+        Snackbar.make(
+                contacts_view,
+                R.string.contacts_deleted_contact,
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.contacts_undelete) { undelete() }
+                .show()
+        onChanged()
     }
 
     private fun refreshScreen() {
