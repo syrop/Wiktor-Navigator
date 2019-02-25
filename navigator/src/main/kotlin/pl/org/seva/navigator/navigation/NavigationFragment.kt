@@ -43,11 +43,8 @@ import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.main.fb.fbWriter
 import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.main.db.contactDao
-import pl.org.seva.navigator.main.extension.inflate
-import pl.org.seva.navigator.main.extension.navigate
-import pl.org.seva.navigator.main.extension.viewModel
+import pl.org.seva.navigator.main.extension.*
 import pl.org.seva.navigator.profile.*
-import pl.org.seva.navigator.main.extension.observe
 
 class NavigationFragment : Fragment() {
 

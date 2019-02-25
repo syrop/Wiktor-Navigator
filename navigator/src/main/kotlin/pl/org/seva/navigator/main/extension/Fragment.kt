@@ -27,7 +27,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.SupportMapFragment
 import org.kodein.di.LazyDelegate
+import pl.org.seva.navigator.R
+import pl.org.seva.navigator.navigation.MapHolder
 import kotlin.reflect.KProperty
 
 fun Fragment.navigate(@IdRes resId: Int): Boolean {
@@ -45,3 +48,8 @@ inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<
 
 fun Fragment.inflate(@LayoutRes resource: Int, root: ViewGroup?): View =
     layoutInflater.inflate(resource, root, false)
+
+fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {
+    val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+    mapFragment.getMapAsync { map -> it withMap map }
+}

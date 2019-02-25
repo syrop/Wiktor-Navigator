@@ -45,11 +45,6 @@ import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.prefs
 import pl.org.seva.navigator.main.ui.OnHudSwipeListener
 
-fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {
-    val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-    mapFragment.getMapAsync { map -> it withMap map }
-}
-
 class MapHolder {
 
     private var map: GoogleMap? = null
