@@ -33,7 +33,7 @@ import pl.org.seva.navigator.R
 import pl.org.seva.navigator.navigation.MapHolder
 import kotlin.reflect.KProperty
 
-fun Fragment.navigate(@IdRes resId: Int): Boolean {
+fun Fragment.nav(@IdRes resId: Int): Boolean {
     findNavController().navigate(resId)
     return true
 }

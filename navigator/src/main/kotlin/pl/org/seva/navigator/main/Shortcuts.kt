@@ -37,7 +37,7 @@ fun setShortcuts() {
     fun Contact.shortcut() = ShortcutInfo.Builder(appContext, System.nanoTime().toString())
                 .setShortLabel(name)
                 .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, appContext, NavigationFragment::class.java)
-                        .putExtra(NavigatorActivity.CONTACT_EMAIL_EXTRA, email))
+                        .putExtra(MainActivity.CONTACT_EMAIL_EXTRA, email))
                 .setIcon(Icon.createWithResource(appContext, R.mipmap.ic_launcher))
                 .build()
 

@@ -35,7 +35,7 @@ import pl.org.seva.navigator.contact.persist
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.extension.viewModel
 
-class NavigatorActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private var backClickTime = 0L
 

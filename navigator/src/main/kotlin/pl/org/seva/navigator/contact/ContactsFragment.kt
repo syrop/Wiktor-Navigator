@@ -56,7 +56,38 @@ class ContactsFragment : Fragment() {
             inflate(R.layout.fragment_contacts, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        fun refreshScreen() {
+            if (contacts.size > 0) {
+                contacts_view.visibility = View.VISIBLE
+                prompt.visibility = View.GONE
+            }
+            else {
+                contacts_view.visibility = View.GONE
+                prompt.visibility = View.VISIBLE
+            }
+        }
+
+        fun Contact.delete(onChanged: () -> Unit) {
+            fun undelete() {
+                fbWriter addFriendship this
+                fbWriter acceptFriendship this
+                contacts add this
+                contactDao insert this
+                onChanged()
+            }
+
+            fbWriter deleteFriendship this
+            contacts delete this
+            contactDao delete this
+            Snackbar.make(
+                    contacts_view,
+                    R.string.contacts_deleted_contact,
+                    Snackbar.LENGTH_LONG)
+                    .setAction(R.string.contacts_undelete) { undelete() }
+                    .show()
+            onChanged()
+        }
+
         fun initContactsRecyclerView() {
             contacts_view.setHasFixedSize(true)
             contacts_view.layoutManager = LinearLayoutManager(context)
@@ -80,8 +111,10 @@ class ContactsFragment : Fragment() {
             prompt.text = ssBuilder
         }
 
+        super.onActivityCreated(savedInstanceState)
+
         seek_contact_fab.setOnClickListener {
-            navigate(R.id.action_contactsFragment_to_seekContactFragment)
+            nav(R.id.action_contactsFragment_to_seekContactFragment)
         }
 
         contacts.addContactsUpdatedListener {
@@ -92,38 +125,5 @@ class ContactsFragment : Fragment() {
         setPromptLabel()
         initContactsRecyclerView()
         refreshScreen()
-    }
-
-
-    private fun Contact.delete(onChanged: () -> Unit) {
-        fun undelete() {
-            fbWriter addFriendship this
-            fbWriter acceptFriendship this
-            contacts add this
-            contactDao insert this
-            onChanged()
-        }
-
-        fbWriter deleteFriendship this
-        contacts delete this
-        contactDao delete this
-        Snackbar.make(
-                contacts_view,
-                R.string.contacts_deleted_contact,
-                Snackbar.LENGTH_LONG)
-                .setAction(R.string.contacts_undelete) { undelete() }
-                .show()
-        onChanged()
-    }
-
-    private fun refreshScreen() {
-        if (contacts.size > 0) {
-            contacts_view.visibility = View.VISIBLE
-            prompt.visibility = View.GONE
-        }
-        else {
-            contacts_view.visibility = View.GONE
-            prompt.visibility = View.VISIBLE
-        }
     }
 }

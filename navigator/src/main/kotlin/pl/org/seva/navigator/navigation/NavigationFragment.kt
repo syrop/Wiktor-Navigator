@@ -85,7 +85,7 @@ class NavigationFragment : Fragment() {
                 checkLocationPermission()
             }
             else if (isLoggedIn) {
-                navigate(R.id.action_navigationFragment_to_contactsFragment)
+                nav(R.id.action_navigationFragment_to_contactsFragment)
             }
             else {
                 showLoginSnackbar()
@@ -198,13 +198,13 @@ class NavigationFragment : Fragment() {
 
         return when (item.itemId) {
             R.id.action_logout -> logout()
-            R.id.action_delete_user -> navigate(R.id.action_navigationFragment_to_deleteProfileFragment)
+            R.id.action_delete_user -> nav(R.id.action_navigationFragment_to_deleteProfileFragment)
             R.id.action_help -> if (!isLocationPermissionGranted) showLocationPermissionHelp()
             else if (!isLoggedIn) {
                 showLoginHelp()
             } else true
-            R.id.action_settings -> navigate(R.id.action_navigationFragment_to_settingsFragmentContainer)
-            R.id.action_credits -> navigate(R.id.action_navigationFragment_to_creditsFragment)
+            R.id.action_settings -> nav(R.id.action_navigationFragment_to_settingsFragmentContainer)
+            R.id.action_credits -> nav(R.id.action_navigationFragment_to_creditsFragment)
             else -> super.onOptionsItemSelected(item)
         }
     }

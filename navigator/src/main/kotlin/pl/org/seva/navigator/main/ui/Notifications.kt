@@ -25,7 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.NavigatorActivity
+import pl.org.seva.navigator.main.MainActivity
 
 fun createNotificationBuilder(context: Context): Notification.Builder =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -37,7 +37,7 @@ fun createNotificationBuilder(context: Context): Notification.Builder =
         }
 
 fun Context.createOngoingNotification(): Notification {
-    val mainActivityIntent = Intent(this, NavigatorActivity::class.java)
+    val mainActivityIntent = Intent(this, MainActivity::class.java)
 
     val pi = PendingIntent.getActivity(
             this,

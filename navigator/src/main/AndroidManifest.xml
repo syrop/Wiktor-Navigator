@@ -27,7 +27,7 @@
             android:value="9608349be08009dc4cc83fa48441db4bcc934626" />
 
         <activity
-            android:name=".main.NavigatorActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name_short"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
