@@ -19,10 +19,15 @@
 
 package pl.org.seva.navigator.main.extension
 
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import pl.org.seva.navigator.contact.ItemSwipeListener
 
 fun RecyclerView.swipeListener(listener: (Int) -> Unit) {
     ItemTouchHelper(ItemSwipeListener(listener)).attachToRecyclerView(this)
+}
+
+fun RecyclerView.verticalDivider() {
+    addItemDecoration(DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL))
 }

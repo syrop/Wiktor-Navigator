@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contacts.*
@@ -92,7 +91,7 @@ class ContactsFragment : Fragment() {
             contacts_view.setHasFixedSize(true)
             contacts_view.layoutManager = LinearLayoutManager(context)
             contacts_view.adapter = adapter
-            contacts_view.addItemDecoration(DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL))
+            contacts_view.verticalDivider()
             contacts_view.swipeListener { position ->
                 contacts[position].delete {
                     refreshScreen()
