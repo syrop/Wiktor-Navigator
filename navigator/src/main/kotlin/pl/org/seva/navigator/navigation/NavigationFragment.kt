@@ -168,7 +168,6 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         fun help(caption: Int, file: String, action: () -> Unit): Boolean {
                 dialog = Dialog(context!!).apply {
                 setContentView(R.layout.dialog_help)
