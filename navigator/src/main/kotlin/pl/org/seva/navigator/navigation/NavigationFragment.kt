@@ -111,8 +111,8 @@ class NavigationFragment : Fragment() {
         checkLocationPermission()
         activityRecognition.stateLiveData.observe(this) { state ->
             when (state) {
-                ActivityRecognitionSource.STATIONARY -> hud_stationary.visibility = View.VISIBLE
-                ActivityRecognitionSource.MOVING -> hud_stationary.visibility = View.GONE
+                ActivityRecognitionObservable.STATIONARY -> hud_stationary.visibility = View.VISIBLE
+                ActivityRecognitionObservable.MOVING -> hud_stationary.visibility = View.GONE
             }
         }
 

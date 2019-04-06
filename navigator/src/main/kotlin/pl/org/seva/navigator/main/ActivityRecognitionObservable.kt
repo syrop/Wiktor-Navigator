@@ -38,9 +38,9 @@ import com.google.android.gms.location.DetectedActivity
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.extension.subscribe
 
-val activityRecognition by instance<ActivityRecognitionSource>()
+val activityRecognition by instance<ActivityRecognitionObservable>()
 
-open class ActivityRecognitionSource :
+open class ActivityRecognitionObservable :
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 

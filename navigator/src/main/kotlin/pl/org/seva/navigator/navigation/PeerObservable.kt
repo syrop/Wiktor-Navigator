@@ -32,11 +32,11 @@ class PeerObservable {
 
     private val cd = CompositeDisposable()
 
-    fun addLocationListener(email: String, f: (latLng: LatLng) -> Unit) {
+    fun addLocationObserver(email: String, f: (latLng: LatLng) -> Unit) {
         fbReader.peerLocationListener(email).subscribeWithComposite(cd) { f(it) }
     }
 
-    fun addDebugListener(email: String, f: (String) -> Unit) {
+    fun addDebugObserver(email: String, f: (String) -> Unit) {
         fbReader.debugListener(email).subscribeWithComposite(cd) { f(it) }
     }
 

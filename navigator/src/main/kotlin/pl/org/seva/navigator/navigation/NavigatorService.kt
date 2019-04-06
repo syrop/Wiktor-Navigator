@@ -27,9 +27,9 @@ class NavigatorService : LifecycleService() {
 
     override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        myLocationSource withService this
+        myLocationObservable withService this
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())
-        myLocationSource.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
+        myLocationObservable.addLocationListener(lifecycle) { fbWriter writeMyLocation it }
 
         return android.app.Service.START_STICKY
     }

@@ -28,15 +28,15 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.main.ActivityRecognitionSource
+import pl.org.seva.navigator.main.ActivityRecognitionObservable
 import pl.org.seva.navigator.main.activityRecognition
 import pl.org.seva.navigator.main.instance
 import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.main.extension.subscribe
 
-val myLocationSource by instance<MyLocationSource>()
+val myLocationObservable by instance<MyLocationObservable>()
 
-class MyLocationSource {
+class MyLocationObservable {
 
     private val provider by instance<FusedLocationProviderClient>()
 
@@ -65,8 +65,8 @@ class MyLocationSource {
     private fun addActivityRecognitionListeners() {
         activityRecognition.listen(lifecycle) { state ->
             when (state) {
-                ActivityRecognitionSource.STATIONARY -> removeRequest()
-                ActivityRecognitionSource.MOVING -> requestLocationUpdates()
+                ActivityRecognitionObservable.STATIONARY -> removeRequest()
+                ActivityRecognitionObservable.MOVING -> requestLocationUpdates()
             }
         }
     }

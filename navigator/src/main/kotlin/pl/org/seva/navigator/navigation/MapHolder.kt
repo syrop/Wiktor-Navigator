@@ -28,10 +28,8 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -194,9 +192,9 @@ class MapHolder {
         }
 
         contacts.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
-        peerObservable.addLocationListener(email)  { onPeerLocationReceived(it) }
+        peerObservable.addLocationObserver(email)  { onPeerLocationReceived(it) }
         if (isDebugMode) {
-            peerObservable.addDebugListener(email)  { message -> message.toast() }
+            peerObservable.addDebugObserver(email)  { message -> message.toast() }
         }
     }
 

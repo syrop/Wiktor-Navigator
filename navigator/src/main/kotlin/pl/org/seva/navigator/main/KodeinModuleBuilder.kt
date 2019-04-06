@@ -43,7 +43,7 @@ import pl.org.seva.navigator.debug.Debug
 import pl.org.seva.navigator.main.ui.Toaster
 import pl.org.seva.navigator.main.ui.ColorFactory
 import pl.org.seva.navigator.main.ui.NotificationChannels
-import pl.org.seva.navigator.navigation.MyLocationSource
+import pl.org.seva.navigator.navigation.MyLocationObservable
 import pl.org.seva.navigator.navigation.PeerObservable
 
 val Context.module get() = KodeinModuleBuilder(this).build()
@@ -65,10 +65,10 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<LoggedInUser>() with singleton { LoggedInUser() }
         bind<FriendshipListener>() with singleton { FriendshipListener() }
         bind<Permissions>() with singleton { Permissions() }
-        bind<ActivityRecognitionSource>() with singleton { ActivityRecognitionSource() }
+        bind<ActivityRecognitionObservable>() with singleton { ActivityRecognitionObservable() }
         bind<FriendshipObservable>() with singleton { FriendshipObservable() }
         bind<PeerObservable>() with singleton { PeerObservable() }
-        bind<MyLocationSource>() with singleton { MyLocationSource() }
+        bind<MyLocationObservable>() with singleton { MyLocationObservable() }
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
         bind<NotificationChannels>() with singleton { NotificationChannels() }
         bind<ColorFactory>() with singleton { ColorFactory() }
