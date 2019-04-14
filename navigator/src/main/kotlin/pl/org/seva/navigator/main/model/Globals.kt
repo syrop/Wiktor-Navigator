@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Wiktor Nizio
+ * Copyright (C) 2018 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,18 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.ui
+package pl.org.seva.navigator.main.model
 
-import android.graphics.Color
-import pl.org.seva.navigator.main.appContext
-import pl.org.seva.navigator.main.instance
+import android.content.Context
+import android.content.SharedPreferences
+import pl.org.seva.navigator.main.init.instance
 
-val colorFactory by instance<ColorFactory>()
+val prefs by instance<SharedPreferences>()
 
-class ColorFactory {
+val applicationContext by instance<Context>()
 
-    private val colors by lazy {
-        appContext.run {
-            resources.getIdentifier(COLOR_ARRAY_NAME + COLOR_TYPE,"array", packageName).let {
-                resources.obtainTypedArray(it)
-            }
-        }
-    }
+val appContext by instance<Context>()
 
-    fun nextColor() = with(colors) {
-        val index = (Math.random() * length()).toInt()
-        getColor(index, Color.GRAY)
-    }
-
-    companion object {
-        const val COLOR_ARRAY_NAME = "mdcolor_"
-        const val COLOR_TYPE = "400"
-    }
+val versionName: String by lazy {
+    appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName
 }

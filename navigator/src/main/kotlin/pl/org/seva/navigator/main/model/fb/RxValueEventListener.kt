@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Wiktor Nizio
+ * Copyright (C) 2017 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +17,19 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.model.fb
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
-val prefs by instance<SharedPreferences>()
+import io.reactivex.subjects.PublishSubject
 
-val applicationContext by instance<Context>()
+class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) : ValueEventListener {
 
-val appContext by instance<Context>()
+    override fun onDataChange(dataSnapshot: DataSnapshot) =
+            dataSnapshot.run { valueEventSubject.onNext(this) }
 
-val versionName: String by lazy {
-    appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName
+    override fun onCancelled(databaseError: DatabaseError) =
+            valueEventSubject.onError(Exception(databaseError.message))
 }

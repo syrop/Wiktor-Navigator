@@ -17,20 +17,24 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.ui
+package pl.org.seva.navigator.main.model.fb
 
-import android.widget.Toast
-import pl.org.seva.navigator.main.appContext
-import pl.org.seva.navigator.main.instance
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 
-val toaster by instance<Toaster>()
+import io.reactivex.subjects.ReplaySubject
 
-class Toaster {
+internal class RxChildEventListener(private val childEventSubject: ReplaySubject<DataSnapshot>) :
+        ChildEventListener {
 
-    infix fun toast(message: CharSequence) =
-        Toast.makeText(appContext, message, Toast.LENGTH_SHORT)!!.apply {
-            if (message.isNotBlank()) {
-                show()
-            }
-        }
+    override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) = childEventSubject.onNext(dataSnapshot)
+
+    override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) = Unit
+
+    override fun onChildRemoved(dataSnapshot: DataSnapshot) = Unit
+
+    override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) = Unit
+
+    override fun onCancelled(databaseError: DatabaseError) = Unit
 }

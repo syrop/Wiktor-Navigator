@@ -32,11 +32,11 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_seek_contact.*
+import kotlinx.android.synthetic.main.fr_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.fb.fbReader
-import pl.org.seva.navigator.main.fb.fbWriter
+import pl.org.seva.navigator.main.model.fb.fbReader
+import pl.org.seva.navigator.main.model.fb.fbWriter
 import pl.org.seva.navigator.main.extension.observe
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.extension.back
@@ -60,7 +60,7 @@ class SeekContactFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fragment_seek_contact, container)
+            inflate(R.layout.fr_seek_contact, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigationFragment"
         android:name="pl.org.seva.navigator.navigation.NavigationFragment"
-        tools:layout="@layout/fragment_navigation"
+        tools:layout="@layout/fr_navigation"
         android:label="@string/app_name_short">
         <action
             android:id="@+id/action_navigationFragment_to_contactsFragment"
@@ -27,7 +27,7 @@
         android:id="@+id/contactsFragment"
         android:name="pl.org.seva.navigator.contact.ContactsFragment"
         android:label="@string/contacts_fragment_label"
-        tools:layout="@layout/fragment_contacts">
+        tools:layout="@layout/fr_contacts">
         <action
             android:id="@+id/action_contactsFragment_to_seekContactFragment"
             app:destination="@id/seekContactFragment"/>
@@ -36,20 +36,20 @@
         android:id="@+id/deleteProfileFragment"
         android:name="pl.org.seva.navigator.profile.DeleteProfileFragment"
         android:label="@string/delete_user_fragment_label"
-        tools:layout="@layout/fragment_delete_profile"/>
+        tools:layout="@layout/fr_delete_profile"/>
     <fragment
         android:id="@+id/seekContactFragment"
         android:name="pl.org.seva.navigator.contact.SeekContactFragment"
         android:label="@string/seek_contact_fragment_label"
-        tools:layout="@layout/fragment_seek_contact"/>
+        tools:layout="@layout/fr_seek_contact"/>
     <fragment
         android:id="@+id/settingsFragmentContainer"
         android:name="pl.org.seva.navigator.settings.SettingsFragmentContainer"
         android:label="@string/settings_fragment_label"
-        tools:layout="@layout/fragment_settings"/>
+        tools:layout="@layout/fr_settings"/>
     <fragment
         android:id="@+id/creditsFragment"
         android:name="pl.org.seva.navigator.credits.CreditsFragment"
         android:label="@string/credits_fragment_label"
-        tools:layout="@layout/fragment_credits"/>
+        tools:layout="@layout/fr_credits"/>
 </navigation>

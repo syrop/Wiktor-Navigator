@@ -17,23 +17,26 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.init
 
 import android.content.Intent
 import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.main.db.contactDao
+import pl.org.seva.navigator.main.model.db.contactDao
 
-import pl.org.seva.navigator.main.db.insert
+import pl.org.seva.navigator.main.model.db.insert
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.debug.isDebugMode
+import pl.org.seva.navigator.main.model.activityRecognition
+import pl.org.seva.navigator.main.model.appContext
+import pl.org.seva.navigator.main.model.setShortcuts
 import pl.org.seva.navigator.navigation.NavigatorService
 import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.profile.loggedInUser
 import pl.org.seva.navigator.profile.setCurrent
-import pl.org.seva.navigator.main.ui.createNotificationChannels
+import pl.org.seva.navigator.main.view.createNotificationChannels
 
 val bootstrap: Bootstrap by instance()
 

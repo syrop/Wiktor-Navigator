@@ -17,12 +17,13 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.model
 
 import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.extension.subscribe
+import pl.org.seva.navigator.main.init.instance
 
 fun Fragment.requestPermissions(
         requestCode: Int,

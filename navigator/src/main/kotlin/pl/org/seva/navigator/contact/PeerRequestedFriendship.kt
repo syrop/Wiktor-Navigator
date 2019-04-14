@@ -27,8 +27,8 @@ import android.content.Context
 import android.content.Intent
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.ParcelableInt
-import pl.org.seva.navigator.main.ui.createNotificationBuilder
+import pl.org.seva.navigator.main.model.ParcelableInt
+import pl.org.seva.navigator.main.view.createNotificationBuilder
 
 inline fun friendshipRequestedNotification(context: Context, f: PeerRequestedFriendship.() -> Unit) =
         PeerRequestedFriendship(context).apply { f() }.build()

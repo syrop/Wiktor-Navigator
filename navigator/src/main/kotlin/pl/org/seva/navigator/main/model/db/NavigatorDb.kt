@@ -17,14 +17,14 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.db
+package pl.org.seva.navigator.main.model.db
 
 import androidx.room.Room
-import pl.org.seva.navigator.main.appContext
-import pl.org.seva.navigator.main.db.migration.AddedColorMigration
-import pl.org.seva.navigator.main.db.migration.AddedDebugMigration
-import pl.org.seva.navigator.main.db.migration.LiteToRoomMigration
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.model.appContext
+import pl.org.seva.navigator.main.model.db.migration.AddedColorMigration
+import pl.org.seva.navigator.main.model.db.migration.AddedDebugMigration
+import pl.org.seva.navigator.main.model.db.migration.LiteToRoomMigration
+import pl.org.seva.navigator.main.init.instance
 
 val db by instance<ContactsDatabase>()
 

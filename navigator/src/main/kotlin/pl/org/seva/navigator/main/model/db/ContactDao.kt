@@ -17,24 +17,33 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.fb
+package pl.org.seva.navigator.main.model.db
 
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import pl.org.seva.navigator.contact.Contact
+import pl.org.seva.navigator.main.init.instance
 
-import io.reactivex.subjects.ReplaySubject
+infix fun ContactDao.insert(contact: Contact) = insert(contact.toEntity())
 
-internal class RxChildEventListener(private val childEventSubject: ReplaySubject<DataSnapshot>) :
-        ChildEventListener {
+infix fun ContactDao.delete(contact: Contact) = delete(contact.toEntity())
 
-    override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) = childEventSubject.onNext(dataSnapshot)
+val contactDao by instance<ContactDao>()
 
-    override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) = Unit
+@Dao
+interface ContactDao {
 
-    override fun onChildRemoved(dataSnapshot: DataSnapshot) = Unit
+    @Query("SELECT * FROM ${ContactsDatabase.TABLE_NAME}")
+    fun getAll(): List<Contact.Entity>
 
-    override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) = Unit
+    @Insert
+    fun insert(contact: Contact.Entity)
 
-    override fun onCancelled(databaseError: DatabaseError) = Unit
+    @Delete
+    fun delete(contact: Contact.Entity)
+
+    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
+    fun deleteAll(): Int
 }

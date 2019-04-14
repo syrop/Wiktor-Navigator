@@ -35,15 +35,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_navigation.*
+import kotlinx.android.synthetic.main.fr_navigation.*
 import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.main.fb.fbWriter
+import pl.org.seva.navigator.main.model.fb.fbWriter
 import pl.org.seva.navigator.main.*
-import pl.org.seva.navigator.main.db.contactDao
+import pl.org.seva.navigator.main.model.db.contactDao
 import pl.org.seva.navigator.main.extension.*
+import pl.org.seva.navigator.main.model.*
 import pl.org.seva.navigator.profile.*
 
 class NavigationFragment : Fragment() {
@@ -63,7 +64,7 @@ class NavigationFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fragment_navigation, container)
+            inflate(R.layout.fr_navigation, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

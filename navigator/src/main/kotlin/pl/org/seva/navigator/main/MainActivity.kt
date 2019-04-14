@@ -28,7 +28,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_navigator.*
+import kotlinx.android.synthetic.main.act_mainr.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        setContentView(R.layout.activity_navigator)
+        setContentView(R.layout.act_mainr)
 
         setSupportActionBar(toolbar)
         NavigationUI.setupActionBarWithNavController(

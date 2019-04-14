@@ -17,7 +17,7 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.fb
+package pl.org.seva.navigator.main.model.fb
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.DataSnapshot
@@ -28,8 +28,8 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.debug.debug
-import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.main.ui.colorFactory
+import pl.org.seva.navigator.main.init.instance
+import pl.org.seva.navigator.main.view.colorFactory
 
 val fbReader by instance<FbReader>()
 

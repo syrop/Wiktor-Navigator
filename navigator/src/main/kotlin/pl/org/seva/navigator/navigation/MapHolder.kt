@@ -34,14 +34,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_navigation.view.*
+import kotlinx.android.synthetic.main.fr_navigation.view.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.isDebugMode
-import pl.org.seva.navigator.main.applicationContext
+import pl.org.seva.navigator.main.model.applicationContext
 import pl.org.seva.navigator.main.extension.toast
-import pl.org.seva.navigator.main.prefs
-import pl.org.seva.navigator.main.ui.OnHudSwipeListener
+import pl.org.seva.navigator.main.model.prefs
+import pl.org.seva.navigator.main.view.OnHudSwipeListener
 
 class MapHolder {
 

@@ -17,33 +17,16 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.db
+package pl.org.seva.navigator.main.model.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import pl.org.seva.navigator.contact.Contact
-import pl.org.seva.navigator.main.instance
 
-infix fun ContactDao.insert(contact: Contact) = insert(contact.toEntity())
+@Database(
+        entities = [Contact.Entity::class],
+        version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION)
+abstract class NavigatorDbAbstract : RoomDatabase() {
 
-infix fun ContactDao.delete(contact: Contact) = delete(contact.toEntity())
-
-val contactDao by instance<ContactDao>()
-
-@Dao
-interface ContactDao {
-
-    @Query("SELECT * FROM ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<Contact.Entity>
-
-    @Insert
-    fun insert(contact: Contact.Entity)
-
-    @Delete
-    fun delete(contact: Contact.Entity)
-
-    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
-    fun deleteAll(): Int
+    abstract fun contactDao(): ContactDao
 }

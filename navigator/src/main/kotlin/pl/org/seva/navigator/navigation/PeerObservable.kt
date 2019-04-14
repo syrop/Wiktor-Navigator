@@ -22,8 +22,8 @@ package pl.org.seva.navigator.navigation
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.disposables.CompositeDisposable
-import pl.org.seva.navigator.main.fb.fbReader
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.model.fb.fbReader
+import pl.org.seva.navigator.main.init.instance
 import pl.org.seva.navigator.main.extension.subscribeWithComposite
 
 val peerObservable by instance<PeerObservable>()

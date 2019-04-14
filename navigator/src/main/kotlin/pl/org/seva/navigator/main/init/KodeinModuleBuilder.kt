@@ -17,7 +17,7 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.init
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -32,17 +32,19 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.main.fb.FbReader
-import pl.org.seva.navigator.main.fb.FbWriter
-import pl.org.seva.navigator.main.db.ContactsDatabase
+import pl.org.seva.navigator.main.model.fb.FbReader
+import pl.org.seva.navigator.main.model.fb.FbWriter
+import pl.org.seva.navigator.main.model.db.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipObservable
-import pl.org.seva.navigator.main.db.ContactDao
-import pl.org.seva.navigator.main.db.db
+import pl.org.seva.navigator.main.model.db.ContactDao
+import pl.org.seva.navigator.main.model.db.db
 import pl.org.seva.navigator.debug.Debug
-import pl.org.seva.navigator.main.ui.Toaster
-import pl.org.seva.navigator.main.ui.ColorFactory
-import pl.org.seva.navigator.main.ui.NotificationChannels
+import pl.org.seva.navigator.main.model.ActivityRecognitionObservable
+import pl.org.seva.navigator.main.model.Permissions
+import pl.org.seva.navigator.main.view.Toaster
+import pl.org.seva.navigator.main.view.ColorFactory
+import pl.org.seva.navigator.main.view.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationObservable
 import pl.org.seva.navigator.navigation.PeerObservable
 

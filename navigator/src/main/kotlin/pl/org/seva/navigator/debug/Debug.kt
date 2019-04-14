@@ -21,9 +21,9 @@ package pl.org.seva.navigator.debug
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
-import pl.org.seva.navigator.main.fb.fbWriter
-import pl.org.seva.navigator.main.instance
-import pl.org.seva.navigator.main.prefs
+import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.init.instance
+import pl.org.seva.navigator.main.model.prefs
 import pl.org.seva.navigator.profile.isLoggedIn
 import java.util.*
 import java.util.concurrent.TimeUnit

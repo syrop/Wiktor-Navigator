@@ -30,16 +30,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_contacts.*
+import kotlinx.android.synthetic.main.fr_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.setShortcuts
+import pl.org.seva.navigator.main.model.setShortcuts
 
-import pl.org.seva.navigator.main.fb.fbWriter
+import pl.org.seva.navigator.main.model.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
-import pl.org.seva.navigator.main.db.contactDao
-import pl.org.seva.navigator.main.db.insert
-import pl.org.seva.navigator.main.db.delete
+import pl.org.seva.navigator.main.model.db.contactDao
+import pl.org.seva.navigator.main.model.db.insert
+import pl.org.seva.navigator.main.model.db.delete
 import pl.org.seva.navigator.main.extension.*
 
 class ContactsFragment : Fragment() {
@@ -52,7 +52,7 @@ class ContactsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fragment_contacts, container)
+            inflate(R.layout.fr_contacts, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         fun refreshScreen() {

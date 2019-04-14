@@ -29,5 +29,5 @@ import pl.org.seva.navigator.main.extension.inflate
 class SettingsFragmentContainer : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fragment_settings, container)
+            inflate(R.layout.fr_settings, container)
 }

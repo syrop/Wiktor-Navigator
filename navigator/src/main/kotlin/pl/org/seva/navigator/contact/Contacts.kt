@@ -24,8 +24,8 @@ import io.reactivex.disposables.Disposable
 import java.util.ArrayList
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.main.fb.fbReader
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.model.fb.fbReader
+import pl.org.seva.navigator.main.init.instance
 
 val contacts by instance<Contacts>()
 

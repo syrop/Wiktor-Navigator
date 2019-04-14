@@ -17,7 +17,7 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.model
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -29,6 +29,7 @@ import android.os.Build
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.contact.contacts
+import pl.org.seva.navigator.main.MainActivity
 import pl.org.seva.navigator.navigation.NavigationFragment
 
 @SuppressLint("NewApi")

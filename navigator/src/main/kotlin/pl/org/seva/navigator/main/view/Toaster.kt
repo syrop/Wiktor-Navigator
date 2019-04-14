@@ -17,12 +17,20 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main
+package pl.org.seva.navigator.main.view
 
-import android.annotation.SuppressLint
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import android.widget.Toast
+import pl.org.seva.navigator.main.model.appContext
+import pl.org.seva.navigator.main.init.instance
 
-@SuppressLint("ParcelCreator")
-@Parcelize
-class ParcelableInt(val value: Int) : Parcelable
+val toaster by instance<Toaster>()
+
+class Toaster {
+
+    infix fun toast(message: CharSequence) =
+        Toast.makeText(appContext, message, Toast.LENGTH_SHORT)!!.apply {
+            if (message.isNotBlank()) {
+                show()
+            }
+        }
+}

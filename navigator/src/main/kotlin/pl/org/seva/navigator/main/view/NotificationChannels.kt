@@ -17,7 +17,7 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.ui
+package pl.org.seva.navigator.main.view
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -25,8 +25,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.appContext
-import pl.org.seva.navigator.main.instance
+import pl.org.seva.navigator.main.model.appContext
+import pl.org.seva.navigator.main.init.instance
 
 val notificationChannels by instance<NotificationChannels>()
 

@@ -28,16 +28,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_credits.*
+import kotlinx.android.synthetic.main.fr_credits.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.extension.inflate
 import pl.org.seva.navigator.main.extension.toast
-import pl.org.seva.navigator.main.versionName
+import pl.org.seva.navigator.main.model.versionName
 
 class CreditsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fragment_credits, container)
+            inflate(R.layout.fr_credits, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
