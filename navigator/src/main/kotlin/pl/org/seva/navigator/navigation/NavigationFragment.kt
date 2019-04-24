@@ -36,7 +36,6 @@ import androidx.fragment.app.Fragment
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fr_navigation.*
-import org.apache.commons.io.IOUtils
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
@@ -175,8 +174,7 @@ class NavigationFragment : Fragment() {
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
                 findViewById<Button>(R.id.action_button).setText(caption)
-                @Suppress("RemoveRedundantQualifierName")
-                val content = IOUtils.toString(activity!!.assets.open(file), UTF_8)
+                val content = activity!!.assets.open(file).readString()
                         .replace(APP_VERSION_PLACEHOLDER, versionName)
                         .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
                 web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)
