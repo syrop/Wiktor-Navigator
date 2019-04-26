@@ -46,7 +46,7 @@ import pl.org.seva.navigator.main.extension.*
 import pl.org.seva.navigator.main.model.*
 import pl.org.seva.navigator.profile.*
 
-class NavigationFragment : Fragment() {
+class NavigationFragment : Fragment(R.layout.fr_navigation) {
 
     private var isLocationPermissionGranted = false
 
@@ -61,9 +61,6 @@ class NavigationFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fr_navigation, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
