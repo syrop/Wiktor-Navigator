@@ -32,6 +32,7 @@ import android.view.*
 import android.webkit.WebView
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 
 import com.google.android.material.snackbar.Snackbar
@@ -66,11 +67,10 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
         super.onActivityCreated(savedInstanceState)
         @SuppressLint("CommitPrefEdits")
         fun persistCameraPositionAndZoom() =
-                with (PreferenceManager.getDefaultSharedPreferences(context).edit()) {
+                PreferenceManager.getDefaultSharedPreferences(context).edit {
                     putFloat(ZOOM_PROPERTY, mapHolder.zoom)
                     putFloat(LATITUDE_PROPERTY, mapHolder.lastCameraPosition.latitude.toFloat())
                     putFloat(LONGITUDE_PROPERTY, mapHolder.lastCameraPosition.longitude.toFloat())
-                    apply()
                 }
 
         fun ifLocationPermissionGranted(f: () -> Unit) =
