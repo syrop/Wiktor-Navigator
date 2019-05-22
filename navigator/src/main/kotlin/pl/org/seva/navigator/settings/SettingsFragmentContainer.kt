@@ -19,15 +19,7 @@
 
 package pl.org.seva.navigator.settings
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.extension.inflate
 
-class SettingsFragmentContainer : Fragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fr_settings, container)
-}
+class SettingsFragmentContainer : Fragment(R.layout.fr_settings)

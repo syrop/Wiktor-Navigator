@@ -40,13 +40,12 @@ import pl.org.seva.navigator.main.model.fb.fbWriter
 import pl.org.seva.navigator.main.extension.observe
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.extension.back
-import pl.org.seva.navigator.main.extension.inflate
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.profile.loggedInUser
 
 @Suppress("DEPRECATION")
-class SeekContactFragment : Fragment() {
+class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
 
     private var progress: ProgressDialog? = null
 
@@ -58,9 +57,6 @@ class SeekContactFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fr_seek_contact, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

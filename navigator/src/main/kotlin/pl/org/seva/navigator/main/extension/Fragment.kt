@@ -46,9 +46,6 @@ inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<
     }
 }
 
-fun Fragment.inflate(@LayoutRes resource: Int, root: ViewGroup?): View =
-    layoutInflater.inflate(resource, root, false)
-
 fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().apply(f).also {
     val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync { map -> it withMap map }

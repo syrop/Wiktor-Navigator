@@ -25,7 +25,7 @@ import pl.org.seva.navigator.main.view.createOngoingNotification
 
 class NavigatorService : LifecycleService() {
 
-    override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: android.content.Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         myLocationObservable withService this
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())

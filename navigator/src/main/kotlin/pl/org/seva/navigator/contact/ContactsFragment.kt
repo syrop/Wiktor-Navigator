@@ -42,7 +42,7 @@ import pl.org.seva.navigator.main.model.db.insert
 import pl.org.seva.navigator.main.model.db.delete
 import pl.org.seva.navigator.main.extension.*
 
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(R.layout.fr_contacts) {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
@@ -50,9 +50,6 @@ class ContactsFragment : Fragment() {
         navigatorModel.contact.value = contact
         back()
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflate(R.layout.fr_contacts, container)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         fun refreshScreen() {
