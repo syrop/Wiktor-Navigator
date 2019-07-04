@@ -20,12 +20,12 @@
 package pl.org.seva.navigator.navigation
 
 import androidx.lifecycle.LifecycleService
-import pl.org.seva.navigator.main.model.fb.fbWriter
-import pl.org.seva.navigator.main.view.createOngoingNotification
+import pl.org.seva.navigator.main.data.fb.fbWriter
+import pl.org.seva.navigator.main.ui.createOngoingNotification
 
 class NavigatorService : LifecycleService() {
 
-    override fun onStartCommand(intent: android.content.Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         myLocationObservable withService this
         startForeground(ONGOING_NOTIFICATION_ID, createOngoingNotification())

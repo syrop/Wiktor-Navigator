@@ -20,8 +20,6 @@
 package pl.org.seva.navigator.main.init
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import org.kodein.di.Kodein
@@ -32,31 +30,32 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
-import pl.org.seva.navigator.main.model.fb.FbReader
-import pl.org.seva.navigator.main.model.fb.FbWriter
-import pl.org.seva.navigator.main.model.db.ContactsDatabase
+import pl.org.seva.navigator.main.data.fb.FbReader
+import pl.org.seva.navigator.main.data.fb.FbWriter
+import pl.org.seva.navigator.main.data.db.ContactsDatabase
 import pl.org.seva.navigator.contact.FriendshipListener
 import pl.org.seva.navigator.contact.FriendshipObservable
-import pl.org.seva.navigator.main.model.db.ContactDao
-import pl.org.seva.navigator.main.model.db.db
+import pl.org.seva.navigator.main.data.db.ContactDao
+import pl.org.seva.navigator.main.data.db.db
 import pl.org.seva.navigator.debug.Debug
-import pl.org.seva.navigator.main.model.ActivityRecognitionObservable
-import pl.org.seva.navigator.main.model.Permissions
-import pl.org.seva.navigator.main.view.Toaster
-import pl.org.seva.navigator.main.view.ColorFactory
-import pl.org.seva.navigator.main.view.NotificationChannels
+import pl.org.seva.navigator.main.data.ActivityRecognitionObservable
+import pl.org.seva.navigator.main.data.Permissions
+import pl.org.seva.navigator.main.data.appContext
+import pl.org.seva.navigator.main.extension.prefs
+import pl.org.seva.navigator.main.ui.Toaster
+import pl.org.seva.navigator.main.ui.ColorFactory
+import pl.org.seva.navigator.main.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationObservable
 import pl.org.seva.navigator.navigation.PeerObservable
 
 val Context.module get() = KodeinModuleBuilder(this).build()
 
-inline fun <reified R : Any> instance() = Kodein.global.instance<R>()
+inline fun <reified R : Any> instance(tag: Any? = null) = Kodein.global.instance<R>(tag)
 
 class KodeinModuleBuilder(private val ctx: Context) {
 
     fun build() = Kodein.Module("main") {
         bind<Context>() with provider { ctx }
-        bind<SharedPreferences>() with singleton { PreferenceManager.getDefaultSharedPreferences(ctx) }
         bind<Bootstrap>() with singleton { Bootstrap() }
         bind<FusedLocationProviderClient>() with singleton {
             LocationServices.getFusedLocationProviderClient(ctx)
@@ -74,8 +73,13 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<ContactsDatabase>() with singleton { ContactsDatabase() }
         bind<NotificationChannels>() with singleton { NotificationChannels() }
         bind<ColorFactory>() with singleton { ColorFactory() }
-        bind<Debug>() with singleton { Debug() }
+        bind<Debug>() with singleton { Debug(ctx.prefs) }
         bind<ContactDao>() with singleton { db.contactDao }
         bind<Toaster>() with singleton { Toaster() }
+        bind<String>(APP_VERSION) with singleton { ctx.packageManager.getPackageInfo(appContext.packageName, 0).versionName }
+    }
+
+    companion object {
+        const val APP_VERSION = "app_version"
     }
 }

@@ -17,19 +17,33 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.model.fb
+package pl.org.seva.navigator.main.data.db
 
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import pl.org.seva.navigator.contact.Contact
+import pl.org.seva.navigator.main.init.instance
 
-import io.reactivex.subjects.PublishSubject
+infix fun ContactDao.insert(contact: Contact) = insert(contact.toEntity())
 
-class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) : ValueEventListener {
+infix fun ContactDao.delete(contact: Contact) = delete(contact.toEntity())
 
-    override fun onDataChange(dataSnapshot: DataSnapshot) =
-            dataSnapshot.run { valueEventSubject.onNext(this) }
+val contactDao by instance<ContactDao>()
 
-    override fun onCancelled(databaseError: DatabaseError) =
-            valueEventSubject.onError(Exception(databaseError.message))
+@Dao
+interface ContactDao {
+
+    @Query("SELECT * FROM ${ContactsDatabase.TABLE_NAME}")
+    fun getAll(): List<Contact.Entity>
+
+    @Insert
+    fun insert(contact: Contact.Entity)
+
+    @Delete
+    fun delete(contact: Contact.Entity)
+
+    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
+    fun deleteAll(): Int
 }

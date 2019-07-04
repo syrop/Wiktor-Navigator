@@ -35,6 +35,8 @@ import pl.org.seva.navigator.contact.persist
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.extension.viewModel
 
+import pl.org.seva.navigator.main.extension.prefs
+
 class MainActivity : AppCompatActivity() {
 
     private var backClickTime = 0L
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
             val contact = contacts[this]
             navigatorModel.contact.value = contact
-            contact.persist()
+            contact persist prefs
         }
         if (Intent.ACTION_SEARCH == intent?.action) {
             navigatorModel.query.value = intent.getStringExtra(SearchManager.QUERY)

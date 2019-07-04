@@ -35,8 +35,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fr_seek_contact.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.model.fb.fbReader
-import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.data.fb.fbReader
+import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.extension.observe
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.extension.back

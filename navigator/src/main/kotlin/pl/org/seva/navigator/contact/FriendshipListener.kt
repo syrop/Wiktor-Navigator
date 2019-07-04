@@ -24,17 +24,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import pl.org.seva.navigator.main.model.ParcelableInt
-import pl.org.seva.navigator.main.model.appContext
+import pl.org.seva.navigator.main.data.ParcelableInt
+import pl.org.seva.navigator.main.data.appContext
 
 import java.util.Random
 
-import pl.org.seva.navigator.main.model.db.contactDao
-import pl.org.seva.navigator.main.model.db.delete
-import pl.org.seva.navigator.main.model.db.insert
-import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.data.db.contactDao
+import pl.org.seva.navigator.main.data.db.delete
+import pl.org.seva.navigator.main.data.db.insert
+import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.init.instance
-import pl.org.seva.navigator.main.model.setShortcuts
+import pl.org.seva.navigator.main.data.setShortcuts
 
 val friendshipListener by instance<FriendshipListener>()
 

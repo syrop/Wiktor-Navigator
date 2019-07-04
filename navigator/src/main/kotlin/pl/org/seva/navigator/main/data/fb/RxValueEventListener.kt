@@ -17,16 +17,19 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.model.db
+package pl.org.seva.navigator.main.data.fb
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import pl.org.seva.navigator.contact.Contact
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
-@Database(
-        entities = [Contact.Entity::class],
-        version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION)
-abstract class NavigatorDbAbstract : RoomDatabase() {
+import io.reactivex.subjects.PublishSubject
 
-    abstract fun contactDao(): ContactDao
+class RxValueEventListener(private val valueEventSubject: PublishSubject<DataSnapshot>) : ValueEventListener {
+
+    override fun onDataChange(dataSnapshot: DataSnapshot) =
+            dataSnapshot.run { valueEventSubject.onNext(this) }
+
+    override fun onCancelled(databaseError: DatabaseError) =
+            valueEventSubject.onError(Exception(databaseError.message))
 }

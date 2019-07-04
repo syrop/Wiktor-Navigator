@@ -19,6 +19,8 @@
 
 package pl.org.seva.navigator.main.extension
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
@@ -50,3 +52,6 @@ fun Fragment.createMapHolder(f: MapHolder.() -> Unit): MapHolder = MapHolder().a
     val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync { map -> it withMap map }
 }
+
+val Fragment.prefs: SharedPreferences get() =
+        requireContext().prefs

@@ -17,33 +17,20 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.model.db
+package pl.org.seva.navigator.main.ui
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import pl.org.seva.navigator.contact.Contact
+import android.widget.Toast
+import pl.org.seva.navigator.main.data.appContext
 import pl.org.seva.navigator.main.init.instance
 
-infix fun ContactDao.insert(contact: Contact) = insert(contact.toEntity())
+val toaster by instance<Toaster>()
 
-infix fun ContactDao.delete(contact: Contact) = delete(contact.toEntity())
+class Toaster {
 
-val contactDao by instance<ContactDao>()
-
-@Dao
-interface ContactDao {
-
-    @Query("SELECT * FROM ${ContactsDatabase.TABLE_NAME}")
-    fun getAll(): List<Contact.Entity>
-
-    @Insert
-    fun insert(contact: Contact.Entity)
-
-    @Delete
-    fun delete(contact: Contact.Entity)
-
-    @Query("DELETE FROM ${ContactsDatabase.TABLE_NAME}")
-    fun deleteAll(): Int
+    infix fun toast(message: CharSequence) =
+        Toast.makeText(appContext, message, Toast.LENGTH_SHORT)!!.apply {
+            if (message.isNotBlank()) {
+                show()
+            }
+        }
 }

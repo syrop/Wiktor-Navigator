@@ -40,14 +40,18 @@ import kotlinx.android.synthetic.main.fr_navigation.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.*
-import pl.org.seva.navigator.main.model.db.contactDao
+import pl.org.seva.navigator.main.data.db.contactDao
 import pl.org.seva.navigator.main.extension.*
-import pl.org.seva.navigator.main.model.*
+import pl.org.seva.navigator.main.data.*
+import pl.org.seva.navigator.main.init.KodeinModuleBuilder
+import pl.org.seva.navigator.main.init.instance
 import pl.org.seva.navigator.profile.*
 
 class NavigationFragment : Fragment(R.layout.fr_navigation) {
+
+    private val versionName by instance<String>(KodeinModuleBuilder.APP_VERSION)
 
     private var isLocationPermissionGranted = false
 
@@ -99,7 +103,7 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
         }
 
         mapHolder = createMapHolder {
-            init(savedInstanceState, root, navigatorModel.contact.value)
+            init(savedInstanceState, root, navigatorModel.contact.value, prefs)
             checkLocationPermission = ::ifLocationPermissionGranted
             persistCameraPositionAndZoom = ::persistCameraPositionAndZoom
         }
@@ -115,7 +119,7 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
 
         navigatorModel.contact.observe(this) { contact ->
             mapHolder.contact = contact
-            contact.persist()
+            contact persist prefs
         }
         navigatorModel.deleteProfile.observe(this) { result ->
             if (result) {
@@ -262,7 +266,7 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
     }
 
     private fun logout(): Boolean {
-        null.persist()
+        null persist prefs
         mapHolder.stopWatchingPeer()
         activity!!.loginActivity(LoginActivity.LOGOUT)
         return true

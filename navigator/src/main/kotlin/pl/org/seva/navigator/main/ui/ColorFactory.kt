@@ -17,24 +17,31 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.model.fb
+package pl.org.seva.navigator.main.ui
 
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import android.graphics.Color
+import pl.org.seva.navigator.main.data.appContext
+import pl.org.seva.navigator.main.init.instance
 
-import io.reactivex.subjects.ReplaySubject
+val colorFactory by instance<ColorFactory>()
 
-internal class RxChildEventListener(private val childEventSubject: ReplaySubject<DataSnapshot>) :
-        ChildEventListener {
+class ColorFactory {
 
-    override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) = childEventSubject.onNext(dataSnapshot)
+    private val colors by lazy {
+        appContext.run {
+            resources.getIdentifier(COLOR_ARRAY_NAME + COLOR_TYPE,"array", packageName).let {
+                resources.obtainTypedArray(it)
+            }
+        }
+    }
 
-    override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) = Unit
+    fun nextColor() = with(colors) {
+        val index = (Math.random() * length()).toInt()
+        getColor(index, Color.GRAY)
+    }
 
-    override fun onChildRemoved(dataSnapshot: DataSnapshot) = Unit
-
-    override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) = Unit
-
-    override fun onCancelled(databaseError: DatabaseError) = Unit
+    companion object {
+        const val COLOR_ARRAY_NAME = "mdcolor_"
+        const val COLOR_TYPE = "400"
+    }
 }

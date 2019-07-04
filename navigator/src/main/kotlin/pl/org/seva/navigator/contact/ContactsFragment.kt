@@ -24,22 +24,20 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fr_contacts.*
 
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.model.setShortcuts
+import pl.org.seva.navigator.main.data.setShortcuts
 
-import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
-import pl.org.seva.navigator.main.model.db.contactDao
-import pl.org.seva.navigator.main.model.db.insert
-import pl.org.seva.navigator.main.model.db.delete
+import pl.org.seva.navigator.main.data.db.contactDao
+import pl.org.seva.navigator.main.data.db.insert
+import pl.org.seva.navigator.main.data.db.delete
 import pl.org.seva.navigator.main.extension.*
 
 class ContactsFragment : Fragment(R.layout.fr_contacts) {

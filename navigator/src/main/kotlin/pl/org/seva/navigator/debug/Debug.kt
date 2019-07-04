@@ -19,20 +19,20 @@
 
 package pl.org.seva.navigator.debug
 
+import android.content.SharedPreferences
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
-import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.init.instance
-import pl.org.seva.navigator.main.model.prefs
 import pl.org.seva.navigator.profile.isLoggedIn
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 val debug by instance<Debug>()
 
-val isDebugMode get() = prefs.getBoolean(Debug.PROPERTY, false)
+class Debug(private val prefs: SharedPreferences) {
 
-class Debug {
+    val isDebugMode get() = prefs.getBoolean(Debug.PROPERTY, false)
 
     private var disposable = Disposables.empty()
 
