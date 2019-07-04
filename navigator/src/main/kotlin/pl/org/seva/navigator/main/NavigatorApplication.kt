@@ -29,9 +29,7 @@ import pl.org.seva.navigator.main.extension.module
 
 class NavigatorApplication : Application() {
 
-    init {
-        Kodein.global.addImport(module)
-    }
+    init { Kodein.global.addImport(module) }
 
     override fun onCreate() {
         super.onCreate()
