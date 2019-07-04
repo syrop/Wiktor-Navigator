@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import pl.org.seva.navigator.main.init.KodeinModuleBuilder
 
 fun <T> Context.start(clazz: Class<T>, f: Intent.() -> Intent): Boolean {
     startActivity(Intent(this, clazz).run(f))
@@ -31,3 +32,5 @@ fun <T> Context.start(clazz: Class<T>, f: Intent.() -> Intent): Boolean {
 
 val Context.prefs: SharedPreferences get() =
         PreferenceManager.getDefaultSharedPreferences(this)
+
+val Context.module get() = KodeinModuleBuilder(this).build()

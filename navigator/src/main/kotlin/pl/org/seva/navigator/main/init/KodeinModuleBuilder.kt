@@ -48,8 +48,6 @@ import pl.org.seva.navigator.main.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationObservable
 import pl.org.seva.navigator.navigation.PeerObservable
 
-val Context.module get() = KodeinModuleBuilder(this).build()
-
 inline fun <reified R : Any> instance(tag: Any? = null) = Kodein.global.instance<R>(tag)
 
 class KodeinModuleBuilder(private val ctx: Context) {
