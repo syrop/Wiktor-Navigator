@@ -24,19 +24,18 @@ import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.main.model.db.contactDao
+import pl.org.seva.navigator.main.data.db.contactDao
 
-import pl.org.seva.navigator.main.model.db.insert
+import pl.org.seva.navigator.main.data.db.insert
 import pl.org.seva.navigator.debug.debug
-import pl.org.seva.navigator.debug.isDebugMode
-import pl.org.seva.navigator.main.model.activityRecognition
-import pl.org.seva.navigator.main.model.appContext
-import pl.org.seva.navigator.main.model.setShortcuts
+import pl.org.seva.navigator.main.data.activityRecognition
+import pl.org.seva.navigator.main.data.appContext
+import pl.org.seva.navigator.main.data.setShortcuts
 import pl.org.seva.navigator.navigation.NavigatorService
 import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.profile.loggedInUser
 import pl.org.seva.navigator.profile.setCurrent
-import pl.org.seva.navigator.main.view.createNotificationChannels
+import pl.org.seva.navigator.main.ui.createNotificationChannels
 
 val bootstrap: Bootstrap by instance()
 
@@ -68,7 +67,7 @@ class Bootstrap {
                 },
                 onCompleted = { setShortcuts() })
         startNavigatorService()
-        if (isDebugMode) {
+        if (debug.isDebugMode) {
             debug.start()
         }
     }

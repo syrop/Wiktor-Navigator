@@ -17,18 +17,11 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.model
+package pl.org.seva.navigator.main.data
 
 import android.content.Context
-import android.content.SharedPreferences
 import pl.org.seva.navigator.main.init.instance
-
-val prefs by instance<SharedPreferences>()
 
 val applicationContext by instance<Context>()
 
 val appContext by instance<Context>()
-
-val versionName: String by lazy {
-    appContext.packageManager.getPackageInfo(appContext.packageName, 0).versionName
-}

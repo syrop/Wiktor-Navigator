@@ -17,31 +17,16 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.view
+package pl.org.seva.navigator.main.data.db
 
-import android.graphics.Color
-import pl.org.seva.navigator.main.model.appContext
-import pl.org.seva.navigator.main.init.instance
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import pl.org.seva.navigator.contact.Contact
 
-val colorFactory by instance<ColorFactory>()
+@Database(
+        entities = [Contact.Entity::class],
+        version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION)
+abstract class NavigatorDbAbstract : RoomDatabase() {
 
-class ColorFactory {
-
-    private val colors by lazy {
-        appContext.run {
-            resources.getIdentifier(COLOR_ARRAY_NAME + COLOR_TYPE,"array", packageName).let {
-                resources.obtainTypedArray(it)
-            }
-        }
-    }
-
-    fun nextColor() = with(colors) {
-        val index = (Math.random() * length()).toInt()
-        getColor(index, Color.GRAY)
-    }
-
-    companion object {
-        const val COLOR_ARRAY_NAME = "mdcolor_"
-        const val COLOR_TYPE = "400"
-    }
+    abstract fun contactDao(): ContactDao
 }

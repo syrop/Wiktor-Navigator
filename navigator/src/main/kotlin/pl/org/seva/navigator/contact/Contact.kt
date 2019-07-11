@@ -20,6 +20,7 @@
 package pl.org.seva.navigator.contact
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Parcelable
 import androidx.core.content.edit
@@ -29,10 +30,9 @@ import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_EMAIL_PROPERTY
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_NAME_PROPERTY
-import pl.org.seva.navigator.main.model.db.ContactsDatabase
-import pl.org.seva.navigator.main.model.prefs
+import pl.org.seva.navigator.main.data.db.ContactsDatabase
 
-fun Contact?.persist() {
+infix fun Contact?.persist(prefs: SharedPreferences) {
     val name = this?.name ?: ""
     val email = this?.email ?: ""
     prefs.edit {
@@ -41,7 +41,7 @@ fun Contact?.persist() {
     }
 }
 
-fun readContactFromProperties(): Contact? {
+fun readContactFromProperties(prefs: SharedPreferences): Contact? {
     val name = prefs.getString(CONTACT_NAME_PROPERTY, "")!!
     val email = prefs.getString(CONTACT_EMAIL_PROPERTY, "")!!
     if (name.isNotEmpty() && email.isNotEmpty()) {

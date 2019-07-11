@@ -20,6 +20,7 @@
 package pl.org.seva.navigator.navigation
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -37,11 +38,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fr_navigation.view.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
-import pl.org.seva.navigator.debug.isDebugMode
-import pl.org.seva.navigator.main.model.applicationContext
+import pl.org.seva.navigator.debug.debug
+import pl.org.seva.navigator.main.data.applicationContext
 import pl.org.seva.navigator.main.extension.toast
-import pl.org.seva.navigator.main.model.prefs
-import pl.org.seva.navigator.main.view.OnHudSwipeListener
+import pl.org.seva.navigator.main.ui.OnHudSwipeListener
 
 class MapHolder {
 
@@ -86,19 +86,23 @@ class MapHolder {
 
     private lateinit var contactNameTemplate: String
 
-    fun init(savedInstanceState: Bundle?, root: ViewGroup, contact: Contact?) {
+    fun init(
+            savedInstanceState: Bundle?,
+            root: ViewGroup,
+            contact: Contact?,
+            prefs: SharedPreferences) {
         view = root
         zoom = prefs.getFloat(NavigationFragment.ZOOM_PROPERTY, NavigationFragment.DEFAULT_ZOOM)
         lastCameraPosition = LatLng(prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
                 prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble())
         contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
-        contact?.persist()
+        contact?.persist(prefs)
         if (contact == null) {
-            this.contact = readContactFromProperties()
+            this.contact = readContactFromProperties(prefs)
         }
 
-        deletePersistedContact = { null.persist() }
+        deletePersistedContact = { null persist prefs }
         if (savedInstanceState != null) {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationFragment.SAVED_PEER_LOCATION)
@@ -193,7 +197,7 @@ class MapHolder {
 
         contacts.addContactsUpdatedListener(email, this@MapHolder::stopWatchingPeer)
         peerObservable.addLocationObserver(email)  { onPeerLocationReceived(it) }
-        if (isDebugMode) {
+        if (debug.isDebugMode) {
             peerObservable.addDebugObserver(email)  { message -> message.toast() }
         }
     }

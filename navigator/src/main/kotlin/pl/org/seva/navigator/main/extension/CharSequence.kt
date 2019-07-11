@@ -19,6 +19,6 @@
 
 package pl.org.seva.navigator.main.extension
 
-import pl.org.seva.navigator.main.view.toaster
+import pl.org.seva.navigator.main.ui.toaster
 
 fun CharSequence.toast() = toaster toast this

@@ -25,13 +25,11 @@ import org.kodein.di.Kodein
 import org.kodein.di.conf.global
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.main.init.bootstrap
-import pl.org.seva.navigator.main.init.module
+import pl.org.seva.navigator.main.extension.module
 
 class NavigatorApplication : Application() {
 
-    init {
-        Kodein.global.addImport(module)
-    }
+    init { Kodein.global.addImport(module) }
 
     override fun onCreate() {
         super.onCreate()

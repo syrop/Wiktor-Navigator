@@ -28,8 +28,8 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 
 import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.main.model.ActivityRecognitionObservable
-import pl.org.seva.navigator.main.model.activityRecognition
+import pl.org.seva.navigator.main.data.ActivityRecognitionObservable
+import pl.org.seva.navigator.main.data.activityRecognition
 import pl.org.seva.navigator.main.init.instance
 import pl.org.seva.navigator.profile.isLoggedIn
 import pl.org.seva.navigator.main.extension.subscribe

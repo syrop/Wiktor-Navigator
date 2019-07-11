@@ -17,11 +17,11 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.model.db.migration
+package pl.org.seva.navigator.main.data.db.migration
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import pl.org.seva.navigator.main.model.db.ContactsDatabase
+import pl.org.seva.navigator.main.data.db.ContactsDatabase
 
 class LiteToRoomMigration: Migration(
         ContactsDatabase.SQL_LITE_DATABASE_VERSION,

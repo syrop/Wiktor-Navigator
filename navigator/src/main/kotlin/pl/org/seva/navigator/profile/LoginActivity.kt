@@ -44,7 +44,7 @@ import io.fabric.sdk.android.Fabric
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.extension.start
-import pl.org.seva.navigator.main.model.fb.fbWriter
+import pl.org.seva.navigator.main.data.fb.fbWriter
 
 fun Context.loginActivity(action: String) = start(LoginActivity::class.java) {
     putExtra(LoginActivity.ACTION, action)
