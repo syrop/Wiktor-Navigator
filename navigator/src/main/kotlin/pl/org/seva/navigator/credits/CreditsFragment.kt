@@ -45,7 +45,7 @@ class CreditsFragment : Fragment(R.layout.fr_credits) {
         }
 
         fun String.toClipboard() {
-            val clipboard = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.primaryClip = ClipData.newPlainText("", this)
             getString(R.string.credits_fragment_copied_to_clipboard).toast()
         }
