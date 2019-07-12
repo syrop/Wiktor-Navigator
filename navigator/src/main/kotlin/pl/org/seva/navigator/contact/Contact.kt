@@ -42,8 +42,8 @@ infix fun Contact?.persist(prefs: SharedPreferences) {
 }
 
 fun readContactFromProperties(prefs: SharedPreferences): Contact? {
-    val name = prefs.getString(CONTACT_NAME_PROPERTY, "")!!
-    val email = prefs.getString(CONTACT_EMAIL_PROPERTY, "")!!
+    val name = checkNotNull(prefs.getString(CONTACT_NAME_PROPERTY, ""))
+    val email = checkNotNull(prefs.getString(CONTACT_EMAIL_PROPERTY, ""))
     if (name.isNotEmpty() && email.isNotEmpty()) {
         val contact = Contact(email = email, name = name)
         if (contact in contacts) {

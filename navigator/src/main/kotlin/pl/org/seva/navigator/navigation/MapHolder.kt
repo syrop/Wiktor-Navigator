@@ -68,9 +68,9 @@ class MapHolder {
 
     private val contactNameSpannable: CharSequence get() = contactNameTemplate.run {
         val idName = indexOf(CONTACT_NAME_PLACEHOLDER)
-        val idEndName = idName + contact!!.name.length
+        val idEndName = idName + checkNotNull(contact).name.length
         val boldSpan = StyleSpan(Typeface.BOLD)
-        SpannableStringBuilder(replace(CONTACT_NAME_PLACEHOLDER, contact!!.name)).apply {
+        SpannableStringBuilder(replace(CONTACT_NAME_PLACEHOLDER, checkNotNull(contact).name)).apply {
             setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         }
     }
@@ -160,7 +160,7 @@ class MapHolder {
         else Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
                 Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
 
-        fun onCameraIdle() = map!!.cameraPosition.let {
+        fun onCameraIdle() = checkNotNull(map).cameraPosition.let {
             zoom = it.zoom
             lastCameraPosition = it.target
             if (lastCameraPosition isDifferentFrom peerLocation) {
@@ -183,7 +183,7 @@ class MapHolder {
             clearMap()
             it.addMarker(MarkerOptions()
                     .position(this)
-                    .title(contact!!.name))
+                    .title(checkNotNull(contact).name))
                     .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }

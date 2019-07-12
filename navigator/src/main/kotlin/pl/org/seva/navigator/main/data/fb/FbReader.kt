@@ -38,7 +38,7 @@ class FbReader : Fb() {
     fun peerLocationListener(email: String): Observable<LatLng> {
         return email.toReference().child(LAT_LNG).listen()
                 .filter { it.value != null }
-                .map { it.value!! }
+                .map { checkNotNull(it.value) }
                 .map { it as String }
                 .map { it.toLatLng() }
     }
@@ -46,7 +46,7 @@ class FbReader : Fb() {
     fun debugListener(email: String): Observable<String> {
         return email.toReference().child(DEBUG).listen()
                 .filter { it.value != null }
-                .map { it.value!! }
+                .map { checkNotNull(it.value) }
                 .map { it as String }
                 .filter { !debug.isIgnoredForPeer(email, it) }
     }
@@ -74,7 +74,7 @@ class FbReader : Fb() {
         return reference.read()
                 .concatMapIterable<DataSnapshot> { it.children }
                 .concatWith(reference.childListener())
-                .doOnNext { reference.child(it.key!!).removeValue() }
+                .doOnNext { reference.child(checkNotNull(it.key)).removeValue() }
                 .map { it.toContact() }
     }
 
@@ -101,7 +101,7 @@ class FbReader : Fb() {
 
     private fun DataSnapshot.toContact() =
             if (exists()) {
-                Contact(key!!.from64(), child(DISPLAY_NAME).value as String, colorFactory.nextColor())
+                Contact(checkNotNull(key).from64(), child(DISPLAY_NAME).value as String, colorFactory.nextColor())
             } else Contact()
 
     companion object {

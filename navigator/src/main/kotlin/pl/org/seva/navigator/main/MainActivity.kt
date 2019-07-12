@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val nc = findNavController(R.id.nav_host_fragment)
-        return if (nc.currentDestination!!.id == R.id.navigationFragment &&
+        return if (checkNotNull(nc.currentDestination).id == R.id.navigationFragment &&
                 System.currentTimeMillis() - backClickTime >= DOUBLE_CLICK_MS) {
             exitApplicationToast?.cancel()
             exitApplicationToast = getString(R.string.tap_back_second_time).toast()

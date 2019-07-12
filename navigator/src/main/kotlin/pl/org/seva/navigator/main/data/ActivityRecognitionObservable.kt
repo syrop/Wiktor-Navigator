@@ -68,7 +68,7 @@ open class ActivityRecognitionObservable :
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build()
-            googleApiClient!!.connect()
+            checkNotNull(googleApiClient).connect()
         }
 
         initialized = true

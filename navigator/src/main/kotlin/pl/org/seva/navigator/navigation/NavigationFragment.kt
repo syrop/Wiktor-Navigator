@@ -144,14 +144,14 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
                     }
                 },
                 onDenied = {})
-        activity!!.invalidateOptionsMenu()
+        requireActivity().invalidateOptionsMenu()
     }
 
     private inline fun checkLocationPermission(
             onGranted: () -> Unit = ::onLocationPermissionGranted,
             onDenied: () -> Unit = ::requestLocationPermission) =
                 if (ContextCompat.checkSelfPermission(
-                    context!!,
+                    requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         isLocationPermissionGranted = true
                         onGranted.invoke()
@@ -170,7 +170,7 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         fun help(caption: Int, file: String, action: () -> Unit): Boolean {
-                dialog = Dialog(context!!).apply {
+                dialog = Dialog(requireContext()).apply {
                 setContentView(R.layout.dialog_help)
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
@@ -213,7 +213,7 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
         dialog?.dismiss()
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        val uri = Uri.fromParts("package", activity!!.packageName, null)
+        val uri = Uri.fromParts("package", requireActivity().packageName, null)
         intent.data = uri
         startActivity(intent)
     }
@@ -238,10 +238,10 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
 
     @SuppressLint("MissingPermission")
     private fun onLocationPermissionGranted() {
-        activity!!.invalidateOptionsMenu()
+        requireActivity().invalidateOptionsMenu()
         mapHolder.locationPermissionGranted()
         if (isLoggedIn) {
-            (activity!!.application as NavigatorApplication).startService()
+            (requireActivity().application as NavigatorApplication).startService()
         }
     }
 
@@ -262,13 +262,13 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
 
     private fun login() {
         dialog?.dismiss()
-        activity!!.loginActivity(LoginActivity.LOGIN)
+        requireActivity().loginActivity(LoginActivity.LOGIN)
     }
 
     private fun logout(): Boolean {
         null persist prefs
         mapHolder.stopWatchingPeer()
-        activity!!.loginActivity(LoginActivity.LOGOUT)
+        requireActivity().loginActivity(LoginActivity.LOGOUT)
         return true
     }
 

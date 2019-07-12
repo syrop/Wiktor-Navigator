@@ -27,8 +27,8 @@ val toaster by instance<Toaster>()
 
 class Toaster {
 
-    infix fun toast(message: CharSequence) =
-        Toast.makeText(appContext, message, Toast.LENGTH_SHORT)!!.apply {
+    infix fun toast(message: CharSequence): Toast =
+        Toast.makeText(appContext, message, Toast.LENGTH_SHORT).apply {
             if (message.isNotBlank()) {
                 show()
             }

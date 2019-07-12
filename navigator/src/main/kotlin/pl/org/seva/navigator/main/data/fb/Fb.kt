@@ -32,11 +32,12 @@ open class Fb {
 
     protected val db = FirebaseDatabase.getInstance()
 
-    protected fun currentUserReference() = loggedInUser.email!!.toReference()
+    protected fun currentUserReference() =
+            checkNotNull(loggedInUser.email).toReference()
 
     protected fun String.toReference() = db.getReference(USER_ROOT + "/" + to64())
 
-    fun String.to64() = Base64.encodeToString(toByteArray(), Base64.NO_WRAP)!!
+    fun String.to64() = checkNotNull(Base64.encodeToString(toByteArray(), Base64.NO_WRAP))
 
     fun String.from64() = String(Base64.decode(toByteArray(), Base64.NO_WRAP))
 

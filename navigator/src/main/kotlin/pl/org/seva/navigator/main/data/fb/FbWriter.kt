@@ -32,10 +32,10 @@ val fbWriter by instance<FbWriter>()
 
 class FbWriter : Fb() {
 
-    private val me get() = loggedInUser.email!!.toReference()
+    private val me get() = checkNotNull(loggedInUser.email).toReference()
 
     infix fun login(user: FirebaseUser) {
-        val contact = Contact(user.email!!, user.displayName!!)
+        val contact = Contact(checkNotNull(user.email), checkNotNull(user.displayName))
         contact.write(db.getReference(USER_ROOT))
     }
 
@@ -44,7 +44,7 @@ class FbWriter : Fb() {
     }
 
     infix fun writeDebug(message: String) {
-        me.child(DEBUG).setValue(debug.withPeerVersionNumber(loggedInUser.email!!, message))
+        me.child(DEBUG).setValue(debug.withPeerVersionNumber(checkNotNull(loggedInUser.email), message))
     }
 
     infix fun requestFriendship(contact: Contact) =
@@ -77,7 +77,7 @@ class FbWriter : Fb() {
     }
 
     private fun Contact.deleteMeFromTag(tag: String) =
-        email.toReference().child(tag).child(loggedInUser.email!!.to64()).removeValue()
+        email.toReference().child(tag).child(checkNotNull(loggedInUser.email).to64()).removeValue()
 
     private fun Contact.deleteFromMyFriends() =
         me.child(FRIENDS).child(email.to64()).removeValue()

@@ -44,7 +44,7 @@ fun Fragment.back() = findNavController().popBackStack()
 
 inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<R> {
     override fun provideDelegate(receiver: Any?, prop: KProperty<Any?>) = lazy {
-        ViewModelProviders.of(this@viewModel.activity!!).get(R::class.java)
+        ViewModelProviders.of(checkNotNull(this@viewModel.activity)).get(R::class.java)
     }
 }
 

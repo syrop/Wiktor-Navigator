@@ -43,13 +43,14 @@ import pl.org.seva.navigator.main.extension.back
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.profile.loggedInUser
+import java.util.*
 
 @Suppress("DEPRECATION")
 class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
 
     private var progress: ProgressDialog? = null
 
-    private val searchManager get() = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    private val searchManager get() = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
@@ -62,10 +63,10 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
         super.onActivityCreated(savedInstanceState)
         setPromptText(R.string.seek_contact_press_to_begin)
         navigatorModel.query.observe(this) { query ->
-            if (!query.isEmpty()) {
+            if (query.isNotEmpty()) {
                 navigatorModel.query.value = ""
                 progress = ProgressDialog.show(context, null, getString(R.string.seek_contact_searching))
-                fbReader.findContact(query.toLowerCase())
+                fbReader.findContact(query.toLowerCase(Locale.getDefault()))
                         .subscribe { onContactReceived(it) }
             }
         }
@@ -94,7 +95,7 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         fun MenuItem.prepareSearchView() = with (actionView as SearchView) {
             setOnSearchClickListener { prompt.visibility = View.GONE }
-            setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
+            setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
             setOnCloseListener {
                 if (contacts_view.visibility != View.VISIBLE) {
                     prompt.visibility = View.VISIBLE
@@ -115,7 +116,7 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
         R.id.action_search -> {
             prompt.visibility = View.GONE
             contacts_view.visibility = View.GONE
-            activity!!.onSearchRequested()
+            requireActivity().onSearchRequested()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -131,7 +132,7 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
                     selectedContact in contacts -> back()
                     selectedContact.email == loggedInUser.email ->
                         getString(R.string.seek_contact_cannot_add_yourself).toast()
-                    else -> FriendshipAddDialogBuilder(context!!)
+                    else -> FriendshipAddDialogBuilder(requireContext())
                             .setContact(selectedContact)
                             .setYesAction { contactApprovedAndFinish(selectedContact) }
                             .setNoAction { back() }
@@ -142,7 +143,7 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
             contacts_view.adapter = adapter
         }
 
-        progress!!.cancel()
+        checkNotNull(progress).cancel()
         if (contact.isEmpty) {
             prompt.visibility = View.VISIBLE
             contacts_view.visibility = View.GONE

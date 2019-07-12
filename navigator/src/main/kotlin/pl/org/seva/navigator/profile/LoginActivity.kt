@@ -157,7 +157,7 @@ class LoginActivity : AppCompatActivity(),
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
                 // Google Sign In was successful, authenticate with Firebase
-                val account = result.signInAccount!!
+                val account = checkNotNull(result.signInAccount)
                 firebaseAuthWithGoogle(account)
             }
             else {
@@ -171,7 +171,7 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
+        Log.d(TAG, "firebaseAuthWithGoogle:" + checkNotNull(acct.id))
         showProgressDialog()
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
@@ -201,15 +201,15 @@ class LoginActivity : AppCompatActivity(),
 
     private fun showProgressDialog() {
         progressDialog = ProgressDialog(this)
-        progressDialog!!.setMessage(getString(R.string.login_loading))
-        progressDialog!!.isIndeterminate = true
+        checkNotNull(progressDialog).setMessage(getString(R.string.login_loading))
+        checkNotNull(progressDialog).isIndeterminate = true
 
-        progressDialog!!.show()
+        checkNotNull(progressDialog).show()
     }
 
     private fun hideProgressDialog() {
-        if (progressDialog != null && progressDialog!!.isShowing) {
-            progressDialog!!.dismiss()
+        if (progressDialog != null && checkNotNull(progressDialog).isShowing) {
+            checkNotNull(progressDialog).dismiss()
         }
     }
 
