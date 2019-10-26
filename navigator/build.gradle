@@ -103,28 +103,28 @@ dependencies {
 
     // Jetpack, AndroidX
     implementation 'androidx.core:core-ktx:1.2.0-beta01'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-beta01'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-beta01'
-    kapt 'androidx.room:room-compiler:2.2.0'
-    implementation 'androidx.room:room-runtime:2.2.0'
-    implementation 'androidx.room:room-ktx:2.2.0'
-    testImplementation 'androidx.room:room-testing:2.2.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-beta01'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-beta01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc01'
+    kapt 'androidx.room:room-compiler:2.2.1'
+    implementation 'androidx.room:room-runtime:2.2.1'
+    implementation 'androidx.room:room-ktx:2.2.1'
+    testImplementation 'androidx.room:room-testing:2.2.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-rc01'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0-alpha04', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.google.android.material:material:1.1.0-beta01'
+    implementation 'com.google.android.material:material:1.2.0-alpha01'
 
     // Play, Firebase
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
-    implementation 'com.google.firebase:firebase-database:19.1.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.0')
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1')
 
     // Testing
     androidTestImplementation 'org.mockito:mockito-android:3.0.0'
