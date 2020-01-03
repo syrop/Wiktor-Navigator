@@ -34,7 +34,6 @@ import pl.org.seva.navigator.navigation.NavigationFragment
 
 @SuppressLint("NewApi")
 fun setShortcuts() {
-    @Suppress("unused")
     fun Contact.shortcut() = ShortcutInfo.Builder(appContext, System.nanoTime().toString())
                 .setShortLabel(name)
                 .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, appContext, NavigationFragment::class.java)
@@ -45,7 +44,7 @@ fun setShortcuts() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
         return
     }
-    val shortcutManager = appContext.getSystemService(ShortcutManager::class.java)
+    val shortcutManager = checkNotNull(appContext.getSystemService(ShortcutManager::class.java))
     val shortcuts = contacts.snapshot()
             .asSequence()
             .take(shortcutManager.maxShortcutCountPerActivity)
