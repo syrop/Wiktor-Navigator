@@ -32,7 +32,6 @@ import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.main.MainActivity
 import pl.org.seva.navigator.navigation.NavigationFragment
 
-@SuppressLint("NewApi")
 fun setShortcuts() {
     fun Contact.shortcut() = ShortcutInfo.Builder(appContext, System.nanoTime().toString())
                 .setShortLabel(name)
@@ -41,9 +40,6 @@ fun setShortcuts() {
                 .setIcon(Icon.createWithResource(appContext, R.mipmap.ic_launcher))
                 .build()
 
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-        return
-    }
     val shortcutManager = checkNotNull(appContext.getSystemService(ShortcutManager::class.java))
     val shortcuts = contacts.snapshot()
             .asSequence()

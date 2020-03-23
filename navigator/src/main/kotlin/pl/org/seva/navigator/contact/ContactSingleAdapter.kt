@@ -21,7 +21,8 @@ package pl.org.seva.navigator.contact
 
 class ContactSingleAdapter(
         private val contact: Contact,
-        listener: ContactListener? = null) : ContactAdapter(listener) {
+        listener: ContactListener? = null,
+) : ContactAdapter(listener) {
 
     override fun getContact(position: Int) = contact
 

@@ -29,7 +29,8 @@ import pl.org.seva.navigator.main.init.instance
 
 class AddedColorMigration : Migration(
         ContactsDatabase.ROOM_DATABASE_VERSION,
-        ContactsDatabase.ADDED_COLOR_DATABASE_VERSION) {
+        ContactsDatabase.ADDED_COLOR_DATABASE_VERSION,
+) {
 
     private val cf by instance<ColorFactory>()
 

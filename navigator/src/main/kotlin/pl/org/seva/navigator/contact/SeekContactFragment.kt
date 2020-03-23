@@ -50,7 +50,8 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
 
     private var progress: ProgressDialog? = null
 
-    private val searchManager get() = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    private val searchManager get() =
+        requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 

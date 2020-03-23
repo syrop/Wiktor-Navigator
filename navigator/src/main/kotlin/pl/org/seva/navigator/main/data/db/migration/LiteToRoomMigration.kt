@@ -25,7 +25,8 @@ import pl.org.seva.navigator.main.data.db.ContactsDatabase
 
 class LiteToRoomMigration: Migration(
         ContactsDatabase.SQL_LITE_DATABASE_VERSION,
-        ContactsDatabase.ROOM_DATABASE_VERSION) {
+        ContactsDatabase.ROOM_DATABASE_VERSION,
+) {
 
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(RENAME_STATEMENT)

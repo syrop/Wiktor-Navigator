@@ -40,7 +40,9 @@ val friendshipListener by instance<FriendshipListener>()
 
 class FriendshipListener {
 
-    private val nm by lazy { appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val nm by lazy {
+        appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     fun onPeerRequestedFriendship(contact: Contact) {
         fun NotificationManager.friendshipRequested(contact: Contact, notificationId: ParcelableInt) =

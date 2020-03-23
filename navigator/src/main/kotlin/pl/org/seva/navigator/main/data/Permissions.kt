@@ -27,11 +27,13 @@ import pl.org.seva.navigator.main.init.instance
 
 fun Fragment.requestPermissions(
         requestCode: Int,
-        requests: Array<Permissions.PermissionRequest>) =
+        requests: Array<Permissions.PermissionRequest>,
+) =
     permissions.request(
             this,
             requestCode,
-            requests)
+            requests,
+    )
 
 val permissions by instance<Permissions>()
 
@@ -87,5 +89,6 @@ class Permissions {
     class PermissionRequest(
             val permission: String,
             val onGranted: () -> Unit = {},
-            val onDenied: () -> Unit = {})
+            val onDenied: () -> Unit = {},
+    )
 }
