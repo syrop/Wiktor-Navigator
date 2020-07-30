@@ -1,7 +1,4 @@
 buildscript {
-
-    ext.kotlin_version = '1.4.0-rc'
-
     repositories {
         google()
         jcenter()
@@ -11,9 +8,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.google.gms:google-services:4.3.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0-rc'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
     }
 }
 

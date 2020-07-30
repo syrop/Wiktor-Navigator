@@ -28,7 +28,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.Crashlytics
 
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -39,7 +38,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import io.fabric.sdk.android.Fabric
 
 import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
@@ -65,7 +63,6 @@ class LoginActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(DEFAULT_WEB_CLIENT_ID)
@@ -155,7 +152,7 @@ class LoginActivity : AppCompatActivity(),
         if (requestCode == SIGN_IN_REQUEST_ID) {
             finishWhenStateChanges()
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-            if (result.isSuccess) {
+            if (result?.isSuccess == true) {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = checkNotNull(result.signInAccount)
                 firebaseAuthWithGoogle(account)
