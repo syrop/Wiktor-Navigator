@@ -23,7 +23,7 @@ import android.content.SharedPreferences
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.SupportMapFragment
 import org.kodein.di.LazyDelegate
@@ -40,7 +40,7 @@ fun Fragment.back() = findNavController().popBackStack()
 
 inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<R> {
     override fun provideDelegate(receiver: Any?, prop: KProperty<Any?>) = lazy {
-        ViewModelProviders.of(this@viewModel.requireActivity()).get(R::class.java)
+        ViewModelProvider(this@viewModel.requireActivity()).get(R::class.java)
     }
 }
 
