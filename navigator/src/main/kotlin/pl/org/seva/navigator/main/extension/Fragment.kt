@@ -19,12 +19,8 @@
 
 package pl.org.seva.navigator.main.extension
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.IdRes
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -44,7 +40,7 @@ fun Fragment.back() = findNavController().popBackStack()
 
 inline fun <reified R : ViewModel> Fragment.viewModel() = object : LazyDelegate<R> {
     override fun provideDelegate(receiver: Any?, prop: KProperty<Any?>) = lazy {
-        ViewModelProviders.of(checkNotNull(this@viewModel.activity)).get(R::class.java)
+        ViewModelProviders.of(this@viewModel.requireActivity()).get(R::class.java)
     }
 }
 

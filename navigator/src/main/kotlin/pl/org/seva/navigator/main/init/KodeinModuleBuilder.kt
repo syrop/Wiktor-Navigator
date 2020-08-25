@@ -42,7 +42,6 @@ import pl.org.seva.navigator.main.data.ActivityRecognitionObservable
 import pl.org.seva.navigator.main.data.Permissions
 import pl.org.seva.navigator.main.data.appContext
 import pl.org.seva.navigator.main.extension.prefs
-import pl.org.seva.navigator.main.ui.Toaster
 import pl.org.seva.navigator.main.ui.ColorFactory
 import pl.org.seva.navigator.main.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationObservable
@@ -73,7 +72,6 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<ColorFactory>() with singleton { ColorFactory() }
         bind<Debug>() with singleton { Debug(ctx.prefs) }
         bind<ContactDao>() with singleton { db.contactDao }
-        bind<Toaster>() with singleton { Toaster() }
         bind<String>(APP_VERSION) with singleton { ctx.packageManager.getPackageInfo(appContext.packageName, 0).versionName }
     }
 

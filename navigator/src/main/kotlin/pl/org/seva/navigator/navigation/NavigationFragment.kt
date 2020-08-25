@@ -175,7 +175,7 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
                 val web = findViewById<WebView>(R.id.web)
                 web.settings.defaultTextEncodingName = UTF_8
                 findViewById<Button>(R.id.action_button).setText(caption)
-                val content = activity!!.assets.open(file).readString()
+                val content = requireActivity().assets.open(file).readString()
                         .replace(APP_VERSION_PLACEHOLDER, versionName)
                         .replace(APP_NAME_PLACEHOLDER, getString(R.string.app_name))
                 web.loadDataWithBaseURL(ASSET_DIR, content, PLAIN_TEXT, UTF_8, null)

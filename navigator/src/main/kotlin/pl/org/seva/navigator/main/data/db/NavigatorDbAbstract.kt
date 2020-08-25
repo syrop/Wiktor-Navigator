@@ -24,9 +24,8 @@ import androidx.room.RoomDatabase
 import pl.org.seva.navigator.contact.Contact
 
 @Database(
-        entities = [Contact.Entity::class],
-        version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION,
-)
+    entities = [Contact.Entity::class],
+    version = ContactsDatabase.ADDED_DEBUG_DATABASE_VERSION, )
 abstract class NavigatorDbAbstract : RoomDatabase() {
 
     abstract fun contactDao(): ContactDao

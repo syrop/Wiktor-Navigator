@@ -19,6 +19,12 @@
 
 package pl.org.seva.navigator.main.extension
 
-import pl.org.seva.navigator.main.ui.toaster
+import android.widget.Toast
+import pl.org.seva.navigator.main.data.appContext
 
-fun CharSequence.toast() = toaster toast this
+fun CharSequence.toast(): Toast =
+    Toast.makeText(appContext, this, Toast.LENGTH_SHORT).apply {
+        if (this@toast.isNotBlank()) {
+            show()
+        }
+    }

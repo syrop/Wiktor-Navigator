@@ -26,14 +26,13 @@ import pl.org.seva.navigator.main.extension.subscribe
 import pl.org.seva.navigator.main.init.instance
 
 fun Fragment.requestPermissions(
-        requestCode: Int,
-        requests: Array<Permissions.PermissionRequest>,
+    requestCode: Int,
+    requests: Array<Permissions.PermissionRequest>,
 ) =
     permissions.request(
-            this,
-            requestCode,
-            requests,
-    )
+        this,
+        requestCode,
+        requests, )
 
 val permissions by instance<Permissions>()
 
@@ -43,9 +42,10 @@ class Permissions {
     private val deniedSubject = PublishSubject.create<PermissionResult>()
 
     fun request(
-            fragment: Fragment,
-            requestCode: Int,
-            requests: Array<PermissionRequest>) {
+        fragment: Fragment,
+        requestCode: Int,
+        requests: Array<PermissionRequest>,
+    ) {
         val lifecycle = fragment.lifecycle
         val permissionsToRequest = ArrayList<String>()
         requests.forEach { request ->

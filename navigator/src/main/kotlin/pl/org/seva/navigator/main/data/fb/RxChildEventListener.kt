@@ -25,8 +25,9 @@ import com.google.firebase.database.DatabaseError
 
 import io.reactivex.subjects.ReplaySubject
 
-internal class RxChildEventListener(private val childEventSubject: ReplaySubject<DataSnapshot>) :
-        ChildEventListener {
+internal class RxChildEventListener(
+    private val childEventSubject: ReplaySubject<DataSnapshot>,
+) : ChildEventListener {
 
     override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) = childEventSubject.onNext(dataSnapshot)
 
