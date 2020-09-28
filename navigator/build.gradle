@@ -10,7 +10,9 @@ android {
     defaultConfig {
         applicationId 'pl.org.seva.navigator'
         minSdkVersion 25
-        targetSdkVersion 28
+        targetSdkVersion 28  // Upgrading above 28 requires a change in location permissions
+                             // https://developer.android.com/training/location/background
+                             // It also requires permission ACTIVITY_RECOGNITION
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary true
         versionCode 48
