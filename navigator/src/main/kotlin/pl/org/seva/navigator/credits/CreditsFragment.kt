@@ -29,12 +29,12 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fr_credits.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.extension.toast
-import pl.org.seva.navigator.main.init.KodeinModuleBuilder
+import pl.org.seva.navigator.main.init.APP_VERSION
 import pl.org.seva.navigator.main.init.instance
 
 class CreditsFragment : Fragment(R.layout.fr_credits) {
 
-    private val versionName by instance<String>(KodeinModuleBuilder.APP_VERSION)
+    private val versionName by instance<String>(APP_VERSION)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

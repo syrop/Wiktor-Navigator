@@ -22,12 +22,7 @@ package pl.org.seva.navigator.main.init
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import org.kodein.di.Kodein
-import org.kodein.di.conf.global
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
+import org.kodein.di.*
 import pl.org.seva.navigator.contact.Contacts
 import pl.org.seva.navigator.profile.LoggedInUser
 import pl.org.seva.navigator.main.data.fb.FbReader
@@ -47,11 +42,12 @@ import pl.org.seva.navigator.main.ui.NotificationChannels
 import pl.org.seva.navigator.navigation.MyLocationObservable
 import pl.org.seva.navigator.navigation.PeerObservable
 
-inline fun <reified R : Any> instance(tag: Any? = null) = Kodein.global.instance<R>(tag)
+lateinit var kodein : DI
 
-class KodeinModuleBuilder(private val ctx: Context) {
+inline fun <reified R : Any> instance(tag: Any? = null) = kodein.instance<R>(tag)
 
-    fun build() = Kodein.Module("main") {
+fun createKodein(ctx: Context) {
+    kodein = DI {
         bind<Context>() with provider { ctx }
         bind<Bootstrap>() with singleton { Bootstrap() }
         bind<FusedLocationProviderClient>() with singleton {
@@ -74,8 +70,6 @@ class KodeinModuleBuilder(private val ctx: Context) {
         bind<ContactDao>() with singleton { db.contactDao }
         bind<String>(APP_VERSION) with singleton { ctx.packageManager.getPackageInfo(appContext.packageName, 0).versionName }
     }
-
-    companion object {
-        const val APP_VERSION = "app_version"
-    }
 }
+
+const val APP_VERSION = "app_version"

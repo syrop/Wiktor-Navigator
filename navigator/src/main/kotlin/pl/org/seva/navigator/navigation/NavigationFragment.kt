@@ -45,13 +45,13 @@ import pl.org.seva.navigator.main.*
 import pl.org.seva.navigator.main.data.db.contactDao
 import pl.org.seva.navigator.main.extension.*
 import pl.org.seva.navigator.main.data.*
-import pl.org.seva.navigator.main.init.KodeinModuleBuilder
+import pl.org.seva.navigator.main.init.APP_VERSION
 import pl.org.seva.navigator.main.init.instance
 import pl.org.seva.navigator.profile.*
 
 class NavigationFragment : Fragment(R.layout.fr_navigation) {
 
-    private val versionName by instance<String>(KodeinModuleBuilder.APP_VERSION)
+    private val versionName by instance<String>(APP_VERSION)
 
     private var isLocationPermissionGranted = false
 
