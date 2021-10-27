@@ -17,8 +17,6 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-@file:Suppress("DEPRECATION")
-
 package pl.org.seva.navigator.profile
 
 import android.app.ProgressDialog
