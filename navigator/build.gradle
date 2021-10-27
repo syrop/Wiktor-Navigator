@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -65,12 +66,13 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     // https://androidstudio.googleblog.com/2018/04/android-studio-32-canary-11-now.html
@@ -92,8 +94,8 @@ kapt {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     // Kotlin, RxKotlin
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
@@ -117,7 +119,8 @@ dependencies {
     })
     implementation 'com.google.android.material:material:1.3.0-alpha02'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
-    implementation 'com.google.firebase:firebase-analytics:17.5.0'
+    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Play, Firebase
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
@@ -136,5 +139,4 @@ dependencies {
   testImplementation 'junit:junit:4.13'
 }
 
-apply plugin: 'com.google.gms.google-services'
 googleServices { disableVersionCheck = true }

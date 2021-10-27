@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Parcelable
+import androidx.annotation.NonNull
 import androidx.core.content.edit
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -84,6 +85,7 @@ data class Contact(
     @androidx.room.Entity(tableName = ContactsDatabase.TABLE_NAME)
     class Entity() {
         @PrimaryKey
+        @NonNull
         lateinit var email: String
         lateinit var name: String
         var color = Color.GRAY
