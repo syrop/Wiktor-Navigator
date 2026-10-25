@@ -68,7 +68,7 @@ fun createKodein(ctx: Context) {
         bind<ColorFactory>() with singleton { ColorFactory() }
         bind<Debug>() with singleton { Debug(ctx.prefs) }
         bind<ContactDao>() with singleton { db.contactDao }
-        bind<String>(APP_VERSION) with singleton { ctx.packageManager.getPackageInfo(appContext.packageName, 0).versionName }
+        bind<String>(APP_VERSION) with singleton { checkNotNull(ctx.packageManager.getPackageInfo(appContext.packageName, 0).versionName) }
     }
 }
 

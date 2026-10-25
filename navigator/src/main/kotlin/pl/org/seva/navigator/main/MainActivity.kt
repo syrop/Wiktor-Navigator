@@ -24,9 +24,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import kotlinx.android.synthetic.main.act_mainr.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_mainr)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar))
         NavigationUI.setupActionBarWithNavController(
                 this,
                 findNavController(R.id.nav_host_fragment))

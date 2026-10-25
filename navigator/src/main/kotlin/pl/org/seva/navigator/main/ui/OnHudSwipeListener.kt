@@ -57,7 +57,8 @@ class OnHudSwipeListener(ctx: Context, val onSwiped: (() -> Unit)) : OnTouchList
 
         override fun onDown(e: MotionEvent) = true
 
-        override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+        override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+            if (e1 == null) return false
             var result = false
             val dX = e2.x - e1.x
             val dY = e2.y - e1.y

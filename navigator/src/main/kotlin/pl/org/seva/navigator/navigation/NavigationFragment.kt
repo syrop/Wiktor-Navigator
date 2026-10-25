@@ -31,12 +31,15 @@ import android.provider.Settings
 import android.view.*
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fr_navigation.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
@@ -61,6 +64,11 @@ class NavigationFragment : Fragment(R.layout.fr_navigation) {
     private lateinit var mapHolder: MapHolder
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
+
+    private val root: RelativeLayout get() = requireView().findViewById(R.id.root)
+    private val add_contact_fab: FloatingActionButton get() = requireView().findViewById(R.id.add_contact_fab)
+    private val hud_stationary: TextView get() = requireView().findViewById(R.id.hud_stationary)
+    private val coordinator: CoordinatorLayout get() = requireView().findViewById(R.id.coordinator)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

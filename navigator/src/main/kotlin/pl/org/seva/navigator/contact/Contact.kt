@@ -27,8 +27,8 @@ import androidx.annotation.NonNull
 import androidx.core.content.edit
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_EMAIL_PROPERTY
 import pl.org.seva.navigator.contact.Contact.Companion.CONTACT_NAME_PROPERTY
 import pl.org.seva.navigator.main.data.db.ContactsDatabase

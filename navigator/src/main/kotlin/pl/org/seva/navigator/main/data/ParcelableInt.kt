@@ -21,7 +21,7 @@ package pl.org.seva.navigator.main.data
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize

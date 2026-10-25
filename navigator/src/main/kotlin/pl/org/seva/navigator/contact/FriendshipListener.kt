@@ -81,12 +81,12 @@ class FriendshipListener {
                 contactDao insert this
             }
 
-            val nid = intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID).value
+            val nid = checkNotNull(intent.getParcelableExtra<ParcelableInt>(NOTIFICATION_ID)).value
             nm.cancel(nid)
             context.unregisterReceiver(this)
-            val action = intent.getParcelableExtra<ParcelableInt>(ACTION).value
+            val action = checkNotNull(intent.getParcelableExtra<ParcelableInt>(ACTION)).value
             if (action == ACCEPTED_ACTION) {
-                intent.getParcelableExtra<Contact>(CONTACT_EXTRA).acceptFriend()
+                checkNotNull(intent.getParcelableExtra<Contact>(CONTACT_EXTRA)).acceptFriend()
                 setShortcuts()
             }
         }

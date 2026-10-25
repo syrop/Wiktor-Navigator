@@ -25,10 +25,12 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fr_contacts.*
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.data.setShortcuts
@@ -43,6 +45,10 @@ import pl.org.seva.navigator.main.extension.*
 class ContactsFragment : Fragment(R.layout.fr_contacts) {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
+
+    private val contacts_view: RecyclerView get() = requireView().findViewById(R.id.contacts_view)
+    private val prompt: TextView get() = requireView().findViewById(R.id.prompt)
+    private val seek_contact_fab: FloatingActionButton get() = requireView().findViewById(R.id.seek_contact_fab)
 
     private val adapter = ContactAdapter { contact ->
         navigatorModel.contact.value = contact

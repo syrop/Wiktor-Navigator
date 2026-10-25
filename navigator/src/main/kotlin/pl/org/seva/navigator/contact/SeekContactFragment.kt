@@ -29,10 +29,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fr_seek_contact.*
+import androidx.recyclerview.widget.RecyclerView
 
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.data.fb.fbReader
@@ -55,6 +56,9 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
+    private val prompt: TextView get() = requireView().findViewById(R.id.prompt)
+    private val contacts_view: RecyclerView get() = requireView().findViewById(R.id.contacts_view)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -67,7 +71,7 @@ class SeekContactFragment : Fragment(R.layout.fr_seek_contact) {
             if (query.isNotEmpty()) {
                 navigatorModel.query.value = ""
                 progress = ProgressDialog.show(context, null, getString(R.string.seek_contact_searching))
-                fbReader.findContact(query.toLowerCase(Locale.getDefault()))
+                fbReader.findContact(query.lowercase(Locale.getDefault()))
                         .subscribe { onContactReceived(it) }
             }
         }

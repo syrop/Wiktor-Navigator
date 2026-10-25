@@ -25,8 +25,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fr_credits.*
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.init.APP_VERSION
@@ -46,22 +47,23 @@ class CreditsFragment : Fragment(R.layout.fr_credits) {
 
         fun String.toClipboard() {
             val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.primaryClip = ClipData.newPlainText("", this)
+            clipboard.setPrimaryClip(ClipData.newPlainText("", this))
             getString(R.string.credits_fragment_copied_to_clipboard).toast()
         }
 
-        version.text = getString(R.string.credits_fragment_version)
+        val root = requireView()
+        root.findViewById<TextView>(R.id.version).text = getString(R.string.credits_fragment_version)
                 .replace(VERSION_PLACEHOLDER, versionName)
 
-        developer_url.setOnClickListener {
+        root.findViewById<View>(R.id.developer_url).setOnClickListener {
             getString(R.string.credits_fragment_developer_url).inBrowser()
         }
 
-        icon_github.setOnClickListener {
+        root.findViewById<View>(R.id.icon_github).setOnClickListener {
             getString(R.string.credits_fragment_icon_github).inBrowser()
         }
 
-        developer_crypto_address.setOnClickListener {
+        root.findViewById<View>(R.id.developer_crypto_address).setOnClickListener {
             getString(R.string.credits_fragment_developer_btc).toClipboard()
         }
     }
