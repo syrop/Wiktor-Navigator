@@ -19,14 +19,15 @@
 
 package pl.org.seva.navigator.profile
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -36,11 +37,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-
-import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.extension.start
+import pl.org.seva.navigator.main.NavigatorApplication
 import pl.org.seva.navigator.main.data.fb.fbWriter
+import pl.org.seva.navigator.main.extension.start
+import pl.org.seva.navigator.main.ui.NavigatorTheme
 
 fun Context.loginActivity(action: String) = start(LoginActivity::class.java) {
     putExtra(LoginActivity.ACTION, action)
@@ -55,12 +56,24 @@ class LoginActivity : AppCompatActivity(),
 
     private lateinit var googleApiClient: GoogleApiClient
 
-    private var progressDialog: ProgressDialog? = null
+    private val isLoading = mutableStateOf(false)
     private var performedAction: Boolean = false
     private var logoutWhenReady: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val composeView = ComposeView(this).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                NavigatorTheme {
+                    if (isLoading.value) {
+                        LoginScreen()
+                    }
+                }
+            }
+        }
+        setContentView(composeView)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(DEFAULT_WEB_CLIENT_ID)
@@ -195,17 +208,11 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun showProgressDialog() {
-        progressDialog = ProgressDialog(this)
-        checkNotNull(progressDialog).setMessage(getString(R.string.login_loading))
-        checkNotNull(progressDialog).isIndeterminate = true
-
-        checkNotNull(progressDialog).show()
+        isLoading.value = true
     }
 
     private fun hideProgressDialog() {
-        if (progressDialog != null && checkNotNull(progressDialog).isShowing) {
-            checkNotNull(progressDialog).dismiss()
-        }
+        isLoading.value = false
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {

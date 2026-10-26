@@ -25,20 +25,27 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.init.APP_VERSION
 import pl.org.seva.navigator.main.init.instance
+import pl.org.seva.navigator.main.ui.NavigatorTheme
 
-class CreditsFragment : Fragment(R.layout.fr_credits) {
+class CreditsFragment : Fragment() {
 
     private val versionName by instance<String>(APP_VERSION)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         fun String.inBrowser() {
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(this)
@@ -51,20 +58,25 @@ class CreditsFragment : Fragment(R.layout.fr_credits) {
             getString(R.string.credits_fragment_copied_to_clipboard).toast()
         }
 
-        val root = requireView()
-        root.findViewById<TextView>(R.id.version).text = getString(R.string.credits_fragment_version)
-                .replace(VERSION_PLACEHOLDER, versionName)
-
-        root.findViewById<View>(R.id.developer_url).setOnClickListener {
-            getString(R.string.credits_fragment_developer_url).inBrowser()
-        }
-
-        root.findViewById<View>(R.id.icon_github).setOnClickListener {
-            getString(R.string.credits_fragment_icon_github).inBrowser()
-        }
-
-        root.findViewById<View>(R.id.developer_crypto_address).setOnClickListener {
-            getString(R.string.credits_fragment_developer_btc).toClipboard()
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                NavigatorTheme {
+                    CreditsScreen(
+                        versionText = getString(R.string.credits_fragment_version)
+                            .replace(VERSION_PLACEHOLDER, versionName),
+                        onDeveloperUrlClick = {
+                            getString(R.string.credits_fragment_developer_url).inBrowser()
+                        },
+                        onCryptoAddressClick = {
+                            getString(R.string.credits_fragment_developer_btc).toClipboard()
+                        },
+                        onIconGithubClick = {
+                            getString(R.string.credits_fragment_icon_github).inBrowser()
+                        },
+                    )
+                }
+            }
         }
     }
 

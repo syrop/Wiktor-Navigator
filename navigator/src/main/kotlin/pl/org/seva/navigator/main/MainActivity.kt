@@ -25,15 +25,18 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.navigation.findNavController
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
+import pl.org.seva.navigator.main.extension.prefs
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.extension.viewModel
-
-import pl.org.seva.navigator.main.extension.prefs
+import pl.org.seva.navigator.main.ui.NavigatorTheme
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,14 +46,37 @@ class MainActivity : AppCompatActivity() {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
+    private val navController: NavController?
+        get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)?.navController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.act_mainr)
+        val composeView = ComposeView(this).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                NavigatorTheme {
+                    MainScreen(
+                        onToolbarCreated = { toolbar ->
+                            setupNavigation(toolbar)
+                        },
+                    )
+                }
+            }
+        }
+        setContentView(composeView)
+    }
 
-        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar))
-        NavigationUI.setupActionBarWithNavController(
-                this,
-                findNavController(R.id.nav_host_fragment))
+    private fun setupNavigation(toolbar: Toolbar) {
+        setSupportActionBar(toolbar)
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+            ?: NavHostFragment.create(R.navigation.nav_graph).also { fragment ->
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, fragment)
+                    .setPrimaryNavigationFragment(fragment)
+                    .commit()
+            }
+        supportFragmentManager.executePendingTransactions()
+        NavigationUI.setupActionBarWithNavController(this, navHost.navController)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -71,15 +97,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val nc = findNavController(R.id.nav_host_fragment)
-        return if (checkNotNull(nc.currentDestination).id == R.id.navigationFragment &&
-                System.currentTimeMillis() - backClickTime >= DOUBLE_CLICK_MS) {
+        val nc = navController
+        return if (nc != null && checkNotNull(nc.currentDestination).id == R.id.navigationFragment &&
+            System.currentTimeMillis() - backClickTime >= DOUBLE_CLICK_MS
+        ) {
             exitApplicationToast?.cancel()
             exitApplicationToast = getString(R.string.tap_back_second_time).toast()
             backClickTime = System.currentTimeMillis()
             false
         } else {
-            nc.navigateUp()
+            nc?.navigateUp() ?: super.onSupportNavigateUp()
         }
     }
 

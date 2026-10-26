@@ -21,26 +21,17 @@ package pl.org.seva.navigator.navigation
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.StyleSpan
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.main.data.applicationContext
 import pl.org.seva.navigator.main.extension.toast
-import pl.org.seva.navigator.main.ui.OnHudSwipeListener
 
 class MapHolder {
 
@@ -58,43 +49,24 @@ class MapHolder {
     lateinit var persistCameraPositionAndZoom: () -> Unit
     private lateinit var deletePersistedContact: () -> Unit
 
-    private val TextView.hudSwipeListener get() = OnHudSwipeListener(ctx = context) {
-        animate().alpha(0.0f).withEndAction { visibility = View.GONE }
-        setOnTouchListener(null)
-        stopWatchingPeer()
-        deletePersistedContact()
-    }
-
-    private val contactNameSpannable: CharSequence get() = contactNameTemplate.run {
-        val idName = indexOf(CONTACT_NAME_PLACEHOLDER)
-        val idEndName = idName + checkNotNull(contact).name.length
-        val boldSpan = StyleSpan(Typeface.BOLD)
-        SpannableStringBuilder(replace(CONTACT_NAME_PLACEHOLDER, checkNotNull(contact).name)).apply {
-            setSpan(boldSpan, idName, idEndName, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-        }
-    }
-
-    lateinit var view: ViewGroup
+    var onContactChanged: ((Contact?) -> Unit)? = null
 
     var contact: Contact? = null
         set(value) {
             field = value
             field?.listen()
-            updateHud()
+            onContactChanged?.invoke(value)
         }
-
-    private lateinit var contactNameTemplate: String
 
     fun init(
             savedInstanceState: Bundle?,
-            root: ViewGroup,
             contact: Contact?,
-            prefs: SharedPreferences) {
-        view = root
+            prefs: SharedPreferences,
+            onContactChanged: ((Contact?) -> Unit)? = null) {
+        this.onContactChanged = onContactChanged
         zoom = prefs.getFloat(NavigationFragment.ZOOM_PROPERTY, NavigationFragment.DEFAULT_ZOOM)
         lastCameraPosition = LatLng(prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
                 prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble())
-        contactNameTemplate = applicationContext.getString(R.string.navigation_following_name)
 
         contact?.persist(prefs)
         if (contact == null) {
@@ -105,20 +77,6 @@ class MapHolder {
         if (savedInstanceState != null) {
             animateCamera = false
             peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationFragment.SAVED_PEER_LOCATION)
-        }
-    }
-
-    private fun updateHud() = view.findViewById<TextView>(R.id.hud_following).run {
-        alpha = 1.0f
-        if (contact == null) {
-            animate().translationYBy(height.toFloat()).withEndAction { visibility = View.GONE }
-            setOnTouchListener(null)
-        }
-        else {
-            visibility = View.VISIBLE
-            animate().translationYBy(0.0f).withEndAction { translationY = 0.0f }
-            text = contactNameSpannable
-            setOnTouchListener(hudSwipeListener)
         }
     }
 
@@ -202,8 +160,6 @@ class MapHolder {
     }
 
     companion object {
-        private const val CONTACT_NAME_PLACEHOLDER = "[name]"
-
         private const val FLOAT_TOLERANCE = 0.002f
         /** Calculated from #00bfa5, or A700 Teal. */
         private const val MARKER_HUE = 34.0f

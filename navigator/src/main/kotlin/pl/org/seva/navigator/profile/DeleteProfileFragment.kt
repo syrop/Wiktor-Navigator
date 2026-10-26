@@ -20,26 +20,40 @@
 package pl.org.seva.navigator.profile
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.extension.back
 import pl.org.seva.navigator.main.extension.viewModel
+import pl.org.seva.navigator.main.ui.NavigatorTheme
 
-class DeleteProfileFragment : Fragment(R.layout.fr_delete_profile) {
+class DeleteProfileFragment : Fragment() {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        requireView().findViewById<View>(R.id.ok).setOnClickListener {
-            navigatorModel.deleteProfile.value = true
-            back()
-        }
-        requireView().findViewById<View>(R.id.cancel).setOnClickListener {
-            navigatorModel.deleteProfile.value = false
-            back()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            NavigatorTheme {
+                DeleteProfileScreen(
+                    onCancelClick = {
+                        navigatorModel.deleteProfile.value = false
+                        back()
+                    },
+                    onOkClick = {
+                        navigatorModel.deleteProfile.value = true
+                        back()
+                    },
+                )
+            }
         }
     }
 }

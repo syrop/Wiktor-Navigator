@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="map" type="id" />
+    <item name="appbar" type="id" />
+    <item name="toolbar" type="id" />
+    <item name="nav_host_fragment" type="id" />
+</resources>

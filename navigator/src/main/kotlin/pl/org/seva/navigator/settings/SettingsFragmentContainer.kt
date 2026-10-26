@@ -19,7 +19,48 @@
 
 package pl.org.seva.navigator.settings
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import pl.org.seva.navigator.R
+import pl.org.seva.navigator.debug.Debug
+import pl.org.seva.navigator.debug.debug
+import pl.org.seva.navigator.main.extension.prefs
+import pl.org.seva.navigator.main.ui.NavigatorTheme
 
-class SettingsFragmentContainer : Fragment(R.layout.fr_settings)
+class SettingsFragmentContainer : Fragment() {
+
+    private val isDebugMode = mutableStateOf(value = false)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        isDebugMode.value = debug.isDebugMode
+        setContent {
+            NavigatorTheme {
+                SettingsScreen(
+                    isDebugMode = isDebugMode.value,
+                    onDebugModeChanged = { enabled ->
+                        isDebugMode.value = enabled
+                        requireContext().prefs.edit {
+                            putBoolean(Debug.PROPERTY, enabled)
+                        }
+                        if (enabled) {
+                            debug.start()
+                        } else {
+                            debug.stop()
+                        }
+                    },
+                )
+            }
+        }
+    }
+}

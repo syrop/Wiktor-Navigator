@@ -19,111 +19,101 @@
 
 package pl.org.seva.navigator.contact
 
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.StyleSpan
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.R
-import pl.org.seva.navigator.main.data.setShortcuts
-
-import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.data.db.contactDao
-import pl.org.seva.navigator.main.data.db.insert
 import pl.org.seva.navigator.main.data.db.delete
-import pl.org.seva.navigator.main.extension.*
+import pl.org.seva.navigator.main.data.db.insert
+import pl.org.seva.navigator.main.data.fb.fbWriter
+import pl.org.seva.navigator.main.data.setShortcuts
+import pl.org.seva.navigator.main.extension.back
+import pl.org.seva.navigator.main.extension.nav
+import pl.org.seva.navigator.main.extension.viewModel
+import pl.org.seva.navigator.main.ui.NavigatorTheme
 
-class ContactsFragment : Fragment(R.layout.fr_contacts) {
+class ContactsFragment : Fragment() {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
-    private val contacts_view: RecyclerView get() = requireView().findViewById(R.id.contacts_view)
-    private val prompt: TextView get() = requireView().findViewById(R.id.prompt)
-    private val seek_contact_fab: FloatingActionButton get() = requireView().findViewById(R.id.seek_contact_fab)
+    private val contactsList = mutableStateListOf<Contact>()
 
-    private val adapter = ContactAdapter { contact ->
-        navigatorModel.contact.value = contact
-        back()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            val snackbarHostState = remember { SnackbarHostState() }
+            val coroutineScope = rememberCoroutineScope()
+
+            NavigatorTheme {
+                ContactsScreen(
+                    contactsList = contactsList,
+                    onContactClick = { contact ->
+                        navigatorModel.contact.value = contact
+                        back()
+                    },
+                    onContactSwipedToDelete = { contact ->
+                        fun undelete() {
+                            fbWriter addFriendship contact
+                            fbWriter acceptFriendship contact
+                            contacts add contact
+                            contactDao insert contact
+                            refreshContactsList()
+                            setShortcuts()
+                        }
+
+                        fbWriter deleteFriendship contact
+                        contacts delete contact
+                        contactDao delete contact
+                        refreshContactsList()
+                        setShortcuts()
+
+                        coroutineScope.launch {
+                            val result = snackbarHostState.showSnackbar(
+                                message = getString(R.string.contacts_deleted_contact),
+                                actionLabel = getString(R.string.contacts_undelete),
+                                duration = SnackbarDuration.Long,
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                undelete()
+                            }
+                        }
+                    },
+                    onAddContactClick = {
+                        nav(R.id.action_contactsFragment_to_seekContactFragment)
+                    },
+                    snackbarHostState = snackbarHostState,
+                )
+            }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        fun refreshScreen() {
-            if (contacts.size > 0) {
-                contacts_view.visibility = View.VISIBLE
-                prompt.visibility = View.GONE
-            }
-            else {
-                contacts_view.visibility = View.GONE
-                prompt.visibility = View.VISIBLE
-            }
-        }
-
-        fun Contact.delete(onChanged: () -> Unit) {
-            fun undelete() {
-                fbWriter addFriendship this
-                fbWriter acceptFriendship this
-                contacts add this
-                contactDao insert this
-                onChanged()
-            }
-
-            fbWriter deleteFriendship this
-            contacts delete this
-            contactDao delete this
-            Snackbar.make(
-                    contacts_view,
-                    R.string.contacts_deleted_contact,
-                    Snackbar.LENGTH_LONG)
-                    .setAction(R.string.contacts_undelete) { undelete() }
-                    .show()
-            onChanged()
-        }
-
-        fun initContactsRecyclerView() {
-            contacts_view.setHasFixedSize(true)
-            contacts_view.layoutManager = LinearLayoutManager(context)
-            contacts_view.adapter = adapter
-            contacts_view.verticalDivider()
-            contacts_view.swipeListener { position ->
-                contacts[position].delete {
-                    refreshScreen()
-                    adapter.notifyDataSetChanged()
-                    setShortcuts()
-                }
-            }
-        }
-
-        fun setPromptLabel() {
-            val str = getString(R.string.contacts_please_press_plus)
-            val idPlus = str.indexOf('+')
-            val boldSpan = StyleSpan(Typeface.BOLD)
-            val ssBuilder = SpannableStringBuilder(str)
-            ssBuilder.setSpan(boldSpan, idPlus, idPlus + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
-            prompt.text = ssBuilder
-        }
-
         super.onActivityCreated(savedInstanceState)
-
-        seek_contact_fab.setOnClickListener {
-            nav(R.id.action_contactsFragment_to_seekContactFragment)
-        }
-
         contacts.addContactsUpdatedListener {
-            adapter.notifyDataSetChanged()
-            refreshScreen()
+            refreshContactsList()
         }
+        refreshContactsList()
+    }
 
-        setPromptLabel()
-        initContactsRecyclerView()
-        refreshScreen()
+    private fun refreshContactsList() {
+        contactsList.clear()
+        contactsList.addAll(contacts.snapshot())
     }
 }
