@@ -141,7 +141,7 @@ class MapHolder {
             it.addMarker(MarkerOptions()
                     .position(this)
                     .title(checkNotNull(contact).name))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
+                    ?.setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }
 

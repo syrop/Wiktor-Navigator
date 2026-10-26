@@ -48,6 +48,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.window.Dialog
+import com.google.maps.android.compose.GoogleMap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +69,7 @@ data class HelpDialogParams(
  *
  * Layout mapping:
  * - Root `RelativeLayout` -> `Box(Modifier.fillMaxSize())`.
- * - Map slot (`mapContent: @Composable () -> Unit`) hosting the Google Map.
+ * - Map slot (`mapContent: @Composable () -> Unit`) hosting the Google Map (defaults to [GoogleMap]).
  * - FAB at bottom-end (`FloatingActionButton`) with `add` icon.
  * - Stationary HUD banner at the top (`hud_stationary`, `#99000000` background, 16sp, 8dp padding).
  * - Following contact HUD banner at the bottom (`hud_following`, `#99000000` background, 16sp, 8dp padding)
@@ -84,7 +85,11 @@ fun NavigationScreen(
     modifier: Modifier = Modifier,
     helpDialogParams: HelpDialogParams? = null,
     onDismissHelpDialog: () -> Unit = {},
-    mapContent: @Composable () -> Unit = {},
+    mapContent: @Composable () -> Unit = {
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+        )
+    },
 ) {
     Box(
         modifier = modifier.fillMaxSize(),

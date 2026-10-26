@@ -23,6 +23,7 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.compose.ui.platform.ComposeView
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)?.navController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         val composeView = ComposeView(this).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -79,14 +81,14 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navHost.navController)
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
+        intent.getStringExtra(CONTACT_EMAIL_EXTRA)?.apply {
             val contact = contacts[this]
             navigatorModel.contact.value = contact
             contact persist prefs
         }
-        if (Intent.ACTION_SEARCH == intent?.action) {
+        if (Intent.ACTION_SEARCH == intent.action) {
             navigatorModel.query.value = intent.getStringExtra(SearchManager.QUERY)
         }
     }

@@ -47,6 +47,9 @@ import com.google.android.material.appbar.AppBarLayout
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.ui.NavigatorTheme
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+
 /**
  * Jetpack Compose replacement for `res/layout/act_mainr.xml`.
  *
@@ -77,7 +80,10 @@ fun MainScreen(
     val isInspection = LocalInspectionMode.current
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
     ) {
         if (isInspection) {
             Surface(
