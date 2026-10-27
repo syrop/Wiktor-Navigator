@@ -136,7 +136,10 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha03") {
         exclude(group = "com.android.support", module = "support-annotations")
     }
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.test:core:1.6.1")
+    testImplementation("androidx.test.ext:junit:1.2.1")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }
 
 googleServices { disableVersionCheck = true }
