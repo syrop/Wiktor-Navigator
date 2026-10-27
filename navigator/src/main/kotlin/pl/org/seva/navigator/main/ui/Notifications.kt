@@ -43,7 +43,7 @@ fun Context.createOngoingNotification(): Notification {
             this,
             System.currentTimeMillis().toInt(),
             mainActivityIntent,
-            0)
+            PendingIntent.FLAG_IMMUTABLE)
     return createNotificationBuilder(this)
             .setContentTitle(getString(R.string.app_name))
             .setSmallIcon(R.drawable.notification)

@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavigation(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
-        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val navHost = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
             ?: NavHostFragment.create(R.navigation.nav_graph).also { fragment ->
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.nav_host_fragment, fragment)
@@ -100,8 +100,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val nc = navController
-        return if (nc != null && checkNotNull(nc.currentDestination).id == R.id.navigationFragment &&
-            System.currentTimeMillis() - backClickTime >= DOUBLE_CLICK_MS
+        return if ((nc != null) &&
+            (checkNotNull(nc.currentDestination).id == R.id.navigationFragment) &&
+            ((System.currentTimeMillis() - backClickTime) >= DOUBLE_CLICK_MS)
         ) {
             exitApplicationToast?.cancel()
             exitApplicationToast = getString(R.string.tap_back_second_time).toast()

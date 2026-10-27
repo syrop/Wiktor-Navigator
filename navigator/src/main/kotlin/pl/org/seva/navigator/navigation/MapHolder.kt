@@ -22,15 +22,16 @@ package pl.org.seva.navigator.navigation
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.core.os.BundleCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlin.math.abs
 import pl.org.seva.navigator.contact.*
 import pl.org.seva.navigator.debug.debug
-import pl.org.seva.navigator.main.data.applicationContext
 import pl.org.seva.navigator.main.extension.toast
 
 class MapHolder {
@@ -47,36 +48,44 @@ class MapHolder {
 
     lateinit var checkLocationPermission: (f: () -> Unit) -> Unit
     lateinit var persistCameraPositionAndZoom: () -> Unit
-    private lateinit var deletePersistedContact: () -> Unit
 
     var onContactChanged: ((Contact?) -> Unit)? = null
 
     var contact: Contact? = null
         set(value) {
+            if (field?.email != value?.email) {
+                peerObservable.clearPeerListeners()
+            }
             field = value
             field?.listen()
             onContactChanged?.invoke(value)
         }
 
     fun init(
-            savedInstanceState: Bundle?,
-            contact: Contact?,
-            prefs: SharedPreferences,
-            onContactChanged: ((Contact?) -> Unit)? = null) {
+        savedInstanceState: Bundle?,
+        contact: Contact?,
+        prefs: SharedPreferences,
+        onContactChanged: ((Contact?) -> Unit)? = null,
+    ) {
         this.onContactChanged = onContactChanged
         zoom = prefs.getFloat(NavigationFragment.ZOOM_PROPERTY, NavigationFragment.DEFAULT_ZOOM)
-        lastCameraPosition = LatLng(prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
-                prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble())
+        lastCameraPosition = LatLng(
+            prefs.getFloat(NavigationFragment.LATITUDE_PROPERTY, 0.0f).toDouble(),
+            prefs.getFloat(NavigationFragment.LONGITUDE_PROPERTY, 0.0f).toDouble(),
+        )
 
         contact?.persist(prefs)
         if (contact == null) {
             this.contact = readContactFromProperties(prefs)
         }
 
-        deletePersistedContact = { null persist prefs }
         if (savedInstanceState != null) {
             animateCamera = false
-            peerLocation = savedInstanceState.getParcelable<LatLng?>(NavigationFragment.SAVED_PEER_LOCATION)
+            peerLocation = BundleCompat.getParcelable(
+                savedInstanceState,
+                NavigationFragment.SAVED_PEER_LOCATION,
+                LatLng::class.java,
+            )
         }
     }
 
@@ -93,14 +102,13 @@ class MapHolder {
         val cameraPosition = CameraPosition.Builder().target(this).zoom(zoom).build()
         if (animateCamera) {
             map?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        }
-        else {
+        } else {
             map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
         animateCamera = false
     }
 
-    private fun moveCameraToPeerOrLastLocation() = (peerLocation?:lastCameraPosition).moveCamera()
+    private fun moveCameraToPeerOrLastLocation() = (peerLocation ?: lastCameraPosition).moveCamera()
 
     private fun moveCameraToLast() = lastCameraPosition.moveCamera()
 
@@ -113,9 +121,10 @@ class MapHolder {
 
     @SuppressLint("MissingPermission")
     private fun GoogleMap.onReady() {
-        infix fun LatLng.isDifferentFrom(other: LatLng?) = if (other == null) true
-        else Math.abs(latitude - other.latitude) > FLOAT_TOLERANCE ||
-                Math.abs(longitude - other.longitude) > FLOAT_TOLERANCE
+        infix fun LatLng.isDifferentFrom(other: LatLng?) =
+            (other == null) ||
+            ((abs(latitude - other.latitude) > FLOAT_TOLERANCE) ||
+             (abs(longitude - other.longitude) > FLOAT_TOLERANCE))
 
         fun onCameraIdle() = checkNotNull(map).cameraPosition.let {
             zoom = it.zoom
@@ -138,10 +147,11 @@ class MapHolder {
     private fun LatLng.putPeerMarker() {
         map?.also {
             clearMap()
-            it.addMarker(MarkerOptions()
+            it.addMarker(
+                MarkerOptions()
                     .position(this)
-                    .title(checkNotNull(contact).name))
-                    ?.setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
+                    .title(checkNotNull(contact).name),
+            )?.setIcon(BitmapDescriptorFactory.defaultMarker(MARKER_HUE))
         }
     }
 

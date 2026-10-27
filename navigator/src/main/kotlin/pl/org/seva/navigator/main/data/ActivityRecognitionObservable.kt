@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -74,6 +75,7 @@ open class ActivityRecognitionObservable :
         initialized = true
     }
 
+    @android.annotation.SuppressLint("MissingPermission")
     override fun onConnected(bundle: Bundle?) {
         registerReceiver()
         val intent = Intent(ACTIVITY_RECOGNITION_INTENT)
@@ -82,7 +84,7 @@ open class ActivityRecognitionObservable :
                 context,
                 0,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT, )
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE, )
         ActivityRecognition.getClient(context).requestActivityUpdates(
                 ACTIVITY_RECOGNITION_INTERVAL_MS,
                 pendingIntent, )
@@ -92,7 +94,11 @@ open class ActivityRecognitionObservable :
 
     private fun registerReceiver() {
         activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
-        context.registerReceiver(activityRecognitionReceiver, IntentFilter(ACTIVITY_RECOGNITION_INTENT))
+        ContextCompat.registerReceiver(
+                context,
+                activityRecognitionReceiver,
+                IntentFilter(ACTIVITY_RECOGNITION_INTENT),
+                ContextCompat.RECEIVER_NOT_EXPORTED, )
     }
 
     private fun unregisterReceiver() {
@@ -124,7 +130,7 @@ open class ActivityRecognitionObservable :
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
-                if (result probably DetectedActivity.STILL) {
+                if (result?.probably(DetectedActivity.STILL) == true) {
                     onDeviceStationary()
                 }
                 else {

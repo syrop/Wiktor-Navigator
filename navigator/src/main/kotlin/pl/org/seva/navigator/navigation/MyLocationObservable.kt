@@ -99,7 +99,7 @@ class MyLocationObservable {
 
     inner class MyLocationCallback : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
-            onLocationChanged(result.lastLocation)
+            result.lastLocation?.let { onLocationChanged(it) }
         }
     }
 

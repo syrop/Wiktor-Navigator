@@ -77,6 +77,6 @@ class PeerRequestedFriendship(private val context: Context) {
     companion object {
         private const val NAME_TAG = "[name]"
         private const val EMAIL_TAG = "[email]"
-        private const val PI_FLAG = PendingIntent.FLAG_ONE_SHOT
+        private val PI_FLAG = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
     }
 }

@@ -14,9 +14,7 @@ android {
     defaultConfig {
         applicationId = "pl.org.seva.navigator"
         minSdk = 25
-        targetSdk = 28  // Upgrading above 28 requires a change in location permissions
-                        // https://developer.android.com/training/location/background
-                        // It also requires permission ACTIVITY_RECOGNITION
+        targetSdk = 35
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         versionCode = 48
@@ -96,27 +94,27 @@ dependencies {
     implementation("org.kodein.di:kodein-di:7.3.0")
 
     // Jetpack, AndroidX
-    implementation("androidx.core:core-ktx:1.5.0-alpha02")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-service:2.8.7")
     ksp("androidx.room:room-compiler:2.8.5")
     implementation("androidx.room:room-runtime:2.8.5")
     implementation("androidx.room:room-ktx:2.8.5")
     testImplementation("androidx.room:room-testing:2.8.5")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
-    implementation("com.google.android.material:material:1.3.0-alpha02")
-    implementation(platform("com.google.firebase:firebase-bom:28.4.2"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-crashlytics")
 
-    // Play, Firebase
-    implementation("com.google.android.gms:play-services-maps:17.0.0")
-    implementation("com.google.android.gms:play-services-location:17.0.0")
-    implementation("com.google.android.gms:play-services-auth:18.1.0")
-    implementation("com.google.firebase:firebase-core:17.5.0")
-    implementation("com.google.firebase:firebase-auth:19.3.2")
-    implementation("com.google.firebase:firebase-database:19.3.1")
-    implementation("com.google.firebase:firebase-crashlytics:17.2.1")
+    // Play
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
     // Jetpack Compose
     val composeBom = platform("androidx.compose:compose-bom:2026.09.00")

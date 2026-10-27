@@ -164,7 +164,7 @@ class LoginActivity : AppCompatActivity(),
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == SIGN_IN_REQUEST_ID) {
             finishWhenStateChanges()
-            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            val result = data?.let { Auth.GoogleSignInApi.getSignInResultFromIntent(it) }
             if (result?.isSuccess == true) {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = checkNotNull(result.signInAccount)

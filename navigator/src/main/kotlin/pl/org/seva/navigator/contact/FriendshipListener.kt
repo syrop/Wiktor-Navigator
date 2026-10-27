@@ -27,6 +27,7 @@ import android.content.IntentFilter
 import pl.org.seva.navigator.main.data.ParcelableInt
 import pl.org.seva.navigator.main.data.appContext
 
+import androidx.core.content.ContextCompat
 import java.util.Random
 
 import pl.org.seva.navigator.main.data.db.contactDao
@@ -51,7 +52,11 @@ class FriendshipListener {
                     this.nid = notificationId
                 })
 
-        appContext.registerReceiver(FriendshipReceiver(), IntentFilter(FRIENDSHIP_REQUESTED_INTENT))
+        ContextCompat.registerReceiver(
+                appContext,
+                FriendshipReceiver(),
+                IntentFilter(FRIENDSHIP_REQUESTED_INTENT),
+                ContextCompat.RECEIVER_NOT_EXPORTED)
         val notificationId = ParcelableInt(Random().nextInt())
         nm.friendshipRequested(contact, notificationId)
     }
