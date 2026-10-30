@@ -19,65 +19,67 @@
 
 package pl.org.seva.navigator.main
 
-import android.view.ContextThemeWrapper
-import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.FragmentContainerView
-import com.google.android.material.appbar.AppBarLayout
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.ui.NavigatorTheme
 
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-
-/**
- * Jetpack Compose replacement for `res/layout/act_mainr.xml`.
- *
- * Layout mapping:
- * - Root `ConstraintLayout` -> `Column(Modifier.fillMaxSize())`
- * - `AppBarLayout` + `Toolbar` -> `AndroidView` hosting `AppBarLayout`/`Toolbar` (or M3 TopAppBar placeholder in preview)
- * - `fragment` -> `navHostContent` slot hosting `FragmentContainerView(id = R.id.nav_host_fragment)`
- */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    onToolbarCreated: (Toolbar) -> Unit,
     modifier: Modifier = Modifier,
-    navHostContent: @Composable () -> Unit = {
-        AndroidView(
-            factory = { context ->
-                FragmentContainerView(context).apply {
-                    id = R.id.nav_host_fragment
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-        )
-    },
+    title: String = stringResource(id = R.string.app_name_short),
+    canNavigateBack: Boolean = false,
+    onNavigateUp: () -> Unit = {},
+    currentRoute: String = NavigatorRoutes.NAVIGATION,
+    isLocationPermissionGranted: Boolean = true,
+    isUserLoggedIn: Boolean = false,
+    onHelpClick: () -> Unit = {},
+    onLogoutClick: () -> Unit = {},
+    onDeleteAccountClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
+    onCreditsClick: () -> Unit = {},
+    isSearchActive: Boolean = false,
+    onSearchActiveChange: (Boolean) -> Unit = {},
+    onSearchQuerySubmitted: (String) -> Unit = {},
+    navHostContent: @Composable () -> Unit = {},
 ) {
     val isInspection = LocalInspectionMode.current
+    var showOverflowMenu by remember { mutableStateOf(value = false) }
+    var searchText by remember { mutableStateOf(value = "") }
 
     Column(
         modifier = modifier
@@ -85,55 +87,162 @@ fun MainScreen(
             .statusBarsPadding()
             .navigationBarsPadding(),
     ) {
-        if (isInspection) {
-            Surface(
-                color = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.CenterStart,
-                ) {
+        TopAppBar(
+            title = {
+                if (currentRoute == NavigatorRoutes.SEEK_CONTACT && isSearchActive) {
+                    TextField(
+                        value = searchText,
+                        onValueChange = { searchText = it },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.seek_contact_fragment_hint),
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
+                            )
+                        },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                if (searchText.isNotBlank()) {
+                                    onSearchQuerySubmitted(searchText)
+                                    onSearchActiveChange(false)
+                                }
+                            },
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                            cursorColor = MaterialTheme.colorScheme.onPrimary,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                } else {
                     Text(
-                        text = stringResource(id = R.string.app_name_short),
+                        text = title,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Medium,
                     )
                 }
-            }
-        } else {
-            AndroidView(
-                factory = { context ->
-                    val themedContext = ContextThemeWrapper(context, R.style.AppTheme_AppBarOverlay)
-                    AppBarLayout(themedContext).apply {
-                        id = R.id.appbar
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
+            },
+            navigationIcon = {
+                if (canNavigateBack) {
+                    IconButton(
+                        onClick = {
+                            if (isSearchActive) {
+                                searchText = ""
+                                onSearchActiveChange(false)
+                            } else {
+                                onNavigateUp()
+                            }
+                        },
+                    ) {
+                        Text(
+                            text = "←",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
-                        val toolbar = Toolbar(themedContext).apply {
-                            id = R.id.toolbar
-                            setPopupTheme(R.style.AppTheme_PopupOverlay)
-                            val typedArray = themedContext.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
-                            val actionBarHeight = typedArray.getDimensionPixelSize(0, ViewGroup.LayoutParams.WRAP_CONTENT)
-                            typedArray.recycle()
-                            layoutParams = AppBarLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                actionBarHeight,
+                    }
+                }
+            },
+            actions = {
+                when (currentRoute) {
+                    NavigatorRoutes.NAVIGATION -> {
+                        if (!isLocationPermissionGranted || !isUserLoggedIn) {
+                            IconButton(onClick = onHelpClick) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_help_white_24dp),
+                                    contentDescription = stringResource(id = R.string.action_help),
+                                )
+                            }
+                        }
+                        IconButton(onClick = { showOverflowMenu = true }) {
+                            Text(
+                                text = "⋮",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
-                        addView(toolbar)
-                        onToolbarCreated(toolbar)
+                        DropdownMenu(
+                            expanded = showOverflowMenu,
+                            onDismissRequest = { showOverflowMenu = false },
+                        ) {
+                            if (isUserLoggedIn) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.action_logout)) },
+                                    onClick = {
+                                        showOverflowMenu = false
+                                        onLogoutClick()
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.action_delete_user)) },
+                                    onClick = {
+                                        showOverflowMenu = false
+                                        onDeleteAccountClick()
+                                    },
+                                )
+                            }
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.action_settings)) },
+                                onClick = {
+                                    showOverflowMenu = false
+                                    onSettingsClick()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.action_credits)) },
+                                onClick = {
+                                    showOverflowMenu = false
+                                    onCreditsClick()
+                                },
+                            )
+                        }
                     }
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+                    NavigatorRoutes.SEEK_CONTACT -> {
+                        if (isSearchActive) {
+                            IconButton(
+                                onClick = {
+                                    if (searchText.isNotEmpty()) {
+                                        searchText = ""
+                                    } else {
+                                        onSearchActiveChange(false)
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_close_black_24dp),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            }
+                        } else {
+                            IconButton(
+                                onClick = {
+                                    searchText = ""
+                                    onSearchActiveChange(true)
+                                },
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_search_white_24dp),
+                                    contentDescription = stringResource(id = R.string.action_search),
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+        )
 
         Box(
             modifier = Modifier
@@ -164,9 +273,7 @@ fun MainScreen(
 fun MainScreenPreview() {
     NavigatorTheme {
         Surface {
-            MainScreen(
-                onToolbarCreated = {},
-            )
+            MainScreen()
         }
     }
 }

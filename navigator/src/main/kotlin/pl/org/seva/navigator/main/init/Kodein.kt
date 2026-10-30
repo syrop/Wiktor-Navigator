@@ -34,7 +34,6 @@ import pl.org.seva.navigator.main.data.db.ContactDao
 import pl.org.seva.navigator.main.data.db.db
 import pl.org.seva.navigator.debug.Debug
 import pl.org.seva.navigator.main.data.ActivityRecognitionObservable
-import pl.org.seva.navigator.main.data.Permissions
 import pl.org.seva.navigator.main.data.appContext
 import pl.org.seva.navigator.main.extension.prefs
 import pl.org.seva.navigator.main.ui.ColorFactory
@@ -58,7 +57,6 @@ fun createKodein(ctx: Context) {
         bind<Contacts>() with singleton { Contacts() }
         bind<LoggedInUser>() with singleton { LoggedInUser() }
         bind<FriendshipListener>() with singleton { FriendshipListener() }
-        bind<Permissions>() with singleton { Permissions() }
         bind<ActivityRecognitionObservable>() with singleton { ActivityRecognitionObservable() }
         bind<FriendshipObservable>() with singleton { FriendshipObservable() }
         bind<PeerObservable>() with singleton { PeerObservable() }

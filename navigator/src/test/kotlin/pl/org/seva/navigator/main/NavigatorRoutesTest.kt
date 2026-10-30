@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Wiktor Nizio
+ * Copyright (C) 2026 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,23 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.extension
+package pl.org.seva.navigator.main
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
-fun ViewGroup.inflate(@LayoutRes resource: Int): View =
-        LayoutInflater.from(context).inflate(resource, this, false)
+class NavigatorRoutesTest {
+
+    @Test
+    fun allRoutesAreDistinct() {
+        val routes = setOf(
+            NavigatorRoutes.NAVIGATION,
+            NavigatorRoutes.CONTACTS,
+            NavigatorRoutes.SEEK_CONTACT,
+            NavigatorRoutes.CREDITS,
+            NavigatorRoutes.DELETE_PROFILE,
+            NavigatorRoutes.SETTINGS,
+        )
+        assertEquals(6, routes.size)
+    }
+}

@@ -20,20 +20,20 @@
 package pl.org.seva.navigator.profile
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
@@ -48,44 +48,58 @@ fun Context.loginActivity(action: String) = start(LoginActivity::class.java) {
     putExtra(LoginActivity.ACTION, action)
 }
 
-class LoginActivity : AppCompatActivity(),
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks {
+@Suppress("DEPRECATION")
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var authStateListener: AuthStateListener
+    private lateinit var googleSignInClient: GoogleSignInClient
 
-    private lateinit var googleApiClient: GoogleApiClient
-
-    private val isLoading = mutableStateOf(false)
+    private val isLoading = mutableStateOf(value = false)
     private var performedAction: Boolean = false
-    private var logoutWhenReady: Boolean = false
+
+    private val signInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { activityResult ->
+        finishWhenStateChanges()
+        val task = GoogleSignIn.getSignedInAccountFromIntent(activityResult.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            firebaseAuthWithGoogle(account)
+        } catch (e: ApiException) {
+            Log.w(TAG, "Google sign in failed", e)
+            signInFailed()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val composeView = ComposeView(this).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                NavigatorTheme {
-                    if (isLoading.value) {
-                        LoginScreen()
-                    }
+        setContent {
+            NavigatorTheme {
+                if (isLoading.value) {
+                    LoginScreen()
                 }
             }
         }
-        setContentView(composeView)
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    moveTaskToBack(true)
+                    finish()
+                }
+            },
+        )
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(DEFAULT_WEB_CLIENT_ID)
-                .requestEmail()
-                .build()
+            .requestIdToken(DEFAULT_WEB_CLIENT_ID)
+            .requestEmail()
+            .build()
 
-        googleApiClient = GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addConnectionCallbacks(this)
-                .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         firebaseAuth = FirebaseAuth.getInstance()
 
@@ -94,8 +108,7 @@ class LoginActivity : AppCompatActivity(),
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.uid)
                 onUserLoggedIn(user)
-            }
-            else {
+            } else {
                 Log.d(TAG, "onAuthStateChanged:signed_out")
                 onUserLoggedOut()
             }
@@ -116,16 +129,14 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun login() {
-        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
-        startActivityForResult(signInIntent, SIGN_IN_REQUEST_ID)
+        signInLauncher.launch(googleSignInClient.signInIntent)
     }
 
     private fun logout() {
         finishWhenStateChanges()
-        logoutWhenReady = true
         firebaseAuth.signOut()
         (application as NavigatorApplication).logout()
-        googleApiClient.connect()
+        googleSignInClient.signOut()
         finish()
     }
 
@@ -153,29 +164,6 @@ class LoginActivity : AppCompatActivity(),
         firebaseAuth.removeAuthStateListener(authStateListener)
     }
 
-    override fun onBackPressed() {
-        moveTaskToBack(true)
-        finish()
-    }
-
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == SIGN_IN_REQUEST_ID) {
-            finishWhenStateChanges()
-            val result = data?.let { Auth.GoogleSignInApi.getSignInResultFromIntent(it) }
-            if (result?.isSuccess == true) {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = checkNotNull(result.signInAccount)
-                firebaseAuthWithGoogle(account)
-            }
-            else {
-                signInFailed()
-            }
-        }
-    }
-
     private fun finishWhenStateChanges() {
         performedAction = true
     }
@@ -186,24 +174,20 @@ class LoginActivity : AppCompatActivity(),
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this) {
-                    Log.d(TAG, "signInWithCredential:onComplete:" + it.isSuccessful)
-                    hideProgressDialog()
+            .addOnCompleteListener(this) {
+                Log.d(TAG, "signInWithCredential:onComplete:" + it.isSuccessful)
+                hideProgressDialog()
 
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
-                    if (!it.isSuccessful) {
-                        signInFailed()
-                    }
+                if (!it.isSuccessful) {
+                    signInFailed()
                 }
+            }
     }
 
     private fun signInFailed(message: String = "") {
-        if (!message.isBlank()) {
+        if (message.isNotBlank()) {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        }
-        else {
+        } else {
             Toast.makeText(this, R.string.login_authentication_failed, Toast.LENGTH_SHORT).show()
         }
         finish()
@@ -217,19 +201,6 @@ class LoginActivity : AppCompatActivity(),
         isLoading.value = false
     }
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.d(TAG, "onConnectionFailed:$connectionResult")
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onConnected(bundle: Bundle?) {
-        if (logoutWhenReady) {
-            Auth.GoogleSignInApi.signOut(googleApiClient)
-        }
-    }
-
-    override fun onConnectionSuspended(i: Int) = Unit
-
     companion object {
 
         const val DEFAULT_WEB_CLIENT_ID = "267180459782-548rckf296jcchkp8id9on17v57trcrf.apps.googleusercontent.com"
@@ -239,7 +210,5 @@ class LoginActivity : AppCompatActivity(),
         const val LOGOUT = "logout"
 
         private val TAG = LoginActivity::class.java.simpleName
-
-        private const val SIGN_IN_REQUEST_ID = 9001
     }
 }

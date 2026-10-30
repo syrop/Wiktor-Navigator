@@ -19,32 +19,31 @@
 
 package pl.org.seva.navigator.main.data
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.net.Uri
-import android.os.Build
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.main.MainActivity
-import pl.org.seva.navigator.navigation.NavigationFragment
 
 fun setShortcuts() {
     fun Contact.shortcut() = ShortcutInfo.Builder(appContext, System.nanoTime().toString())
-                .setShortLabel(name)
-                .setIntent(Intent(Intent.ACTION_MAIN, Uri.EMPTY, appContext, NavigationFragment::class.java)
-                        .putExtra(MainActivity.CONTACT_EMAIL_EXTRA, email))
-                .setIcon(Icon.createWithResource(appContext, R.mipmap.ic_launcher))
-                .build()
+        .setShortLabel(name)
+        .setIntent(
+            Intent(Intent.ACTION_MAIN, Uri.EMPTY, appContext, MainActivity::class.java)
+                .putExtra(MainActivity.CONTACT_EMAIL_EXTRA, email),
+        )
+        .setIcon(Icon.createWithResource(appContext, R.mipmap.ic_launcher))
+        .build()
 
     val shortcutManager = checkNotNull(appContext.getSystemService(ShortcutManager::class.java))
     val shortcuts = contacts.snapshot()
-            .asSequence()
-            .take(shortcutManager.maxShortcutCountPerActivity)
-            .map { it.shortcut() }
-            .toList()
+        .asSequence()
+        .take(shortcutManager.maxShortcutCountPerActivity)
+        .map { it.shortcut() }
+        .toList()
     shortcutManager.dynamicShortcuts = shortcuts
 }

@@ -19,13 +19,10 @@
 
 package pl.org.seva.navigator.main
 
-import androidx.appcompat.widget.Toolbar
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import pl.org.seva.navigator.main.ui.NavigatorTheme
@@ -36,15 +33,11 @@ class MainScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun mainScreen_invokesToolbarCallbackAndDisplaysNavHostSlot() {
-        var toolbarCreated: Toolbar? = null
-
+    fun mainScreen_displaysTitleAndNavHostSlot() {
         composeTestRule.setContent {
             NavigatorTheme {
                 MainScreen(
-                    onToolbarCreated = { toolbar ->
-                        toolbarCreated = toolbar
-                    },
+                    title = "Test App Title",
                     navHostContent = {
                         Text(text = "Test Destination Content")
                     },
@@ -52,10 +45,7 @@ class MainScreenTest {
             }
         }
 
+        composeTestRule.onNodeWithText("Test App Title").assertIsDisplayed()
         composeTestRule.onNodeWithText("Test Destination Content").assertIsDisplayed()
-        composeTestRule.runOnIdle {
-            assertNotNull(toolbarCreated)
-            assertTrue(toolbarCreated is Toolbar)
-        }
     }
 }

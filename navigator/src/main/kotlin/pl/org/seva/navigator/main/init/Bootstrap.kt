@@ -45,7 +45,7 @@ class Bootstrap {
 
     fun boot() {
         FirebaseAuth.getInstance().currentUser?.setCurrent()
-        activityRecognition initGoogleApiClient appContext
+        activityRecognition init appContext
         with(contactDao) {
             contacts addAll getAll().map { it.value() }
         }

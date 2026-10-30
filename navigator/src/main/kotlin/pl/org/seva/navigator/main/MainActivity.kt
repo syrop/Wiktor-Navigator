@@ -23,21 +23,38 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import pl.org.seva.navigator.R
+import pl.org.seva.navigator.contact.ContactsRoute
+import pl.org.seva.navigator.contact.SeekContactRoute
 import pl.org.seva.navigator.contact.contacts
 import pl.org.seva.navigator.contact.persist
+import pl.org.seva.navigator.credits.CreditsRoute
 import pl.org.seva.navigator.main.extension.prefs
 import pl.org.seva.navigator.main.extension.toast
 import pl.org.seva.navigator.main.extension.viewModel
 import pl.org.seva.navigator.main.ui.NavigatorTheme
+import pl.org.seva.navigator.navigation.NavigationRoute
+import pl.org.seva.navigator.profile.DeleteProfileRoute
+import pl.org.seva.navigator.profile.isLoggedIn
+import pl.org.seva.navigator.settings.SettingsRoute
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,38 +64,137 @@ class MainActivity : AppCompatActivity() {
 
     private val navigatorModel by viewModel<NavigatorViewModel>()
 
-    private val navController: NavController?
-        get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)?.navController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        val composeView = ComposeView(this).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                NavigatorTheme {
-                    MainScreen(
-                        onToolbarCreated = { toolbar ->
-                            setupNavigation(toolbar)
-                        },
-                    )
+        setContent {
+            NavigatorTheme {
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route ?: NavigatorRoutes.NAVIGATION
+
+                var isLocationPermissionGranted by remember { mutableStateOf(value = false) }
+                var loggedInState by remember { mutableStateOf(value = isLoggedIn) }
+                var isSearchActive by remember { mutableStateOf(value = false) }
+                var helpTrigger by remember { mutableIntStateOf(value = 0) }
+                var logoutTrigger by remember { mutableIntStateOf(value = 0) }
+
+                val lifecycleOwner = LocalLifecycleOwner.current
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_RESUME) {
+                            loggedInState = isLoggedIn
+                        }
+                    }
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
+                    }
                 }
+
+                BackHandler(enabled = currentRoute == NavigatorRoutes.NAVIGATION) {
+                    if ((System.currentTimeMillis() - backClickTime) >= DOUBLE_CLICK_MS) {
+                        exitApplicationToast?.cancel()
+                        exitApplicationToast = getString(R.string.tap_back_second_time).toast()
+                        backClickTime = System.currentTimeMillis()
+                    } else {
+                        finish()
+                    }
+                }
+
+                val title = when (currentRoute) {
+                    NavigatorRoutes.CONTACTS -> stringResource(id = R.string.contacts_fragment_label)
+                    NavigatorRoutes.SEEK_CONTACT -> stringResource(id = R.string.seek_contact_fragment_label)
+                    NavigatorRoutes.CREDITS -> stringResource(id = R.string.credits_fragment_label)
+                    NavigatorRoutes.DELETE_PROFILE -> stringResource(id = R.string.delete_user_fragment_label)
+                    NavigatorRoutes.SETTINGS -> stringResource(id = R.string.settings_fragment_label)
+                    else -> stringResource(id = R.string.app_name_short)
+                }
+
+                MainScreen(
+                    title = title,
+                    canNavigateBack = currentRoute != NavigatorRoutes.NAVIGATION,
+                    onNavigateUp = {
+                        isSearchActive = false
+                        navController.navigateUp()
+                    },
+                    currentRoute = currentRoute,
+                    isLocationPermissionGranted = isLocationPermissionGranted,
+                    isUserLoggedIn = loggedInState,
+                    onHelpClick = { helpTrigger++ },
+                    onLogoutClick = {
+                        logoutTrigger++
+                        loggedInState = false
+                    },
+                    onDeleteAccountClick = {
+                        navController.navigate(NavigatorRoutes.DELETE_PROFILE)
+                    },
+                    onSettingsClick = {
+                        navController.navigate(NavigatorRoutes.SETTINGS)
+                    },
+                    onCreditsClick = {
+                        navController.navigate(NavigatorRoutes.CREDITS)
+                    },
+                    isSearchActive = isSearchActive,
+                    onSearchActiveChange = { active -> isSearchActive = active },
+                    onSearchQuerySubmitted = { query ->
+                        navigatorModel.query.value = query
+                    },
+                    navHostContent = {
+                        NavHost(
+                            navController = navController,
+                            startDestination = NavigatorRoutes.NAVIGATION,
+                        ) {
+                            composable(NavigatorRoutes.NAVIGATION) {
+                                NavigationRoute(
+                                    navigatorModel = navigatorModel,
+                                    onNavigateToContacts = {
+                                        navController.navigate(NavigatorRoutes.CONTACTS)
+                                    },
+                                    isLocationPermissionGranted = isLocationPermissionGranted,
+                                    onLocationPermissionChanged = { granted ->
+                                        isLocationPermissionGranted = granted
+                                    },
+                                    helpTrigger = helpTrigger,
+                                    logoutTrigger = logoutTrigger,
+                                )
+                            }
+                            composable(NavigatorRoutes.CONTACTS) {
+                                ContactsRoute(
+                                    navigatorModel = navigatorModel,
+                                    onNavigateBack = { navController.popBackStack() },
+                                    onNavigateToSeekContact = {
+                                        navController.navigate(NavigatorRoutes.SEEK_CONTACT)
+                                    },
+                                )
+                            }
+                            composable(NavigatorRoutes.SEEK_CONTACT) {
+                                SeekContactRoute(
+                                    navigatorModel = navigatorModel,
+                                    isSearchActive = isSearchActive,
+                                    onNavigateBack = {
+                                        isSearchActive = false
+                                        navController.popBackStack()
+                                    },
+                                )
+                            }
+                            composable(NavigatorRoutes.CREDITS) {
+                                CreditsRoute()
+                            }
+                            composable(NavigatorRoutes.DELETE_PROFILE) {
+                                DeleteProfileRoute(
+                                    navigatorModel = navigatorModel,
+                                    onNavigateBack = { navController.popBackStack() },
+                                )
+                            }
+                            composable(NavigatorRoutes.SETTINGS) {
+                                SettingsRoute()
+                            }
+                        }
+                    },
+                )
             }
         }
-        setContentView(composeView)
-    }
-
-    private fun setupNavigation(toolbar: Toolbar) {
-        setSupportActionBar(toolbar)
-        val navHost = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
-            ?: NavHostFragment.create(R.navigation.nav_graph).also { fragment ->
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment)
-                    .setPrimaryNavigationFragment(fragment)
-                    .commit()
-            }
-        supportFragmentManager.executePendingTransactions()
-        NavigationUI.setupActionBarWithNavController(this, navHost.navController)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -96,21 +212,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         (application as NavigatorApplication).stopService()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val nc = navController
-        return if ((nc != null) &&
-            (checkNotNull(nc.currentDestination).id == R.id.navigationFragment) &&
-            ((System.currentTimeMillis() - backClickTime) >= DOUBLE_CLICK_MS)
-        ) {
-            exitApplicationToast?.cancel()
-            exitApplicationToast = getString(R.string.tap_back_second_time).toast()
-            backClickTime = System.currentTimeMillis()
-            false
-        } else {
-            nc?.navigateUp() ?: super.onSupportNavigateUp()
-        }
     }
 
     companion object {

@@ -19,38 +19,31 @@
 
 package pl.org.seva.navigator.main.data
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
-
 import io.reactivex.subjects.PublishSubject
 import pl.org.seva.navigator.main.extension.subscribe
 import pl.org.seva.navigator.main.init.instance
 
 val activityRecognition by instance<ActivityRecognitionObservable>()
 
-open class ActivityRecognitionObservable :
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+open class ActivityRecognitionObservable {
 
     private var initialized = false
     private var state = STATIONARY
-    private var googleApiClient: GoogleApiClient? = null
     private lateinit var context: Context
-    private var activityRecognitionReceiver : BroadcastReceiver? = null
+    private var activityRecognitionReceiver: BroadcastReceiver? = null
 
     private val stateSubject = PublishSubject.create<Int>()
 
@@ -58,55 +51,38 @@ open class ActivityRecognitionObservable :
 
     val stateLiveData: LiveData<Int> = mutableStateLiveData
 
-    infix fun initGoogleApiClient(context: Context) {
+    @SuppressLint("MissingPermission")
+    infix fun init(context: Context) {
         if (initialized) {
             return
         }
         this.context = context
-        googleApiClient?:let {
-            googleApiClient = GoogleApiClient.Builder(context)
-                    .addApi(ActivityRecognition.API)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build()
-            checkNotNull(googleApiClient).connect()
+        registerReceiver()
+        val intent = Intent(ACTIVITY_RECOGNITION_INTENT).apply {
+            setPackage(context.packageName)
         }
-
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE,
+        )
+        ActivityRecognition.getClient(context).requestActivityUpdates(
+            ACTIVITY_RECOGNITION_INTERVAL_MS,
+            pendingIntent,
+        )
         initialized = true
     }
 
-    @android.annotation.SuppressLint("MissingPermission")
-    override fun onConnected(bundle: Bundle?) {
-        registerReceiver()
-        val intent = Intent(ACTIVITY_RECOGNITION_INTENT)
-
-        val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE, )
-        ActivityRecognition.getClient(context).requestActivityUpdates(
-                ACTIVITY_RECOGNITION_INTERVAL_MS,
-                pendingIntent, )
-    }
-
-    override fun onConnectionSuspended(i: Int) = unregisterReceiver()
-
     private fun registerReceiver() {
-        activityRecognitionReceiver = activityRecognitionReceiver?: ActivityRecognitionReceiver()
+        activityRecognitionReceiver = activityRecognitionReceiver ?: ActivityRecognitionReceiver()
         ContextCompat.registerReceiver(
-                context,
-                activityRecognitionReceiver,
-                IntentFilter(ACTIVITY_RECOGNITION_INTENT),
-                ContextCompat.RECEIVER_NOT_EXPORTED, )
+            context,
+            activityRecognitionReceiver,
+            IntentFilter(ACTIVITY_RECOGNITION_INTENT),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
     }
-
-    private fun unregisterReceiver() {
-        activityRecognitionReceiver?: return
-        context.unregisterReceiver(activityRecognitionReceiver)
-    }
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) = Unit
 
     fun listen(lifecycle: Lifecycle, f: (Int) -> Unit) {
         f(state)
@@ -125,22 +101,21 @@ open class ActivityRecognitionObservable :
         mutableStateLiveData.value = MOVING
     }
 
-    private inner class ActivityRecognitionReceiver: BroadcastReceiver() {
+    private inner class ActivityRecognitionReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)
                 if (result?.probably(DetectedActivity.STILL) == true) {
                     onDeviceStationary()
-                }
-                else {
+                } else {
                     onDeviceMoving()
                 }
             }
         }
 
         private infix fun ActivityRecognitionResult.probably(activity: Int) =
-                mostProbableActivity.type == activity && getActivityConfidence(activity) >= MIN_CONFIDENCE
+            (mostProbableActivity.type == activity) && (getActivityConfidence(activity) >= MIN_CONFIDENCE)
     }
 
     companion object {

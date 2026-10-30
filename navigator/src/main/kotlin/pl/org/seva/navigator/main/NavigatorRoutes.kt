@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Wiktor Nizio
+ * Copyright (C) 2026 Wiktor Nizio
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,13 @@
  * If you like this program, consider donating bitcoin: bc1qncxh5xs6erq6w4qz3a7xl7f50agrgn3w58dsfp
  */
 
-package pl.org.seva.navigator.main.extension
+package pl.org.seva.navigator.main
 
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
-import pl.org.seva.navigator.contact.ItemSwipeListener
-
-fun RecyclerView.swipeListener(listener: (Int) -> Unit) {
-    ItemTouchHelper(ItemSwipeListener(listener)).attachToRecyclerView(this)
-}
-
-fun RecyclerView.verticalDivider() {
-    addItemDecoration(DividerItemDecoration(checkNotNull(context), DividerItemDecoration.VERTICAL))
+object NavigatorRoutes {
+    const val NAVIGATION = "navigation"
+    const val CONTACTS = "contacts"
+    const val SEEK_CONTACT = "seek_contact"
+    const val CREDITS = "credits"
+    const val DELETE_PROFILE = "delete_profile"
+    const val SETTINGS = "settings"
 }
