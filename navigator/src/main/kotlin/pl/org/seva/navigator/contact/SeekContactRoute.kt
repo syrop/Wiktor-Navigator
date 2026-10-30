@@ -24,12 +24,14 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Observer
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import io.reactivex.disposables.CompositeDisposable
 import java.util.Locale
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.R
 import pl.org.seva.navigator.main.NavigatorViewModel
 import pl.org.seva.navigator.main.data.fb.fbReader
@@ -45,6 +47,7 @@ fun SeekContactRoute(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val coroutineScope = rememberCoroutineScope()
 
     var uiState by remember {
         mutableStateOf<SeekContactUiState>(
@@ -60,26 +63,26 @@ fun SeekContactRoute(
     }
 
     DisposableEffect(lifecycleOwner) {
-        val disposables = CompositeDisposable()
+        val jobs = mutableListOf<Job>()
         val queryObserver = Observer<String> { query ->
             if (query.isNotEmpty()) {
                 navigatorModel.query.value = ""
                 uiState = SeekContactUiState.Searching
-                val disposable = fbReader.findContact(query.lowercase(Locale.getDefault()))
-                    .subscribe { contact ->
-                        uiState = if (contact.isEmpty) {
-                            SeekContactUiState.Prompt(SeekPromptType.NO_USER_FOUND)
-                        } else {
-                            SeekContactUiState.ContactResult(contact)
-                        }
+                val job = coroutineScope.launch {
+                    val contact = fbReader.findContact(query.lowercase(Locale.getDefault()))
+                    uiState = if (contact.isEmpty) {
+                        SeekContactUiState.Prompt(SeekPromptType.NO_USER_FOUND)
+                    } else {
+                        SeekContactUiState.ContactResult(contact)
                     }
-                disposables.add(disposable)
+                }
+                jobs.add(job)
             }
         }
         navigatorModel.query.observe(lifecycleOwner, queryObserver)
         onDispose {
             navigatorModel.query.removeObserver(queryObserver)
-            disposables.clear()
+            jobs.forEach { it.cancel() }
         }
     }
 

@@ -20,13 +20,18 @@
 package pl.org.seva.navigator.debug
 
 import android.content.SharedPreferences
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposables
+import java.util.*
+import kotlin.time.Duration.Companion.minutes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.main.data.fb.fbWriter
 import pl.org.seva.navigator.main.init.instance
 import pl.org.seva.navigator.profile.isLoggedIn
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 val debug by instance<Debug>()
 
@@ -34,22 +39,26 @@ class Debug(private val prefs: SharedPreferences) {
 
     val isDebugMode get() = prefs.getBoolean(Debug.PROPERTY, false)
 
-    private var disposable = Disposables.empty()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private var job: Job? = null
 
     fun start() {
-        disposable.dispose()
-        disposable = Observable.interval(1, TimeUnit.MINUTES)
-                .filter { isLoggedIn }
-                .subscribe {
+        job?.cancel()
+        job = scope.launch {
+            while (isActive) {
+                delay(1.minutes)
+                if (isLoggedIn) {
                     val cal = Calendar.getInstance()
                     val message = "${cal.get(Calendar.HOUR_OF_DAY)}:" +
                             "${cal.get(Calendar.MINUTE)}:${cal.get(Calendar.SECOND)}"
                     fbWriter.writeDebug(message)
                 }
+            }
+        }
     }
 
     fun stop() {
-        disposable.dispose()
+        job?.cancel()
     }
 
     fun isIgnoredForPeer(

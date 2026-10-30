@@ -19,8 +19,11 @@
 
 package pl.org.seva.navigator.contact
 
-import io.reactivex.disposables.CompositeDisposable
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.main.data.fb.fbReader
 import pl.org.seva.navigator.main.init.instance
 
@@ -32,17 +35,22 @@ fun addFriendshipListener() = friendshipObservable addFriendshipListener friends
 
 class FriendshipObservable {
 
-    private val cd = CompositeDisposable()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    infix fun addFriendshipListener(friendshipListener: FriendshipListener) = with (fbReader) {
-        cd.addAll(
-                friendshipRequestedListener()
-                        .subscribe { friendshipListener.onPeerRequestedFriendship(it) },
-                friendshipAcceptedListener()
-                        .subscribe { friendshipListener.onPeerAcceptedFriendship(it) },
-                friendshipDeletedListener()
-                        .subscribe { friendshipListener.onPeerDeletedFriendship(it) })
+    infix fun addFriendshipListener(friendshipListener: FriendshipListener) = with(fbReader) {
+        scope.launch {
+            friendshipRequestedListener()
+                .collect { friendshipListener.onPeerRequestedFriendship(it) }
+        }
+        scope.launch {
+            friendshipAcceptedListener()
+                .collect { friendshipListener.onPeerAcceptedFriendship(it) }
+        }
+        scope.launch {
+            friendshipDeletedListener()
+                .collect { friendshipListener.onPeerDeletedFriendship(it) }
+        }
     }
 
-    fun clearFriendshipListeners() = cd.clear()
+    fun clearFriendshipListeners() = scope.coroutineContext.cancelChildren()
 }

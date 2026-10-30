@@ -60,7 +60,6 @@ android {
     packaging {
         resources {
             excludes += listOf(
-                "META-INF/rxjava.properties",
                 "META-INF/main.kotlin_module",
                 "META-INF/atomicfu.kotlin_module"
             )
@@ -87,9 +86,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
-    // Kotlin, RxKotlin
-    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    // DI
     implementation("org.kodein.di:kodein-di:7.3.0")
 
     // Jetpack, AndroidX

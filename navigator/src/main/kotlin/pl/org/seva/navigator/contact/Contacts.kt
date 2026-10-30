@@ -19,23 +19,33 @@
 
 package pl.org.seva.navigator.contact
 
-import android.annotation.SuppressLint
-import io.reactivex.disposables.Disposable
 import java.util.ArrayList
-
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.main.data.fb.fbReader
 import pl.org.seva.navigator.main.init.instance
 
 val contacts by instance<Contacts>()
 
-fun downloadFriendsFromFb(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Disposable =
-        fbReader.readFriends().doOnComplete(onCompleted).subscribe { onFriendFound(it) }
+private val contactsScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+fun downloadFriendsFromFb(onFriendFound: (Contact) -> Unit, onCompleted: () -> Unit): Job =
+        contactsScope.launch {
+            fbReader.readFriends()
+                    .onCompletion { cause -> if (cause == null) onCompleted() }
+                    .collect { onFriendFound(it) }
+        }
 
 class Contacts {
 
     private val contactsCache = ArrayList<Contact>()
-    private val contactsUpdatedSubject = PublishSubject.create<Contact>()
+    private val contactsUpdatedFlow = MutableSharedFlow<Contact>(extraBufferCapacity = 1)
 
     operator fun contains(contact: Contact) = contactsCache.contains(contact)
 
@@ -47,7 +57,7 @@ class Contacts {
         }
         contactsCache.add(contact)
         contactsCache.sort()
-        contactsUpdatedSubject.onNext(contact)
+        contactsUpdatedFlow.tryEmit(contact)
     }
 
     infix fun addAll(contacts: Collection<Contact>) {
@@ -57,7 +67,7 @@ class Contacts {
 
     infix fun delete(contact: Contact) {
         contactsCache.remove(contact)
-        contactsUpdatedSubject.onNext(contact)
+        contactsUpdatedFlow.tryEmit(contact)
     }
 
     fun clear() = contactsCache.clear()
@@ -68,13 +78,13 @@ class Contacts {
 
     val size get() = contactsCache.size
 
-    @SuppressLint("CheckResult")
-    fun addContactsUpdatedListener(email: String?, contactsUpdatedListener : () -> Unit) {
-        contactsUpdatedSubject
-                .filter { email == null || it.email == email }
-                .subscribe { contactsUpdatedListener() }
-    }
+    fun addContactsUpdatedListener(email: String?, contactsUpdatedListener: () -> Unit): Job =
+            contactsScope.launch {
+                contactsUpdatedFlow
+                        .filter { email == null || it.email == email }
+                        .collect { contactsUpdatedListener() }
+            }
 
-    fun addContactsUpdatedListener(contactsUpdatedListener: () -> Unit) =
+    fun addContactsUpdatedListener(contactsUpdatedListener: () -> Unit): Job =
             addContactsUpdatedListener(null, contactsUpdatedListener)
 }

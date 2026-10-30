@@ -20,12 +20,22 @@
 package pl.org.seva.navigator.main.data.fb
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.ReplaySubject
+import com.google.firebase.database.ValueEventListener
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.suspendCancellableCoroutine
 import pl.org.seva.navigator.contact.Contact
 import pl.org.seva.navigator.debug.debug
 import pl.org.seva.navigator.main.init.instance
@@ -35,76 +45,107 @@ val fbReader by instance<FbReader>()
 
 class FbReader : Fb() {
 
-    fun peerLocationListener(email: String): Observable<LatLng> {
+    fun peerLocationListener(email: String): Flow<LatLng> {
         return email.toReference().child(LAT_LNG).listen()
                 .filter { it.value != null }
-                .map { checkNotNull(it.value) }
-                .map { it as String }
+                .map { checkNotNull(it.value) as String }
                 .map { it.toLatLng() }
     }
 
-    fun debugListener(email: String): Observable<String> {
+    fun debugListener(email: String): Flow<String> {
         return email.toReference().child(DEBUG).listen()
                 .filter { it.value != null }
-                .map { checkNotNull(it.value) }
-                .map { it as String }
+                .map { checkNotNull(it.value) as String }
                 .filter { !debug.isIgnoredForPeer(email, it) }
     }
 
-    fun friendshipRequestedListener(): Observable<Contact> = FRIENDSHIP_REQUESTED.contactListener()
+    fun friendshipRequestedListener(): Flow<Contact> = FRIENDSHIP_REQUESTED.contactListener()
 
-    fun friendshipAcceptedListener(): Observable<Contact> = FRIENDSHIP_ACCEPTED.contactListener()
+    fun friendshipAcceptedListener(): Flow<Contact> = FRIENDSHIP_ACCEPTED.contactListener()
 
-    fun friendshipDeletedListener(): Observable<Contact> = FRIENDSHIP_DELETED.contactListener()
+    fun friendshipDeletedListener(): Flow<Contact> = FRIENDSHIP_DELETED.contactListener()
 
-    fun readFriends(): Observable<Contact> {
+    fun readFriends(): Flow<Contact> = flow {
         val reference = currentUserReference().child(FRIENDS)
-        return reference.read()
-                .concatMapIterable { it.children }
-                .filter { it.exists() }
+        val snapshot = reference.read()
+        for (child in snapshot.children) {
+            if (child.exists()) {
+                emit(child.toContact())
+            }
+        }
+    }
+
+    suspend fun findContact(email: String): Contact = email.toReference().readContact()
+
+    private suspend fun DatabaseReference.readContact(): Contact = read().toContact()
+
+    private fun String.contactListener(): Flow<Contact> = flow {
+        val reference = currentUserReference().child(this@contactListener)
+        val initialSnapshot = reference.read()
+        for (child in initialSnapshot.children) {
+            reference.child(checkNotNull(child.key)).removeValue()
+            emit(child.toContact())
+        }
+        emitAll(
+            reference.childListener()
+                .onEach { reference.child(checkNotNull(it.key)).removeValue() }
                 .map { it.toContact() }
+        )
     }
 
-    fun findContact(email: String): Observable<Contact> = email.toReference().readContact()
+    private fun DatabaseReference.childListener(): Flow<DataSnapshot> = callbackFlow {
+        val listener = object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                trySend(dataSnapshot)
+            }
 
-    private fun DatabaseReference.readContact(): Observable<Contact> = read().map { it.toContact() }
+            override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) = Unit
 
-    private fun String.contactListener(): Observable<Contact> {
-        val reference = currentUserReference().child(this)
-        return reference.read()
-                .concatMapIterable<DataSnapshot> { it.children }
-                .concatWith(reference.childListener())
-                .doOnNext { reference.child(checkNotNull(it.key)).removeValue() }
-                .map { it.toContact() }
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) = Unit
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) = Unit
+
+            override fun onCancelled(databaseError: DatabaseError) = Unit
+        }
+        addChildEventListener(listener)
+        awaitClose { removeEventListener(listener) }
     }
 
-    private fun DatabaseReference.childListener(): Observable<DataSnapshot> {
-        val result = ReplaySubject.create<DataSnapshot>()
-        addChildEventListener(RxChildEventListener(result))
-        return result.hide()
-    }
+    private suspend fun DatabaseReference.read(): DataSnapshot =
+        suspendCancellableCoroutine { continuation ->
+            val listener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (continuation.isActive) {
+                        continuation.resume(dataSnapshot)
+                    }
+                }
 
-    private fun DatabaseReference.read(): Observable<DataSnapshot> {
-        val resultSubject = PublishSubject.create<DataSnapshot>()
-        return resultSubject
-                .doOnSubscribe { addListenerForSingleValueEvent(RxValueEventListener(resultSubject)) }
-                .take(READ_ONCE)
-    }
+                override fun onCancelled(databaseError: DatabaseError) {
+                    if (continuation.isActive) {
+                        continuation.resumeWithException(Exception(databaseError.message))
+                    }
+                }
+            }
+            addListenerForSingleValueEvent(listener)
+            continuation.invokeOnCancellation { removeEventListener(listener) }
+        }
 
-    private fun DatabaseReference.listen(): Observable<DataSnapshot> {
-        val resultSubject = PublishSubject.create<DataSnapshot>()
-        val value = RxValueEventListener(resultSubject)
-        return resultSubject
-                .doOnSubscribe { addValueEventListener(value) }
-                .doOnDispose { removeEventListener(value) }
+    private fun DatabaseReference.listen(): Flow<DataSnapshot> = callbackFlow {
+        val listener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                trySend(dataSnapshot)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                close(Exception(databaseError.message))
+            }
+        }
+        addValueEventListener(listener)
+        awaitClose { removeEventListener(listener) }
     }
 
     private fun DataSnapshot.toContact() =
             if (exists()) {
                 Contact(checkNotNull(key).from64(), child(DISPLAY_NAME).value as String, colorFactory.nextColor())
             } else Contact()
-
-    companion object {
-        const val READ_ONCE = 1L
-    }
 }

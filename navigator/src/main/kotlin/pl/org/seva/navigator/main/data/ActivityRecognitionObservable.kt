@@ -29,11 +29,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.coroutineScope
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
-import io.reactivex.subjects.PublishSubject
-import pl.org.seva.navigator.main.extension.subscribe
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.main.init.instance
 
 val activityRecognition by instance<ActivityRecognitionObservable>()
@@ -45,7 +46,7 @@ open class ActivityRecognitionObservable {
     private lateinit var context: Context
     private var activityRecognitionReceiver: BroadcastReceiver? = null
 
-    private val stateSubject = PublishSubject.create<Int>()
+    private val stateFlow = MutableSharedFlow<Int>(extraBufferCapacity = 1)
 
     private val mutableStateLiveData = MutableLiveData<Int>()
 
@@ -86,18 +87,20 @@ open class ActivityRecognitionObservable {
 
     fun listen(lifecycle: Lifecycle, f: (Int) -> Unit) {
         f(state)
-        stateSubject.subscribe(lifecycle) { f(state) }
+        lifecycle.coroutineScope.launch {
+            stateFlow.collect { f(state) }
+        }
     }
 
     private fun onDeviceStationary() {
         state = STATIONARY
-        stateSubject.onNext(STATIONARY)
+        stateFlow.tryEmit(STATIONARY)
         mutableStateLiveData.value = STATIONARY
     }
 
     private fun onDeviceMoving() {
         state = MOVING
-        stateSubject.onNext(MOVING)
+        stateFlow.tryEmit(MOVING)
         mutableStateLiveData.value = MOVING
     }
 

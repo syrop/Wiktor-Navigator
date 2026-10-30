@@ -23,7 +23,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,11 +53,14 @@ fun ContactsRoute(
         contactsList.addAll(contacts.snapshot())
     }
 
-    LaunchedEffect(Unit) {
-        contacts.addContactsUpdatedListener {
+    DisposableEffect(Unit) {
+        val job = contacts.addContactsUpdatedListener {
             refreshContactsList()
         }
         refreshContactsList()
+        onDispose {
+            job.cancel()
+        }
     }
 
     ContactsScreen(

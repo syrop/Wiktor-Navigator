@@ -248,11 +248,8 @@ fun NavigationRoute(
         peerObservable.clearPeerListeners()
         val contact = followingContact
         contact persist prefs
-        if (contact != null) {
+        val contactsJob = if (contact != null) {
             moveCameraToPeer = true
-            contacts.addContactsUpdatedListener(contact.email) {
-                stopWatchingPeer()
-            }
             peerObservable.addLocationObserver(contact.email) { latLng ->
                 peerLocation = latLng
             }
@@ -261,8 +258,14 @@ fun NavigationRoute(
                     message.toast()
                 }
             }
+            contacts.addContactsUpdatedListener(contact.email) {
+                stopWatchingPeer()
+            }
+        } else {
+            null
         }
         onDispose {
+            contactsJob?.cancel()
             peerObservable.clearPeerListeners()
         }
     }

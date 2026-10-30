@@ -20,25 +20,31 @@
 package pl.org.seva.navigator.navigation
 
 import com.google.android.gms.maps.model.LatLng
-
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.main.data.fb.fbReader
 import pl.org.seva.navigator.main.init.instance
-import pl.org.seva.navigator.main.extension.subscribeWithComposite
 
 val peerObservable by instance<PeerObservable>()
 
 class PeerObservable {
 
-    private val cd = CompositeDisposable()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     fun addLocationObserver(email: String, f: (latLng: LatLng) -> Unit) {
-        fbReader.peerLocationListener(email).subscribeWithComposite(cd) { f(it) }
+        scope.launch {
+            fbReader.peerLocationListener(email).collect { f(it) }
+        }
     }
 
     fun addDebugObserver(email: String, f: (String) -> Unit) {
-        fbReader.debugListener(email).subscribeWithComposite(cd) { f(it) }
+        scope.launch {
+            fbReader.debugListener(email).collect { f(it) }
+        }
     }
 
-    fun clearPeerListeners() = cd.clear()
+    fun clearPeerListeners() = scope.coroutineContext.cancelChildren()
 }

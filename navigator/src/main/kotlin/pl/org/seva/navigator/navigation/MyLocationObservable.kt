@@ -23,16 +23,17 @@ import android.annotation.SuppressLint
 import android.location.Location
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleService
-
+import androidx.lifecycle.coroutineScope
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
-
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import pl.org.seva.navigator.main.data.ActivityRecognitionObservable
 import pl.org.seva.navigator.main.data.activityRecognition
 import pl.org.seva.navigator.main.init.instance
 import pl.org.seva.navigator.profile.isLoggedIn
-import pl.org.seva.navigator.main.extension.subscribe
 
 val myLocationObservable by instance<MyLocationObservable>()
 
@@ -47,20 +48,20 @@ class MyLocationObservable {
 
     private val callback = MyLocationCallback()
 
-    private val locationSubject = PublishSubject.create<LatLng>()
-    private val locationObservable = locationSubject
+    private val locationSubject = MutableSharedFlow<LatLng>(extraBufferCapacity = 1)
+    private val locationFlow = locationSubject
             .filter { isLoggedIn }
-            .timestamp()
-            .filter { it.time() - lastSentLocationTime >= UPDATE_FREQUENCY }
-            .doOnNext { lastSentLocationTime = it.time() }
-            .map { it.value() }
+            .filter { System.currentTimeMillis() - lastSentLocationTime >= UPDATE_FREQUENCY }
+            .onEach { lastSentLocationTime = System.currentTimeMillis() }
 
     private var location: Location? = null
     private var lastSentLocationTime: Long = 0
-    private lateinit  var lifecycle: Lifecycle
+    private lateinit var lifecycle: Lifecycle
 
     fun addLocationListener(lifecycle: Lifecycle, myLocationListener: (LatLng) -> Unit) =
-        locationObservable.subscribe(lifecycle, myLocationListener)
+        lifecycle.coroutineScope.launch {
+            locationFlow.collect(myLocationListener)
+        }
 
     private fun addActivityRecognitionListeners() {
         activityRecognition.listen(lifecycle) { state ->
@@ -85,7 +86,7 @@ class MyLocationObservable {
             return
         }
         this.location = location
-        locationSubject.onNext(LatLng(location.latitude, location.longitude))
+        locationSubject.tryEmit(LatLng(location.latitude, location.longitude))
     }
 
     @SuppressLint("MissingPermission")
